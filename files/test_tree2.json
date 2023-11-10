@@ -1,0 +1,21 @@
+{
+    "event_whenflagclicked": {
+        "looks_sayforsecs": {
+            "SECS": "2",
+            "MESSAGE": "Hello!"
+        },
+        "motion_movesteps": {
+            "STEPS": "10"
+        },
+        "control_repeat_until": {
+            "OPERAND2": "50",
+            "OPERAND1": {
+                "sensing_answer": {}
+            }
+        },
+        "looks_thinkforsecs": {
+            "SECS": "2",
+            "MESSAGE": "Hmm..."
+        }
+    }
+}
