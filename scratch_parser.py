@@ -178,7 +178,7 @@ class scratch_parser:
                         if isinstance(each_val,str) and len(each_val) > 0 and each_val != '':
                             opcode = self.get_opcode_from_id(blocks_values,each_val)
                             new_inp_block = self.read_input_values_by_id(blocks_values,each_val)
-                            self.inpt_2 = [k,[opcode,[self.read_input_values2(blocks_values,new_inp_block)]]]
+                            self.inpt_2 = [k,[opcode,self.read_input_values2(blocks_values,new_inp_block)]]
                         if isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0 and each_val[1] != '':
                             self.inpt_2 = [[k,each_val[1]]]
             
@@ -189,8 +189,7 @@ class scratch_parser:
                             if isinstance(each_val2,str) and len(each_val2) > 0 and each_val2 != '':
                                 opcode2 = self.get_opcode_from_id(blocks_values,each_val2)
                                 new_inp_block = self.read_input_values_by_id(blocks_values,each_val2)
-                                print(new_inp_block)
-                                self.inpt_2 = [k2,[opcode2,[self.read_input_values2(blocks_values,new_inp_block)]]]
+                                self.inpt_2 = [k2,[opcode2,self.read_input_values2(blocks_values,new_inp_block)]]
                             if isinstance(each_val2,list) and len(each_val2) > 0 and isinstance(each_val2[1],str) and len(each_val2[1]) > 0 and each_val2[1] != '':
                                 val = [k2,each_val2[1]]
                                 if val in self.inpt_2:

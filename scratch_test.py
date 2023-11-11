@@ -45,8 +45,8 @@ class ScratchTester(unittest.TestCase):
     }
   }
 }
-        expected2 = [
-                        ['looks_sayforsecs', [
+        expected2 = ['event_whenflagclicked',
+                        [['looks_sayforsecs', [
                                 ['SECS', '2'], 
                                 ['MESSAGE', 'Hello!']
                             ]
@@ -61,8 +61,8 @@ class ScratchTester(unittest.TestCase):
                                     ['operator_equals', 
                                         ['OPERAND1', 
                                             ['sensing_answer', []], 
-                                            ['OPERAND2', '50']
-                                        ]
+                                        ],
+                                        ['OPERAND2', '50']
                                     ],
                                     ['sensing_askandwait', 
                                         ['QUESTION', 'How old are you?']
@@ -75,7 +75,7 @@ class ScratchTester(unittest.TestCase):
                                 ['SECS', '2'],
                                 ['MESSAGE', 'Hmm...']
                             ]
-                        ]
+                        ]]
                     ]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
