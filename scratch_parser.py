@@ -110,7 +110,6 @@ class scratch_parser:
             return {}
         if isinstance(input_block,dict) and bool(input_block):
                 for k,v in input_block.items():
-                    print('what',type(v2[1]))
                     if isinstance(v,list) and len(v) > 0:
                         if isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and not isinstance(v[1],str):
                             self.input_block = {k:v[1][1]} if v[1][1] != '' or v[1][1] != None else {}
@@ -121,13 +120,12 @@ class scratch_parser:
                             self.input_block = {k:{opcode:self.flatten_input_values(block_by_id,v[1])}}
                             
                 for k2,v2 in input_block.items():
-                    print('what',type(v2[1]))
                     if k2 not in self.input_block.keys(): 
                         if isinstance(v2,list) and len(v2) > 0:
                             if isinstance(v2[1],str):
                                 
                                 opcode = self.get_opcode_from_id(blocks_values,v2[1])
-                                print(opcode)
+                                
                                 if opcode != None or opcode != '':
                                     val_flat = self.flatten_input_values(blocks_values,v2[1])
                                     
@@ -203,11 +201,7 @@ class scratch_parser:
                         if isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0 and each_val[1] != '':
                             self.inpt_2 = [[k,each_val[1]]]
 
-                            '''
-                                
-                            
-                                
-                            '''
+                          
             
             for k2,v2 in input_block.items():
                 if k2 not in self.inpt_2: 
@@ -248,17 +242,8 @@ class scratch_parser:
                                 if val in self.inpt_2:
                                     continue
                                 self.inpt_2.append(val)
-                               
-                            '''
-                                
-                            '''                               
-                               
-                                
-           
+                                                              
         return self.inpt_2    
-        
-            
-            
         
     def create_next_values(self,blocks_values):
         if blocks_values == None or blocks_values == {}:
@@ -279,8 +264,6 @@ class scratch_parser:
             
         
             val.append([self.get_opcode_from_id(blocks_values,v),inpval])
-            #val.append(self.read_input_values2(blocks_values,self.read_input_values_by_id(blocks_values,v)))
-        #val = [self.get_opcode_from_id(blocks_values,v),[self.read_input_values(blocks_values,self.read_input_values_by_id(blocks_values,v)) for v in self.get_all_next_id(blocks_values) if isinstance(v,str) and v != '']]      
         return val
     
     def get_children_keys(self,blocks_values):
@@ -324,15 +307,10 @@ class scratch_parser:
                             if next_key_index < len(keyss):
                                 
                                 if v2["next"] == keyss[next_key_index] and v2["next"] not in self.get_children_keys(blocks_values) and v2["next"] not in self.get_next_child_keys(blocks_values):
-                                    print(self.get_opcode_from_id(blocks_values,v2["next"]), self.get_opcode_from_id(blocks_values,keyss[next_key_index]))
                                     all_ids.append(v2["next"])
                                 elif v2["next"] != keyss[next_key_index] and v2["next"] == None:
-                                    break                       
-                        #if isinstance(v2,dict) and bool(v2) and 'next' in v2.keys() and v2['next'] != None:
-                            #all_ids.append(v2['next'])
+                                    break                         
         return all_ids
-        
-        #return [v2["next"] for v in blocks_values.values() for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'next' in v2.keys() and v2["next"] != None]
     
     def read_files(self, parsed_file):
         self.parsed_value = self.sb3class.unpack_sb3(parsed_file)
@@ -363,12 +341,11 @@ class scratch_parser:
         
         top_tree2 = self.create_top_tree2(all_blocks_value,next_val2)
         print(top_tree2)  
-        all_id = self.get_all_next_id(all_blocks_value)
-        print(all_id)  
+        
         
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/infinite_two_opcode.sb3")
+scratch_parser_inst.read_files("files/3l_opcode.sb3")
 
     

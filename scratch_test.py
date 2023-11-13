@@ -14,6 +14,7 @@ class ScratchTester(unittest.TestCase):
         self.prog2 = json.loads(self.scratch_unzipped.unpack_sb3("files/stand_check2.sb3"))
         self.prog3 = json.loads(self.scratch_unzipped.unpack_sb3("files/stand_check.sb3"))
         self.prog4 = json.loads(self.scratch_unzipped.unpack_sb3("files/infinite_two_opcode.sb3"))
+        self.prog5 = json.loads(self.scratch_unzipped.unpack_sb3("files/3l_opcode.sb3"))
         self.scratch_parser_inst = scratch_parser() 
         self.maxDiff = None
         return self.shortDescription()
@@ -126,6 +127,19 @@ class ScratchTester(unittest.TestCase):
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
         parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
         self.assertEqual(expected,parsed,msg="Test failed")
+    
+    def test_loop_in_a_loop_in_a_loop(self):
+        expected = ['event_whenflagclicked',
+                     [
+                         ['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'loop in a loop in a loop with 2 opcodes']]],
+                         ['control_repeat', ['SUBSTACK', ['control_repeat', [['SUBSTACK', ['control_repeat', [['SUBSTACK', ['motion_movesteps', [[['STEPS', '10']]], 'sound_seteffectto', [[['VALUE', '100']]]], ['TIMES', '10']]]], ['TIMES', '10']]]], ['TIMES', '10']]]]]
+        
+        all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog5)
+        next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
+        parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
+        self.assertEqual(expected,parsed,msg="Test failed")
+
+    
     def tearDown(self) :
         return self.shortDescription()
         
