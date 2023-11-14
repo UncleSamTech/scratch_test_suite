@@ -179,7 +179,7 @@ class scratch_parser:
                             opcode = self.get_opcode_from_id(blocks_values,each_val)
                             new_inp_block = self.read_input_values_by_id(blocks_values,each_val) 
                             self.missed_inp =self.read_input_values2(blocks_values,new_inp_block)
-                            print(f'{self.missed_inp} is of type {type(self.missed_inp[0]) if len(self.missed_inp) > 0 else type(self.missed_inp)}')
+                            
                             
                             any_block = self.get_any_block_by_id(blocks_values,each_val)
                             next_opcode = self.get_opcode_from_id(blocks_values,any_block["next"])   
@@ -193,26 +193,30 @@ class scratch_parser:
                                 
                                 if  self.missed_inp in self.inpt_2 or opcode in self.inpt_2:
                                     continue
-
-                                
                                 
                                 self.inpt_2 = [k,[opcode,[self.missed_inp]]] if len(opcode) > 0 else [k,[self.missed_inp]]
+                                
+                                
+                                
                             
                             elif self.missed_inp != {} and any_block["next"] != None:
                                 
                                 if  next_rec in self.inpt_2 or next_opcode in self.inpt_2 or self.missed_inp in self.inpt_2 or opcode in self.inpt_2:
                                     continue
-                                self.inpt_2 = [k,[opcode,[self.missed_inp],next_opcode,[next_rec]]] if len(opcode) > 0 else [k,[self.missed_inp,next_opcode,[next_rec]]]
+                                self.inpt_2 = [k,[opcode,[self.missed_inp],next_opcode,[next_rec]]] if len(opcode) > 0  else [k,[self.missed_inp,next_opcode,[next_rec]]]
+                                if self.missed_inp not in self.inpt_2:
+                                    self.inpt_2[len(self.inpt_2):] = self.missed_inp
                                 
-                                
+                          
                         if isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0 and each_val[1] != '':
                             self.inpt_2 = [[k,each_val[1]]]
 
-                
+                 
             for k2,v2 in input_block.items():
                 if k2 not in self.inpt_2: 
                     if isinstance(v2,list) and len(v2) > 0:
                         for each_val2 in v2:
+                            
                             if isinstance(each_val2,str) and len(each_val2) > 0:
                                 opcode2 = self.get_opcode_from_id(blocks_values,each_val2)
                                 new_inp_block = self.read_input_values_by_id(blocks_values,each_val2)
@@ -240,11 +244,11 @@ class scratch_parser:
                                     
                                     if  self.missed_inp2 in self.inpt_2 or opcode2 in self.inpt_2:
                                         continue
-                                    self.inpt_2 = [k2,[opcode2]]
+                                    
                                     
                                     self.inpt_2 = [k2,[opcode2,[self.missed_inp2]]] if len(opcode2) > 0 else [k2,[self.missed_inp2]]
-                                    
-                                
+                                       
+                              
                             if isinstance(each_val2,list) and len(each_val2) > 0 and isinstance(each_val2[1],str) and len(each_val2[1]) > 0:
                                 val = [k2,each_val2[1]]
                                 if val in self.inpt_2:
@@ -252,6 +256,16 @@ class scratch_parser:
                                 self.inpt_2.append(val)
                                                               
         return self.inpt_2    
+    
+    def read_input_values_ls(self,blocks_values,input_block):
+        if input_block == None or input_block == {} or blocks_values == None or blocks_values == {}:
+            return []
+        if isinstance(input_block,dict) and bool(input_block):
+            for k,v in input_block.items():
+                if isinstance(v,list) and len(v) > 0:
+                    #val =  [[k,[self.get_opcode_from_id(blocks_values,each_val),[self.read_input_values_ls(blocks_values,self.read_input_values_by_id(blocks_values,each_val))]]] for each_val in v  if isinstance(each_val,str)]
+                    self.inpt_2.append([[k,[self.get_opcode_from_id(blocks_values,each_val),[self.read_input_values_ls(blocks_values,self.read_input_values_by_id(blocks_values,each_val))]]] for each_val in v  if isinstance(each_val,str)])
+        return self.inpt_2
         
     def create_next_values(self,blocks_values):
         if blocks_values == None or blocks_values == {}:
@@ -354,6 +368,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/test.sb3")
+scratch_parser_inst.read_files("files/infinite_two_opcode.sb3")
 
     

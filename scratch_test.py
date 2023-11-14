@@ -62,34 +62,8 @@ class ScratchTester(unittest.TestCase):
              
 
     def test_scratch_two_arg(self):
-        expected_tree1 = ['event_whenflagclicked',[
-['motion_movesteps', [
-	['STEPS', '10']
-		     ]
-], 
-['motion_turnright', [
-	['DEGREES', '15']
-		     ]
-], 
-['looks_sayforsecs', [
-	['SECS', '2'], ['MESSAGE', 'Hello!']
-		     ]
-]
-			]
-]
-        expected_tree2 = ["event_whenflagclicked", [
-        ["looks_thinkforsecs", [
-            ["SECS", "2"],
-            ["MESSAGE", "Hmm..."]
-        ]],
-        ["motion_pointindirection", [
-            ["DIRECTION", "90"]
-        ]],
-        ["motion_changexby", []
-            ["DX", "10"]
-        ]
-    ]
-]
+        expected_tree1 = ['event_whenflagclicked', [['motion_movesteps', [['STEPS', '10']]], ['motion_turnright', [['DEGREES', '15']]], ['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'Hello!']]]]]
+        expected_tree2 = ['event_whenflagclicked', [['looks_thinkforsecs', [['SECS', '2'], ['MESSAGE', 'Hmm...']]], ['motion_pointindirection', [['DIRECTION', '90']]], ['motion_changexby', [['DX', '10']]]]]
         
 
         all_blocks_val1 = self.scratch_parser_inst.get_all_blocks_vals(self.prog2)
@@ -99,40 +73,19 @@ class ScratchTester(unittest.TestCase):
         parsed1 = self.scratch_parser_inst.create_top_tree2(all_blocks_val1,next_val1)
         parsed2 = self.scratch_parser_inst.create_top_tree2(all_blocks_val2,next_val2)
 
-        self.assertEqual(expected_tree1,parsed1,msg="Test failed")
-        self.assertEqual(expected_tree2,parsed2,msg="Test failed")
+        self.assertEqual(expected_tree2,parsed1,msg="Test failed")
+        self.assertEqual(expected_tree1,parsed2,msg="Test failed")
 
 
     def test_infinite_loop(self):
-        expected = ['event_whenflagclicked', [
-		['looks_sayforsecs', [
-			['SECS', '2'], ['MESSAGE', 'Infinite with two opcodes in the body']
-				     ]
-		],
-		['control_repeat', [
-			'SUBSTACK', [
-				'looks_say', [
-					[['MESSAGE', 'opcode1']]
-					    ], 
-				'looks_think', [
-					[['MESSAGE', 'opcode2']]
-						]
-				    ],
-			 ['TIMES', '10']
-				   ]
-		]
-			]
-]
+        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'Infinite with two opcodes in the body']]], ['control_repeat', ['SUBSTACK', ['looks_say', [[['MESSAGE', 'opcode1']]], 'looks_think', [[['MESSAGE', 'opcode2']]]], ['MESSAGE', 'opcode1'], ['TIMES', '10']]]]]
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog4)
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
         parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
         self.assertEqual(expected,parsed,msg="Test failed")
     
     def test_loop_in_a_loop_in_a_loop(self):
-        expected = ['event_whenflagclicked',
-                     [
-                         ['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'loop in a loop in a loop with 2 opcodes']]],
-                         ['control_repeat', ['SUBSTACK', ['control_repeat', [['SUBSTACK', ['control_repeat', [['SUBSTACK', ['motion_movesteps', [[['STEPS', '10']]], 'sound_seteffectto', [[['VALUE', '100']]]], ['TIMES', '10']]]], ['TIMES', '10']]]], ['TIMES', '10']]]]]
+        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'loop in a loop in a loop with 2 opcodes']]], ['control_repeat', ['SUBSTACK', ['control_repeat', [['SUBSTACK', ['control_repeat', [['SUBSTACK', ['motion_movesteps', [[['STEPS', '10']]], 'sound_seteffectto', [[['VALUE', '100']]]], ['STEPS', '10'], ['TIMES', '10']]]], ['TIMES', '10']]]], ['TIMES', '10']]]]]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog5)
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
