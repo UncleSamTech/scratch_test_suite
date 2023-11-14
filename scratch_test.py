@@ -36,7 +36,7 @@ class ScratchTester(unittest.TestCase):
                                 ['CONDITION', 
                                     ['operator_equals', 
                                         ['OPERAND1', 
-                                            ['sensing_answer', []], 
+                                            ['sensing_answer', [[]]], 
                                         ],
                                         ['OPERAND2', '50']
                                     ],
