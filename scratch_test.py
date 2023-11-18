@@ -21,19 +21,7 @@ class TestScratchParser(unittest.TestCase):
 
     def test_scratch_nothing_onclick(self):
         
-        expected2 = ['event_whenflagclicked', [
-                        ['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'Hello!']]],
-                        ['motion_movesteps', [['STEPS', '10']]], 
-                        ['control_repeat_until', 
-                            ['CONDITION', 
-                                ['operator_equals', [
-                                    ['OPERAND1', ['sensing_answer', [[]]], ['OPERAND2', '50']]
-                                     ]
-                                ],
-                                ['sensing_askandwait',['QUESTION','How old are you?']]
-
-                            ]], 
-                        ['looks_thinkforsecs', [['SECS', '2'], ['MESSAGE', 'Hmm...']]]]]
+        expected2 = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['Hello!']], ['SECS', ['2']]]], ['motion_movesteps', [['STEPS', ['10']]]], ['control_repeat_until', [['SUBSTACK', ['sensing_askandwait', [[['QUESTION', ['How old are you?']]]]]], ['CONDITION', ['operator_equals', [[['OPERAND1', ['sensing_answer', [[]]]], ['OPERAND2', ['50']]]]]]]], ['looks_thinkforsecs', [['MESSAGE', ['Hmm...']], ['SECS', ['2']]]]]]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
@@ -52,8 +40,8 @@ class TestScratchParser(unittest.TestCase):
 
 
     def test_scratch_two_arg(self):
-        expected_tree1 = ['event_whenflagclicked', [['motion_movesteps', [['STEPS', '10']]], ['motion_turnright', [['DEGREES', '15']]], ['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'Hello!']]]]]
-        expected_tree2 = ['event_whenflagclicked', [['looks_thinkforsecs', [['SECS', '2'], ['MESSAGE', 'Hmm...']]], ['motion_pointindirection', [['DIRECTION', '90']]], ['motion_changexby', [['DX', '10']]]]]
+        expected_tree1 = ['event_whenflagclicked', [['motion_movesteps', [['STEPS', ['10']]]], ['motion_turnright', [['DEGREES', ['15']]]], ['looks_sayforsecs', [['MESSAGE', ['Hello!']], ['SECS', ['2']]]]]]
+        expected_tree2 = ['event_whenflagclicked', [['looks_thinkforsecs', [['MESSAGE', ['Hmm...']], ['SECS', ['2']]]], ['motion_pointindirection', [['DIRECTION', ['90']]]], ['motion_changexby', [['DX', ['10']]]]]]
         
 
         all_blocks_val1 = self.scratch_parser_inst.get_all_blocks_vals(self.prog2)
@@ -68,14 +56,14 @@ class TestScratchParser(unittest.TestCase):
 
 
     def test_infinite_loop(self):
-        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'Infinite with two opcodes in the body']]], ['control_repeat', ['SUBSTACK', ['looks_say', [[['MESSAGE', 'opcode1']]], 'looks_think', [[['MESSAGE', 'opcode2']]]], ['MESSAGE', 'opcode1'], ['TIMES', '10']]]]]
+        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['Infinite with two opcodes in the body']], ['SECS', ['2']]]], ['control_repeat', [['TIMES', ['10']], ['SUBSTACK', ['looks_say', [[['MESSAGE', ['opcode1']]]], 'looks_think', [[['MESSAGE', ['opcode2']]]]]]]]]]
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog4)
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
         parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
         self.assertEqual(expected,parsed,msg="Test failed")
     
     def test_loop_in_a_loop_in_a_loop(self):
-        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['SECS', '2'], ['MESSAGE', 'loop in a loop in a loop with 2 opcodes']]], ['control_repeat', ['SUBSTACK', ['control_repeat', [['SUBSTACK', ['control_repeat', [['SUBSTACK', ['motion_movesteps', [[['STEPS', '10']]], 'sound_seteffectto', [[['VALUE', '100']]]], ['STEPS', '10'], ['TIMES', '10']]]], ['TIMES', '10']]]], ['TIMES', '10']]]]]
+        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['loop in a loop in a loop with 2 opcodes']], ['SECS', ['2']]]], ['control_repeat', [['TIMES', ['10']], ['SUBSTACK', ['control_repeat', [[['TIMES', ['10']], ['SUBSTACK', ['control_repeat', [[['TIMES', ['10']], ['SUBSTACK', ['motion_movesteps', [[['STEPS', ['10']]]], 'sound_seteffectto', [[['VALUE', ['100']]]]]]]]]]]]]]]]]]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog5)
         next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
@@ -87,19 +75,53 @@ class TestScratchParser(unittest.TestCase):
         return self.shortDescription()
         
     def test_input_blocks(self):
-        expected = ['CONDITION',
-                     ['operator_equals', [
-                         ['OPERAND1', ['sensing_answer', [[]]],
-                           ['OPERAND2', '50']
+        expected = [
+                [
+                    "SUBSTACK",
+                    [
+                        "sensing_askandwait",
+                        [
+                            [
+                                [
+                                    "QUESTION",
+                                    [
+                                        "How old are you?"
+                                    ]
+                                ]
+                            ]
                         ]
+                    ]
+                ],
+                [
+                    "CONDITION",
+                    [
+                        "operator_equals",
+                        [
+                            [
+                                [
+                                    "OPERAND1",
+                                    [
+                                        "sensing_answer",
+                                        [
+                                            []
                                         ]
-                    ],
-                    ['sensing_askandwait',['QUESTION','How old are you?']] 
-             ]
+                                    ]
+                                ],
+                                [
+                                    "OPERAND2",
+                                    [
+                                        "50"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
 
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
         inp_block = self.scratch_parser_inst.read_input_values_by_id(all_blocks_val,"8J%l~hNqUpt0Lfv1;iR^")
-        parsed_block  = self.scratch_parser_inst.read_input_values2(all_blocks_val,inp_block)
+        parsed_block  = self.scratch_parser_inst.correct_input_block_tree_by_id(all_blocks_val,inp_block,"8J%l~hNqUpt0Lfv1;iR^")
         self.assertEqual(expected,parsed_block,msg="Test failed")
 
     
@@ -107,7 +129,7 @@ class TestScratchParser(unittest.TestCase):
         expected = ['SECS', ['2']]
         all_blocks = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
         block_by_id_key = self.scratch_parser_inst.get_input_block_by_id_key(all_blocks,",r([,#`OV3[DwDfw/x./","SECS")
-        self.assertNotEqual(expected,block_by_id_key,msg="Test failed")
+        self.assertEqual(expected,block_by_id_key,msg="Test failed")
 
 if __name__ == '__main__':
     unittest.main()

@@ -422,6 +422,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/3l_opcode.sb3")
+scratch_parser_inst.read_files("files/stand_check.sb3")
 
     

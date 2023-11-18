@@ -1,23 +1,96 @@
-{
-    "event_whenflagclicked": {
-        "looks_sayforsecs": {
-            "SECS": "2",
-            "MESSAGE": "Hello!"
-        },
-        "motion_movesteps": {
-            "STEPS": "10"
-        },
-        "control_repeat_until": {
-            "OPERAND2": "50",
-            "OPERAND1": {
-                "sensing_answer": {}
-            }
-        },
-        "looks_thinkforsecs": {
-            "SECS": "2",
-            "MESSAGE": "Hmm..."
-        }
-    }
-}
-
-
+[
+    "event_whenflagclicked",
+    [
+        [
+            "looks_sayforsecs",
+            [
+                [
+                    "MESSAGE",
+                    [
+                        "Hello!"
+                    ]
+                ],
+                [
+                    "SECS",
+                    [
+                        "2"
+                    ]
+                ]
+            ]
+        ],
+        [
+            "motion_movesteps",
+            [
+                [
+                    "STEPS",
+                    [
+                        "10"
+                    ]
+                ]
+            ]
+        ],
+        [
+            "control_repeat_until",
+            [
+                [
+                    "SUBSTACK",
+                    [
+                        "sensing_askandwait",
+                        [
+                            [
+                                [
+                                    "QUESTION",
+                                    [
+                                        "How old are you?"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "CONDITION",
+                    [
+                        "operator_equals",
+                        [
+                            [
+                                [
+                                    "OPERAND1",
+                                    [
+                                        "sensing_answer",
+                                        [
+                                            []
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "OPERAND2",
+                                    [
+                                        "50"
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        [
+            "looks_thinkforsecs",
+            [
+                [
+                    "MESSAGE",
+                    [
+                        "Hmm..."
+                    ]
+                ],
+                [
+                    "SECS",
+                    [
+                        "2"
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
