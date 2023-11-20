@@ -362,35 +362,6 @@ class scratch_parser:
                             spec.append(v2["next"])
         return spec
                         
-        
-    '''
-    def get_all_next_id(self,blocks_values):
-        count_parents = []
-        all_ids = []
-        if blocks_values == None or blocks_values == {}:
-            return {}
-        if isinstance(blocks_values,dict) and bool(blocks_values):
-            for k,v in blocks_values.items():
-                if isinstance(v,dict) and bool(v):
-                    for k2,v2 in v.items():
-                        if v2["parent"] == None:
-                            count_parents.append(k2)
-                        
-                        keyss = list(v.keys())
-                        
-                        for i in range(len(keyss)):
-                            next_key_index = i + 1
-                            
-                            if next_key_index < len(keyss):
-                                if count_parents != [] or count_parents != None and len(count_parents) == 1:
-                                    if v2["next"] == keyss[next_key_index] and v2["next"] not in self.get_children_keys(blocks_values) and v2["next"] not in self.get_next_child_keys(blocks_values):
-                                        all_ids.append(v2["next"])
-                                    elif v2["next"] != keyss[next_key_index] and v2["next"] == None:
-                                        break      
-                                elif count_parents != [] or count_parents != None and len(count_parents) > 1:
-                                    pass                   
-        return all_ids
-'''
 
     def get_all_next_id_test(self,blocks_values):
        if blocks_values == None or blocks_values == {}:
