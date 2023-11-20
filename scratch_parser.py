@@ -230,8 +230,9 @@ class scratch_parser:
                         corr_block_tree.append(self.get_input_block_by_id_key(blocks_values,ids,k))
         return corr_block_tree
         
-    def create_next_values2(self,blocks_values):  
+    def create_next_values2(self,blocks_values,file_name):  
         tr = [] 
+        final_tree = []
         
        
         all_val = self.get_all_next_id_test(blocks_values)     
@@ -242,7 +243,8 @@ class scratch_parser:
                 if isinstance(vs,list) and len(vs) > 0:
                     val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                     tr.append([ks,val])
-        return tr
+        final_tree = [file_name,tr]
+        return final_tree
 
     def count_opcodes(self,blocks_values):
         all_opcodes = self.return_all_opcodes(blocks_values)
@@ -330,7 +332,7 @@ class scratch_parser:
         #print(self.count_opcodes(all_blocks_value))
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
-        next_val2 = self.create_next_values2(all_blocks_value)
+        next_val2 = self.create_next_values2(all_blocks_value,file_name)
         
        
 
@@ -346,6 +348,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/scratch_parent_4.sb3")
+scratch_parser_inst.read_files("files/test2.sb3")
 
     

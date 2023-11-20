@@ -25,6 +25,7 @@
             "control_forever": 2
         },
         "non_opcodes_statistics": {
+            "scratch_parent_4": 1,
             "MESSAGE": 3,
             "Hello!": 2,
             "Hmm...": 1,

@@ -1,0 +1,45 @@
+{
+    "test2": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "motion_movesteps": 1,
+            "operator_equals": 1,
+            "sensing_askandwait": 1,
+            "control_repeat_until": 1,
+            "looks_thinkforsecs": 1,
+            "sensing_answer": 1
+        },
+        "non_opcodes_statistics": {
+            "test2": 1,
+            "MESSAGE": 3,
+            "Hello!": 1,
+            "SECS": 3,
+            "2": 3,
+            "STEPS": 1,
+            "10": 1,
+            "SUBSTACK": 1,
+            "QUESTION": 1,
+            "How old are you?": 1,
+            "Hmm...": 2,
+            "CONDITION": 1,
+            "OPERAND1": 1,
+            "OPERAND2": 1,
+            "50": 1
+        },
+        "most_common_opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "motion_movesteps": 1,
+            "operator_equals": 1,
+            "sensing_askandwait": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "MESSAGE": 3,
+            "SECS": 3,
+            "2": 3,
+            "Hmm...": 2,
+            "test2": 1
+        }
+    }
+}
