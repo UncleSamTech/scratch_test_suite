@@ -254,7 +254,8 @@ class scratch_parser:
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
           
         #all opcodes
-        print(self.get_all_unique_opcodes(all_blocks_value))
+        #print(self.get_all_unique_opcodes(all_blocks_value))
+
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)
         print(next_val2)
