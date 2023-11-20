@@ -1,58 +1,61 @@
 [
+    "scratch_parent",
     [
-        "event_whenflagclicked",
         [
+            "event_whenflagclicked",
             [
-                "motion_movesteps",
                 [
+                    "motion_movesteps",
                     [
-                        "STEPS",
                         [
-                            "10"
+                            "STEPS",
+                            [
+                                "10"
+                            ]
                         ]
                     ]
-                ]
-            ],
-            [
-                "looks_sayforsecs",
+                ],
                 [
+                    "looks_sayforsecs",
                     [
-                        "MESSAGE",
                         [
-                            "Hello!"
-                        ]
-                    ],
-                    [
-                        "SECS",
+                            "MESSAGE",
+                            [
+                                "Hello!"
+                            ]
+                        ],
                         [
-                            "2"
+                            "SECS",
+                            [
+                                "2"
+                            ]
                         ]
                     ]
                 ]
             ]
-        ]
-    ],
-    [
-        "event_whenkeypressed_space",
+        ],
         [
+            "event_whenkeypressed_space",
             [
-                "motion_movesteps",
                 [
+                    "motion_movesteps",
                     [
-                        "STEPS",
                         [
-                            "10"
+                            "STEPS",
+                            [
+                                "10"
+                            ]
                         ]
                     ]
-                ]
-            ],
-            [
-                "motion_turnright",
+                ],
                 [
+                    "motion_turnright",
                     [
-                        "DEGREES",
                         [
-                            "15"
+                            "DEGREES",
+                            [
+                                "15"
+                            ]
                         ]
                     ]
                 ]

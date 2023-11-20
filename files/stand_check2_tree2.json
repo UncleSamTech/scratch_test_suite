@@ -1,42 +1,45 @@
 [
+    "stand_check2",
     [
-        "event_whenflagclicked",
         [
+            "event_whenflagclicked",
             [
-                "looks_thinkforsecs",
                 [
+                    "looks_thinkforsecs",
                     [
-                        "MESSAGE",
                         [
-                            "Hmm..."
-                        ]
-                    ],
-                    [
-                        "SECS",
+                            "MESSAGE",
+                            [
+                                "Hmm..."
+                            ]
+                        ],
                         [
-                            "2"
-                        ]
-                    ]
-                ]
-            ],
-            [
-                "motion_pointindirection",
-                [
-                    [
-                        "DIRECTION",
-                        [
-                            "90"
+                            "SECS",
+                            [
+                                "2"
+                            ]
                         ]
                     ]
-                ]
-            ],
-            [
-                "motion_changexby",
+                ],
                 [
+                    "motion_pointindirection",
                     [
-                        "DX",
                         [
-                            "10"
+                            "DIRECTION",
+                            [
+                                "90"
+                            ]
+                        ]
+                    ]
+                ],
+                [
+                    "motion_changexby",
+                    [
+                        [
+                            "DX",
+                            [
+                                "10"
+                            ]
                         ]
                     ]
                 ]

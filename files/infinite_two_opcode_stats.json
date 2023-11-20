@@ -1,0 +1,37 @@
+{
+    "infinite_two_opcode": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "control_repeat": 1,
+            "looks_say": 1,
+            "looks_think": 1
+        },
+        "non_opcodes_statistics": {
+            "infinite_two_opcode": 1,
+            "MESSAGE": 3,
+            "Infinite with two opcodes in the body": 1,
+            "SECS": 1,
+            "2": 1,
+            "TIMES": 1,
+            "10": 1,
+            "SUBSTACK": 1,
+            "opcode1": 1,
+            "opcode2": 1
+        },
+        "most_common_opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "control_repeat": 1,
+            "looks_say": 1,
+            "looks_think": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "MESSAGE": 3,
+            "infinite_two_opcode": 1,
+            "Infinite with two opcodes in the body": 1,
+            "SECS": 1,
+            "2": 1
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "scratch_parent2": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "motion_movesteps": 2,
+            "looks_sayforsecs": 1,
+            "event_whenkeypressed_space": 1,
+            "motion_turnright": 1,
+            "event_whenthisspriteclicked": 1,
+            "sound_play": 1,
+            "sound_sounds_menu_Meow": 1,
+            "motion_turnleft": 1,
+            "motion_glidesecstoxy": 1
+        },
+        "non_opcodes_statistics": {
+            "scratch_parent2": 1,
+            "STEPS": 2,
+            "10": 2,
+            "MESSAGE": 1,
+            "Hello!": 1,
+            "SECS": 2,
+            "2": 1,
+            "DEGREES": 2,
+            "15": 2,
+            "SOUND_MENU": 1,
+            "1": 1,
+            "X": 1,
+            "0": 2,
+            "Y": 1
+        },
+        "most_common_opcodes_statistics": {
+            "motion_movesteps": 2,
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "event_whenkeypressed_space": 1,
+            "motion_turnright": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "STEPS": 2,
+            "10": 2,
+            "SECS": 2,
+            "DEGREES": 2,
+            "15": 2
+        }
+    }
+}
