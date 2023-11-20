@@ -13,7 +13,7 @@ class scratch_parser:
         self.ommited_block_keys_parent = {"opcode"}
         self.all_opcodes = []
         self.scratch_tree_list = []
-        self.scratch_tree = {}
+        self.scratch_stats = {}
         self.next_val_tree = {}
         self.input_block = {}
         self.sec_val = None
@@ -65,7 +65,7 @@ class scratch_parser:
             return opcode
         
     def return_all_opcodes(self,blocks_values):
-        return [v2['opcode'] for k,v in blocks_values.items() for v2 in v.values() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'opcode' in v2.keys()]
+        return [self.get_opcode_from_id(blocks_values,k2) for k,v in blocks_values.items() for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2)]
     
     def get_all_unique_opcodes(self,blocks_values):
         all_unique_opcodes = []
@@ -244,8 +244,62 @@ class scratch_parser:
                     tr.append([ks,val])
         return tr
 
+    def count_opcodes(self,blocks_values):
+        all_opcodes = self.return_all_opcodes(blocks_values)
+        if blocks_values == None or blocks_values == {}:
+           return {}
+           
+        if all_opcodes == None or all_opcodes == []:
+               return {}
+           
+        count_val = collections.Counter(all_opcodes)
+        return count_val 
 
+    def iterate_tree_for_non_opcodes(self,scratch_tree,blocks_values):
+        if scratch_tree == None or scratch_tree == [] or blocks_values == None or blocks_values == {}:
+            return []   
+        if isinstance(scratch_tree,list) and len(scratch_tree) > 0:
+            for each_val in scratch_tree:
+                if isinstance(each_val,list) and len(each_val) > 0:
+                    self.iterate_tree_for_non_opcodes(each_val,blocks_values)
+                else:
+                    if each_val not in self.get_all_unique_opcodes(blocks_values) and  each_val != []:
+                        self.all_met.append(each_val)
+                    
+     
+        return self.all_met
+    
+    def count_non_opcodes(self,blocks_values,scratch_tree):
+        non_opcodes = self.iterate_tree_for_non_opcodes(scratch_tree,blocks_values)
+        if blocks_values == None or blocks_values == {} or scratch_tree == None or scratch_tree == [] or non_opcodes == None or non_opcodes == []:
+           return {}
+           
+        count_val = collections.Counter(non_opcodes)
+        return count_val
+    
+    def generate_summary_stats(self,blocks_values,file_name,scratch_tree):
+        opcodes = self.count_opcodes(blocks_values)
+        non_opcodes = self.count_non_opcodes(blocks_values,scratch_tree)
+        opcode_tree = {}
+        non_opcode_tree = {}
+        opcode_key = None
+        opcode_val = None
+        non_opcode_key = None
+        non_opcode_val = None
+        for k in opcodes:
+            opcode_key = k
+            opcode_val = opcodes[k]
+            opcode_tree[opcode_key] = opcode_val
+        for v in non_opcodes:
+            non_opcode_key = v
+            non_opcode_val = non_opcodes[v]
+            non_opcode_tree[non_opcode_key] = non_opcode_val
+            
+        self.scratch_stats[file_name] = {"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree}
+        return self.scratch_stats 
         
+
+
 
     def read_files(self, parsed_file):
         self.parsed_value = self.sb3class.unpack_sb3(parsed_file)
@@ -256,13 +310,18 @@ class scratch_parser:
         #all opcodes
         #print(self.get_all_unique_opcodes(all_blocks_value))
 
+        #print(self.count_opcodes(all_blocks_value))
+
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)
-        print(next_val2)
+        
     
 
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
+        
+        with open(f"files/{file_name}_stats.json","w") as stats_file:
+            json.dump(self.generate_summary_stats(all_blocks_value,file_name,next_val2),stats_file,indent=4)
         
          
         
@@ -270,6 +329,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/test.sb3")
+scratch_parser_inst.read_files("files/scratch_parent_4.sb3")
 
     

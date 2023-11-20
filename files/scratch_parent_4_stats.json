@@ -1,0 +1,48 @@
+{
+    "scratch_parent_4": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_say": 1,
+            "looks_think": 1,
+            "event_whenthisspriteclicked": 1,
+            "motion_movesteps": 1,
+            "motion_turnright": 1,
+            "event_whenbackdropswitchesto_backdrop1": 1,
+            "looks_switchbackdropto": 1,
+            "looks_backdrops_backdrop1": 1,
+            "looks_changesizeby": 2,
+            "event_whengreaterthan_LOUDNESS": 1,
+            "looks_changeeffectby_COLOR": 1,
+            "event_whenbroadcastreceived_message1_v4GIX#ypIidUNRRbpTm`": 1,
+            "sound_changevolumeby": 1,
+            "sound_stopallsounds": 1,
+            "event_whenkeypressed_space": 1,
+            "looks_sayforsecs": 1,
+            "looks_nextbackdrop": 1,
+            "control_repeat": 3,
+            "motion_glideto": 1,
+            "motion_glideto_menu__random_": 1,
+            "control_forever": 2
+        },
+        "non_opcodes_statistics": {
+            "MESSAGE": 3,
+            "Hello!": 2,
+            "Hmm...": 1,
+            "STEPS": 1,
+            "10": 5,
+            "DEGREES": 1,
+            "15": 1,
+            "BACKDROP": 1,
+            "CHANGE": 3,
+            "TIMES": 3,
+            "SUBSTACK": 5,
+            "-10": 2,
+            "25": 1,
+            "VOLUME": 1,
+            "SECS": 2,
+            "2": 1,
+            "1": 1,
+            "TO": 1
+        }
+    }
+}
