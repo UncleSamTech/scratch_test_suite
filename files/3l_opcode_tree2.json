@@ -1,77 +1,83 @@
 [
-    "event_whenflagclicked",
     [
+        "event_whenflagclicked",
         [
-            "looks_sayforsecs",
             [
+                "looks_sayforsecs",
                 [
-                    "MESSAGE",
                     [
-                        "loop in a loop in a loop with 2 opcodes"
-                    ]
-                ],
-                [
-                    "SECS",
-                    [
-                        "2"
+                        [
+                            "MESSAGE",
+                            [
+                                "loop in a loop in a loop with 2 opcodes"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        ],
-        [
-            "control_repeat",
+            ],
             [
+                "control_repeat",
                 [
-                    "TIMES",
                     [
-                        "10"
-                    ]
-                ],
-                [
-                    "SUBSTACK",
-                    [
-                        "control_repeat",
                         [
+                            "TIMES",
                             [
+                                "10"
+                            ]
+                        ],
+                        [
+                            "SUBSTACK",
+                            [
+                                "control_repeat",
                                 [
-                                    "TIMES",
                                     [
-                                        "10"
-                                    ]
-                                ],
-                                [
-                                    "SUBSTACK",
-                                    [
-                                        "control_repeat",
                                         [
+                                            "TIMES",
                                             [
+                                                "10"
+                                            ]
+                                        ],
+                                        [
+                                            "SUBSTACK",
+                                            [
+                                                "control_repeat",
                                                 [
-                                                    "TIMES",
                                                     [
-                                                        "10"
-                                                    ]
-                                                ],
-                                                [
-                                                    "SUBSTACK",
-                                                    [
-                                                        "motion_movesteps",
                                                         [
+                                                            "TIMES",
                                                             [
-                                                                [
-                                                                    "STEPS",
-                                                                    [
-                                                                        "10"
-                                                                    ]
-                                                                ]
+                                                                "10"
                                                             ]
                                                         ],
-                                                        "sound_seteffectto",
                                                         [
+                                                            "SUBSTACK",
                                                             [
+                                                                "motion_movesteps",
                                                                 [
-                                                                    "VALUE",
                                                                     [
-                                                                        "100"
+                                                                        [
+                                                                            "STEPS",
+                                                                            [
+                                                                                "10"
+                                                                            ]
+                                                                        ]
+                                                                    ]
+                                                                ],
+                                                                "sound_seteffectto",
+                                                                [
+                                                                    [
+                                                                        [
+                                                                            "VALUE",
+                                                                            [
+                                                                                "100"
+                                                                            ]
+                                                                        ]
                                                                     ]
                                                                 ]
                                                             ]

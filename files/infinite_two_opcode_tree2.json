@@ -1,53 +1,59 @@
 [
-    "event_whenflagclicked",
     [
+        "event_whenflagclicked",
         [
-            "looks_sayforsecs",
             [
+                "looks_sayforsecs",
                 [
-                    "MESSAGE",
                     [
-                        "Infinite with two opcodes in the body"
-                    ]
-                ],
-                [
-                    "SECS",
-                    [
-                        "2"
-                    ]
-                ]
-            ]
-        ],
-        [
-            "control_repeat",
-            [
-                [
-                    "TIMES",
-                    [
-                        "10"
-                    ]
-                ],
-                [
-                    "SUBSTACK",
-                    [
-                        "looks_say",
                         [
+                            "MESSAGE",
                             [
-                                [
-                                    "MESSAGE",
-                                    [
-                                        "opcode1"
-                                    ]
-                                ]
+                                "Infinite with two opcodes in the body"
                             ]
                         ],
-                        "looks_think",
                         [
+                            "SECS",
                             [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "control_repeat",
+                [
+                    [
+                        [
+                            "TIMES",
+                            [
+                                "10"
+                            ]
+                        ],
+                        [
+                            "SUBSTACK",
+                            [
+                                "looks_say",
                                 [
-                                    "MESSAGE",
                                     [
-                                        "opcode2"
+                                        [
+                                            "MESSAGE",
+                                            [
+                                                "opcode1"
+                                            ]
+                                        ]
+                                    ]
+                                ],
+                                "looks_think",
+                                [
+                                    [
+                                        [
+                                            "MESSAGE",
+                                            [
+                                                "opcode2"
+                                            ]
+                                        ]
                                     ]
                                 ]
                             ]

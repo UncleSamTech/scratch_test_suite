@@ -21,11 +21,116 @@ class TestScratchParser(unittest.TestCase):
 
     def test_scratch_nothing_onclick(self):
         
-        expected2 = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['Hello!']], ['SECS', ['2']]]], ['motion_movesteps', [['STEPS', ['10']]]], ['control_repeat_until', [['SUBSTACK', ['sensing_askandwait', [[['QUESTION', ['How old are you?']]]]]], ['CONDITION', ['operator_equals', [[['OPERAND1', ['sensing_answer', [[]]]], ['OPERAND2', ['50']]]]]]]], ['looks_thinkforsecs', [['MESSAGE', ['Hmm...']], ['SECS', ['2']]]]]]
+        expected2 = [
+    [
+        "event_whenflagclicked",
+        [
+            [
+                "looks_sayforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "Hello!"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_movesteps",
+                [
+                    [
+                        [
+                            "STEPS",
+                            [
+                                "10"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "control_repeat_until",
+                [
+                    [
+                        [
+                            "SUBSTACK",
+                            [
+                                "sensing_askandwait",
+                                [
+                                    [
+                                        [
+                                            "QUESTION",
+                                            [
+                                                "How old are you?"
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            "CONDITION",
+                            [
+                                "operator_equals",
+                                [
+                                    [
+                                        [
+                                            "OPERAND1",
+                                            [
+                                                "sensing_answer",
+                                                [
+                                                    []
+                                                ]
+                                            ]
+                                        ],
+                                        [
+                                            "OPERAND2",
+                                            [
+                                                "50"
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "looks_thinkforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "Hmm..."
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
-        next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
-        parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
+        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val)
+        
         
         self.assertEqual(expected2,parsed,msg="Test failed")
              
@@ -40,34 +145,297 @@ class TestScratchParser(unittest.TestCase):
 
 
     def test_scratch_two_arg(self):
-        expected_tree1 = ['event_whenflagclicked', [['motion_movesteps', [['STEPS', ['10']]]], ['motion_turnright', [['DEGREES', ['15']]]], ['looks_sayforsecs', [['MESSAGE', ['Hello!']], ['SECS', ['2']]]]]]
-        expected_tree2 = ['event_whenflagclicked', [['looks_thinkforsecs', [['MESSAGE', ['Hmm...']], ['SECS', ['2']]]], ['motion_pointindirection', [['DIRECTION', ['90']]]], ['motion_changexby', [['DX', ['10']]]]]]
+        expected_tree1 = [
+    [
+        "event_whenflagclicked",
+        [
+            [
+                "motion_movesteps",
+                [
+                    [
+                        [
+                            "STEPS",
+                            [
+                                "10"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_turnright",
+                [
+                    [
+                        [
+                            "DEGREES",
+                            [
+                                "15"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "looks_sayforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "Hello!"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
+        expected_tree2 = [
+    [
+        "event_whenflagclicked",
+        [
+            [
+                "looks_thinkforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "Hmm..."
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_pointindirection",
+                [
+                    [
+                        [
+                            "DIRECTION",
+                            [
+                                "90"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_changexby",
+                [
+                    [
+                        [
+                            "DX",
+                            [
+                                "10"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
         
 
         all_blocks_val1 = self.scratch_parser_inst.get_all_blocks_vals(self.prog2)
         all_blocks_val2 = self.scratch_parser_inst.get_all_blocks_vals(self.prog3)
-        next_val1 = self.scratch_parser_inst.create_next_values2(all_blocks_val1)
-        next_val2 = self.scratch_parser_inst.create_next_values2(all_blocks_val2)
-        parsed1 = self.scratch_parser_inst.create_top_tree2(all_blocks_val1,next_val1)
-        parsed2 = self.scratch_parser_inst.create_top_tree2(all_blocks_val2,next_val2)
+        parsed1 = self.scratch_parser_inst.create_next_values2(all_blocks_val1)
+        parsed2 = self.scratch_parser_inst.create_next_values2(all_blocks_val2)
+        
 
         self.assertEqual(expected_tree2,parsed1,msg="Test failed")
         self.assertEqual(expected_tree1,parsed2,msg="Test failed")
 
 
     def test_infinite_loop(self):
-        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['Infinite with two opcodes in the body']], ['SECS', ['2']]]], ['control_repeat', [['TIMES', ['10']], ['SUBSTACK', ['looks_say', [[['MESSAGE', ['opcode1']]]], 'looks_think', [[['MESSAGE', ['opcode2']]]]]]]]]]
+        expected = [
+    [
+        "event_whenflagclicked",
+        [
+            [
+                "looks_sayforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "Infinite with two opcodes in the body"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "control_repeat",
+                [
+                    [
+                        [
+                            "TIMES",
+                            [
+                                "10"
+                            ]
+                        ],
+                        [
+                            "SUBSTACK",
+                            [
+                                "looks_say",
+                                [
+                                    [
+                                        [
+                                            "MESSAGE",
+                                            [
+                                                "opcode1"
+                                            ]
+                                        ]
+                                    ]
+                                ],
+                                "looks_think",
+                                [
+                                    [
+                                        [
+                                            "MESSAGE",
+                                            [
+                                                "opcode2"
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog4)
-        next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
-        parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
+        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val)
+        
         self.assertEqual(expected,parsed,msg="Test failed")
     
     def test_loop_in_a_loop_in_a_loop(self):
-        expected = ['event_whenflagclicked', [['looks_sayforsecs', [['MESSAGE', ['loop in a loop in a loop with 2 opcodes']], ['SECS', ['2']]]], ['control_repeat', [['TIMES', ['10']], ['SUBSTACK', ['control_repeat', [[['TIMES', ['10']], ['SUBSTACK', ['control_repeat', [[['TIMES', ['10']], ['SUBSTACK', ['motion_movesteps', [[['STEPS', ['10']]]], 'sound_seteffectto', [[['VALUE', ['100']]]]]]]]]]]]]]]]]]
+        expected = [
+    [
+        "event_whenflagclicked",
+        [
+            [
+                "looks_sayforsecs",
+                [
+                    [
+                        [
+                            "MESSAGE",
+                            [
+                                "loop in a loop in a loop with 2 opcodes"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "control_repeat",
+                [
+                    [
+                        [
+                            "TIMES",
+                            [
+                                "10"
+                            ]
+                        ],
+                        [
+                            "SUBSTACK",
+                            [
+                                "control_repeat",
+                                [
+                                    [
+                                        [
+                                            "TIMES",
+                                            [
+                                                "10"
+                                            ]
+                                        ],
+                                        [
+                                            "SUBSTACK",
+                                            [
+                                                "control_repeat",
+                                                [
+                                                    [
+                                                        [
+                                                            "TIMES",
+                                                            [
+                                                                "10"
+                                                            ]
+                                                        ],
+                                                        [
+                                                            "SUBSTACK",
+                                                            [
+                                                                "motion_movesteps",
+                                                                [
+                                                                    [
+                                                                        [
+                                                                            "STEPS",
+                                                                            [
+                                                                                "10"
+                                                                            ]
+                                                                        ]
+                                                                    ]
+                                                                ],
+                                                                "sound_seteffectto",
+                                                                [
+                                                                    [
+                                                                        [
+                                                                            "VALUE",
+                                                                            [
+                                                                                "100"
+                                                                            ]
+                                                                        ]
+                                                                    ]
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+]
         
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog5)
-        next_val = self.scratch_parser_inst.create_next_values2(all_blocks_val)
-        parsed = self.scratch_parser_inst.create_top_tree2(all_blocks_val,next_val)
+        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val)
+        
         self.assertEqual(expected,parsed,msg="Test failed")
 
     

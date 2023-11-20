@@ -62,31 +62,6 @@ class scratch_parser:
         par = [v2['opcode'] for k,v in blocks_values.items() for v2 in v.values() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'opcode' in v2.keys() and 'parent' in v2.keys() and v2["parent"] == None]
         return par[0] if len(par) == 1 else par
          
-
-    def create_top_tree(self,block_values,next_values):
-        if block_values == None or block_values == {}:
-            return {}
-        par_opcode = self.get_parent_opcode(block_values)
-        if isinstance(par_opcode,list):
-            for each_par in par_opcode:
-                self.scratch_tree[each_par] = next_values
-        else:
-            self.scratch_tree[par_opcode] = next_values
-
-            
-        return self.scratch_tree 
-
-    def create_top_tree2(self,block_values,next_values):
-        if block_values == None or block_values == {}:
-            return []
-        par_opcode = self.get_parent_opcode(block_values)
-        if isinstance(par_opcode,list):
-            for each_par in par_opcode:
-                self.scratch_tree_list.append([each_par,next_values])
-        else:
-            self.scratch_tree_list.append([par_opcode,next_values])
-    
-        return self.scratch_tree_list
     
     def read_input_values_by_id(self,blocks_values,id):
         if id == None or id == '' or blocks_values == None or blocks_values == {}:
@@ -107,196 +82,6 @@ class scratch_parser:
         return max(self.check_dict_depth(v,depth+1) for k,v in dict_val.items())
 
     
-    def flatten_input_values(self,blocks_values,id):
-        if id == None or id == '' or blocks_values == None or blocks_values == {}:
-            return {}
-        input_block = self.read_input_values_by_id(blocks_values,id)
-        print(input_block)
-        if input_block == None or input_block == {}:
-            return {}
-        if isinstance(input_block,dict) and bool(input_block):
-                for k,v in input_block.items():
-                    if isinstance(v,list) and len(v) > 0:
-                        if isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and not isinstance(v[1],str):
-                            self.input_block = {k:v[1][1]} if v[1][1] != '' or v[1][1] != None else {}
-                                
-                        elif isinstance(v[1],str) and len(v[1]) > 0 and not isinstance(v[1],list):
-                            opcode = self.get_opcode_from_id(blocks_values,v[1])
-                            block_by_id = self.get_any_block_by_id(blocks_values,v[1])
-                            self.input_block = {k:{opcode:self.flatten_input_values(block_by_id,v[1])}}
-                            
-                for k2,v2 in input_block.items():
-                    if k2 not in self.input_block.keys(): 
-                        if isinstance(v2,list) and len(v2) > 0:
-                            if isinstance(v2[1],str):
-                                
-                                opcode = self.get_opcode_from_id(blocks_values,v2[1])
-                                
-                                if opcode != None or opcode != '':
-                                    val_flat = self.flatten_input_values(blocks_values,v2[1])
-                                    
-                                    if isinstance(val_flat,dict):
-                                        self.sec_val = {opcode: val_flat} if self.check_dict_depth(val_flat) != 2 else {opcode:{ks:vs for ks,vs in val_flat.items()}}
-                                        self.input_block = {k2:self.sec_val}
-                                else:
-                                    self.input_block = {k2:v2[1]}
-                            elif not isinstance(v2[1],str) and isinstance(v2[1],list) and len(v2[1]) > 0 and isinstance(v2[1][1],str) and v2[1][1] != '' or v2[1][1] != None:
-                                self.sec_val = v2[1][1]
-                                self.input_block.update({k2:self.sec_val})
-
-    def read_input_values(self,blocks_values,input_block):
-        if input_block == None or input_block == {}:
-            return {}
-        if isinstance(input_block,dict) and bool(input_block):
-            for k,v in input_block.items():
-                if isinstance(v,list) and len(v) > 0:
-                    for each_val in v:
-                        if isinstance(each_val,str) and len(each_val) > 0 and each_val != '':
-                            opcode = self.get_opcode_from_id(blocks_values,each_val)
-                            new_inp_block = self.read_input_values_by_id(blocks_values,each_val)
-                            
-                            self.input_block = {k:{opcode:self.read_input_values(blocks_values,new_inp_block)}}
-                        if isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0 and each_val[1] != '':
-                            self.input_block = {k:each_val[1]}
-            
-            for k2,v2 in input_block.items():
-                if k2 not in self.input_block.keys(): 
-                    if isinstance(v2,list) and len(v2) > 0:
-                        for each_val2 in v2:
-                            if isinstance(each_val2,str) and len(each_val2) > 0 and each_val2 != '':
-                                opcode2 = self.get_opcode_from_id(blocks_values,each_val2)
-                                new_inp_block = self.read_input_values_by_id(blocks_values,each_val2)
-                                self.input_block.update({k2:{opcode2:self.read_input_values(blocks_values,new_inp_block)}})
-                            if isinstance(each_val2,list) and len(each_val2) > 0 and isinstance(each_val2[1],str) and len(each_val2[1]) > 0 and each_val2[1] != '':
-                                self.input_block.update({k2:each_val2[1]})
-                        
-        return self.input_block
-
-    def read_input_values2(self,blocks_values,input_block):
-        if input_block == None or input_block == {} or blocks_values == None or blocks_values == {}:
-            return []
-        if isinstance(input_block,dict) and bool(input_block):
-            for k,v in input_block.items():
-                if isinstance(v,list) and len(v) > 0:
-                    for each_val in v:
-                        if isinstance(each_val,str) and len(each_val) > 0:
-                            opcode = self.get_opcode_from_id(blocks_values,each_val)
-                            new_inp_block = self.read_input_values_by_id(blocks_values,each_val) 
-                            self.missed_inp =self.read_input_values2(blocks_values,new_inp_block)
-                            
-                            
-                            any_block = self.get_any_block_by_id(blocks_values,each_val)
-                            next_opcode = self.get_opcode_from_id(blocks_values,any_block["next"])   
-                            next_rec  = self.read_input_values2(blocks_values,self.read_input_values_by_id(blocks_values,any_block["next"]))  
-                            
-                            if self.missed_inp == {} and  any_block["next"] == None:
-                                
-                                self.inpt_2 = [k,opcode]
-                            
-                            elif self.missed_inp != {} and  any_block["next"] == None:
-                                
-                                if  self.missed_inp in self.inpt_2 or opcode in self.inpt_2:
-                                    continue
-                                
-                                self.inpt_2 = [k,[opcode,[self.missed_inp]]] if len(opcode) > 0 else [k,[self.missed_inp]]
-                                
-                                
-                                
-                            
-                            elif self.missed_inp != {} and any_block["next"] != None:
-                                
-                                if  next_rec in self.inpt_2 or next_opcode in self.inpt_2 or self.missed_inp in self.inpt_2 or opcode in self.inpt_2:
-                                    continue
-                                self.inpt_2 = [k,[opcode,[self.missed_inp],next_opcode,[next_rec]]] if len(opcode) > 0  else [k,[self.missed_inp,next_opcode,[next_rec]]]
-                                if self.missed_inp not in self.inpt_2:
-                                    self.inpt_2[len(self.inpt_2):] = self.missed_inp
-                                
-                          
-                        if isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0 and each_val[1] != '':
-                            self.inpt_2 = [[k,each_val[1]]]
-
-                 
-            for k2,v2 in input_block.items():
-                if k2 not in self.inpt_2: 
-                    if isinstance(v2,list) and len(v2) > 0:
-                        for each_val2 in v2:
-                            
-                            if isinstance(each_val2,str) and len(each_val2) > 0:
-                                opcode2 = self.get_opcode_from_id(blocks_values,each_val2)
-                                new_inp_block = self.read_input_values_by_id(blocks_values,each_val2)
-                                self.missed_inp2 =self.read_input_values2(blocks_values,new_inp_block)
-                                any_block2 = self.get_any_block_by_id(blocks_values,each_val2)
-                                next_opcode2 = self.get_opcode_from_id(blocks_values,any_block2["next"])
-                                next_rec2  = self.read_input_values2(blocks_values,self.read_input_values_by_id(blocks_values,any_block2["next"]))
-                                
-                                  
-                                if self.missed_inp2 == {} and any_block2["next"] == None:
-                                    
-                                    if  k2 in self.inpt_2 or opcode2 in self.inpt_2:
-                                        continue
-                                    self.inpt_2 = [k2,opcode2]
-                                
-                                elif  self.missed_inp2 != {} and any_block2["next"] != None  :
-                                    
-                                    if  next_rec2 in self.inpt_2 or next_opcode2 in self.inpt_2 or self.missed_inp2 in self.inpt_2 or opcode2 in self.inpt_2:
-                                        continue
-                    
-                                    self.inpt_2 = [k2,[opcode2,[self.missed_inp2],next_opcode2,[next_rec2]]] if len(opcode2) > 0 else [k2,[self.missed_inp2,next_opcode2,[next_rec2]]]
-                                    
-
-                                elif self.missed_inp2 != {} and any_block2["next"] == None:
-                                    
-                                    if  self.missed_inp2 in self.inpt_2 or opcode2 in self.inpt_2:
-                                        continue
-                                    
-                                    
-                                    self.inpt_2 = [k2,[opcode2,[self.missed_inp2]]] if len(opcode2) > 0 else [k2,[self.missed_inp2]]
-                                       
-                              
-                            if isinstance(each_val2,list) and len(each_val2) > 0 and isinstance(each_val2[1],str) and len(each_val2[1]) > 0:
-                                val = [k2,each_val2[1]]
-                                if val in self.inpt_2:
-                                    continue
-                                self.inpt_2.append(val)
-                                                              
-        return self.inpt_2    
-    
-    def read_input_values_ls(self,blocks_values,input_block):
-        if input_block == None or input_block == {} or blocks_values == None or blocks_values == {}:
-            return []
-        if isinstance(input_block,dict) and bool(input_block):
-            for k,v in input_block.items():
-                if isinstance(v,list) and len(v) > 0:
-                    #val =  [[k,[self.get_opcode_from_id(blocks_values,each_val),[self.read_input_values_ls(blocks_values,self.read_input_values_by_id(blocks_values,each_val))]]] for each_val in v  if isinstance(each_val,str)]
-                    self.inpt_2.append([[k,[self.get_opcode_from_id(blocks_values,each_val),[self.read_input_values_ls(blocks_values,self.read_input_values_by_id(blocks_values,each_val))]]] for each_val in v  if isinstance(each_val,str)])
-        return self.inpt_2
-
-    '''
-    def create_next_values(self,blocks_values):
-        if blocks_values == None or blocks_values == {}:
-            return {}
-        val = {self.get_opcode_from_id(blocks_values,v):self.read_input_values(blocks_values,self.read_input_values_by_id(blocks_values,v)) for v in self.get_all_next_id(blocks_values) if isinstance(v,str) and v != ''}      
-        return val
-    '''    
-    
-   
-    
-    #will make this recursive
-    def get_children_keys(self,blocks_values):
-        all_input_keys = []
-        if blocks_values == None or blocks_values == {}:
-            return []
-        if isinstance(blocks_values,dict) and bool(blocks_values):
-            for k,v in blocks_values.items():
-                if isinstance(v,dict) and bool(v):
-                    for k2,v2 in v.items():
-                        if isinstance(v2,dict) and bool(v2) and 'inputs' in v2.keys():
-                            v = v2['inputs']
-                            for k3,v3 in v.items():
-                                if isinstance(v3,list) and len(v3) > 0 and isinstance(v3[1],str) and len(v3[1]) > 0:
-                                    all_input_keys.append(v3[1])
-        return all_input_keys
-    
     def get_children_key_recursively(self,blocks_values,spec_block):
         if spec_block == None or spec_block == {} or blocks_values == None or blocks_values == {}:
             return []
@@ -315,6 +100,8 @@ class scratch_parser:
                                 else:
                                     break                
         return self.child_input_keys
+    
+    
     def get_next_child_keys(self,blocks_values,inp_block):
         all_next_keys = []
         all_child_keys = self.get_children_key_recursively(blocks_values,inp_block)
@@ -410,15 +197,13 @@ class scratch_parser:
                             corr_block_tree.append([k,[opcode,[recur_val]]])
                         elif any_block["next"] == None and next_rec == [] or next_rec == None:
                             corr_block_tree.append([k,opcode])
-
-                        #corr_block_tree.append([self.get_input_block_by_id_key(blocks_values,ids,k),[self.get_opcode_from_id(blocks_values,v[1]),[self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v[1]),v[1])]]])
                     elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
                         corr_block_tree.append(self.get_input_block_by_id_key(blocks_values,ids,k))
         return corr_block_tree
         
     def create_next_values2(self,blocks_values):  
         tr = [] 
-        second_child = []
+        
        
         all_val = self.get_all_next_id_test(blocks_values)     
         if all_val == None or all_val == {}:
@@ -436,55 +221,23 @@ class scratch_parser:
     def read_files(self, parsed_file):
         self.parsed_value = self.sb3class.unpack_sb3(parsed_file)
         self.blocs_json = json.loads(self.parsed_value)
-        
-        
-
-
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
-        #print(json.dumps(all_blocks_value,indent=4))
-        
-        #bl = self.get_any_block_by_id(all_blocks_value,"rAEgtw;+bsY[Tr#=dQ$k")
-        
-        #comp = self.compare_parent_keys(all_blocks_value,bl,"h:aZ)a`s/kO+/2[2O?c%")
-        #all opcodes
-        #print(comp)
-        all_opcodes = self.return_all_opcodes(all_blocks_value)
-        
-        
-        #print(self.get_all_parent_keys(all_blocks_value))
-        inp_by_id = self.read_input_values_by_id(all_blocks_value,"rAEgtw;+bsY[Tr#=dQ$k")
-        #print(inp_by_id)
-        #print(self.get_children_key_recursively(all_blocks_value,bl))
-        inp = self.read_input_values2(all_blocks_value,inp_by_id)
-        
-        inp_byidkey = self.get_input_block_by_id_key(all_blocks_value,"8J%l~hNqUpt0Lfv1;iR^","CONDITION")
-        #co = self.correct_input_block_tree_by_id(all_blocks_value,inp_by_id,"8J%l~hNqUpt0Lfv1;iR^")
-        #print(co)
-        
-
-        
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)
         print(next_val2)
-        #print(self.get_all_next_id_test(all_blocks_value))
-        #print(self.get_all_next_id(all_blocks_value))
-        
-        
-        
-        #top_tree2 = self.create_top_tree2(all_blocks_value,next_val2)
-        #print(top_tree2)
+    
 
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
-        #print(top_tree)
+        
          
         
         
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/stand_check2.sb3")
+scratch_parser_inst.read_files("files/3l_opcode.sb3")
 
     
