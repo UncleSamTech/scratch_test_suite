@@ -1,41 +1,49 @@
 [
-    "event_whenflagclicked",
     [
+        "event_whenflagclicked",
         [
-            "motion_movesteps",
             [
+                "motion_movesteps",
                 [
-                    "STEPS",
                     [
-                        "10"
+                        [
+                            "STEPS",
+                            [
+                                "10"
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        ],
-        [
-            "motion_turnright",
+            ],
             [
+                "motion_turnright",
                 [
-                    "DEGREES",
                     [
-                        "15"
+                        [
+                            "DEGREES",
+                            [
+                                "15"
+                            ]
+                        ]
                     ]
                 ]
-            ]
-        ],
-        [
-            "looks_sayforsecs",
+            ],
             [
+                "looks_sayforsecs",
                 [
-                    "MESSAGE",
                     [
-                        "Hello!"
-                    ]
-                ],
-                [
-                    "SECS",
-                    [
-                        "2"
+                        [
+                            "MESSAGE",
+                            [
+                                "Hello!"
+                            ]
+                        ],
+                        [
+                            "SECS",
+                            [
+                                "2"
+                            ]
+                        ]
                     ]
                 ]
             ]
