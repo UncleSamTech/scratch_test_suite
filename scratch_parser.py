@@ -50,8 +50,19 @@ class scratch_parser:
     def get_opcode_from_id(self,block_values,block_id):
         if block_id == None or block_id == '':
             return ''
-    
-        return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
+        if block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
+            return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
+        else:
+            opcode = block_values["blocks"][block_id]["opcode"]
+            fields = block_values["blocks"][block_id]["fields"] 
+            if isinstance(fields,dict) and bool(fields):
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
+                                opcode = f'{opcode}_{v[0]}'
+                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and v[1] != None and len(v[1]) > 0:
+                            opcode = f'{opcode}_{v[0]}_{v[1]}'
+            return opcode
         
     def return_all_opcodes(self,blocks_values):
         return [v2['opcode'] for k,v in blocks_values.items() for v2 in v.values() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'opcode' in v2.keys()]
@@ -223,6 +234,7 @@ class scratch_parser:
         self.blocs_json = json.loads(self.parsed_value)
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
+          
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)

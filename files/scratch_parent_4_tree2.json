@@ -62,7 +62,7 @@
         ]
     ],
     [
-        "event_whenbackdropswitchesto",
+        "event_whenbackdropswitchesto_backdrop1",
         [
             [
                 "looks_switchbackdropto",
@@ -71,7 +71,7 @@
                         [
                             "BACKDROP",
                             [
-                                "looks_backdrops",
+                                "looks_backdrops_backdrop1",
                                 [
                                     []
                                 ]
@@ -96,7 +96,7 @@
         ]
     ],
     [
-        "event_whengreaterthan",
+        "event_whengreaterthan_LOUDNESS",
         [
             [
                 "control_repeat",
@@ -128,7 +128,7 @@
                                                         ]
                                                     ]
                                                 ],
-                                                "looks_changeeffectby",
+                                                "looks_changeeffectby_COLOR",
                                                 [
                                                     [
                                                         [
@@ -151,7 +151,7 @@
         ]
     ],
     [
-        "event_whenbroadcastreceived",
+        "event_whenbroadcastreceived_message1_v4GIX#ypIidUNRRbpTm`",
         [
             [
                 "sound_changevolumeby",
@@ -175,7 +175,7 @@
         ]
     ],
     [
-        "event_whenkeypressed",
+        "event_whenkeypressed_space",
         [
             [
                 "looks_sayforsecs",
@@ -245,7 +245,7 @@
                                                                         [
                                                                             "TO",
                                                                             [
-                                                                                "motion_glideto_menu",
+                                                                                "motion_glideto_menu__random_",
                                                                                 [
                                                                                     []
                                                                                 ]

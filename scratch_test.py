@@ -405,7 +405,7 @@ class TestScratchParser(unittest.TestCase):
                                                                         ]
                                                                     ]
                                                                 ],
-                                                                "sound_seteffectto",
+                                                                "sound_seteffectto_PITCH",
                                                                 [
                                                                     [
                                                                         [
