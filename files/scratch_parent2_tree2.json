@@ -58,5 +58,58 @@
                 ]
             ]
         ]
+    ],
+    [
+        "event_whenthisspriteclicked",
+        [
+            [
+                "sound_play",
+                [
+                    [
+                        "SOUND_MENU",
+                        [
+                            "sound_sounds_menu_Meow",
+                            [
+                                []
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_turnleft",
+                [
+                    [
+                        "DEGREES",
+                        [
+                            "15"
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "motion_glidesecstoxy",
+                [
+                    [
+                        "SECS",
+                        [
+                            "1"
+                        ]
+                    ],
+                    [
+                        "X",
+                        [
+                            "0"
+                        ]
+                    ],
+                    [
+                        "Y",
+                        [
+                            "0"
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ]
 ]

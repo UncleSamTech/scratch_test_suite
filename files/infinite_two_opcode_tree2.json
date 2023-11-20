@@ -6,17 +6,15 @@
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Infinite with two opcodes in the body"
-                            ]
-                        ],
+                            "Infinite with two opcodes in the body"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -25,34 +23,32 @@
                 "control_repeat",
                 [
                     [
+                        "TIMES",
                         [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
+                            "10"
+                        ]
+                    ],
+                    [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "looks_say",
                             [
-                                "looks_say",
                                 [
                                     [
+                                        "MESSAGE",
                                         [
-                                            "MESSAGE",
-                                            [
-                                                "opcode1"
-                                            ]
+                                            "opcode1"
                                         ]
                                     ]
-                                ],
-                                "looks_think",
+                                ]
+                            ],
+                            "looks_think",
+                            [
                                 [
                                     [
+                                        "MESSAGE",
                                         [
-                                            "MESSAGE",
-                                            [
-                                                "opcode2"
-                                            ]
+                                            "opcode2"
                                         ]
                                     ]
                                 ]

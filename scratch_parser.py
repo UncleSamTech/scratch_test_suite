@@ -66,6 +66,24 @@ class scratch_parser:
         
     def return_all_opcodes(self,blocks_values):
         return [v2['opcode'] for k,v in blocks_values.items() for v2 in v.values() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'opcode' in v2.keys()]
+    
+    def get_all_unique_opcodes(self,blocks_values):
+        all_unique_opcodes = []
+        if blocks_values == None or blocks_values == {}:
+            return []
+        if isinstance(blocks_values,dict) and bool(blocks_values):
+            for k,v in blocks_values.items():
+                if isinstance(v,dict) and bool(v):
+                    for k2 in v.keys():
+                        opcodes = self.get_opcode_from_id(blocks_values,k2)
+                        if opcodes not in all_unique_opcodes:
+                            all_unique_opcodes.append(opcodes)
+                        else:
+                            continue
+
+        return all_unique_opcodes
+        
+
 
     def get_parent_opcode(self,blocks_values):
         if blocks_values == None or blocks_values == {}:
@@ -222,7 +240,7 @@ class scratch_parser:
         if isinstance(all_val,dict) and bool(all_val):
             for ks,vs in all_val.items():
                 if isinstance(vs,list) and len(vs) > 0:
-                    val =  [[self.get_opcode_from_id(blocks_values,v2),[self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                    val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                     tr.append([ks,val])
         return tr
 
@@ -235,7 +253,8 @@ class scratch_parser:
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
           
-
+        #all opcodes
+        print(self.get_all_unique_opcodes(all_blocks_value))
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)
         print(next_val2)
@@ -250,6 +269,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/3l_opcode.sb3")
+scratch_parser_inst.read_files("files/test.sb3")
 
     

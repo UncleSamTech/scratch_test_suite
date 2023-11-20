@@ -6,17 +6,15 @@
                 "looks_thinkforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
-                        ],
+                            "Hmm..."
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -25,11 +23,9 @@
                 "motion_pointindirection",
                 [
                     [
+                        "DIRECTION",
                         [
-                            "DIRECTION",
-                            [
-                                "90"
-                            ]
+                            "90"
                         ]
                     ]
                 ]
@@ -38,11 +34,9 @@
                 "motion_changexby",
                 [
                     [
+                        "DX",
                         [
-                            "DX",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]

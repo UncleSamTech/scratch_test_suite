@@ -6,17 +6,15 @@
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
+                            "Hello!"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -25,11 +23,9 @@
                 "motion_movesteps",
                 [
                     [
+                        "STEPS",
                         [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -38,42 +34,40 @@
                 "control_repeat_until",
                 [
                     [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "sensing_askandwait",
                             [
-                                "sensing_askandwait",
                                 [
                                     [
+                                        "QUESTION",
                                         [
-                                            "QUESTION",
-                                            [
-                                                "How old are you?"
-                                            ]
+                                            "How old are you?"
                                         ]
                                     ]
                                 ]
                             ]
-                        ],
+                        ]
+                    ],
+                    [
+                        "CONDITION",
                         [
-                            "CONDITION",
+                            "operator_equals",
                             [
-                                "operator_equals",
                                 [
                                     [
+                                        "OPERAND1",
                                         [
-                                            "OPERAND1",
+                                            "sensing_answer",
                                             [
-                                                "sensing_answer",
-                                                [
-                                                    []
-                                                ]
+                                                []
                                             ]
-                                        ],
+                                        ]
+                                    ],
+                                    [
+                                        "OPERAND2",
                                         [
-                                            "OPERAND2",
-                                            [
-                                                "50"
-                                            ]
+                                            "50"
                                         ]
                                     ]
                                 ]
@@ -86,17 +80,15 @@
                 "looks_thinkforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
-                        ],
+                            "Hmm..."
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]

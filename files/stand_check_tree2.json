@@ -6,11 +6,9 @@
                 "motion_movesteps",
                 [
                     [
+                        "STEPS",
                         [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -19,11 +17,9 @@
                 "motion_turnright",
                 [
                     [
+                        "DEGREES",
                         [
-                            "DEGREES",
-                            [
-                                "15"
-                            ]
+                            "15"
                         ]
                     ]
                 ]
@@ -32,17 +28,15 @@
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
+                            "Hello!"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]

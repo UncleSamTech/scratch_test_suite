@@ -6,17 +6,15 @@
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "loop in a loop in a loop with 2 opcodes"
-                            ]
-                        ],
+                            "loop in a loop in a loop with 2 opcodes"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -25,58 +23,56 @@
                 "control_repeat",
                 [
                     [
+                        "TIMES",
                         [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
+                            "10"
+                        ]
+                    ],
+                    [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "control_repeat",
                             [
-                                "control_repeat",
                                 [
                                     [
+                                        "TIMES",
                                         [
-                                            "TIMES",
-                                            [
-                                                "10"
-                                            ]
-                                        ],
+                                            "10"
+                                        ]
+                                    ],
+                                    [
+                                        "SUBSTACK",
                                         [
-                                            "SUBSTACK",
+                                            "control_repeat",
                                             [
-                                                "control_repeat",
                                                 [
                                                     [
+                                                        "TIMES",
                                                         [
-                                                            "TIMES",
-                                                            [
-                                                                "10"
-                                                            ]
-                                                        ],
+                                                            "10"
+                                                        ]
+                                                    ],
+                                                    [
+                                                        "SUBSTACK",
                                                         [
-                                                            "SUBSTACK",
+                                                            "motion_movesteps",
                                                             [
-                                                                "motion_movesteps",
                                                                 [
                                                                     [
+                                                                        "STEPS",
                                                                         [
-                                                                            "STEPS",
-                                                                            [
-                                                                                "10"
-                                                                            ]
+                                                                            "10"
                                                                         ]
                                                                     ]
-                                                                ],
-                                                                "sound_seteffectto_PITCH",
+                                                                ]
+                                                            ],
+                                                            "sound_seteffectto_PITCH",
+                                                            [
                                                                 [
                                                                     [
+                                                                        "VALUE",
                                                                         [
-                                                                            "VALUE",
-                                                                            [
-                                                                                "100"
-                                                                            ]
+                                                                            "100"
                                                                         ]
                                                                     ]
                                                                 ]

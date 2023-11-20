@@ -29,17 +29,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
+                            "Hello!"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -48,11 +46,9 @@ class TestScratchParser(unittest.TestCase):
                 "motion_movesteps",
                 [
                     [
+                        "STEPS",
                         [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -61,42 +57,40 @@ class TestScratchParser(unittest.TestCase):
                 "control_repeat_until",
                 [
                     [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "sensing_askandwait",
                             [
-                                "sensing_askandwait",
                                 [
                                     [
+                                        "QUESTION",
                                         [
-                                            "QUESTION",
-                                            [
-                                                "How old are you?"
-                                            ]
+                                            "How old are you?"
                                         ]
                                     ]
                                 ]
                             ]
-                        ],
+                        ]
+                    ],
+                    [
+                        "CONDITION",
                         [
-                            "CONDITION",
+                            "operator_equals",
                             [
-                                "operator_equals",
                                 [
                                     [
+                                        "OPERAND1",
                                         [
-                                            "OPERAND1",
+                                            "sensing_answer",
                                             [
-                                                "sensing_answer",
-                                                [
-                                                    []
-                                                ]
+                                                []
                                             ]
-                                        ],
+                                        ]
+                                    ],
+                                    [
+                                        "OPERAND2",
                                         [
-                                            "OPERAND2",
-                                            [
-                                                "50"
-                                            ]
+                                            "50"
                                         ]
                                     ]
                                 ]
@@ -109,17 +103,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_thinkforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
-                        ],
+                            "Hmm..."
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -153,11 +145,9 @@ class TestScratchParser(unittest.TestCase):
                 "motion_movesteps",
                 [
                     [
+                        "STEPS",
                         [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -166,11 +156,9 @@ class TestScratchParser(unittest.TestCase):
                 "motion_turnright",
                 [
                     [
+                        "DEGREES",
                         [
-                            "DEGREES",
-                            [
-                                "15"
-                            ]
+                            "15"
                         ]
                     ]
                 ]
@@ -179,17 +167,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
+                            "Hello!"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -205,17 +191,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_thinkforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
-                        ],
+                            "Hmm..."
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -224,11 +208,9 @@ class TestScratchParser(unittest.TestCase):
                 "motion_pointindirection",
                 [
                     [
+                        "DIRECTION",
                         [
-                            "DIRECTION",
-                            [
-                                "90"
-                            ]
+                            "90"
                         ]
                     ]
                 ]
@@ -237,11 +219,9 @@ class TestScratchParser(unittest.TestCase):
                 "motion_changexby",
                 [
                     [
+                        "DX",
                         [
-                            "DX",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -270,17 +250,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Infinite with two opcodes in the body"
-                            ]
-                        ],
+                            "Infinite with two opcodes in the body"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -289,34 +267,32 @@ class TestScratchParser(unittest.TestCase):
                 "control_repeat",
                 [
                     [
+                        "TIMES",
                         [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
+                            "10"
+                        ]
+                    ],
+                    [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "looks_say",
                             [
-                                "looks_say",
                                 [
                                     [
+                                        "MESSAGE",
                                         [
-                                            "MESSAGE",
-                                            [
-                                                "opcode1"
-                                            ]
+                                            "opcode1"
                                         ]
                                     ]
-                                ],
-                                "looks_think",
+                                ]
+                            ],
+                            "looks_think",
+                            [
                                 [
                                     [
+                                        "MESSAGE",
                                         [
-                                            "MESSAGE",
-                                            [
-                                                "opcode2"
-                                            ]
+                                            "opcode2"
                                         ]
                                     ]
                                 ]
@@ -342,17 +318,15 @@ class TestScratchParser(unittest.TestCase):
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "loop in a loop in a loop with 2 opcodes"
-                            ]
-                        ],
+                            "loop in a loop in a loop with 2 opcodes"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
@@ -361,58 +335,56 @@ class TestScratchParser(unittest.TestCase):
                 "control_repeat",
                 [
                     [
+                        "TIMES",
                         [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
+                            "10"
+                        ]
+                    ],
+                    [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "control_repeat",
                             [
-                                "control_repeat",
                                 [
                                     [
+                                        "TIMES",
                                         [
-                                            "TIMES",
-                                            [
-                                                "10"
-                                            ]
-                                        ],
+                                            "10"
+                                        ]
+                                    ],
+                                    [
+                                        "SUBSTACK",
                                         [
-                                            "SUBSTACK",
+                                            "control_repeat",
                                             [
-                                                "control_repeat",
                                                 [
                                                     [
+                                                        "TIMES",
                                                         [
-                                                            "TIMES",
-                                                            [
-                                                                "10"
-                                                            ]
-                                                        ],
+                                                            "10"
+                                                        ]
+                                                    ],
+                                                    [
+                                                        "SUBSTACK",
                                                         [
-                                                            "SUBSTACK",
+                                                            "motion_movesteps",
                                                             [
-                                                                "motion_movesteps",
                                                                 [
                                                                     [
+                                                                        "STEPS",
                                                                         [
-                                                                            "STEPS",
-                                                                            [
-                                                                                "10"
-                                                                            ]
+                                                                            "10"
                                                                         ]
                                                                     ]
-                                                                ],
-                                                                "sound_seteffectto_PITCH",
+                                                                ]
+                                                            ],
+                                                            "sound_seteffectto_PITCH",
+                                                            [
                                                                 [
                                                                     [
+                                                                        "VALUE",
                                                                         [
-                                                                            "VALUE",
-                                                                            [
-                                                                                "100"
-                                                                            ]
+                                                                            "100"
                                                                         ]
                                                                     ]
                                                                 ]

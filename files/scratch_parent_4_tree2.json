@@ -6,11 +6,9 @@
                 "looks_say",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
+                            "Hello!"
                         ]
                     ]
                 ]
@@ -19,11 +17,9 @@
                 "looks_think",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
+                            "Hmm..."
                         ]
                     ]
                 ]
@@ -37,11 +33,9 @@
                 "motion_movesteps",
                 [
                     [
+                        "STEPS",
                         [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -50,11 +44,9 @@
                 "motion_turnright",
                 [
                     [
+                        "DEGREES",
                         [
-                            "DEGREES",
-                            [
-                                "15"
-                            ]
+                            "15"
                         ]
                     ]
                 ]
@@ -68,13 +60,11 @@
                 "looks_switchbackdropto",
                 [
                     [
+                        "BACKDROP",
                         [
-                            "BACKDROP",
+                            "looks_backdrops_backdrop1",
                             [
-                                "looks_backdrops_backdrop1",
-                                [
-                                    []
-                                ]
+                                []
                             ]
                         ]
                     ]
@@ -84,11 +74,9 @@
                 "looks_changesizeby",
                 [
                     [
+                        "CHANGE",
                         [
-                            "CHANGE",
-                            [
-                                "10"
-                            ]
+                            "10"
                         ]
                     ]
                 ]
@@ -102,40 +90,38 @@
                 "control_repeat",
                 [
                     [
+                        "TIMES",
                         [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
+                            "10"
+                        ]
+                    ],
+                    [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "control_forever",
                             [
-                                "control_forever",
                                 [
                                     [
+                                        "SUBSTACK",
                                         [
-                                            "SUBSTACK",
+                                            "looks_changesizeby",
                                             [
-                                                "looks_changesizeby",
                                                 [
                                                     [
+                                                        "CHANGE",
                                                         [
-                                                            "CHANGE",
-                                                            [
-                                                                "-10"
-                                                            ]
+                                                            "-10"
                                                         ]
                                                     ]
-                                                ],
-                                                "looks_changeeffectby_COLOR",
+                                                ]
+                                            ],
+                                            "looks_changeeffectby_COLOR",
+                                            [
                                                 [
                                                     [
+                                                        "CHANGE",
                                                         [
-                                                            "CHANGE",
-                                                            [
-                                                                "25"
-                                                            ]
+                                                            "25"
                                                         ]
                                                     ]
                                                 ]
@@ -157,20 +143,16 @@
                 "sound_changevolumeby",
                 [
                     [
+                        "VOLUME",
                         [
-                            "VOLUME",
-                            [
-                                "-10"
-                            ]
+                            "-10"
                         ]
                     ]
                 ]
             ],
             [
                 "sound_stopallsounds",
-                [
-                    []
-                ]
+                []
             ]
         ]
     ],
@@ -181,74 +163,68 @@
                 "looks_sayforsecs",
                 [
                     [
+                        "MESSAGE",
                         [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
+                            "Hello!"
+                        ]
+                    ],
+                    [
+                        "SECS",
                         [
-                            "SECS",
-                            [
-                                "2"
-                            ]
+                            "2"
                         ]
                     ]
                 ]
             ],
             [
                 "looks_nextbackdrop",
-                [
-                    []
-                ]
+                []
             ],
             [
                 "control_forever",
                 [
                     [
+                        "SUBSTACK",
                         [
-                            "SUBSTACK",
+                            "control_repeat",
                             [
-                                "control_repeat",
                                 [
                                     [
+                                        "TIMES",
                                         [
-                                            "TIMES",
-                                            [
-                                                "10"
-                                            ]
-                                        ],
+                                            "10"
+                                        ]
+                                    ],
+                                    [
+                                        "SUBSTACK",
                                         [
-                                            "SUBSTACK",
+                                            "control_repeat",
                                             [
-                                                "control_repeat",
                                                 [
                                                     [
+                                                        "TIMES",
                                                         [
-                                                            "TIMES",
-                                                            [
-                                                                "10"
-                                                            ]
-                                                        ],
+                                                            "10"
+                                                        ]
+                                                    ],
+                                                    [
+                                                        "SUBSTACK",
                                                         [
-                                                            "SUBSTACK",
+                                                            "motion_glideto",
                                                             [
-                                                                "motion_glideto",
                                                                 [
                                                                     [
+                                                                        "SECS",
                                                                         [
-                                                                            "SECS",
-                                                                            [
-                                                                                "1"
-                                                                            ]
-                                                                        ],
+                                                                            "1"
+                                                                        ]
+                                                                    ],
+                                                                    [
+                                                                        "TO",
                                                                         [
-                                                                            "TO",
+                                                                            "motion_glideto_menu__random_",
                                                                             [
-                                                                                "motion_glideto_menu__random_",
-                                                                                [
-                                                                                    []
-                                                                                ]
+                                                                                []
                                                                             ]
                                                                         ]
                                                                     ]
