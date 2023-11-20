@@ -43,6 +43,20 @@
             "2": 1,
             "1": 1,
             "TO": 1
+        },
+        "most_common_opcodes_statistics": {
+            "control_repeat": 3,
+            "looks_changesizeby": 2,
+            "control_forever": 2,
+            "event_whenflagclicked": 1,
+            "looks_say": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "10": 5,
+            "SUBSTACK": 5,
+            "MESSAGE": 3,
+            "CHANGE": 3,
+            "TIMES": 3
         }
     }
 }

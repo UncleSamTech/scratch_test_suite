@@ -277,11 +277,17 @@ class scratch_parser:
         count_val = collections.Counter(non_opcodes)
         return count_val
     
+  
+    
+
+    
     def generate_summary_stats(self,blocks_values,file_name,scratch_tree):
         opcodes = self.count_opcodes(blocks_values)
         non_opcodes = self.count_non_opcodes(blocks_values,scratch_tree)
         opcode_tree = {}
         non_opcode_tree = {}
+        most_common_opcode_tree = {}
+        most_common_non_opcode_tree = {}
         opcode_key = None
         opcode_val = None
         non_opcode_key = None
@@ -290,12 +296,23 @@ class scratch_parser:
             opcode_key = k
             opcode_val = opcodes[k]
             opcode_tree[opcode_key] = opcode_val
-        for v in non_opcodes:
-            non_opcode_key = v
-            non_opcode_val = non_opcodes[v]
+        for mc in non_opcodes:
+            non_opcode_key = mc
+            non_opcode_val = non_opcodes[mc]
             non_opcode_tree[non_opcode_key] = non_opcode_val
+        
+        for mc in opcodes.most_common(5):
+            most_common_opcode_key = mc[0]
+            most_common_opcode_val = mc[1]
+            most_common_opcode_tree[most_common_opcode_key] = most_common_opcode_val
+        
+        for nmc in non_opcodes.most_common(5):
+            most_common_non_opcode_key = nmc[0]
+            most_common_non_opcode_val = nmc[1]
+            most_common_non_opcode_tree[most_common_non_opcode_key] = most_common_non_opcode_val
+
             
-        self.scratch_stats[file_name] = {"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree}
+        self.scratch_stats[file_name] = {"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
         return self.scratch_stats 
         
 
@@ -315,7 +332,7 @@ class scratch_parser:
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value)
         
-    
+       
 
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
