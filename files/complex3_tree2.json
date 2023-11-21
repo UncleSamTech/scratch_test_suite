@@ -2,14 +2,14 @@
     "complex3",
     [
         [
-            "event_whenbackdropswitchesto",
+            "event_whenbackdropswitchesto_BACKDROP_backdrop1",
             [
                 [
                     "looks_show",
                     []
                 ],
                 [
-                    "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                    "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                     [
                         [
                             "VALUE",
@@ -36,13 +36,13 @@
                         [
                             "QUESTION",
                             [
-                                "sensing_of_backdrop #",
+                                "sensing_of_PROPERTY_backdrop #",
                                 [
                                     [
                                         [
                                             "OBJECT",
                                             [
-                                                "sensing_of_object_menu__stage_",
+                                                "sensing_of_object_menu_OBJECT__stage_",
                                                 [
                                                     []
                                                 ]
@@ -55,7 +55,7 @@
                     ]
                 ],
                 [
-                    "sound_changeeffectby_PITCH",
+                    "sound_changeeffectby_EFFECT_PITCH",
                     [
                         [
                             "VALUE",
@@ -104,7 +104,7 @@
                                                                                                         [
                                                                                                             "KEY_OPTION",
                                                                                                             [
-                                                                                                                "sensing_keyoptions_space",
+                                                                                                                "sensing_keyoptions_KEY_OPTION_space",
                                                                                                                 [
                                                                                                                     []
                                                                                                                 ]
@@ -296,7 +296,7 @@
                                 [
                                     []
                                 ],
-                                "looks_changeeffectby_COLOR",
+                                "looks_changeeffectby_EFFECT_COLOR",
                                 [
                                     [
                                         [
@@ -314,10 +314,10 @@
             ]
         ],
         [
-            "event_whengreaterthan_LOUDNESS",
+            "event_whengreaterthan_WHENGREATERTHANMENU_LOUDNESS_VALUE_10",
             [
                 [
-                    "sensing_setdragmode_draggable",
+                    "sensing_setdragmode_DRAG_MODE_draggable",
                     []
                 ],
                 [
@@ -340,21 +340,21 @@
                     []
                 ],
                 [
-                    "data_hidevariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                    "data_hidevariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                     []
                 ]
             ]
         ],
         [
-            "event_whenbroadcastreceived",
+            "event_whenbroadcastreceived_BROADCAST_OPTION_message1_`?E;sypFl4~,u59zTqY2",
             [
                 [
-                    "looks_goforwardbackwardlayers_forward",
+                    "looks_goforwardbackwardlayers_FORWARD_BACKWARD_forward",
                     [
                         [
                             "NUM",
                             [
-                                "operator_mathop_abs",
+                                "operator_mathop_OPERATOR_abs",
                                 [
                                     [
                                         [
@@ -390,7 +390,7 @@
                     []
                 ],
                 [
-                    "data_showvariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                    "data_showvariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                     []
                 ],
                 [
@@ -405,7 +405,7 @@
                         [
                             "SUBSTACK",
                             [
-                                "looks_seteffectto_COLOR",
+                                "looks_seteffectto_EFFECT_COLOR",
                                 [
                                     [
                                         [
@@ -426,7 +426,7 @@
             "control_start_as_clone",
             [
                 [
-                    "looks_gotofrontback_front",
+                    "looks_gotofrontback_FRONT_BACK_front",
                     []
                 ],
                 [
@@ -510,7 +510,7 @@
                                         [
                                             "CLONE_OPTION",
                                             [
-                                                "control_create_clone_of_menu__myself_",
+                                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
                                                 [
                                                     []
                                                 ]

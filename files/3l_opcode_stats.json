@@ -5,7 +5,7 @@
             "looks_sayforsecs": 1,
             "control_repeat": 3,
             "motion_movesteps": 1,
-            "sound_seteffectto_PITCH": 1
+            "sound_seteffectto_EFFECT_PITCH": 1
         },
         "non_opcodes_statistics": {
             "3l_opcode": 1,
@@ -25,7 +25,7 @@
             "event_whenflagclicked": 1,
             "looks_sayforsecs": 1,
             "motion_movesteps": 1,
-            "sound_seteffectto_PITCH": 1
+            "sound_seteffectto_EFFECT_PITCH": 1
         },
         "most_common_non_opcodes_statistics": {
             "10": 4,

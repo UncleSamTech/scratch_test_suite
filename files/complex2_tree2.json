@@ -2,7 +2,7 @@
     "complex2",
     [
         [
-            "event_whenkeypressed_space",
+            "event_whenkeypressed_KEY_OPTION_space",
             [
                 [
                     "control_create_clone_of",
@@ -10,7 +10,7 @@
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu__myself_",
+                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
                                 [
                                     []
                                 ]
@@ -75,7 +75,7 @@
                     ]
                 ],
                 [
-                    "looks_seteffectto_COLOR",
+                    "looks_seteffectto_EFFECT_COLOR",
                     [
                         [
                             "VALUE",
@@ -116,7 +116,7 @@
                                         [
                                             "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_space",
+                                                "sensing_keyoptions_KEY_OPTION_space",
                                                 [
                                                     []
                                                 ]
@@ -204,7 +204,7 @@
                         [
                             "SUBSTACK2",
                             [
-                                "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -220,7 +220,7 @@
                     ]
                 ],
                 [
-                    "control_stop_all",
+                    "control_stop_STOP_OPTION_all",
                     []
                 ],
                 [
@@ -235,7 +235,7 @@
                         [
                             "TO",
                             [
-                                "motion_glideto_menu__random_",
+                                "motion_glideto_menu_TO__random_",
                                 [
                                     []
                                 ]
@@ -277,7 +277,7 @@
                         [
                             "TOWARDS",
                             [
-                                "motion_pointtowards_menu__mouse_",
+                                "motion_pointtowards_menu_TOWARDS__mouse_",
                                 [
                                     []
                                 ]
@@ -308,7 +308,7 @@
                     ]
                 ],
                 [
-                    "motion_setrotationstyle_left-right",
+                    "motion_setrotationstyle_STYLE_left-right",
                     []
                 ],
                 [
@@ -317,7 +317,7 @@
                         [
                             "BACKDROP",
                             [
-                                "looks_backdrops_backdrop1",
+                                "looks_backdrops_BACKDROP_backdrop1",
                                 [
                                     []
                                 ]
@@ -337,7 +337,7 @@
                     ]
                 ],
                 [
-                    "looks_changeeffectby_COLOR",
+                    "looks_changeeffectby_EFFECT_COLOR",
                     [
                         [
                             "CHANGE",
@@ -367,7 +367,7 @@
                     ]
                 ],
                 [
-                    "sound_seteffectto_PITCH",
+                    "sound_seteffectto_EFFECT_PITCH",
                     [
                         [
                             "VALUE",
@@ -389,7 +389,7 @@
                                         [
                                             "SOUND_MENU",
                                             [
-                                                "sound_sounds_menu_Meow",
+                                                "sound_sounds_menu_SOUND_MENU_Meow",
                                                 [
                                                     []
                                                 ]
@@ -436,7 +436,7 @@
                                         [
                                             "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_space",
+                                                "sensing_keyoptions_KEY_OPTION_space",
                                                 [
                                                     []
                                                 ]
@@ -459,7 +459,7 @@
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu__myself_",
+                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
                                 [
                                     []
                                 ]
