@@ -46,36 +46,104 @@ class scratch_parser:
             return {}
         return blocks_values['blocks'][key]
         
+    def check_if_id_is_parent(self,blocks_values,block_id):
+        if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
+            return False
+        block = self.get_any_block_by_id(blocks_values,block_id)
+        if block == None or block == {}:
+            return False
+        return 'parent' in block.keys() and block["parent"] == None
+          
+    def get_parent_complete_opcode(self,blocks_values,block_id):
+        if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
+            return ''
+        block = self.get_any_block_by_id(blocks_values,block_id)
+        if block == None or block == {}:
+            return ''
+        inputs = block["inputs"] if "inputs" in block.keys() else {}
+        fields = block["fields"] if "fields" in block.keys() else {}
+        opcode = block["opcode"] if "opcode" in block.keys() else ''
+        if opcode.startswith("event"):
+            
+            if inputs == {} and fields == {} :
+                return opcode
+            
+            if inputs != {}  and fields != {}: 
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and  isinstance(v[1],str) and len(v[1]) > 0:
+                            
+                            opcode = f'{opcode}_{k}_{v[0]}_{v[1]}'
+                            
+                        if isinstance(v[0],str) and len(v[0]) > 0:
+                            
+                            opcode = f'{opcode}_{k}_{v[0]}' 
+                
+                        
+                for k,v in inputs.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1]}'
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1][1]}'
+                return opcode
+            elif inputs != {}  and fields == {} :
+                
+                for k,v in inputs.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1]}'
+                            
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1][1]}'
+                return opcode
+
+            elif inputs == {}  and fields != {} :
+                            
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
+                            opcode = f'{opcode}_{k}_{v[0]}'
+                            print(opcode)
+                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[0]}_{v[1]}'
+                return opcode    
+            
+        
+                    
+        else:
+            return opcode
+        
+
 
     def get_opcode_from_id(self,block_values,block_id):
         if block_id == None or block_id == '':
             return ''
-        if block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
+        
+        if self.check_if_id_is_parent(block_values,block_id):
+            return self.get_parent_complete_opcode(block_values,block_id)
+        
+        elif block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
             return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
+
         else:
-            opcode = block_values["blocks"][block_id]["opcode"]
-            fields = block_values["blocks"][block_id]["fields"] 
-            inputs = block_values["blocks"][block_id]["inputs"] if "inputs" in block_values["blocks"][block_id].keys() else {}
-            parent = block_values["blocks"][block_id]["parent"] if "parent" in block_values["blocks"][block_id].keys() else None
-
-            
-            if isinstance(fields,dict) and bool(fields) and parent != None:
-                for k,v in fields.items():
+            block = self.get_any_block_by_id(block_values,block_id)
+            opcode = block["opcode"] if "opcode" in block.keys() else ''
+            if block == None or block == {}:
+                return ''
+            fields = block["fields"] if "fields" in block.keys() else {}
+            if fields == {} or fields == None:
+                return opcode
+            for k,v in fields.items():
                     if isinstance(v,list) and len(v) > 0:
                         if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
-                                opcode = f'{opcode}_{v[0]}'
-                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and v[1] != None and len(v[1]) > 0:
-                            opcode = f'{opcode}_{v[0]}_{v[1]}'
-            if isinstance(fields,dict) and bool(fields) and parent == None and inputs != {}:
-                for k,v in fields.items():
-                    val = [v[1][1] for k,v in inputs.items() if isinstance(input,dict) and bool(input) and isinstance(v,list) and len(v) > 0 and isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0]
-                    if isinstance(v,list) and len(v) > 0:
-                        if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
-                                opcode = f'{opcode}_{v[0]}_{val[0]}' if len(val) > 0 else f'{opcode}_{v[0]}'
-
-                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and v[1] != None and len(v[1]) > 0:
-                            opcode = f'{opcode}_{v[0]}_{val[0]}_{v[1]}' if len(val) > 0 else f'{opcode}_{v[0]}_{v[1]}'
+                            opcode = f'{opcode}_{k}_{v[0]}'
+                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[0]}_{v[1]}'
             return opcode
+            
+            
+            
         
     def return_all_opcodes(self,blocks_values):
         return [self.get_opcode_from_id(blocks_values,k2) for k,v in blocks_values.items() for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2)]
@@ -348,7 +416,7 @@ class scratch_parser:
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value,file_name)
         
-       
+        #print(self.get_parent_complete_opcode(all_blocks_value,".Iv=l2}y77^@2$#=AT$e"))
 
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
@@ -362,6 +430,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/complex3.sb3")
+scratch_parser_inst.read_files("files/complex4.sb3")
 
     
