@@ -104,7 +104,7 @@ class scratch_parser:
                     if isinstance(v,list) and len(v) > 0:
                         if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
                             opcode = f'{opcode}_{k}_{v[0]}'
-                            print(opcode)
+                            
                         elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
                             opcode = f'{opcode}_{k}_{v[0]}_{v[1]}'
                 return opcode    
@@ -407,16 +407,9 @@ class scratch_parser:
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
 
-        print(json.dumps(all_blocks_value,indent=4)) 
-        #all opcodes
-        #print(self.get_all_unique_opcodes(all_blocks_value))
-
-        #print(self.count_opcodes(all_blocks_value))
-
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value,file_name)
         
-        #print(self.get_parent_complete_opcode(all_blocks_value,".Iv=l2}y77^@2$#=AT$e"))
 
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
