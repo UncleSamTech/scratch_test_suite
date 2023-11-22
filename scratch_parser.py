@@ -491,6 +491,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/complex2.sb3")
+scratch_parser_inst.read_files("files/complex3.sb3")
 
     
