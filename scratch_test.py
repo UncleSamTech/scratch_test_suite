@@ -408,7 +408,7 @@ class TestScratchParser(unittest.TestCase):
                                                                         ]
                                                                     ]
                                                                 ],
-                                                                "sound_seteffectto_EFFECT_PITCH",
+                                                                "sound_seteffectto_PITCH",
                                                                 [
                                                                     [
                                                                         [
@@ -560,7 +560,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "MESSAGE",
                             [
-                                "data_itemnumoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_itemnumoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -581,13 +581,13 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "CHANGE",
                             [
-                                "sensing_of_PROPERTY_backdrop #",
+                                "sensing_of_backdrop #",
                                 [
                                     [
                                         [
                                             "OBJECT",
                                             [
-                                                "sensing_of_object_menu_OBJECT__stage_",
+                                                "sensing_of_object_menu__stage_",
                                                 [
                                                     []
                                                 ]
@@ -609,7 +609,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -643,7 +643,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "DISTANCETOMENU",
                                             [
-                                                "sensing_distancetomenu_DISTANCETOMENU__mouse_",
+                                                "sensing_distancetomenu__mouse_",
                                                 [
                                                     []
                                                 ]
@@ -671,7 +671,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "SUBSTACK",
                                             [
-                                                "sensing_setdragmode_DRAG_MODE_draggable",
+                                                "sensing_setdragmode_draggable",
                                                 [
                                                     []
                                                 ]
@@ -697,7 +697,7 @@ class TestScratchParser(unittest.TestCase):
                                                                         [
                                                                             "KEY_OPTION",
                                                                             [
-                                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                                "sensing_keyoptions_space",
                                                                                 [
                                                                                     []
                                                                                 ]
@@ -747,7 +747,7 @@ class TestScratchParser(unittest.TestCase):
                                                                                         [
                                                                                             "NUM2",
                                                                                             [
-                                                                                                "operator_mathop_OPERATOR_abs",
+                                                                                                "operator_mathop_abs",
                                                                                                 [
                                                                                                     [
                                                                                                         [
@@ -770,7 +770,7 @@ class TestScratchParser(unittest.TestCase):
                                                         ]
                                                     ]
                                                 ],
-                                                "data_insertatlist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_insertatlist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     [
                                                         [
@@ -796,7 +796,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "control_stop_STOP_OPTION_all",
+                    "control_stop_all",
                     []
                 ]
             ]
@@ -816,7 +816,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "FROM",
                                             [
-                                                "data_lengthoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_lengthoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     []
                                                 ]
@@ -840,7 +840,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TOWARDS",
                             [
-                                "motion_pointtowards_menu_TOWARDS__mouse_",
+                                "motion_pointtowards_menu__mouse_",
                                 [
                                     []
                                 ]
@@ -849,7 +849,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "motion_setrotationstyle_STYLE_left-right",
+                    "motion_setrotationstyle_left-right",
                     []
                 ],
                 [
@@ -858,7 +858,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "MESSAGE",
                             [
-                                "sensing_current_CURRENTMENU_YEAR",
+                                "sensing_current_YEAR",
                                 [
                                     []
                                 ]
@@ -884,7 +884,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "looks_gotofrontback_FRONT_BACK_front",
+                    "looks_gotofrontback_front",
                     []
                 ],
                 [
@@ -893,7 +893,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -927,7 +927,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "QUESTION",
                                             [
-                                                "data_itemoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_itemoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     [
                                                         [
@@ -969,7 +969,7 @@ class TestScratchParser(unittest.TestCase):
                                                                         [
                                                                             "KEY_OPTION",
                                                                             [
-                                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                                "sensing_keyoptions_space",
                                                                                 [
                                                                                     []
                                                                                 ]
@@ -990,7 +990,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "data_replaceitemoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_replaceitemoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     [
                         [
                             "INDEX",
@@ -1045,7 +1045,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "COSTUME",
                             [
-                                "looks_costume_COSTUME_costume2",
+                                "looks_costume_costume2",
                                 [
                                     []
                                 ]
@@ -1054,7 +1054,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "looks_changeeffectby_EFFECT_COLOR",
+                    "looks_changeeffectby_COLOR",
                     [
                         [
                             "CHANGE",
@@ -1068,7 +1068,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "looks_goforwardbackwardlayers_FORWARD_BACKWARD_forward",
+                    "looks_goforwardbackwardlayers_forward",
                     [
                         [
                             "NUM",
@@ -1106,7 +1106,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                "sensing_keyoptions_space",
                                                 [
                                                     []
                                                 ]
@@ -1136,7 +1136,7 @@ class TestScratchParser(unittest.TestCase):
                                                         [
                                                             "KEY_OPTION",
                                                             [
-                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                "sensing_keyoptions_space",
                                                                 [
                                                                     []
                                                                 ]
@@ -1153,7 +1153,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK",
                             [
-                                "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -1179,7 +1179,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TO",
                             [
-                                "motion_goto_menu_TO__random_",
+                                "motion_goto_menu__random_",
                                 [
                                     []
                                 ]
@@ -1206,12 +1206,12 @@ class TestScratchParser(unittest.TestCase):
                     []
                 ],
                 [
-                    "looks_seteffectto_EFFECT_COLOR",
+                    "looks_seteffectto_COLOR",
                     [
                         [
                             "VALUE",
                             [
-                                "looks_costumenumbername_NUMBER_NAME_number",
+                                "looks_costumenumbername_number",
                                 [
                                     []
                                 ]
@@ -1220,7 +1220,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "sound_changeeffectby_EFFECT_PITCH",
+                    "sound_changeeffectby_PITCH",
                     [
                         [
                             "VALUE",
@@ -1256,7 +1256,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "TOUCHINGOBJECTMENU",
                                             [
-                                                "sensing_touchingobjectmenu_TOUCHINGOBJECTMENU__mouse_",
+                                                "sensing_touchingobjectmenu__mouse_",
                                                 [
                                                     []
                                                 ]
@@ -1313,7 +1313,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "SUBSTACK",
                                             [
-                                                "data_showvariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                                "data_showvariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                                 [
                                                     []
                                                 ]
@@ -1326,7 +1326,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK2",
                             [
-                                "data_addtolist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_addtolist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -1347,7 +1347,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "CONDITION",
                             [
-                                "data_listcontainsitem_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_listcontainsitem_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -1363,7 +1363,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK",
                             [
-                                "data_showlist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_showlist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     []
                                 ]
@@ -1391,7 +1391,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "Y",
                             [
-                                "looks_backdropnumbername_NUMBER_NAME_number",
+                                "looks_backdropnumbername_number",
                                 [
                                     []
                                 ]
@@ -1419,7 +1419,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "BACKDROP",
                             [
-                                "looks_backdrops_BACKDROP_backdrop1",
+                                "looks_backdrops_backdrop1",
                                 [
                                     []
                                 ]
@@ -1432,7 +1432,7 @@ class TestScratchParser(unittest.TestCase):
                     []
                 ],
                 [
-                    "sound_seteffectto_EFFECT_PITCH",
+                    "sound_seteffectto_PITCH",
                     [
                         [
                             "VALUE",
@@ -1521,11 +1521,11 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK",
                             [
-                                "data_hidevariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_hidevariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     []
                                 ],
-                                "data_deleteoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_deleteoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -1541,7 +1541,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "data_hidelist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_hidelist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     []
                 ]
             ]
@@ -1561,7 +1561,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TO",
                             [
-                                "motion_glideto_menu_TO__random_",
+                                "motion_glideto_menu__random_",
                                 [
                                     []
                                 ]
@@ -1676,7 +1676,7 @@ class TestScratchParser(unittest.TestCase):
                     []
                 ],
                 [
-                    "data_deletealloflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_deletealloflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     []
                 ],
                 [
@@ -1727,7 +1727,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
+                                "control_create_clone_of_menu__myself_",
                                 [
                                     []
                                 ]
@@ -1763,7 +1763,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK",
                             [
-                                "data_changevariableby_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_changevariableby_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -1784,29 +1784,42 @@ class TestScratchParser(unittest.TestCase):
             "procedures_definition",
             [
                 [
-                    "procedures_call",
                     [
                         [
-                            "6psEeyKNwbAq9?cPG_c#",
+                            "procedures_prototype_comp4block_comp4",
                             [
-                                "looks_backdropnumbername_NUMBER_NAME_number",
-                                [
-                                    []
-                                ]
+                                "argument_reporter_string_number_VALUE_number"
+                            ],
+                            [
+                                "argument_reporter_boolean_VALUE_true"
                             ]
-                        ],
+                        ]
+                    ],
+                    [
+                        "procedures_call",
                         [
-                            "3.Xk%pjRv/P67n];n9b;",
                             [
-                                "sensing_touchingobject",
+                                "6psEeyKNwbAq9?cPG_c#",
                                 [
+                                    "looks_backdropnumbername_number",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ],
+                            [
+                                "3.Xk%pjRv/P67n];n9b;",
+                                [
+                                    "sensing_touchingobject",
                                     [
                                         [
-                                            "TOUCHINGOBJECTMENU",
                                             [
-                                                "sensing_touchingobjectmenu_TOUCHINGOBJECTMENU__mouse_",
+                                                "TOUCHINGOBJECTMENU",
                                                 [
-                                                    []
+                                                    "sensing_touchingobjectmenu__mouse_",
+                                                    [
+                                                        []
+                                                    ]
                                                 ]
                                             ]
                                         ]
@@ -1822,1466 +1835,6 @@ class TestScratchParser(unittest.TestCase):
 ]
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog6)
         parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val,self.file_name6)
-        self.assertEqual(expected,parsed,msg="Test failed")
-
-    def test_complex3(self):
-        expected = [
-    "complex3",
-    [
-        [
-            "event_whenbackdropswitchesto_BACKDROP_backdrop1",
-            [
-                [
-                    "looks_show",
-                    []
-                ],
-                [
-                    "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "89"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "event_broadcast",
-                    [
-                        [
-                            "BROADCAST_INPUT",
-                            [
-                                "message1"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sensing_askandwait",
-                    [
-                        [
-                            "QUESTION",
-                            [
-                                "sensing_of_backdrop #",
-                                [
-                                    [
-                                        [
-                                            "OBJECT",
-                                            [
-                                                "sensing_of_object_menu__stage_",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_changeeffectby_PITCH",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "sound_volume",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_setvolumeto",
-                    [
-                        [
-                            "VOLUME",
-                            [
-                                "operator_divide",
-                                [
-                                    [
-                                        [
-                                            "NUM1",
-                                            [
-                                                "operator_gt",
-                                                [
-                                                    [
-                                                        [
-                                                            "OPERAND1",
-                                                            [
-                                                                "operator_and",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "OPERAND1",
-                                                                            [
-                                                                                "operator_or",
-                                                                                [
-                                                                                    [
-                                                                                        [
-                                                                                            "OPERAND1",
-                                                                                            [
-                                                                                                "sensing_keypressed",
-                                                                                                [
-                                                                                                    [
-                                                                                                        [
-                                                                                                            "KEY_OPTION",
-                                                                                                            [
-                                                                                                                "sensing_keyoptions_space",
-                                                                                                                [
-                                                                                                                    []
-                                                                                                                ]
-                                                                                                            ]
-                                                                                                        ]
-                                                                                                    ]
-                                                                                                ]
-                                                                                            ]
-                                                                                        ],
-                                                                                        [
-                                                                                            "OPERAND2",
-                                                                                            [
-                                                                                                "sensing_touchingcolor",
-                                                                                                [
-                                                                                                    [
-                                                                                                        [
-                                                                                                            "COLOR",
-                                                                                                            [
-                                                                                                                "#981632"
-                                                                                                            ]
-                                                                                                        ]
-                                                                                                    ]
-                                                                                                ]
-                                                                                            ]
-                                                                                        ]
-                                                                                    ]
-                                                                                ]
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "OPERAND2",
-                                                                            [
-                                                                                "sensing_coloristouchingcolor",
-                                                                                [
-                                                                                    [
-                                                                                        [
-                                                                                            "COLOR",
-                                                                                            [
-                                                                                                "#77057b"
-                                                                                            ]
-                                                                                        ],
-                                                                                        [
-                                                                                            "COLOR2",
-                                                                                            [
-                                                                                                "#954cf2"
-                                                                                            ]
-                                                                                        ]
-                                                                                    ]
-                                                                                ]
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "OPERAND2",
-                                                            [
-                                                                "50"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "NUM2",
-                                            [
-                                                "operator_not",
-                                                [
-                                                    [
-                                                        [
-                                                            "OPERAND",
-                                                            [
-                                                                "operator_lt",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "OPERAND1",
-                                                                            [
-                                                                                "sensing_mousex",
-                                                                                [
-                                                                                    []
-                                                                                ]
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "OPERAND2",
-                                                                            [
-                                                                                "50"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_if_else",
-                    [
-                        [
-                            "CONDITION",
-                            [
-                                "operator_not",
-                                [
-                                    [
-                                        [
-                                            "OPERAND",
-                                            [
-                                                "operator_gt",
-                                                [
-                                                    [
-                                                        [
-                                                            "OPERAND1",
-                                                            [
-                                                                "operator_join",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "STRING1",
-                                                                            [
-                                                                                "apple "
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "STRING2",
-                                                                            [
-                                                                                "banana"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "OPERAND2",
-                                                            [
-                                                                "50"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "SUBSTACK",
-                            [
-                                "looks_setsizeto",
-                                [
-                                    [
-                                        [
-                                            "SIZE",
-                                            [
-                                                "100"
-                                            ]
-                                        ]
-                                    ]
-                                ],
-                                "looks_changesizeby",
-                                [
-                                    [
-                                        [
-                                            "CHANGE",
-                                            [
-                                                "10"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "SUBSTACK2",
-                            [
-                                "looks_nextbackdrop",
-                                [
-                                    []
-                                ],
-                                "looks_changeeffectby_COLOR",
-                                [
-                                    [
-                                        [
-                                            "CHANGE",
-                                            [
-                                                "25"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        [
-            "event_whengreaterthan_WHENGREATERTHANMENU_LOUDNESS_VALUE_10",
-            [
-                [
-                    "sensing_setdragmode_draggable",
-                    []
-                ],
-                [
-                    "looks_hide",
-                    []
-                ],
-                [
-                    "event_broadcastandwait",
-                    [
-                        [
-                            "BROADCAST_INPUT",
-                            [
-                                "message1"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_cleareffects",
-                    []
-                ],
-                [
-                    "data_hidevariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
-                    []
-                ]
-            ]
-        ],
-        [
-            "event_whenbroadcastreceived_BROADCAST_OPTION_message1_`?E;sypFl4~,u59zTqY2",
-            [
-                [
-                    "looks_goforwardbackwardlayers_forward",
-                    [
-                        [
-                            "NUM",
-                            [
-                                "operator_mathop_abs",
-                                [
-                                    [
-                                        [
-                                            "NUM",
-                                            [
-                                                "operator_letter_of",
-                                                [
-                                                    [
-                                                        [
-                                                            "LETTER",
-                                                            [
-                                                                "1"
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "STRING",
-                                                            [
-                                                                "apple"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sensing_resettimer",
-                    []
-                ],
-                [
-                    "data_showvariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
-                    []
-                ],
-                [
-                    "control_repeat",
-                    [
-                        [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
-                        [
-                            "SUBSTACK",
-                            [
-                                "looks_seteffectto_COLOR",
-                                [
-                                    [
-                                        [
-                                            "VALUE",
-                                            [
-                                                "90"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        [
-            "control_start_as_clone",
-            [
-                [
-                    "looks_gotofrontback_front",
-                    []
-                ],
-                [
-                    "looks_think",
-                    [
-                        [
-                            "MESSAGE",
-                            [
-                                "operator_add",
-                                [
-                                    [
-                                        [
-                                            "NUM1",
-                                            [
-                                                "operator_length",
-                                                [
-                                                    [
-                                                        [
-                                                            "STRING",
-                                                            [
-                                                                "sensing_username",
-                                                                [
-                                                                    []
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "NUM2",
-                                            [
-                                                "operator_mod",
-                                                [
-                                                    [
-                                                        [
-                                                            "NUM1",
-                                                            [
-                                                                "sensing_dayssince2000",
-                                                                [
-                                                                    []
-                                                                ]
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "NUM2",
-                                                            [
-                                                                "operator_round",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "NUM",
-                                                                            [
-                                                                                "9"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_repeat_until",
-                    [
-                        [
-                            "SUBSTACK",
-                            [
-                                "control_create_clone_of",
-                                [
-                                    [
-                                        [
-                                            "CLONE_OPTION",
-                                            [
-                                                "control_create_clone_of_menu__myself_",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "CONDITION",
-                            [
-                                "operator_gt",
-                                [
-                                    [
-                                        [
-                                            "OPERAND1",
-                                            [
-                                                "operator_random",
-                                                [
-                                                    [
-                                                        [
-                                                            "FROM",
-                                                            [
-                                                                "1"
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "TO",
-                                                            [
-                                                                "10"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "OPERAND2",
-                                            [
-                                                "50"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_delete_this_clone",
-                    []
-                ]
-            ]
-        ]
-    ]
-]
-        all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog7)
-        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val,self.file_name7)
-        self.assertEqual(expected,parsed,msg="Test failed")
-
-    def test_complex2(self):
-        expected = [
-    "complex2",
-    [
-        [
-            "event_whenkeypressed_KEY_OPTION_space",
-            [
-                [
-                    "control_create_clone_of",
-                    [
-                        [
-                            "CLONE_OPTION",
-                            [
-                                "control_create_clone_of_menu__myself_",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_pointindirection",
-                    [
-                        [
-                            "DIRECTION",
-                            [
-                                "90"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_changexby",
-                    [
-                        [
-                            "DX",
-                            [
-                                "10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_changeyby",
-                    [
-                        [
-                            "DY",
-                            [
-                                "10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_ifonedgebounce",
-                    []
-                ],
-                [
-                    "looks_nextcostume",
-                    []
-                ],
-                [
-                    "looks_nextbackdrop",
-                    []
-                ],
-                [
-                    "looks_setsizeto",
-                    [
-                        [
-                            "SIZE",
-                            [
-                                "100"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_seteffectto_COLOR",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "0"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_show",
-                    []
-                ],
-                [
-                    "sound_cleareffects",
-                    []
-                ],
-                [
-                    "sound_setvolumeto",
-                    [
-                        [
-                            "VOLUME",
-                            [
-                                "100"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_wait_until",
-                    [
-                        [
-                            "CONDITION",
-                            [
-                                "sensing_keypressed",
-                                [
-                                    [
-                                        [
-                                            "KEY_OPTION",
-                                            [
-                                                "sensing_keyoptions_space",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_if_else",
-                    [
-                        [
-                            "CONDITION",
-                            [
-                                "operator_gt",
-                                [
-                                    [
-                                        [
-                                            "OPERAND1",
-                                            [
-                                                "operator_multiply",
-                                                [
-                                                    [
-                                                        [
-                                                            "NUM1",
-                                                            [
-                                                                "operator_random",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "FROM",
-                                                                            [
-                                                                                "1"
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "TO",
-                                                                            [
-                                                                                "10"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "NUM2",
-                                                            [
-                                                                "operator_join",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "STRING1",
-                                                                            [
-                                                                                "apple "
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "STRING2",
-                                                                            [
-                                                                                "banana"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "OPERAND2",
-                                            [
-                                                "50"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "SUBSTACK2",
-                            [
-                                "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
-                                [
-                                    [
-                                        [
-                                            "VALUE",
-                                            [
-                                                "yes"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_stop_all",
-                    []
-                ],
-                [
-                    "motion_glideto",
-                    [
-                        [
-                            "SECS",
-                            [
-                                "1"
-                            ]
-                        ],
-                        [
-                            "TO",
-                            [
-                                "motion_glideto_menu__random_",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        [
-            "event_whenthisspriteclicked",
-            [
-                [
-                    "motion_glidesecstoxy",
-                    [
-                        [
-                            "SECS",
-                            [
-                                "1"
-                            ]
-                        ],
-                        [
-                            "X",
-                            [
-                                "4"
-                            ]
-                        ],
-                        [
-                            "Y",
-                            [
-                                "42"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_pointtowards",
-                    [
-                        [
-                            "TOWARDS",
-                            [
-                                "motion_pointtowards_menu__mouse_",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_setx",
-                    [
-                        [
-                            "X",
-                            [
-                                "8"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_sety",
-                    [
-                        [
-                            "Y",
-                            [
-                                "8"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_setrotationstyle_left-right",
-                    []
-                ],
-                [
-                    "looks_switchbackdropto",
-                    [
-                        [
-                            "BACKDROP",
-                            [
-                                "looks_backdrops_backdrop1",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_changesizeby",
-                    [
-                        [
-                            "CHANGE",
-                            [
-                                "10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_changeeffectby_COLOR",
-                    [
-                        [
-                            "CHANGE",
-                            [
-                                "25"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_cleargraphiceffects",
-                    []
-                ],
-                [
-                    "looks_hide",
-                    []
-                ],
-                [
-                    "sound_changevolumeby",
-                    [
-                        [
-                            "VOLUME",
-                            [
-                                "-10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_seteffectto_PITCH",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "-100"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_repeat_until",
-                    [
-                        [
-                            "SUBSTACK",
-                            [
-                                "sound_playuntildone",
-                                [
-                                    [
-                                        [
-                                            "SOUND_MENU",
-                                            [
-                                                "sound_sounds_menu_Meow",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "CONDITION",
-                            [
-                                "sensing_mousedown",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        [
-            "procedures_definition",
-            [
-                [
-                    [
-                        [
-                            "procedures_prototype_myblock_yes",
-                            [
-                                "argument_reporter_string_number_VALUE_n3"
-                            ],
-                            [
-                                "argument_reporter_boolean_VALUE_true"
-                            ]
-                        ]
-                    ],
-                    [
-                        "procedures_call",
-                        [
-                            [
-                                "v*[[rw;8e#{x6iJcr=-_",
-                                [
-                                    "sensing_mousey",
-                                    [
-                                        []
-                                    ]
-                                ]
-                            ],
-                            [
-                                "g75W+0Q{NLJrb$~17SO]",
-                                [
-                                    "sensing_keypressed",
-                                    [
-                                        [
-                                            [
-                                                "KEY_OPTION",
-                                                [
-                                                    "sensing_keyoptions_space",
-                                                    [
-                                                        []
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        [
-            "control_start_as_clone",
-            [
-                [
-                    "control_create_clone_of",
-                    [
-                        [
-                            "CLONE_OPTION",
-                            [
-                                "control_create_clone_of_menu__myself_",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]
-]
-        all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog8)
-        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val,self.file_name8)
-        self.assertEqual(expected,parsed,msg="Test failed")
-
-    def test_complex1(self):
-        expected = [
-    "complex",
-    [
-        [
-            "event_whenflagclicked",
-            [
-                [
-                    "motion_movesteps",
-                    [
-                        [
-                            "STEPS",
-                            [
-                                "10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_turnright",
-                    [
-                        [
-                            "DEGREES",
-                            [
-                                "15"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_turnleft",
-                    [
-                        [
-                            "DEGREES",
-                            [
-                                "15"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_goto",
-                    [
-                        [
-                            "TO",
-                            [
-                                "motion_goto_menu__random_",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "motion_gotoxy",
-                    [
-                        [
-                            "X",
-                            [
-                                "0"
-                            ]
-                        ],
-                        [
-                            "Y",
-                            [
-                                "0"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_sayforsecs",
-                    [
-                        [
-                            "MESSAGE",
-                            [
-                                "Hello!"
-                            ]
-                        ],
-                        [
-                            "SECS",
-                            [
-                                "2"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "test"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_thinkforsecs",
-                    [
-                        [
-                            "MESSAGE",
-                            [
-                                "Hmm..."
-                            ]
-                        ],
-                        [
-                            "SECS",
-                            [
-                                "2"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_think",
-                    [
-                        [
-                            "MESSAGE",
-                            [
-                                "operator_letter_of",
-                                [
-                                    [
-                                        [
-                                            "LETTER",
-                                            [
-                                                "1"
-                                            ]
-                                        ],
-                                        [
-                                            "STRING",
-                                            [
-                                                "apple"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_switchcostumeto",
-                    [
-                        [
-                            "COSTUME",
-                            [
-                                "looks_costume_costume2",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_playuntildone",
-                    [
-                        [
-                            "SOUND_MENU",
-                            [
-                                "sound_sounds_menu_Meow",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_play",
-                    [
-                        [
-                            "SOUND_MENU",
-                            [
-                                "sound_sounds_menu_Meow",
-                                [
-                                    []
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_stopallsounds",
-                    []
-                ],
-                [
-                    "sound_changeeffectby_PITCH",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "10"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "sound_seteffectto_PITCH",
-                    [
-                        [
-                            "VALUE",
-                            [
-                                "100"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_wait",
-                    [
-                        [
-                            "DURATION",
-                            [
-                                "1"
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_repeat",
-                    [
-                        [
-                            "TIMES",
-                            [
-                                "10"
-                            ]
-                        ],
-                        [
-                            "SUBSTACK",
-                            [
-                                "control_forever",
-                                [
-                                    [
-                                        [
-                                            "SUBSTACK",
-                                            [
-                                                "sensing_setdragmode_draggable",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "control_if",
-                    [
-                        [
-                            "SUBSTACK",
-                            [
-                                "control_if_else",
-                                [
-                                    [
-                                        [
-                                            "CONDITION",
-                                            [
-                                                "sensing_touchingcolor",
-                                                [
-                                                    [
-                                                        [
-                                                            "COLOR",
-                                                            [
-                                                                "#9427c0"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "SUBSTACK",
-                                            [
-                                                "sensing_askandwait",
-                                                [
-                                                    [
-                                                        [
-                                                            "QUESTION",
-                                                            [
-                                                                "What's your name?"
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ],
-                                        [
-                                            "SUBSTACK2",
-                                            [
-                                                "looks_thinkforsecs",
-                                                [
-                                                    [
-                                                        [
-                                                            "MESSAGE",
-                                                            [
-                                                                "operator_random",
-                                                                [
-                                                                    [
-                                                                        [
-                                                                            "FROM",
-                                                                            [
-                                                                                "1"
-                                                                            ]
-                                                                        ],
-                                                                        [
-                                                                            "TO",
-                                                                            [
-                                                                                "10"
-                                                                            ]
-                                                                        ]
-                                                                    ]
-                                                                ]
-                                                            ]
-                                                        ],
-                                                        [
-                                                            "SECS",
-                                                            [
-                                                                "sensing_mousey",
-                                                                [
-                                                                    []
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "CONDITION",
-                            [
-                                "sensing_touchingobject",
-                                [
-                                    [
-                                        [
-                                            "TOUCHINGOBJECTMENU",
-                                            [
-                                                "sensing_touchingobjectmenu__mouse_",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    "looks_say",
-                    [
-                        [
-                            "MESSAGE",
-                            [
-                                "operator_join",
-                                [
-                                    [
-                                        [
-                                            "STRING1",
-                                            [
-                                                "apple "
-                                            ]
-                                        ],
-                                        [
-                                            "STRING2",
-                                            [
-                                                "banana"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]
-]
-        all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog9)
-        parsed = self.scratch_parser_inst.create_next_values2(all_blocks_val,self.file_name9)
         self.assertEqual(expected,parsed,msg="Test failed")
 
 if __name__ == '__main__':
