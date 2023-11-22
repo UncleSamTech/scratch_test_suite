@@ -1,0 +1,66 @@
+{
+    "kalvin_test_case2": {
+        "opcodes_statistics": {
+            "event_whenkeypressed_KEY_OPTION_space": 1,
+            "looks_sayforsecs": 1,
+            "looks_switchcostumeto": 1,
+            "looks_costume_costume2": 1,
+            "control_forever": 1,
+            "control_if": 1,
+            "sensing_touchingcolor": 2,
+            "sensing_askandwait": 2,
+            "control_repeat_until": 2,
+            "sensing_keypressed": 1,
+            "sensing_keyoptions_down arrow": 1,
+            "looks_cleargraphiceffects": 1,
+            "event_whenbackdropswitchesto_BACKDROP_backdrop1": 1,
+            "sound_changeeffectby_PITCH": 1,
+            "sound_changevolumeby": 1,
+            "looks_thinkforsecs": 1,
+            "looks_setsizeto": 1,
+            "motion_pointtowards": 1,
+            "motion_pointtowards_menu__mouse_": 1,
+            "motion_glideto": 1,
+            "motion_glideto_menu__random_": 1
+        },
+        "non_opcodes_statistics": {
+            "kalvin_test_case2": 1,
+            "MESSAGE": 2,
+            "Hello!": 1,
+            "SECS": 3,
+            "2": 2,
+            "COSTUME": 1,
+            "SUBSTACK": 4,
+            "CONDITION": 3,
+            "COLOR": 2,
+            "#b6b114": 2,
+            "QUESTION": 2,
+            "What's your name?": 2,
+            "KEY_OPTION": 1,
+            "VALUE": 1,
+            "10": 1,
+            "VOLUME": 1,
+            "-10": 1,
+            "Hmm...": 1,
+            "SIZE": 1,
+            "100": 1,
+            "TOWARDS": 1,
+            "1": 1,
+            "TO": 1
+        },
+        "most_common_opcodes_statistics": {
+            "sensing_touchingcolor": 2,
+            "sensing_askandwait": 2,
+            "control_repeat_until": 2,
+            "event_whenkeypressed_KEY_OPTION_space": 1,
+            "looks_sayforsecs": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "SUBSTACK": 4,
+            "SECS": 3,
+            "CONDITION": 3,
+            "MESSAGE": 2,
+            "2": 2
+        }
+    }
+}

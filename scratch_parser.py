@@ -115,10 +115,16 @@ class scratch_parser:
             return opcode
         
 
+    def get_opcode_from_id2(self,blocks_values,block_id):
+       if block_id == None or block_id == '' or block_id == None or blocks_values == {} or blocks_values == None:
+            return '' 
+       return blocks_values['blocks'][block_id]['opcode'] if blocks_values['blocks'][block_id]['opcode'] != None else ''
 
     def get_opcode_from_id(self,block_values,block_id):
         if block_id == None or block_id == '':
             return ''
+        elif block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
+            return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
         
         if self.check_if_id_is_parent(block_values,block_id):
             return self.get_parent_complete_opcode(block_values,block_id)
@@ -137,9 +143,9 @@ class scratch_parser:
             for k,v in fields.items():
                     if isinstance(v,list) and len(v) > 0:
                         if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
-                            opcode = f'{opcode}_{k}_{v[0]}'
+                            opcode = f'{opcode}_{v[0]}'
                         elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
-                            opcode = f'{opcode}_{k}_{v[0]}_{v[1]}'
+                            opcode = f'{opcode}_{v[0]}_{v[1]}'
             return opcode
             
             
@@ -322,10 +328,70 @@ class scratch_parser:
         if isinstance(all_val,dict) and bool(all_val):
             for ks,vs in all_val.items():
                 if isinstance(vs,list) and len(vs) > 0:
-                    val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
-                    tr.append([ks,val])
+                    if isinstance(ks,str) and ks.startswith("event") or ks.startswith("control"):
+                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                        tr.append([ks,val])
+                    else:
+                        all_par_keys = self.get_all_parent_keys(blocks_values)
+                        for each_par in all_par_keys:
+                            if self.get_opcode_from_id2(blocks_values, each_par) == ks:
+                                blocks = self.get_any_block_by_id(blocks_values,each_par)
+                                proc_par = self.iterate_procedure_input(blocks_values,blocks)
+                                val = [[proc_par,[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                                tr.append([ks,val])
+                                
+                                
+                                                
+                                    
+                                
+                                
+                        
         final_tree = [file_name,tr]
         return final_tree
+    
+
+
+    def iterate_procedure_input(self,blocks_values,input_block):
+        child_list = []    
+        if input_block != None or blocks_values != {}:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input(blocks_values,child_block)
+                            chil_opc = child_block["opcode"] if "opcode" in child_block.keys() else ''
+                            mutation = child_block["mutation"] if "mutation" in child_block.keys() else {}
+                            mut_val = mutation["proccode"] if "proccode" in mutation.keys() else ''
+                            
+                            mut_val = mut_val.replace(' %s %b ','_') if ' %s %b ' in mut_val else mut_val
+                            child_list = [[f'{chil_opc}_{mut_val}']]
+                            
+                            
+                            for k,v in child_block["inputs"].items():
+                                if isinstance(v,list) and len(v) > 0 and isinstance(v[1],str) and len(v[1]) == 20:
+                                    inner_block = self.get_any_block_by_id(blocks_values,v[1])
+                                    opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
+                                    fields = inner_block["fields"] if "fields" in inner_block.keys() else {}
+                                    fields_v = [f'{k2}_{v2[0]}' for k2,v2 in fields.items() if fields != {} or fields != None and isinstance(v2,list) and len(v2) > 0 and isinstance(v2[0],str) and len(v2[0]) > 0]
+                                    if isinstance(child_list[-1],list) and len(child_list[-1]) > 0:
+
+                                        child_list[-1].append([f'{opcode_ch}_{fields_v[0]}' if len(fields_v) > 0 else f'{opcode_ch}']) 
+                                        #if isinstance(child_list[-1],list) and len(child_list[-1]) > 0 else child_list.append([f'{opcode_ch}_{fields_v[0]}' if len(fields_v) > 0 else f'{opcode_ch}'])
+
+                                
+                return child_list
+                            
+
 
     def count_opcodes(self,blocks_values):
         all_opcodes = self.return_all_opcodes(blocks_values)
@@ -406,11 +472,13 @@ class scratch_parser:
         self.blocs_json = json.loads(self.parsed_value)
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
+        #print(json.dumps(all_blocks_value,indent=4))
+        
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2(all_blocks_value,file_name)
         
-
+        
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
         
@@ -423,6 +491,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/complex.sb3")
+scratch_parser_inst.read_files("files/complex2.sb3")
 
     

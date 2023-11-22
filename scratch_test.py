@@ -2412,7 +2412,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
+                                "control_create_clone_of_menu__myself_",
                                 [
                                     []
                                 ]
@@ -2477,7 +2477,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "looks_seteffectto_EFFECT_COLOR",
+                    "looks_seteffectto_COLOR",
                     [
                         [
                             "VALUE",
@@ -2518,7 +2518,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                "sensing_keyoptions_space",
                                                 [
                                                     []
                                                 ]
@@ -2606,7 +2606,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SUBSTACK2",
                             [
-                                "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -2622,7 +2622,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "control_stop_STOP_OPTION_all",
+                    "control_stop_all",
                     []
                 ],
                 [
@@ -2637,7 +2637,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TO",
                             [
-                                "motion_glideto_menu_TO__random_",
+                                "motion_glideto_menu__random_",
                                 [
                                     []
                                 ]
@@ -2679,7 +2679,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TOWARDS",
                             [
-                                "motion_pointtowards_menu_TOWARDS__mouse_",
+                                "motion_pointtowards_menu__mouse_",
                                 [
                                     []
                                 ]
@@ -2710,7 +2710,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "motion_setrotationstyle_STYLE_left-right",
+                    "motion_setrotationstyle_left-right",
                     []
                 ],
                 [
@@ -2719,7 +2719,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "BACKDROP",
                             [
-                                "looks_backdrops_BACKDROP_backdrop1",
+                                "looks_backdrops_backdrop1",
                                 [
                                     []
                                 ]
@@ -2739,7 +2739,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "looks_changeeffectby_EFFECT_COLOR",
+                    "looks_changeeffectby_COLOR",
                     [
                         [
                             "CHANGE",
@@ -2769,7 +2769,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "sound_seteffectto_EFFECT_PITCH",
+                    "sound_seteffectto_PITCH",
                     [
                         [
                             "VALUE",
@@ -2791,7 +2791,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "SOUND_MENU",
                                             [
-                                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                                "sound_sounds_menu_Meow",
                                                 [
                                                     []
                                                 ]
@@ -2818,29 +2818,42 @@ class TestScratchParser(unittest.TestCase):
             "procedures_definition",
             [
                 [
-                    "procedures_call",
                     [
                         [
-                            "v*[[rw;8e#{x6iJcr=-_",
+                            "procedures_prototype_myblock_yes",
                             [
-                                "sensing_mousey",
-                                [
-                                    []
-                                ]
+                                "argument_reporter_string_number_VALUE_n3"
+                            ],
+                            [
+                                "argument_reporter_boolean_VALUE_true"
                             ]
-                        ],
+                        ]
+                    ],
+                    [
+                        "procedures_call",
                         [
-                            "g75W+0Q{NLJrb$~17SO]",
                             [
-                                "sensing_keypressed",
+                                "v*[[rw;8e#{x6iJcr=-_",
                                 [
+                                    "sensing_mousey",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ],
+                            [
+                                "g75W+0Q{NLJrb$~17SO]",
+                                [
+                                    "sensing_keypressed",
                                     [
                                         [
-                                            "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                "KEY_OPTION",
                                                 [
-                                                    []
+                                                    "sensing_keyoptions_space",
+                                                    [
+                                                        []
+                                                    ]
                                                 ]
                                             ]
                                         ]
@@ -2861,7 +2874,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
+                                "control_create_clone_of_menu__myself_",
                                 [
                                     []
                                 ]
@@ -2923,7 +2936,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "TO",
                             [
-                                "motion_goto_menu_TO__random_",
+                                "motion_goto_menu__random_",
                                 [
                                     []
                                 ]
@@ -2966,7 +2979,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                    "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                     [
                         [
                             "VALUE",
@@ -3026,7 +3039,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "COSTUME",
                             [
-                                "looks_costume_COSTUME_costume2",
+                                "looks_costume_costume2",
                                 [
                                     []
                                 ]
@@ -3040,7 +3053,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -3054,7 +3067,7 @@ class TestScratchParser(unittest.TestCase):
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -3067,7 +3080,7 @@ class TestScratchParser(unittest.TestCase):
                     []
                 ],
                 [
-                    "sound_changeeffectby_EFFECT_PITCH",
+                    "sound_changeeffectby_PITCH",
                     [
                         [
                             "VALUE",
@@ -3078,7 +3091,7 @@ class TestScratchParser(unittest.TestCase):
                     ]
                 ],
                 [
-                    "sound_seteffectto_EFFECT_PITCH",
+                    "sound_seteffectto_PITCH",
                     [
                         [
                             "VALUE",
@@ -3117,7 +3130,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "SUBSTACK",
                                             [
-                                                "sensing_setdragmode_DRAG_MODE_draggable",
+                                                "sensing_setdragmode_draggable",
                                                 [
                                                     []
                                                 ]
@@ -3224,7 +3237,7 @@ class TestScratchParser(unittest.TestCase):
                                         [
                                             "TOUCHINGOBJECTMENU",
                                             [
-                                                "sensing_touchingobjectmenu_TOUCHINGOBJECTMENU__mouse_",
+                                                "sensing_touchingobjectmenu__mouse_",
                                                 [
                                                     []
                                                 ]

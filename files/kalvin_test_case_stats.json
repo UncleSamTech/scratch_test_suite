@@ -1,0 +1,43 @@
+{
+    "kalvin_test_case": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "motion_movesteps": 1,
+            "motion_turnleft": 1,
+            "control_if_else": 1,
+            "sensing_touchingobject": 1,
+            "sensing_touchingobjectmenu__mouse_": 1,
+            "sensing_askandwait": 1,
+            "sound_playuntildone": 1,
+            "sound_sounds_menu_Meow": 1
+        },
+        "non_opcodes_statistics": {
+            "kalvin_test_case": 1,
+            "STEPS": 1,
+            "10": 1,
+            "DEGREES": 1,
+            "15": 1,
+            "CONDITION": 1,
+            "TOUCHINGOBJECTMENU": 1,
+            "SUBSTACK": 1,
+            "QUESTION": 1,
+            "What's your name?": 1,
+            "SUBSTACK2": 1,
+            "SOUND_MENU": 1
+        },
+        "most_common_opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "motion_movesteps": 1,
+            "motion_turnleft": 1,
+            "control_if_else": 1,
+            "sensing_touchingobject": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "kalvin_test_case": 1,
+            "STEPS": 1,
+            "10": 1,
+            "DEGREES": 1,
+            "15": 1
+        }
+    }
+}

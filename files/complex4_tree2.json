@@ -52,7 +52,7 @@
                         [
                             "MESSAGE",
                             [
-                                "data_itemnumoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_itemnumoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -73,13 +73,13 @@
                         [
                             "CHANGE",
                             [
-                                "sensing_of_PROPERTY_backdrop #",
+                                "sensing_of_backdrop #",
                                 [
                                     [
                                         [
                                             "OBJECT",
                                             [
-                                                "sensing_of_object_menu_OBJECT__stage_",
+                                                "sensing_of_object_menu__stage_",
                                                 [
                                                     []
                                                 ]
@@ -101,7 +101,7 @@
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -135,7 +135,7 @@
                                         [
                                             "DISTANCETOMENU",
                                             [
-                                                "sensing_distancetomenu_DISTANCETOMENU__mouse_",
+                                                "sensing_distancetomenu__mouse_",
                                                 [
                                                     []
                                                 ]
@@ -163,7 +163,7 @@
                                         [
                                             "SUBSTACK",
                                             [
-                                                "sensing_setdragmode_DRAG_MODE_draggable",
+                                                "sensing_setdragmode_draggable",
                                                 [
                                                     []
                                                 ]
@@ -189,7 +189,7 @@
                                                                         [
                                                                             "KEY_OPTION",
                                                                             [
-                                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                                "sensing_keyoptions_space",
                                                                                 [
                                                                                     []
                                                                                 ]
@@ -239,7 +239,7 @@
                                                                                         [
                                                                                             "NUM2",
                                                                                             [
-                                                                                                "operator_mathop_OPERATOR_abs",
+                                                                                                "operator_mathop_abs",
                                                                                                 [
                                                                                                     [
                                                                                                         [
@@ -262,7 +262,7 @@
                                                         ]
                                                     ]
                                                 ],
-                                                "data_insertatlist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_insertatlist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     [
                                                         [
@@ -288,7 +288,7 @@
                     ]
                 ],
                 [
-                    "control_stop_STOP_OPTION_all",
+                    "control_stop_all",
                     []
                 ]
             ]
@@ -308,7 +308,7 @@
                                         [
                                             "FROM",
                                             [
-                                                "data_lengthoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_lengthoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     []
                                                 ]
@@ -332,7 +332,7 @@
                         [
                             "TOWARDS",
                             [
-                                "motion_pointtowards_menu_TOWARDS__mouse_",
+                                "motion_pointtowards_menu__mouse_",
                                 [
                                     []
                                 ]
@@ -341,7 +341,7 @@
                     ]
                 ],
                 [
-                    "motion_setrotationstyle_STYLE_left-right",
+                    "motion_setrotationstyle_left-right",
                     []
                 ],
                 [
@@ -350,7 +350,7 @@
                         [
                             "MESSAGE",
                             [
-                                "sensing_current_CURRENTMENU_YEAR",
+                                "sensing_current_YEAR",
                                 [
                                     []
                                 ]
@@ -376,7 +376,7 @@
                     ]
                 ],
                 [
-                    "looks_gotofrontback_FRONT_BACK_front",
+                    "looks_gotofrontback_front",
                     []
                 ],
                 [
@@ -385,7 +385,7 @@
                         [
                             "SOUND_MENU",
                             [
-                                "sound_sounds_menu_SOUND_MENU_Meow",
+                                "sound_sounds_menu_Meow",
                                 [
                                     []
                                 ]
@@ -419,7 +419,7 @@
                                         [
                                             "QUESTION",
                                             [
-                                                "data_itemoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                                "data_itemoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                                 [
                                                     [
                                                         [
@@ -461,7 +461,7 @@
                                                                         [
                                                                             "KEY_OPTION",
                                                                             [
-                                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                                "sensing_keyoptions_space",
                                                                                 [
                                                                                     []
                                                                                 ]
@@ -482,7 +482,7 @@
                     ]
                 ],
                 [
-                    "data_replaceitemoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_replaceitemoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     [
                         [
                             "INDEX",
@@ -537,7 +537,7 @@
                         [
                             "COSTUME",
                             [
-                                "looks_costume_COSTUME_costume2",
+                                "looks_costume_costume2",
                                 [
                                     []
                                 ]
@@ -546,7 +546,7 @@
                     ]
                 ],
                 [
-                    "looks_changeeffectby_EFFECT_COLOR",
+                    "looks_changeeffectby_COLOR",
                     [
                         [
                             "CHANGE",
@@ -560,7 +560,7 @@
                     ]
                 ],
                 [
-                    "looks_goforwardbackwardlayers_FORWARD_BACKWARD_forward",
+                    "looks_goforwardbackwardlayers_forward",
                     [
                         [
                             "NUM",
@@ -598,7 +598,7 @@
                                         [
                                             "KEY_OPTION",
                                             [
-                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                "sensing_keyoptions_space",
                                                 [
                                                     []
                                                 ]
@@ -628,7 +628,7 @@
                                                         [
                                                             "KEY_OPTION",
                                                             [
-                                                                "sensing_keyoptions_KEY_OPTION_space",
+                                                                "sensing_keyoptions_space",
                                                                 [
                                                                     []
                                                                 ]
@@ -645,7 +645,7 @@
                         [
                             "SUBSTACK",
                             [
-                                "data_setvariableto_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_setvariableto_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -671,7 +671,7 @@
                         [
                             "TO",
                             [
-                                "motion_goto_menu_TO__random_",
+                                "motion_goto_menu__random_",
                                 [
                                     []
                                 ]
@@ -698,12 +698,12 @@
                     []
                 ],
                 [
-                    "looks_seteffectto_EFFECT_COLOR",
+                    "looks_seteffectto_COLOR",
                     [
                         [
                             "VALUE",
                             [
-                                "looks_costumenumbername_NUMBER_NAME_number",
+                                "looks_costumenumbername_number",
                                 [
                                     []
                                 ]
@@ -712,7 +712,7 @@
                     ]
                 ],
                 [
-                    "sound_changeeffectby_EFFECT_PITCH",
+                    "sound_changeeffectby_PITCH",
                     [
                         [
                             "VALUE",
@@ -748,7 +748,7 @@
                                         [
                                             "TOUCHINGOBJECTMENU",
                                             [
-                                                "sensing_touchingobjectmenu_TOUCHINGOBJECTMENU__mouse_",
+                                                "sensing_touchingobjectmenu__mouse_",
                                                 [
                                                     []
                                                 ]
@@ -805,7 +805,7 @@
                                         [
                                             "SUBSTACK",
                                             [
-                                                "data_showvariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                                "data_showvariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                                 [
                                                     []
                                                 ]
@@ -818,7 +818,7 @@
                         [
                             "SUBSTACK2",
                             [
-                                "data_addtolist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_addtolist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -839,7 +839,7 @@
                         [
                             "CONDITION",
                             [
-                                "data_listcontainsitem_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_listcontainsitem_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -855,7 +855,7 @@
                         [
                             "SUBSTACK",
                             [
-                                "data_showlist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_showlist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     []
                                 ]
@@ -883,7 +883,7 @@
                         [
                             "Y",
                             [
-                                "looks_backdropnumbername_NUMBER_NAME_number",
+                                "looks_backdropnumbername_number",
                                 [
                                     []
                                 ]
@@ -911,7 +911,7 @@
                         [
                             "BACKDROP",
                             [
-                                "looks_backdrops_BACKDROP_backdrop1",
+                                "looks_backdrops_backdrop1",
                                 [
                                     []
                                 ]
@@ -924,7 +924,7 @@
                     []
                 ],
                 [
-                    "sound_seteffectto_EFFECT_PITCH",
+                    "sound_seteffectto_PITCH",
                     [
                         [
                             "VALUE",
@@ -1013,11 +1013,11 @@
                         [
                             "SUBSTACK",
                             [
-                                "data_hidevariable_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_hidevariable_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     []
                                 ],
-                                "data_deleteoflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                                "data_deleteoflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                                 [
                                     [
                                         [
@@ -1033,7 +1033,7 @@
                     ]
                 ],
                 [
-                    "data_hidelist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_hidelist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     []
                 ]
             ]
@@ -1053,7 +1053,7 @@
                         [
                             "TO",
                             [
-                                "motion_glideto_menu_TO__random_",
+                                "motion_glideto_menu__random_",
                                 [
                                     []
                                 ]
@@ -1168,7 +1168,7 @@
                     []
                 ],
                 [
-                    "data_deletealloflist_LIST_comp4list_t|(E2+GqDUkDWvfS_dG:",
+                    "data_deletealloflist_comp4list_t|(E2+GqDUkDWvfS_dG:",
                     []
                 ],
                 [
@@ -1219,7 +1219,7 @@
                         [
                             "CLONE_OPTION",
                             [
-                                "control_create_clone_of_menu_CLONE_OPTION__myself_",
+                                "control_create_clone_of_menu__myself_",
                                 [
                                     []
                                 ]
@@ -1255,7 +1255,7 @@
                         [
                             "SUBSTACK",
                             [
-                                "data_changevariableby_VARIABLE_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
+                                "data_changevariableby_my variable_`jEk@4|i[#Fk?(8x)AV.-my variable",
                                 [
                                     [
                                         [
@@ -1276,29 +1276,42 @@
             "procedures_definition",
             [
                 [
-                    "procedures_call",
                     [
                         [
-                            "6psEeyKNwbAq9?cPG_c#",
+                            "procedures_prototype_comp4block_comp4",
                             [
-                                "looks_backdropnumbername_NUMBER_NAME_number",
-                                [
-                                    []
-                                ]
+                                "argument_reporter_string_number_VALUE_number"
+                            ],
+                            [
+                                "argument_reporter_boolean_VALUE_true"
                             ]
-                        ],
+                        ]
+                    ],
+                    [
+                        "procedures_call",
                         [
-                            "3.Xk%pjRv/P67n];n9b;",
                             [
-                                "sensing_touchingobject",
+                                "6psEeyKNwbAq9?cPG_c#",
                                 [
+                                    "looks_backdropnumbername_number",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ],
+                            [
+                                "3.Xk%pjRv/P67n];n9b;",
+                                [
+                                    "sensing_touchingobject",
                                     [
                                         [
-                                            "TOUCHINGOBJECTMENU",
                                             [
-                                                "sensing_touchingobjectmenu_TOUCHINGOBJECTMENU__mouse_",
+                                                "TOUCHINGOBJECTMENU",
                                                 [
-                                                    []
+                                                    "sensing_touchingobjectmenu__mouse_",
+                                                    [
+                                                        []
+                                                    ]
                                                 ]
                                             ]
                                         ]
