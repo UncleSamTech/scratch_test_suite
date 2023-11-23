@@ -30,10 +30,11 @@
             "SECS": 3,
             "2": 2,
             "COSTUME": 1,
-            "SUBSTACK": 4,
+            "BodyBlock": 3,
             "CONDITION": 3,
             "COLOR": 2,
             "#b6b114": 2,
+            "ThenBranch": 1,
             "QUESTION": 2,
             "What's your name?": 2,
             "KEY_OPTION": 1,
@@ -56,8 +57,8 @@
             "looks_sayforsecs": 1
         },
         "most_common_non_opcodes_statistics": {
-            "SUBSTACK": 4,
             "SECS": 3,
+            "BodyBlock": 3,
             "CONDITION": 3,
             "MESSAGE": 2,
             "2": 2

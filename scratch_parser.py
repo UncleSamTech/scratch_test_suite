@@ -24,6 +24,8 @@ class scratch_parser:
         self.missed_inp  = []
         self.missed_inp2  = []
         self.child_input_keys = []
+        self.substack_replacement = {"control_repeat":"BodyBlock","control_forever":"BodyBlock","control_if":"ThenBranch","control_if_else":["ThenBranch","BodyBlock"],"control_repeat_until":"BodyBlock"}
+
 
     
     def get_all_targets(self,json_data):
@@ -113,6 +115,70 @@ class scratch_parser:
                     
         else:
             return opcode
+    
+    def get_complete_fields_inputs(self,blocks_values,block_id):
+        opcode = ""
+        if block_id == "" or block_id == None or blocks_values == {} or blocks_values == None:
+            return opcode
+        block = self.get_any_block_by_id(blocks_values,block_id)
+        if block == None or block == {}:
+            return opcode
+        inputs = block["inputs"] if "inputs" in block.keys() else {}
+        fields = block["fields"] if "fields" in block.keys() else {}
+        main_opcode = block["parent"] if "parent" in block.keys() else ''
+        
+        if main_opcode == None or main_opcode == "":
+            
+            if inputs == {} and fields == {} :
+                    return opcode
+            
+            if inputs != {}  and fields != {}: 
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and  isinstance(v[1],str) and len(v[1]) > 0:
+                            
+                            opcode = f'{k}_{v[0]}_{v[1]}'
+                            
+                        if isinstance(v[0],str) and len(v[0]) > 0:
+                            
+                            opcode = f'{k}_{v[0]}' 
+                
+                        
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1]}'
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1][1]}'
+                
+                return opcode
+            elif inputs != {}  and fields == {} :
+                
+                for k,v in inputs.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{k}_{v[1]}'
+                            
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{k}_{v[1][1]}'
+                return opcode
+
+            elif inputs == {}  and fields != {} :
+                            
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
+                            opcode = f'{k}_{v[0]}'
+                            
+                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{k}_{v[0]}_{v[1]}'
+            return opcode    
+            
+        
+                    
+        
+            
         
 
     def get_opcode_from_id2(self,blocks_values,block_id):
@@ -120,7 +186,7 @@ class scratch_parser:
             return '' 
        return blocks_values['blocks'][block_id]['opcode'] if blocks_values['blocks'][block_id]['opcode'] != None else ''
 
-    def get_opcode_from_id(self,block_values,block_id):
+    def get_opcode_from_id_main(self,block_values,block_id):
         if block_id == None or block_id == '':
             return ''
         elif block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
@@ -147,6 +213,38 @@ class scratch_parser:
                         elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
                             opcode = f'{opcode}_{v[0]}_{v[1]}'
             return opcode
+    
+    def get_opcode_from_id(self,block_values,block_id):
+        if block_id == '' or block_id == None or block_values == {} or block_values == None or block_values['blocks'] == {} or block_values['blocks'] == None or block_values['blocks'][block_id] == {} or block_values['blocks'][block_id] == None:
+            return ''
+        
+        return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None or block_values['blocks'][block_id]['opcode'] != ''  else ''
+        
+            
+        
+    def get_fields_values(self,blocks_values,block_id):
+        if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
+            return ""
+        block = self.get_any_block_by_id(blocks_values,block_id)
+        if block == None or block == {}:
+            return ""
+        fields = block["fields"] if "fields" in block.keys() else {}
+        if fields != {} or fields != None:
+            for k,v in fields.items():
+                if isinstance(v,list) and len(v) > 0:
+                    if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
+                        return f'{k}_{v[0]}' if len(k) > 0 else f'{v[0]}'
+                    elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
+                        return f'{v[0]}{v[1]}'
+        else:
+            return ""
+        
+    def get_input_values_parent(self,blocks_values,block_id):
+        if block_id == "" or block_id == None or blocks_values == {} or blocks_values == None:
+            return ""
+        if self.check_if_id_is_parent(blocks_values,block_id):
+            return self.get_parent_complete_opcode(blocks_values,block_id)
+
             
             
             
@@ -269,7 +367,7 @@ class scratch_parser:
     def get_all_next_id_test(self,blocks_values):
        if blocks_values == None or blocks_values == {}:
             return {}                                                   
-       return {self.get_opcode_from_id(blocks_values,each_value):self.break_down(blocks_values,each_value) for each_value in self.get_all_parent_keys(blocks_values)}
+       return {each_value:self.break_down(blocks_values,each_value) for each_value in self.get_all_parent_keys(blocks_values)}
 
     def get_input_block_by_id_key(self,block_values,bid,key):
         if key == None or len(key) < 1 or block_values == None or block_values == {} or bid == None or len(bid) < 1:
@@ -286,10 +384,52 @@ class scratch_parser:
                             specific_input_by_id_key = [key,[opcode]]
                         elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
                             specific_input_by_id_key = [key,[each_val[1]]]
-                        
-
-
+        return specific_input_by_id_key
+    
+    def get_input_block_by_id_key_disp(self,block_values,bid,key):
         
+        if key == None or len(key) < 1  or block_values == {} or block_values == None or bid == None or len(bid) < 1:
+            return []
+        specific_input_by_id_key = []
+        input_block = self.read_input_values_by_id(block_values,bid)
+        opcode_par  = self.get_opcode_from_id(block_values,bid)
+        
+        if isinstance(input_block,dict) and bool(input_block): 
+            if opcode_par in self.substack_replacement.keys() :
+                if key in input_block.keys():
+                    value_block =  input_block[key]
+                    if isinstance(value_block,list) and len(value_block) > 0:
+                        for each_val in value_block:
+                            if opcode_par != "control_if_else":
+                                if isinstance(each_val,str) and len(each_val) > 0:
+                                    opcode = self.get_opcode_from_id(block_values,each_val)
+                                    specific_input_by_id_key = [self.substack_replacement[opcode_par]  if isinstance(key,str) and key.startswith("SUBS")  else key,[opcode]]
+                                elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                    specific_input_by_id_key = [self.substack_replacement[opcode_par] if isinstance(key,str) and key.startswith("SUBS")  else key,[each_val[1]]]
+                            else:
+                                if isinstance(each_val,str) and len(each_val) > 0:
+                                    opcode = self.get_opcode_from_id(block_values,each_val)
+                                    if isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][0],[opcode]]
+                                    elif isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK2"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][1],[opcode]]
+                                elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                    if isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][0],[each_val[1]]]
+                                    elif isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK2"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][1],[each_val[1]]]
+                                
+            else:
+                if key in input_block.keys():
+                    value_block =  input_block[key]
+                    if isinstance(value_block,list) and len(value_block) > 0:
+                        for each_val in value_block:
+                            if isinstance(each_val,str) and len(each_val) > 0:
+                                opcode = self.get_opcode_from_id(block_values,each_val)
+                                specific_input_by_id_key = [key,[opcode]]
+                            elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                specific_input_by_id_key = [key,[each_val[1]]]
+
         return specific_input_by_id_key
 
     def correct_input_block_tree_by_id(self,blocks_values,input_block,ids):
@@ -297,6 +437,7 @@ class scratch_parser:
         corr_block_tree = []
         if input_block == None or input_block == {} or blocks_values == None or blocks_values == {}:
             return []
+         
         if isinstance(input_block,dict) and bool(input_block):
             for k,v in input_block.items():
                 if isinstance(v,list) and len(v) > 0:
@@ -315,6 +456,84 @@ class scratch_parser:
                             corr_block_tree.append([k,opcode])
                     elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
                         corr_block_tree.append(self.get_input_block_by_id_key(blocks_values,ids,k))
+        return corr_block_tree
+    
+    def correct_input_block_tree_by_id_disp(self,blocks_values,input_block,ids):
+        opcode_par  = self.get_opcode_from_id(blocks_values,ids)    
+
+        corr_block_tree = []
+        if input_block == None or input_block == {} or blocks_values == None or blocks_values == {}:
+            return []
+        if isinstance(input_block,dict) and bool(input_block):
+            if opcode_par in self.substack_replacement.keys():
+                for k,v in input_block.items():
+                    if opcode_par != "control_if_else":
+                        if isinstance(v,list) and len(v) > 0:
+                            if isinstance(v[1] ,str) and len(v[1]) > 0:
+                                opcode = self.get_opcode_from_id(blocks_values,v[1])  
+                                recur_val = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v[1]),v[1])  
+                        
+                                any_block = self.get_any_block_by_id(blocks_values,v[1])
+                                next_opcode = self.get_opcode_from_id(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                                next_rec  = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,any_block["next"]),any_block["next"]) 
+                                if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                                elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,[opcode,[recur_val]]])
+                                elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,opcode])
+                            elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values,ids,k))
+                    else:
+                        if isinstance(v,list) and len(v) > 0:
+                            if isinstance(v[1] ,str) and len(v[1]) > 0:
+                                opcode = self.get_opcode_from_id(blocks_values,v[1])  
+                                recur_val = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v[1]),v[1])  
+                        
+                                any_block = self.get_any_block_by_id(blocks_values,v[1])
+                                next_opcode = self.get_opcode_from_id(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                                next_rec  = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,any_block["next"]),any_block["next"]) 
+                                if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],[opcode,[recur_val],next_opcode,[next_rec]]])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],[opcode,[recur_val],next_opcode,[next_rec]]])
+                                    else:
+                                        corr_block_tree.append([k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                                elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],[opcode,[recur_val]]])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],[opcode,[recur_val]]])
+                                    else:
+                                        corr_block_tree.append([k,[opcode,[recur_val]]])
+                                elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],opcode])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],opcode])
+                                    else:
+                                        corr_block_tree.append([k,opcode])
+                            elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values,ids,k))
+            else:
+                for k,v in input_block.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1] ,str) and len(v[1]) > 0:
+                            opcode = self.get_opcode_from_id(blocks_values,v[1])  
+                            recur_val = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v[1]),v[1])  
+                        
+                            any_block = self.get_any_block_by_id(blocks_values,v[1])
+                            next_opcode = self.get_opcode_from_id(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                            next_rec  = self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,any_block["next"]),any_block["next"]) 
+                            if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                corr_block_tree.append([k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                            elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                corr_block_tree.append([k,[opcode,[recur_val]]])
+                            elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                corr_block_tree.append([k,opcode])
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values,ids,k))
         return corr_block_tree
         
     def create_next_values2(self,blocks_values,file_name):  
@@ -336,16 +555,34 @@ class scratch_parser:
                         for each_par in all_par_keys:
                             if self.get_opcode_from_id2(blocks_values, each_par) == ks:
                                 blocks = self.get_any_block_by_id(blocks_values,each_par)
-                                proc_par = self.iterate_procedure_input(blocks_values,blocks)
-                                val = [[proc_par,[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
-                                tr.append([ks,val])
-                                
-                                
-                                                
-                                    
-                                
-                                
+                                val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                                tr.append([ks,val])                        
+        final_tree = [file_name,tr]
+        return final_tree
+    
+    def create_next_values2_disp(self,blocks_values,file_name):  
+        tr = [] 
+        final_tree = []
+        
+        
+        all_val = self.get_all_next_id_test(blocks_values)     
+        if all_val == None or all_val == {}:
+            return []
+        if isinstance(all_val,dict) and bool(all_val):
+            for ks,vs in all_val.items():
+                
+                if isinstance(vs,list) and len(vs) > 0:
+                    if isinstance(self.get_opcode_from_id(blocks_values,ks),str) and self.get_opcode_from_id(blocks_values,ks).startswith("event") or self.get_opcode_from_id(blocks_values,ks).startswith("control"):
                         
+                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] if self.get_complete_fields_inputs(blocks_values,v2) == '' or self.get_complete_fields_inputs(blocks_values,v2) == None else [self.get_opcode_from_id(blocks_values,v2),[self.get_complete_fields_inputs(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs ]
+                        
+                        tr.append([self.get_opcode_from_id(blocks_values,ks),val] if self.get_complete_fields_inputs(blocks_values,ks) == "" or self.get_complete_fields_inputs(blocks_values,ks) == None else [self.get_opcode_from_id(blocks_values,ks),[self.get_complete_fields_inputs(blocks_values,ks),val]])
+                    else:
+                        if self.get_opcode_from_id2(blocks_values, ks) == self.get_opcode_from_id(blocks_values,ks):
+                            blocks = self.get_any_block_by_id(blocks_values,ks)
+                            val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                                
+                            tr.append([self.get_opcode_from_id(blocks_values,ks),val])                        
         final_tree = [file_name,tr]
         return final_tree
     
@@ -374,7 +611,7 @@ class scratch_parser:
                             mut_val = mutation["proccode"] if "proccode" in mutation.keys() else ''
                             
                             mut_val = mut_val.replace(' %s %b ','_') if ' %s %b ' in mut_val else mut_val
-                            child_list = [[f'{chil_opc}_{mut_val}']]
+                            child_list = [chil_opc,[[mut_val]]]
                             
                             
                             for k,v in child_block["inputs"].items():
@@ -385,8 +622,10 @@ class scratch_parser:
                                     fields_v = [f'{k2}_{v2[0]}' for k2,v2 in fields.items() if fields != {} or fields != None and isinstance(v2,list) and len(v2) > 0 and isinstance(v2[0],str) and len(v2[0]) > 0]
                                     if isinstance(child_list[-1],list) and len(child_list[-1]) > 0:
 
-                                        child_list[-1].append([f'{opcode_ch}_{fields_v[0]}' if len(fields_v) > 0 else f'{opcode_ch}']) 
-                                        #if isinstance(child_list[-1],list) and len(child_list[-1]) > 0 else child_list.append([f'{opcode_ch}_{fields_v[0]}' if len(fields_v) > 0 else f'{opcode_ch}'])
+                                        child_list[-1].append([opcode_ch,[fields_v[0]] if len(fields_v) > 0 else f'{opcode_ch}']) 
+                                    else:
+                                        child_list.append([opcode_ch,[fields_v[0]] if len(fields_v) > 0 else f'{opcode_ch}'])
+                                        
 
                                 
                 return child_list
@@ -476,8 +715,13 @@ class scratch_parser:
         
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
-        next_val2 = self.create_next_values2(all_blocks_value,file_name)
+        next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
         
+        
+        #inp_byid = self.get_input_block_by_id_key_disp(all_blocks_value,"CGRCR{+Vd.C42.6]~Ttt","SUBSTACK2")
+        #print(inp_byid)
+        #cor = self.correct_input_block_tree_by_id_disp(all_blocks_value,self.read_input_values_by_id(all_blocks_value,"CGRCR{+Vd.C42.6]~Ttt"),"CGRCR{+Vd.C42.6]~Ttt")
+        #print(cor)
         
         with open(f"files/{file_name}_tree2.json","w") as tree_file:
             json.dump(next_val2,tree_file,indent=4)
@@ -491,6 +735,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/3l_opcode.sb3")
+scratch_parser_inst.read_files("files/stand_check.sb3")
 
     

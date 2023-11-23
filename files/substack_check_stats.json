@@ -1,0 +1,53 @@
+{
+    "substack_check": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 2,
+            "event_whenkeypressed_KEY_OPTION_space": 2,
+            "event_whenthisspriteclicked": 1,
+            "event_whenbackdropswitchesto_BACKDROP_backdrop1": 1,
+            "event_whengreaterthan_WHENGREATERTHANMENU_LOUDNESS_VALUE_10": 1,
+            "event_whenbroadcastreceived_BROADCAST_OPTION_message1_Ivxi5WqTJ8s[:O~n!2/O": 1,
+            "control_wait": 2,
+            "control_repeat": 2,
+            "control_forever": 1,
+            "control_if": 1,
+            "control_if_else": 1,
+            "control_wait_until": 1,
+            "control_start_as_clone": 1,
+            "control_repeat_until": 1,
+            "sensing_askandwait": 5,
+            "sensing_touchingobject": 4,
+            "sensing_touchingobjectmenu__mouse_": 4,
+            "looks_say": 1
+        },
+        "non_opcodes_statistics": {
+            "substack_check": 1,
+            "DURATION": 1,
+            "1": 1,
+            "TIMES": 1,
+            "10": 1,
+            "SUBSTACK": 5,
+            "QUESTION": 5,
+            "What's your name?": 5,
+            "CONDITION": 4,
+            "TOUCHINGOBJECTMENU": 4,
+            "SUBSTACK2": 1,
+            "MESSAGE": 1,
+            "Hello!": 1
+        },
+        "most_common_opcodes_statistics": {
+            "sensing_askandwait": 5,
+            "sensing_touchingobject": 4,
+            "sensing_touchingobjectmenu__mouse_": 4,
+            "event_whenflagclicked": 2,
+            "event_whenkeypressed_KEY_OPTION_space": 2
+        },
+        "most_common_non_opcodes_statistics": {
+            "SUBSTACK": 5,
+            "QUESTION": 5,
+            "What's your name?": 5,
+            "CONDITION": 4,
+            "TOUCHINGOBJECTMENU": 4
+        }
+    }
+}

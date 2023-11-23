@@ -39,7 +39,7 @@
                     "control_forever",
                     [
                         [
-                            "SUBSTACK",
+                            "BodyBlock",
                             [
                                 "control_if",
                                 [
@@ -61,7 +61,7 @@
                                             ]
                                         ],
                                         [
-                                            "SUBSTACK",
+                                            "ThenBranch",
                                             [
                                                 "sensing_askandwait",
                                                 [
@@ -101,7 +101,7 @@
                                             ]
                                         ],
                                         [
-                                            "SUBSTACK",
+                                            "BodyBlock",
                                             [
                                                 "looks_cleargraphiceffects",
                                                 [
@@ -224,7 +224,7 @@
                             ]
                         ],
                         [
-                            "SUBSTACK",
+                            "BodyBlock",
                             [
                                 "sensing_askandwait",
                                 [

@@ -1,0 +1,39 @@
+{
+    "quick": {
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "control_if_else": 1,
+            "sensing_touchingobject": 1,
+            "sensing_touchingobjectmenu__mouse_": 1,
+            "sensing_askandwait": 1,
+            "looks_thinkforsecs": 1
+        },
+        "non_opcodes_statistics": {
+            "quick": 1,
+            "CONDITION": 1,
+            "TOUCHINGOBJECTMENU": 1,
+            "SUBSTACK": 1,
+            "QUESTION": 1,
+            "What's your name?": 1,
+            "SUBSTACK2": 1,
+            "MESSAGE": 1,
+            "Hmm...": 1,
+            "SECS": 1,
+            "2": 1
+        },
+        "most_common_opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "control_if_else": 1,
+            "sensing_touchingobject": 1,
+            "sensing_touchingobjectmenu__mouse_": 1,
+            "sensing_askandwait": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "quick": 1,
+            "CONDITION": 1,
+            "TOUCHINGOBJECTMENU": 1,
+            "SUBSTACK": 1,
+            "QUESTION": 1
+        }
+    }
+}

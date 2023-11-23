@@ -5,7 +5,7 @@
             "looks_sayforsecs": 1,
             "control_repeat": 3,
             "motion_movesteps": 1,
-            "sound_seteffectto_PITCH": 1
+            "sound_seteffectto": 1
         },
         "non_opcodes_statistics": {
             "3l_opcode": 1,
@@ -15,7 +15,7 @@
             "2": 1,
             "TIMES": 3,
             "10": 4,
-            "SUBSTACK": 3,
+            "BodyBlock": 3,
             "STEPS": 1,
             "VALUE": 1,
             "100": 1
@@ -25,12 +25,12 @@
             "event_whenflagclicked": 1,
             "looks_sayforsecs": 1,
             "motion_movesteps": 1,
-            "sound_seteffectto_PITCH": 1
+            "sound_seteffectto": 1
         },
         "most_common_non_opcodes_statistics": {
             "10": 4,
             "TIMES": 3,
-            "SUBSTACK": 3,
+            "BodyBlock": 3,
             "3l_opcode": 1,
             "MESSAGE": 1
         }

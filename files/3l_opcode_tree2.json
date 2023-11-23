@@ -31,7 +31,7 @@
                             ]
                         ],
                         [
-                            "SUBSTACK",
+                            "BodyBlock",
                             [
                                 "control_repeat",
                                 [
@@ -43,7 +43,7 @@
                                             ]
                                         ],
                                         [
-                                            "SUBSTACK",
+                                            "BodyBlock",
                                             [
                                                 "control_repeat",
                                                 [
@@ -55,7 +55,7 @@
                                                             ]
                                                         ],
                                                         [
-                                                            "SUBSTACK",
+                                                            "BodyBlock",
                                                             [
                                                                 "motion_movesteps",
                                                                 [
@@ -68,7 +68,7 @@
                                                                         ]
                                                                     ]
                                                                 ],
-                                                                "sound_seteffectto_PITCH",
+                                                                "sound_seteffectto",
                                                                 [
                                                                     [
                                                                         [
