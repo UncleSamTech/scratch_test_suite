@@ -179,7 +179,7 @@ def main(filename: str):
                 project_name, main_branch = lines.split(',') 
                 print(project_name, main_branch)
                 print(len(project_name), len(main_branch))
-                if project_name != '' and main_branch  != '' and len(project_name) > 0 and len(main_branch) > 0:
+                if project_name != '' and main_branch  != '' and len(project_name) > 1 and len(main_branch) > 1:
                 #get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
                     print("running")
                     print(project_name)
