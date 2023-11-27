@@ -444,6 +444,7 @@ class TestScratchParser(unittest.TestCase):
 
     
     def tearDown(self) :
+        
         return self.shortDescription()
         
     def test_input_blocks(self):

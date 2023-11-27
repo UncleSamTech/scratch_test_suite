@@ -1,5 +1,7 @@
 {
     "complex4": {
+        "number_of_nodes": 315,
+        "number_of_edges": 131,
         "opcodes_statistics": {
             "event_whenflagclicked": 1,
             "event_whenkeypressed": 1,

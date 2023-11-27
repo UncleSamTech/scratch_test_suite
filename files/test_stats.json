@@ -1,5 +1,7 @@
 {
     "test": {
+        "number_of_nodes": 26,
+        "number_of_edges": 21,
         "opcodes_statistics": {
             "event_whenflagclicked": 1,
             "looks_sayforsecs": 1,

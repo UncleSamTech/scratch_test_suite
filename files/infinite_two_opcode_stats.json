@@ -1,5 +1,7 @@
 {
     "infinite_two_opcode": {
+        "number_of_nodes": 16,
+        "number_of_edges": 1,
         "opcodes_statistics": {
             "event_whenflagclicked": 1,
             "looks_sayforsecs": 1,

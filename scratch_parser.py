@@ -1,7 +1,10 @@
 import os
 import json
+import sys
 import collections
 from unzip_scratch import unzip_scratch
+from io import BytesIO
+import zipfile
 
 class scratch_parser:
 
@@ -9,6 +12,7 @@ class scratch_parser:
         
         self.blocs_json = None
         self.blocks_values = []
+        self.scr_pro = None
         self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
         self.all_opcodes = []
@@ -24,6 +28,7 @@ class scratch_parser:
         self.missed_inp  = []
         self.missed_inp2  = []
         self.child_input_keys = []
+        self.flat = []
         self.substack_replacement = {"control_repeat":"BodyBlock","control_forever":"BodyBlock","control_if":"ThenBranch","control_if_else":["ThenBranch","BodyBlock"],"control_repeat_until":"BodyBlock"}
 
 
@@ -174,12 +179,7 @@ class scratch_parser:
                         elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
                             opcode = f'{k}_{v[0]}_{v[1]}'
             return opcode    
-            
-        
-                    
-        
-            
-        
+                   
 
     def get_opcode_from_id2(self,blocks_values,block_id):
        if block_id == None or block_id == '' or block_id == None or blocks_values == {} or blocks_values == None:
@@ -630,7 +630,12 @@ class scratch_parser:
                                 
                 return child_list
                             
-
+    def rep_sub(self,block,op):
+        if block == None or block == {} or op == None or op == '':
+            return ''
+        
+        else:
+            return op
 
     def count_opcodes(self,blocks_values):
         all_opcodes = self.return_all_opcodes(blocks_values)
@@ -644,18 +649,25 @@ class scratch_parser:
         return count_val 
 
     def iterate_tree_for_non_opcodes(self,scratch_tree,blocks_values):
-        if scratch_tree == None or scratch_tree == [] or blocks_values == None or blocks_values == {}:
+        
+        if scratch_tree == [] or scratch_tree == None  or blocks_values == {} or blocks_values == None:
             return []   
         if isinstance(scratch_tree,list) and len(scratch_tree) > 0:
-            for each_val in scratch_tree:
-                if isinstance(each_val,list) and len(each_val) > 0:
-                    self.iterate_tree_for_non_opcodes(each_val,blocks_values)
-                else:
-                    if each_val not in self.get_all_unique_opcodes(blocks_values) and  each_val != []:
-                        self.all_met.append(each_val)
-                    
-     
-        return self.all_met
+            if len(scratch_tree) == 1 and not isinstance(scratch_tree[0],list):
+                self.all_met.append(scratch_tree[0])
+                return self.all_met 
+            else:
+                for each_val in scratch_tree:
+                    if not isinstance(each_val,list):
+                        if each_val not in self.get_all_unique_opcodes(blocks_values):
+                            
+                            self.all_met.append(each_val)
+                    else:
+                        
+                        self.iterate_tree_for_non_opcodes(each_val,blocks_values)
+            
+            return self.all_met    
+        
     
     def count_non_opcodes(self,blocks_values,scratch_tree):
         non_opcodes = self.iterate_tree_for_non_opcodes(scratch_tree,blocks_values)
@@ -664,12 +676,98 @@ class scratch_parser:
            
         count_val = collections.Counter(non_opcodes)
         return count_val
+
+    def get_all_keys(self,blocks_values):
+        all_keys = [] 
+        if blocks_values == None or blocks_values == {}: 
+            return []
+        if isinstance(blocks_values,dict) and bool(blocks_values):
+            for k,v in blocks_values.items():
+                if isinstance(v,dict) and bool(v):
+                    for k2 in v.keys():
+                        if k2 != [] or k2 != None or k2 != {}:
+                            all_keys.append(k2)
+        return all_keys
+
+    def get_spec_key_id_leaf(self,blocks_values,id):
+        all_key_val = []
+        if blocks_values == {} or blocks_values == None or id == "" or id == None:
+            return []
+        input_block = self.read_input_values_by_id(blocks_values,id)
+        block = self.get_any_block_by_id(blocks_values,id)
+        parent = block["parent"] if "parent" in block.keys() else ''
+        fields = block["fields"] if "fields" in block.keys() else {}
+        if parent != None or parent != '':
+            if input_block == {} or input_block == None:
+                return []
+            if isinstance(input_block,dict) and bool(input_block):
+                for k,v in input_block.items():
+                    if isinstance(v,list) and len(v) > 0: 
+                        if isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            all_key_val.append(k)
+                            all_key_val.append(v[1][1])
+                        elif isinstance(v[1],str) and len(v[1]) > 0:
+                            all_key_val.append(k)
+                if fields != {} or fields != None:
+                    for k,v in fields.items():
+                        if isinstance(v,list) and len(v) > 0:
+                            if isinstance(v[0],str) and len(v[0]) > 0:
+                                all_key_val.append(f'{k}_{v[0]}' if v[1] == None else f'{v[0]}{v[1]}')
+                            
+                                
+        else:
+            all_key_val.append(self.get_complete_fields_inputs(blocks_values,id))
+        
+        return all_key_val
     
-  
+    def get_all(self,blocks,all_keys):
+        fin = []
+        
+        for key in all_keys:
+            val = self.get_spec_key_id_leaf(blocks,key)
+            if val == [] or val == None:
+                continue
+            fin.append(val)
+        return fin
+
+    def get_node_count(self,blocks,all_leafs):
+        if blocks == None or blocks == {} or all_leafs == None or all_leafs == []:
+            return []
+        if isinstance(all_leafs,list) and len(all_leafs) > 0:
+            for each_val in all_leafs:
+                if isinstance(each_val,list) and len(each_val) > 0:
+                    self.get_node_count(blocks,each_val)
+                else:
+                    self.flat.append(each_val)
+        
+        return len(self.flat) + len(self.return_all_opcodes(blocks))
     
+    def count_nodes_and_edges(self,tree_list):
+        if not isinstance(tree_list,list):
+            return 0,0
+
+    def get_total_nodes(self,scratch_tree,block):
+        total_opcodes  = self.return_all_opcodes(block)
+        val = self.iterate_tree_for_non_opcodes(scratch_tree,block)
+        
+        return int(len(total_opcodes) + ((len(val)/2) - 1))  
+
+    def get_total_edges(self,scratch_tree):  
+        main_edges = 0
+        if scratch_tree == [] or scratch_tree == None or not isinstance(scratch_tree,list):
+            return 0
+        
+        if isinstance(scratch_tree,list):
+            for each_val in scratch_tree:
+                edges = self.get_total_edges(each_val)
+                main_edges += edges + 1
+            return main_edges
+
+        
 
     
     def generate_summary_stats(self,blocks_values,file_name,scratch_tree):
+        
         opcodes = self.count_opcodes(blocks_values)
         non_opcodes = self.count_non_opcodes(blocks_values,scratch_tree)
         opcode_tree = {}
@@ -698,11 +796,20 @@ class scratch_parser:
             most_common_non_opcode_key = nmc[0]
             most_common_non_opcode_val = nmc[1]
             most_common_non_opcode_tree[most_common_non_opcode_key] = most_common_non_opcode_val
+        
+
+        nodes_val = sum(opcode_tree.values()) + sum(non_opcode_tree.values())
+        
+        #nodes, edges = self.count_nodes_and_edges(scratch_tree)
+        
 
             
-        self.scratch_stats[file_name] = {"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
+        self.scratch_stats[f'{file_name}_summary'] = {"number_of_nodes": nodes_val, "number_of_edges" : int(self.get_total_edges(scratch_tree) / 3),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
         return self.scratch_stats 
         
+
+    
+
 
 
 
@@ -711,30 +818,49 @@ class scratch_parser:
         self.blocs_json = json.loads(self.parsed_value)
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
-        #print(json.dumps(all_blocks_value,indent=4))
+        
         
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
         
+        all_keys = self.get_all_keys(all_blocks_value)
+        all = self.get_all(all_blocks_value,all_keys)
         
-        #inp_byid = self.get_input_block_by_id_key_disp(all_blocks_value,"CGRCR{+Vd.C42.6]~Ttt","SUBSTACK2")
-        #print(inp_byid)
-        #cor = self.correct_input_block_tree_by_id_disp(all_blocks_value,self.read_input_values_by_id(all_blocks_value,"CGRCR{+Vd.C42.6]~Ttt"),"CGRCR{+Vd.C42.6]~Ttt")
-        #print(cor)
+      
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
-        with open(f"files/{file_name}_tree2.json","w") as tree_file:
-            json.dump(next_val2,tree_file,indent=4)
         
-        with open(f"files/{file_name}_stats.json","w") as stats_file:
-            json.dump(self.generate_summary_stats(all_blocks_value,file_name,next_val2),stats_file,indent=4)
+        return fin_val
         
-         
+    def decode_scratch_bytes(self, raw_bytes):
+        with BytesIO(raw_bytes) as f:
+            with zipfile.ZipFile(f,"r") as zipf:
+                zip_contents = zipf.read("project.json") 
+
+                scr_str = zip_contents.decode("utf-8")
+                self.scr_proj = json.loads(scr_str)
+        return self.scr_proj
+    
+    def parse_scratch(self,scr_proj,file_name):
+        all_blocks_value = self.get_all_blocks_vals(scr_proj)
+        
+        
+
+        file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+        next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+
+        return fin_val
+        
+
+
+
         
         
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/stand_check.sb3")
+scratch_parser_inst.read_files("files/project.json.sb2")
 
     

@@ -11,6 +11,7 @@ class unzip_scratch:
         need = "project.json" if sprite else "project.json"
         with zipfile.ZipFile(sb3_file) as sb3zip:
             names = sb3zip.namelist()
+            
             if need not in names:
                 print('sprite3 must contain sprite.json')
             else:

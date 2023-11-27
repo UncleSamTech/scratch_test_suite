@@ -1,5 +1,7 @@
 {
     "stand_check": {
+        "number_of_nodes": 13,
+        "number_of_edges": 10.0,
         "opcodes_statistics": {
             "event_whenflagclicked": 1,
             "motion_movesteps": 1,
