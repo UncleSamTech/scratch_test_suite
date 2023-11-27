@@ -174,7 +174,8 @@ def main(filename: str):
     with open(filename) as f:
         for lines in f:
             val = len(lines.split(','))
-            if val == 2 and lines.split(',')[0] != '' and lines.split(',')[1] != '':
+            if val == 2 and lines.split(',')[0] != '' and lines.split(',')[1] != '' and len(lines.split(',')[0]) > 0 and len(lines.split(',')[1]) > 0:
+
                 project_name, main_branch = lines.split(',') 
                 print(project_name, main_branch)
                 print(len(project_name), len(main_branch))
@@ -203,7 +204,9 @@ def main(filename: str):
                 else:
                     print("skipped")
                     continue
-
+            else:
+                print("skipped")
+                continue
 
 main("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_branch_name_MIRROR.txt")
 
