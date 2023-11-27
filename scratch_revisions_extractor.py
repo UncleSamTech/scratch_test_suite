@@ -174,36 +174,35 @@ def main(filename: str):
     with open(filename) as f:
         for lines in f:
             val = len(lines.split(','))
-            if val != 2:
-                continue
-            project_name, main_branch = lines.split(',') 
-            print(project_name, main_branch)
-            print(len(project_name), len(main_branch))
-            if project_name != '' and main_branch  != '' and len(project_name) > 0 and len(main_branch) > 0:
+            if val == 2 and lines.split(',')[0] != '' and lines.split(',')[1] != '':
+                project_name, main_branch = lines.split(',') 
+                print(project_name, main_branch)
+                print(len(project_name), len(main_branch))
+                if project_name != '' and main_branch  != '' and len(project_name) > 0 and len(main_branch) > 0:
                 #get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
-                git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}')
+                    git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}')
             
-                git_object.checkout(main_branch.strip())
+                    git_object.checkout(main_branch.strip())
         
-                try:
+                    try:
         
-                    v = get_revisions_and_run_parser(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}', project_name, main_branch)
-                    if v == -1:
-                    #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
-                        continue
+                        v = get_revisions_and_run_parser(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}', project_name, main_branch)
+                        if v == -1:
+                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
+                            continue
         
-                except Exception as e:
+                    except Exception as e:
             
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/exceptions.txt", "a")
-                    f.write("{}\n".format(e))
-                    f.close()
-                #logging.error(f'skipped {project_name}  to {logging.ERROR}')
-                    pass
-                finally:
-                    print("done")
-            else:
-                print("skipped")
-                continue
+                        f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/exceptions.txt", "a")
+                        f.write("{}\n".format(e))
+                        f.close()
+                    #logging.error(f'skipped {project_name}  to {logging.ERROR}')
+                        pass
+                    finally:
+                        print("done")
+                else:
+                    print("skipped")
+                    continue
 
 
 main("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_branch_name_MIRROR.txt")
