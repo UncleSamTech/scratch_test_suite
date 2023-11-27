@@ -145,40 +145,40 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
                 
-                #file_contents = contents1.stdout.decode("utf-8", "ignore")
+                file_contents = contents1.stdout.decode("utf-8", "ignore")
                 #print(file_contents.encode())
-                '''
+                
                 with tempfile.NamedTemporaryFile(delete=False) as fp:
                     val = file_contents.encode()
-                    
+                    #print(val)
                     fp.write(val)
                     
-
+                    print(fp.name)
                     try:
                         resp = fp.name
                         print(resp)
-                        with open(resp, 'rb') as f:
-                            contents = f.read()
+                        with open(val, 'rb') as f:
+                            contents = f
                             val = sp.decode_scratch_bytes(contents)
                             print(val)
                     
                     except:
                         stats = {}
-                '''
-                val = sp.decode_scratch_bytes(contents1.stdout)
+                
+                #val = sp.decode_scratch_bytes(contents1.stdout)
             
-                file_contents = val
+                #file_contents = val
             
             
-                stats = sp.parse_scratch(file_contents,new_name)
+                #stats = sp.parse_scratch(file_contents,new_name)
                 
             
                 stats["commit_date"] = parsed_date_str
                 stats["commit_sha"] = c
-                print(stats)
+                #print(stats)
                 
                 json_output = json.dumps(stats, indent=4)
-                print(json_output)
+                #print(json_output)
             
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem

@@ -12,3 +12,8 @@ File is not a zip file
 '_io.BufferedReader' object has no attribute 'replace'
 '_io.BufferedReader' object has no attribute 'replace'
 '_io.BufferedReader' object has no attribute 'replace'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
