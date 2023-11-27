@@ -197,6 +197,7 @@ def main(filename: str):
                 finally:
                     print("done")
             else:
+                print("skipped")
                 continue
 
 
