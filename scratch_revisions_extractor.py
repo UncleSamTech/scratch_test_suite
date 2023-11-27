@@ -181,6 +181,9 @@ def main(filename: str):
                 print(len(project_name), len(main_branch))
                 if project_name != '' and main_branch  != '' and len(project_name) > 0 and len(main_branch) > 0:
                 #get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
+                    print("running")
+                    print(project_name)
+                    print(main_branch)
                     git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}')
             
                     git_object.checkout(main_branch.strip())
