@@ -159,6 +159,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 stats["commit_sha"] = c
                 
                 json_output = json.dumps(stats, indent=4)
+                print(json_output)
             
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
