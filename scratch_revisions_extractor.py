@@ -34,7 +34,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     filenames = proc4.stdout.decode().strip().split('\n')
     print(filenames)
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
-        logging.error(f"no sb3 file found in {project_name} due to {logging.ERROR} ")
+        logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
         return -1
 
     else:
