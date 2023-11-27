@@ -133,9 +133,14 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
-
+                form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
+                print(form_file)
+                
                 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/project_file_revision_commitsha_commitdate_1.txt", "a") as outfile:
-                    outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str))
+                    if form_file not in outfile:
+                        outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)) 
+                    else:
+                        continue
 
 
                 file_contents = ''
