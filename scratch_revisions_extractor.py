@@ -187,7 +187,7 @@ def main(filename: str):
         
                 v = get_revisions_and_run_parser(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}', project_name, main_branch)
                 if v == -1:
-                    logging.error(f"no sb3 file found in {project_name} due to {logging.ERROR} ")
+                    logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
                     continue
         
             except Exception as e:
@@ -195,7 +195,7 @@ def main(filename: str):
                 f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/exceptions.txt", "a")
                 f.write("{}\n".format(e))
                 f.close()
-                logging.error(f"skipped {project_name}  to {logging.ERROR} ")
+                logging.error(f'skipped {project_name}  to {logging.ERROR}')
                 pass
             finally:
                 print("done")
