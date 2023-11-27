@@ -173,7 +173,8 @@ def main(filename: str):
     count = 0
     with open(filename) as f:
         for lines in f:
-            project_name, main_branch = lines.split(',')
+            project_name, main_branch = lines.split(',') 
+            print(project_name, main_branch)
             if project_name != '' and main_branch  != '' and len(project_name) > 0 and len(main_branch) > 0:
                 #get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
                 git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}')
