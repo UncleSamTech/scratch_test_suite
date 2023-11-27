@@ -147,7 +147,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 file_contents = contents1.stdout.decode("utf-8", "ignore")
                 #print(file_contents.encode())
-                
+                '''
                 with tempfile.NamedTemporaryFile(delete=False) as fp:
                     val = file_contents.encode()
                     #print(val)
@@ -164,13 +164,14 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                     
                     except:
                         stats = {}
+                    '''
                 
-                #val = sp.decode_scratch_bytes(contents1.stdout)
+                val = sp.decode_scratch_bytes(contents1.stdout)
             
-                #file_contents = val
+                file_contents = val
             
             
-                #stats = sp.parse_scratch(file_contents,new_name)
+                stats = sp.parse_scratch(file_contents,new_name)
                 
             
                 stats["commit_date"] = parsed_date_str
@@ -181,11 +182,14 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 #print(json_output)
             
                 new_original_file_name = f.replace("/", "_FFF_")
+                print(new_original_file_name)
                 root_name = Path(new_original_file_name).stem
+                print(root_name)
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
                 
                 print(root_name)
-                com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}/{root_name}_CMMT_{c}.json'
+                com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}/{new_original_file_name}_CMMT_{c}.json'
+                print(com)
             
             
                 with open(com,"w") as outfile:
