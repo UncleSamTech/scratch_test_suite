@@ -173,8 +173,9 @@ def main(filename: str):
     count = 0
     with open(filename) as f:
         for lines in f:
-            print(len(lines.split(',')))
-            print(lines)
+            val = len(lines.split(','))
+            if val != 2:
+                continue
             project_name, main_branch = lines.split(',') 
             print(project_name, main_branch)
             print(len(project_name), len(main_branch))
