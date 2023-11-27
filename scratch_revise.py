@@ -136,7 +136,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/project_file_revision_commitsha_commitdate_1.txt", "a") as outfile:
+                with open("/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions/project_file_revision_commitsha_commitdate_1.txt", "a") as outfile:
                     outfile.write(form_file) 
                     
 
@@ -144,17 +144,38 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                #print('contents1',contents1)
+                
+                #file_contents = contents1.stdout.decode("utf-8", "ignore")
+                #print(file_contents.encode())
+                '''
+                with tempfile.NamedTemporaryFile(delete=False) as fp:
+                    val = file_contents.encode()
+                    
+                    fp.write(val)
+                    
+
+                    try:
+                        resp = fp.name
+                        print(resp)
+                        with open(resp, 'rb') as f:
+                            contents = f.read()
+                            val = sp.decode_scratch_bytes(contents)
+                            print(val)
+                    
+                    except:
+                        stats = {}
+                '''
                 val = sp.decode_scratch_bytes(contents1.stdout)
             
                 file_contents = val
             
             
                 stats = sp.parse_scratch(file_contents,new_name)
-                print(stats)
+                
             
                 stats["commit_date"] = parsed_date_str
                 stats["commit_sha"] = c
+                print(stats)
                 
                 json_output = json.dumps(stats, indent=4)
                 print(json_output)
@@ -162,8 +183,9 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
-            
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}/{root_name}_CMMT_{c}.json'
+                
+                print(root_name)
+                com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}/{root_name}_CMMT_{c}.json'
             
             
                 with open(com,"w") as outfile:
@@ -185,23 +207,21 @@ def main(filename: str):
                 print(len(project_name), len(main_branch))
                 if project_name != '' and main_branch  != '' and len(project_name) > 1 and len(main_branch) > 1:
                 #get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
-                    print("running")
-                    print(project_name)
-                    print(main_branch)
-                    git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}')
+                  
+                    git_object = Git(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}')
             
                     git_object.checkout(main_branch.strip())
         
                     try:
         
-                        v = get_revisions_and_run_parser(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2projects_mirrored_extracted/{project_name}', project_name, main_branch)
+                        v = get_revisions_and_run_parser(f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/repos/{project_name}', project_name, main_branch)
                         if v == -1:
                         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
                             continue
         
                     except Exception as e:
             
-                        f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_extracted_revisions/exceptions.txt", "a")
+                        f = open("/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions/exceptions.txt", "a")
                         f.write("{}\n".format(e))
                         f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
@@ -215,5 +235,5 @@ def main(filename: str):
                 print("skipped")
                 continue
 
-main("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb2_branch_name_MIRROR.txt")
+main("files.txt")
 

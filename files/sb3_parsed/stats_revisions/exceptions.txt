@@ -1,0 +1,14 @@
+not readable
+not readable
+not readable
+not readable
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+File is not a zip file
+File is not a zip file
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
+'_io.BufferedReader' object has no attribute 'replace'
