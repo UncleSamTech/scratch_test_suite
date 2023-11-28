@@ -188,7 +188,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
                 
                 print(root_name)
-                complete_name = f'{project_name}/{new_original_file_name}_CMMT_{c}.json'
+                complete_name = f'{project_name}_{new_original_file_name}_CMMT_{c}.json'
                 com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions/{complete_name}'
                 print(com)
             
