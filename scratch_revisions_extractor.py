@@ -136,7 +136,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_12.txt", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_13.txt", "a") as outfile:
                     outfile.write(form_file) 
                     
 
