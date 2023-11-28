@@ -220,16 +220,16 @@ def main2(project_path: str):
     count = 0
     proj_names = []
     for i in os.listdir(project_path):
-        if len(i) > 0 and os.path.isdir(f'{project_path}/{i}'):
+        if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
             proj_names.append(i)
         else:
             continue
     for proj_name in proj_names:
-        if proj_name != '' and len(proj_name) > 0:
+        if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
-            if main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
+            if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
                     v = get_revisions_and_run_parser(repo, proj_name, main_branch)
                     if v == -1:
