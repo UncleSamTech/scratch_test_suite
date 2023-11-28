@@ -163,7 +163,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 root_name = Path(new_original_file_name).stem
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents/{project_name}/{new_original_file_name}_CMMT_{c}.json'
+                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents/{project_name}_{new_original_file_name}_CMMT_{c}.json'
                 print(com)
             
                 with open(com,"w") as outfile:
