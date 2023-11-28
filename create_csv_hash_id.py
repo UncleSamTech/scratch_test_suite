@@ -8,7 +8,8 @@ def calc_sha256(file_data):
 
 #folder= sys.argv[1]
 #print(folder)
-folder_name = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents/"
+#folder_name = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents/"
+folder_name = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/test/"
 
 
 for filename in os.listdir(folder_name):
