@@ -163,7 +163,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 root_name = Path(new_original_file_name).stem
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents/{project_name}_{new_original_file_name}_CMMT_{c}.json'
+                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_contents'
+                com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
                 print(com)
             
                 with open(com,"w") as outfile:
@@ -188,7 +189,7 @@ def main(filename: str):
                     print("running")
                     print(project_name)
                     print(main_branch)
-                    git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted/{project_name}')
+                    git_object = Git(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test/{project_name}')
             
                     git_object.checkout(main_branch.strip())
         
@@ -216,14 +217,16 @@ def main(filename: str):
                 continue
 
 def main2(project_path: str):
-    lines = None
-    count = 0
     proj_names = []
     for i in os.listdir(project_path):
         if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
             proj_names.append(i)
         else:
             continue
+    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames.txt","w") as pna:
+        if len(proj_names) > 0:
+            for i in proj_names:
+                pna.write("{}\n".format(i))
     for proj_name in proj_names:
         if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
@@ -251,5 +254,5 @@ def main2(project_path: str):
             continue
 
 
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test")
 

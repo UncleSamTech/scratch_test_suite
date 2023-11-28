@@ -189,7 +189,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 print(root_name)
                 complete_name = f'{project_name}_{new_original_file_name}_CMMT_{c}.json'
-                com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions/{complete_name}'
+                com = f'/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions'
+                com = com + "/" + project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
                 print(com)
             
             
@@ -249,6 +250,10 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
+    
+    with open("/mnt/c/Users/USER/documents/scratch_tester/scratch_test_suite/files/sb3_parsed/stats_revisions/projnames.txt","w") as pna:
+        for i in proj_names:
+            pna.write("{}\n".format(i))
     for proj_name in proj_names:
         if proj_name != '' and len(proj_name) > 0:
             repo = f'{project_path}/{proj_name}'
