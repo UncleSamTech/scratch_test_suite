@@ -14,5 +14,5 @@ def count_non_empty_directories(path):
         return count            
 
 
-val = count_non_empty_directories("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects") 
+val = count_non_empty_directories("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted") 
 print(val)
