@@ -1,0 +1,269 @@
+{
+    "parsed_tree": [
+        "CS50 - Problem Set 0 v2 (1)",
+        [
+            [
+                "event_whenflagclicked",
+                [
+                    [
+                        "looks_hide",
+                        []
+                    ],
+                    [
+                        "looks_gotofrontback",
+                        []
+                    ],
+                    [
+                        "control_forever",
+                        [
+                            [
+                                "BodyBlock",
+                                [
+                                    "control_wait",
+                                    [
+                                        [
+                                            [
+                                                "DURATION",
+                                                [
+                                                    "2"
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    "control_create_clone_of",
+                                    [
+                                        [
+                                            [
+                                                "CLONE_OPTION",
+                                                [
+                                                    "control_create_clone_of_menu",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "control_start_as_clone",
+                [
+                    [
+                        "looks_show",
+                        []
+                    ],
+                    [
+                        "motion_gotoxy",
+                        [
+                            [
+                                "X",
+                                [
+                                    "240"
+                                ]
+                            ],
+                            [
+                                "Y",
+                                [
+                                    "operator_random",
+                                    [
+                                        [
+                                            [
+                                                "FROM",
+                                                [
+                                                    "170"
+                                                ]
+                                            ],
+                                            [
+                                                "TO",
+                                                [
+                                                    "-170"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_forever",
+                        [
+                            [
+                                "BodyBlock",
+                                [
+                                    "motion_pointtowards",
+                                    [
+                                        [
+                                            [
+                                                "TOWARDS",
+                                                [
+                                                    "motion_pointtowards_menu",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    "motion_movesteps",
+                                    [
+                                        [
+                                            [
+                                                "STEPS",
+                                                [
+                                                    "1"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_if",
+                        [
+                            [
+                                "CONDITION",
+                                [
+                                    "sensing_touchingobject",
+                                    [
+                                        [
+                                            [
+                                                "TOUCHINGOBJECTMENU",
+                                                [
+                                                    "sensing_touchingobjectmenu",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            [
+                                "ThenBranch",
+                                [
+                                    "data_changevariableby",
+                                    [
+                                        [
+                                            [
+                                                "VALUE",
+                                                [
+                                                    "1"
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    "control_wait",
+                                    [
+                                        [
+                                            [
+                                                "DURATION",
+                                                [
+                                                    ".05"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "sound_play",
+                        [
+                            [
+                                "SOUND_MENU",
+                                [
+                                    "sound_sounds_menu",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_delete_this_clone",
+                        []
+                    ]
+                ]
+            ]
+        ]
+    ],
+    "stats": {
+        "CS50 - Problem Set 0 v2 (1)_summary": {
+            "number_of_nodes": 47,
+            "number_of_edges": 42,
+            "opcodes_statistics": {
+                "event_whenflagclicked": 1,
+                "looks_hide": 1,
+                "looks_gotofrontback": 1,
+                "control_forever": 2,
+                "control_wait": 2,
+                "control_create_clone_of": 1,
+                "control_create_clone_of_menu": 1,
+                "control_start_as_clone": 1,
+                "looks_show": 1,
+                "motion_gotoxy": 1,
+                "operator_random": 1,
+                "motion_pointtowards": 1,
+                "motion_pointtowards_menu": 1,
+                "motion_movesteps": 1,
+                "control_if": 1,
+                "sensing_touchingobject": 1,
+                "sensing_touchingobjectmenu": 1,
+                "data_changevariableby": 1,
+                "sound_play": 1,
+                "sound_sounds_menu": 1,
+                "control_delete_this_clone": 1
+            },
+            "non_opcodes_statistics": {
+                "CS50 - Problem Set 0 v2 (1)": 1,
+                "BodyBlock": 2,
+                "DURATION": 2,
+                "2": 1,
+                "CLONE_OPTION": 1,
+                "X": 1,
+                "240": 1,
+                "Y": 1,
+                "FROM": 1,
+                "170": 1,
+                "TO": 1,
+                "-170": 1,
+                "TOWARDS": 1,
+                "STEPS": 1,
+                "1": 2,
+                "CONDITION": 1,
+                "TOUCHINGOBJECTMENU": 1,
+                "ThenBranch": 1,
+                "VALUE": 1,
+                ".05": 1,
+                "SOUND_MENU": 1
+            },
+            "most_common_opcodes_statistics": {
+                "control_forever": 2,
+                "control_wait": 2,
+                "event_whenflagclicked": 1,
+                "looks_hide": 1,
+                "looks_gotofrontback": 1
+            },
+            "most_common_non_opcodes_statistics": {
+                "BodyBlock": 2,
+                "DURATION": 2,
+                "1": 2,
+                "CS50 - Problem Set 0 v2 (1)": 1,
+                "2": 1
+            }
+        }
+    },
+    "commit_date": "2020-02-03 20:20:25 -0600",
+    "commit_sha": "83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a"
+}
