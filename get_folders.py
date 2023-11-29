@@ -3,7 +3,8 @@ import os
 def get_folders(path):
     proj_names = []
     for i in os.listdir(path):
-        if len(i) > 1 and os.path.isdir(f'{path}/{i}'):
+        full_path = f'{path}/{i}'
+        if len(i) > 1 and len(full_path) > 1 and os.path.isdir(full_path):
             proj_names.append(i)
         else:
             continue

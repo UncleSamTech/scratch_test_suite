@@ -1,0 +1,278 @@
+{
+    "parsed_tree": [
+        "project.json.sb2",
+        [
+            [
+                "event_whenflagclicked",
+                [
+                    [
+                        "data_setvariableto",
+                        [
+                            [
+                                "VALUE",
+                                [
+                                    "0"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "data_deletealloflist",
+                        []
+                    ],
+                    [
+                        "motion_gotoxy",
+                        [
+                            [
+                                "X",
+                                [
+                                    "3"
+                                ]
+                            ],
+                            [
+                                "Y",
+                                [
+                                    "25"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_repeat",
+                        [
+                            [
+                                "TIMES",
+                                [
+                                    "motion_yposition",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ],
+                            [
+                                "BodyBlock",
+                                [
+                                    "data_changevariableby",
+                                    [
+                                        [
+                                            [
+                                                "VALUE",
+                                                [
+                                                    "motion_xposition",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    "data_addtolist",
+                                    [
+                                        [
+                                            [
+                                                "ITEM",
+                                                [
+                                                    "operator_letter_of",
+                                                    [
+                                                        [
+                                                            [
+                                                                "LETTER",
+                                                                [
+                                                                    "operator_mod",
+                                                                    [
+                                                                        [
+                                                                            [
+                                                                                "NUM1",
+                                                                                [
+                                                                                    "my variable"
+                                                                                ]
+                                                                            ],
+                                                                            [
+                                                                                "NUM2",
+                                                                                [
+                                                                                    "26"
+                                                                                ]
+                                                                            ]
+                                                                        ]
+                                                                    ]
+                                                                ]
+                                                            ],
+                                                            [
+                                                                "STRING",
+                                                                [
+                                                                    "_La0AcpNtTgf1U{maTaGhL35_"
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "data_addtolist",
+                        [
+                            [
+                                "ITEM",
+                                [
+                                    "}"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_repeat",
+                        [
+                            [
+                                "TIMES",
+                                [
+                                    "10"
+                                ]
+                            ],
+                            [
+                                "BodyBlock",
+                                [
+                                    "motion_turnright",
+                                    [
+                                        [
+                                            [
+                                                "DEGREES",
+                                                [
+                                                    "15"
+                                                ]
+                                            ]
+                                        ]
+                                    ],
+                                    "music_playDrumForBeats",
+                                    [
+                                        [
+                                            [
+                                                "DRUM",
+                                                [
+                                                    "operator_random",
+                                                    [
+                                                        [
+                                                            [
+                                                                "FROM",
+                                                                [
+                                                                    "1"
+                                                                ]
+                                                            ],
+                                                            [
+                                                                "TO",
+                                                                [
+                                                                    "20"
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ],
+                                            [
+                                                "BEATS",
+                                                [
+                                                    "0.25"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "looks_say",
+                        [
+                            [
+                                "MESSAGE",
+                                [
+                                    "Hello!"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "data_deletealloflist",
+                        []
+                    ]
+                ]
+            ]
+        ]
+    ],
+    "stats": {
+        "project.json.sb2_summary": {
+            "number_of_nodes": 53,
+            "number_of_edges": 43,
+            "opcodes_statistics": {
+                "event_whenflagclicked": 1,
+                "data_setvariableto": 1,
+                "data_deletealloflist": 2,
+                "motion_gotoxy": 1,
+                "control_repeat": 2,
+                "motion_yposition": 1,
+                "data_changevariableby": 1,
+                "motion_xposition": 1,
+                "data_addtolist": 2,
+                "operator_letter_of": 1,
+                "operator_mod": 1,
+                "motion_turnright": 1,
+                "music_playDrumForBeats": 1,
+                "operator_random": 1,
+                "music_menu_DRUM": 1,
+                "looks_say": 1
+            },
+            "non_opcodes_statistics": {
+                "project.json.sb2": 1,
+                "VALUE": 2,
+                "0": 1,
+                "X": 1,
+                "3": 1,
+                "Y": 1,
+                "25": 1,
+                "TIMES": 2,
+                "BodyBlock": 2,
+                "ITEM": 2,
+                "LETTER": 1,
+                "NUM1": 1,
+                "my variable": 1,
+                "NUM2": 1,
+                "26": 1,
+                "STRING": 1,
+                "_La0AcpNtTgf1U{maTaGhL35_": 1,
+                "}": 1,
+                "10": 1,
+                "DEGREES": 1,
+                "15": 1,
+                "DRUM": 1,
+                "FROM": 1,
+                "1": 1,
+                "TO": 1,
+                "20": 1,
+                "BEATS": 1,
+                "0.25": 1,
+                "MESSAGE": 1,
+                "Hello!": 1
+            },
+            "most_common_opcodes_statistics": {
+                "data_deletealloflist": 2,
+                "control_repeat": 2,
+                "data_addtolist": 2,
+                "event_whenflagclicked": 1,
+                "data_setvariableto": 1
+            },
+            "most_common_non_opcodes_statistics": {
+                "VALUE": 2,
+                "TIMES": 2,
+                "BodyBlock": 2,
+                "ITEM": 2,
+                "project.json.sb2": 1
+            }
+        }
+    },
+    "commit_date": "2019-04-25 19:37:51 +0800",
+    "commit_sha": "0285d5875da082635695503da6d673cbfaef48de"
+}
