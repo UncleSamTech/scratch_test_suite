@@ -15,4 +15,4 @@ def get_folders(path):
     
 
     
-get_folders("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test")
+get_folders("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
