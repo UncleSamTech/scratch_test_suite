@@ -33,11 +33,11 @@ def get_nodes_edges_per_file(path):
                             
                             an_file = new_original_file_name_sb3.split("/")[-1] if "/" in new_original_file_name_sb3 else new_original_file_name_sb3
                             an_file = os.path.splitext(an_file)[0] if ".sb3" in an_file else an_file
-                            
+                            an_file = f'{an_file}_summary'
                             
                             try:
-                                nodes_in_sb3_file  = data["stats"][f'{an_file}_summary']["number_of_nodes"]  
-                                edges_in_sb3_file = data["stats"][f'{an_file}_summary']["number_of_edges"]
+                                nodes_in_sb3_file  = data["stats"][an_file]["number_of_nodes"]  
+                                edges_in_sb3_file = data["stats"][an_file]["number_of_edges"]
                             except:
                                 nodes_in_sb3_file = 0
                                 edges_in_sb3_file = 0
