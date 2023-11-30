@@ -39,14 +39,14 @@ def get_nodes_edges_per_file(path):
                                 edges_in_sb3_file = 0
                             
                             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_file.csv", 'a') as f:
-                                f.write(f'_{project_names}'  + "," + new_original_file_name_sb3 + "," + commit + "," + str(nodes_in_sb3_file) + "," + str(edges_in_sb3_file))
+                                f.write(project_names  + "," + new_original_file_name_sb3 + "," + commit + "," + str(nodes_in_sb3_file) + "," + str(edges_in_sb3_file))
                                 f.write("\n")
                             
                             nodes_in_this_project += nodes_in_sb3_file
                             edges_in_this_project += edges_in_sb3_file
 
             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_project.csv", 'a') as f:
-                f.write(f'_{project_names}' + "," + str(nodes_in_this_project) + "," + str(edges_in_this_project))
+                f.write(project_names + "," + str(nodes_in_this_project) + "," + str(edges_in_this_project))
                 f.write("\n")
 
 
