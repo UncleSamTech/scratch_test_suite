@@ -1,0 +1,174 @@
+{
+    "parsed_tree": [
+        "physics testing v1.3",
+        [
+            [
+                "event_whenflagclicked",
+                [
+                    [
+                        "control_if_else",
+                        [
+                            [
+                                "CONDITION",
+                                [
+                                    "operator_equals",
+                                    [
+                                        [
+                                            [
+                                                "OPERAND1",
+                                                [
+                                                    "scene"
+                                                ]
+                                            ],
+                                            [
+                                                "OPERAND2",
+                                                [
+                                                    "9"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            [
+                                "ThenBranch",
+                                [
+                                    "looks_show",
+                                    [
+                                        []
+                                    ],
+                                    "griffpatch_setPhysics",
+                                    [
+                                        [
+                                            [
+                                                "shape",
+                                                [
+                                                    "griffpatch_menu_ShapeTypes",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ],
+                                            [
+                                                "mode",
+                                                [
+                                                    "griffpatch_menu_EnableModeTypes",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            [
+                                "BodyBlock",
+                                [
+                                    "looks_hide",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "griffpatch_setPosition",
+                        [
+                            [
+                                "x",
+                                [
+                                    "-3"
+                                ]
+                            ],
+                            [
+                                "y",
+                                [
+                                    "7"
+                                ]
+                            ],
+                            [
+                                "space",
+                                [
+                                    "griffpatch_menu_SpaceTypes",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "griffpatch_setStatic",
+                        [
+                            [
+                                "static",
+                                [
+                                    "griffpatch_menu_StaticTypes",
+                                    [
+                                        []
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    "stats": {
+        "physics testing v1.3_summary": {
+            "number_of_nodes": 28,
+            "number_of_edges": 25,
+            "opcodes_statistics": {
+                "event_whenflagclicked": 1,
+                "control_if_else": 1,
+                "operator_equals": 1,
+                "looks_show": 1,
+                "looks_hide": 1,
+                "griffpatch_setPhysics": 1,
+                "griffpatch_menu_ShapeTypes": 1,
+                "griffpatch_menu_EnableModeTypes": 1,
+                "griffpatch_setPosition": 1,
+                "griffpatch_menu_SpaceTypes": 1,
+                "griffpatch_setStatic": 1,
+                "griffpatch_menu_StaticTypes": 1
+            },
+            "non_opcodes_statistics": {
+                "physics testing v1.3": 1,
+                "CONDITION": 1,
+                "OPERAND1": 1,
+                "scene": 1,
+                "OPERAND2": 1,
+                "9": 1,
+                "ThenBranch": 1,
+                "shape": 1,
+                "mode": 1,
+                "BodyBlock": 1,
+                "x": 1,
+                "-3": 1,
+                "y": 1,
+                "7": 1,
+                "space": 1,
+                "static": 1
+            },
+            "most_common_opcodes_statistics": {
+                "event_whenflagclicked": 1,
+                "control_if_else": 1,
+                "operator_equals": 1,
+                "looks_show": 1,
+                "looks_hide": 1
+            },
+            "most_common_non_opcodes_statistics": {
+                "physics testing v1.3": 1,
+                "CONDITION": 1,
+                "OPERAND1": 1,
+                "scene": 1,
+                "OPERAND2": 1
+            }
+        }
+    },
+    "commit_date": "2019-05-10 09:33:01 -0700",
+    "commit_sha": "c633825c8dd3b33b7afca02048697fb0ecac8a77"
+}

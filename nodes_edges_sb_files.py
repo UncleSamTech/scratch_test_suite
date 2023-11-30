@@ -14,6 +14,7 @@ def get_nodes_edges_per_file(path):
                     continue
                 else:
                     for filename in os.listdir(f'{path}/{project_names}'):
+                        #print(filename)
                         with open(os.path.join(f'{path}/{project_names}', filename), 'r') as f: # open in readonly mode
                             # read the json file
                             
@@ -31,11 +32,12 @@ def get_nodes_edges_per_file(path):
                             data = json.load(f)
                             
                             an_file = new_original_file_name_sb3.split("/")[-1] if "/" in new_original_file_name_sb3 else new_original_file_name_sb3
-                            print(an_file)
+                            an_file = os.path.splitext(an_file)[0] if ".sb3" in an_file else an_file
+                            
+                            
                             try:
-                                nodes_in_sb3_file  = data["stats"][f'{an_file.strip(".sb3")}_summary' if ".sb3" in an_file  else f'{an_file}_summary']["number_of_nodes"]
-                                
-                                edges_in_sb3_file = data["stats"][f'{an_file.strip(".sb3")}_summary' if ".sb3" in an_file  else f'{an_file}_summary']["number_of_edges"]
+                                nodes_in_sb3_file  = data["stats"][f'{an_file}_summary']["number_of_nodes"]  
+                                edges_in_sb3_file = data["stats"][f'{an_file}_summary']["number_of_edges"]
                             except:
                                 nodes_in_sb3_file = 0
                                 edges_in_sb3_file = 0
