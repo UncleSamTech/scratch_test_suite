@@ -1,0 +1,57 @@
+import os
+import json
+
+def get_nodes_edges_per_file(path):
+    
+    if os.path.isdir(path):
+        for project_names in os.listdir(path):
+            nodes_in_this_project = 0 
+            edges_in_this_project = 0 
+            if not os.path.isdir(f'{path}/{project_names}'):
+                continue
+            else:
+                if not os.listdir(f'{path}/{project_names}'):
+                    continue
+                else:
+                    for filename in os.listdir(f'{path}/{project_names}'):
+                        with open(os.path.join(f'{path}/{project_names}', filename), 'r') as f: # open in readonly mode
+                            # read the json file
+                            
+                            original_part = filename.split("_CMMT_")[0]
+                            
+                            new_original_file_name = original_part.replace(",", "_COMMA_")
+                            
+                            new_original_file_name = new_original_file_name.replace("_FFF_", "/") 
+                            
+                            # suggestion: use the original file name extension and check if the filename is actually empty, in that case, no need to add extensions.    
+                            new_original_file_name_sb3 = new_original_file_name.split("/")[-1] if "/" in new_original_file_name else new_original_file_name + ".sb3" if ".sb3" not in new_original_file_name else new_original_file_name 
+                            print(new_original_file_name_sb3)
+                            commit = filename.split("_CMMT_")[1].split(".json")[0]
+                            #print(commit)
+                            data = json.load(f)
+                            #print(data["stats"][f'{new_original_file_name_sb3.split(".sb3")}_summary'])
+                            try:
+                                nodes_in_sb3_file  = data["stats"][f'{new_original_file_name_sb3.strip(".sb3")}_summary']["number_of_nodes"]
+                                
+                                edges_in_sb3_file = data["stats"][f'{new_original_file_name_sb3.strip(".sb3")}_summary']["number_of_edges"]
+                            except:
+                                nodes_in_sb3_file = 0
+                                edges_in_sb3_file = 0
+                            
+                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_file.csv", 'a') as f:
+                                f.write(f'_{project_names}'  + "," + new_original_file_name_sb3 + "," + commit + "," + str(nodes_in_sb3_file) + "," + str(edges_in_sb3_file))
+                                f.write("\n")
+                            
+                            nodes_in_this_project += nodes_in_sb3_file
+                            edges_in_this_project += edges_in_sb3_file
+
+            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_project.csv", 'a') as f:
+                f.write(f'_{project_names}' + "," + str(nodes_in_this_project) + "," + str(edges_in_this_project))
+                f.write("\n")
+
+
+
+                            
+get_nodes_edges_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects")
+
+                        
