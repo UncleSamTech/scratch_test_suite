@@ -32,32 +32,37 @@ with open(filename, 'r', encoding="utf-8", errors='ignore') as f: # open in read
         if len(content) == 2:
             commit = content[0]
             author_info = content[1]
-            print(author_info)
-            author_name = calculate_sha256(author_info.split("_COMMA_")[0]) 
-            author_email = calculate_sha256(author_info.split("_COMMA_")[1])
-            committer_name = calculate_sha256(author_info.split("_COMMA_")[2])
-            committer_email = calculate_sha256(author_info.split("_COMMA_")[3])  
+            aut_data = author_info.split("_COMMA_")
+            if len(aut_data) == 4:
+                author_name = calculate_sha256(aut_data[0]) 
+                author_email = calculate_sha256(aut_data[1])
+                committer_name = calculate_sha256(aut_data[2])
+                committer_email = calculate_sha256(aut_data[3])  
 
-            author_names.append(author_name)
-            author_emails.append(author_email)
-            commits.append(commit)
-            committer_names.append(committer_name)
-            committer_emails.append(committer_email)
+                author_names.append(author_name)
+                author_emails.append(author_email)
+                commits.append(commit)
+                committer_names.append(committer_name)
+                committer_emails.append(committer_email)
+            else:
+                continue
         elif len(content) > 2:
             commit = content[0]
             author_info = content[2]
-            print(author_info)
-            author_name = calculate_sha256(author_info.split("_COMMA_")[0]) 
-            author_email = calculate_sha256(author_info.split("_COMMA_")[1])
-            committer_name = calculate_sha256(author_info.split("_COMMA_")[2])
-            committer_email = calculate_sha256(author_info.split("_COMMA_")[3])  
+            aut_data = author_info.split("_COMMA_")
+            if len(aut_data) == 4:
+                author_name = calculate_sha256(aut_data[0]) 
+                author_email = calculate_sha256(aut_data[1])
+                committer_name = calculate_sha256(aut_data[2])
+                committer_email = calculate_sha256(aut_data[3])  
 
-            author_names.append(author_name)
-            author_emails.append(author_email)
-            commits.append(commit)
-            committer_names.append(committer_name)
-            committer_emails.append(committer_email)
-
+                author_names.append(author_name)
+                author_emails.append(author_email)
+                commits.append(commit)
+                committer_names.append(committer_name)
+                committer_emails.append(committer_email)
+            else:
+                continue
 
 df = pd.DataFrame(list(zip(commits,author_names,author_emails,committer_names,committer_emails)), columns =['Commit_SHA','Author_Name','Author_Email','Committer_Name','Committer_Email'])         
 df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/authors_hashed.csv", index=False)
