@@ -44,14 +44,14 @@ def get_nodes_edges_per_file(path):
                             
                             
                             #with open("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/sb3_parsed/nodes_edges/nodes_edges_per_file.csv", 'a') as f:
-                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_file.csv", 'a') as f:
+                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_file2.csv", 'a') as f:
                                 f.write(project_names  + "," + new_original_file_name_sb3 + "," + commit + "," + str(nodes_in_sb3_file) + "," + str(edges_in_sb3_file))
                                 f.write("\n")
                             
                             nodes_in_this_project += nodes_in_sb3_file
                             edges_in_this_project += edges_in_sb3_file
             
-            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_project.csv", 'a') as f:
+            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_per_project2.csv", 'a') as f:
             #with open("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/sb3_parsed/nodes_edges/nodes_edges_per_project.csv", 'a') as f:
                 f.write(project_names + "," + str(nodes_in_this_project) + "," + str(edges_in_this_project))
                 f.write("\n")
@@ -60,6 +60,6 @@ def get_nodes_edges_per_file(path):
 
                             
 #get_nodes_edges_per_file("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/sb3_parsed/new_projects")
-get_nodes_edges_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects")
+get_nodes_edges_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2")
 
                         
