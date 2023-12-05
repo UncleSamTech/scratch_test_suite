@@ -2,7 +2,6 @@ INPUT=/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/
 while read p; do
     folder=`echo $p | cut -d\/ -f2`
     dir=/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/$folder/
-    
     cd /media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted/$folder
     main= git rev-parse --abbrev-ref HEAD
     git checkout $main
