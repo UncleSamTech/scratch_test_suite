@@ -12,7 +12,7 @@ def author_commit(path):
                     continue
                 else:
                     try:
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/projnames.txt","w") as wf:
+                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/projnames2.txt","w") as wf:
                             wf.write("{}\n".format(i))
                         subprocess.call(['sh', '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/author_commit_message.sh'])
                     except Exception as e:
@@ -21,4 +21,4 @@ def author_commit(path):
                         f.close()
         
                     
-author_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects")
+author_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2")
