@@ -20,13 +20,17 @@ connection = sqlite3.connect("scratch_revisions.db")
 #df.to_sql("Projects", connection, if_exists='replace', index=False)
 #df3.to_sql("Authors", connection, if_exists='replace', index=False)
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
-revision_obj = connection.cursor()
+#revision_obj = connection.cursor()
 
 #revision_obj.execute("DROP TABLE IF EXIST Revisions")
-revision_table = """CREATE TABLE Revisions (Project_Name,
- File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
+#revision_table = """CREATE TABLE Revisions (Project_Name,
+ #File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
 
-revision_obj.execute(revision_table)
+#revision_obj.execute(revision_table)
+
+hash_obj = connection.cursor()
+hash_table = """CREATE TABLE Hashes (Hash,Content); """
+hash_obj.execute(hash_table)
 
 #df2.to_sql("Revisions", connection, if_exists='replace', index=False)
 # step 5: close connection
