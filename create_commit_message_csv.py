@@ -10,8 +10,8 @@ def is_sha1(maybe_sha):
         return False
     return True
 
-df_project = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projectnames_branch_names2.txt")
-commit_messages_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/commit_message_2.csv"
+df_project = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/proj_branch/projectnames_branch_names2.txt")
+commit_messages_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/commit_message_2.csv"
 
 project_names = df_project['Project_Name'].values
 
@@ -41,15 +41,15 @@ with open(commit_messages_file, 'r', encoding="utf8", errors='ignore') as f:
 
 df = pd.DataFrame(list(zip(projects,commits, commit_messages)), columns =['Project_Name','Commit_SHA', 'Commit_Message'])
 df['Commit_Message'] = df['Commit_Message'].str.rstrip('\n')
-df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/commit_messages2.csv", index=False)
+df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages2.csv", index=False)
 
 
-df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/commit_messages2.csv")
+df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages2.csv")
 unique_df = df.drop_duplicates()
-unique_df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/commit_messages_unique_with_project2.csv", index=False)
+unique_df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_unique_with_project2.csv", index=False)
 
 # drop the project_name column
-df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/commit_messages_unique_with_project2.csv")
+df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_unique_with_project2.csv")
 df = df.drop(columns=['Project_Name'])
 unique_df = df.drop_duplicates()
-unique_df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/commit_messages_unique2.csv", index=False)
+unique_df.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_unique2.csv", index=False)
