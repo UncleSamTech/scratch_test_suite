@@ -1,7 +1,7 @@
 import pandas as pd
 
 # create the hash_nodes_edges_final.csv
-df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/hashcontents/project_file_commit_hash2.csv')
+df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/hashcontents/all_hashes.csv')
 df_nodes_edges = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_per_file2.csv')
 merged_df = pd.merge(df, df_nodes_edges, on=['Commit_SHA', 'Project_Name', 'File']) 
 
