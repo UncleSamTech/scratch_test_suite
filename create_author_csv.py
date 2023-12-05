@@ -2,7 +2,7 @@
 import pandas as pd
 import hashlib
 
-filename = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/authors2_unique.csv"
+filename = "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/authors_2_unique.csv"
 
 commits = []
 author_names = []
