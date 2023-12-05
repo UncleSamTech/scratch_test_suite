@@ -2,7 +2,7 @@ import os
 import subprocess
 
 def author_commit(path):
-    if os.path.isdir(f'{path}'):
+    if os.path.isdir(path):
         for i in os.listdir(path):
             if not os.path.isdir(f'{path}/{i}'):
                 continue
