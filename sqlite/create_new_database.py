@@ -23,8 +23,7 @@ df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 
 #create the revision table to be used later
 revision_obj = connection.cursor()
-revision_table = """CREATE TABLE Revisions (Project_Name,
- #File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
+revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
 revision_obj.execute(revision_table)
 
 #create the hash table to be used later
