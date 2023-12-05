@@ -22,7 +22,7 @@ connection = sqlite3.connect("scratch_revisions.db")
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 revision_obj = connection.cursor()
 
-revision_obj.execute("DROP TABLE IF EXIST Revisions")
+#revision_obj.execute("DROP TABLE IF EXIST Revisions")
 revision_table = """CREATE TABLE Revisions (Project_Name,
  File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
 
