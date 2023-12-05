@@ -12,7 +12,7 @@ df_nodes_edges['Project_Name'] =  df_nodes_edges['Project_Name'].astype(str)
 df_nodes_edges['File'] =  df_nodes_edges['File'].astype(str)
 df_nodes_edges['Commit_SHA'] = df_nodes_edges['Commit_SHA'].astype(str)
 #merged_df = pd.merge(df, df_nodes_edges, on=['Commit_SHA', 'Project_Name', 'File']) 
-merged_df = pd.concat(df,df_nodes_edges,join=['Commit_SHA', 'Project_Name', 'File'])
+merged_df = pd.concat([df,df_nodes_edges])
 
 
 # save the dataframe df to a csv file
