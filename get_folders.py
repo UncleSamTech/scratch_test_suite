@@ -8,7 +8,7 @@ def get_folders(path):
             proj_names.append(i)
         else:
             continue
-    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames.txt","w") as pna:
+    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames2.txt","w") as pna:
         if len(proj_names) > 0:
             for i in proj_names:
                 pna.write("{}\n".format(i))
