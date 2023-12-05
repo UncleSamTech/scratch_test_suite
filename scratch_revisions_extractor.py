@@ -136,7 +136,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_13.txt", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter.txt", "a") as outfile:
                     outfile.write(form_file) 
                     
 
@@ -163,7 +163,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 root_name = Path(new_original_file_name).stem
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects'
+                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects2'
                 com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
                 print(com)
             
@@ -223,7 +223,7 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
-    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames.txt","w") as pna:
+    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames2.txt","w") as pna:
         if len(proj_names) > 0:
             for i in proj_names:
                 pna.write("{}\n".format(i))
@@ -242,7 +242,7 @@ def main2(project_path: str):
                         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
                         continue
                 except Exception as e:
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions.txt", "a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions2.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
