@@ -48,7 +48,7 @@ def create_csv_hash_id(path):
                         
             
                 
-                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/hashcontents/project_file_commit_hash1.txt", "a") as outfile:
+                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/hashcontents/project_file_commit_hash2.txt", "a") as outfile:
                                 outfile.write("{},{},{},{}\n".format(project_name, file_name, commit_sha, hash_value))
 
-create_csv_hash_id("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/projects")
+create_csv_hash_id("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2")
