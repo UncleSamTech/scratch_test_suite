@@ -6,6 +6,10 @@ df_nodes_edges = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/
 print('1',type(df['Commit_SHA']))
 print('2',type(df_nodes_edges['Commit_SHA']))
 df['Commit_SHA'] = df['Commit_SHA'].astype(str)
+df['Project_Name'] = df['Project_Name'].astype(str)
+df['File'] = df['File'].astype(str)
+df_nodes_edges['Project_Name'] =  df_nodes_edges['Project_Name'].astype(str)
+df_nodes_edges['File'] =  df_nodes_edges['File'].astype(str)
 df_nodes_edges['Commit_SHA'] = df_nodes_edges['Commit_SHA'].astype(str)
 merged_df = pd.merge(df, df_nodes_edges, on=['Commit_SHA', 'Project_Name', 'File']) 
 
