@@ -43,7 +43,7 @@ with open(filename, 'r', encoding="utf-8", errors='ignore') as f: # open in read
             commits.append(commit)
             committer_names.append(committer_name)
             committer_emails.append(committer_email)
-        elif len(content) == 3:
+        elif len(content) > 2:
             commit = content[0]
             author_info = content[2]
             print(author_info)
