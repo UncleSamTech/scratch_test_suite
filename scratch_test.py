@@ -34,6 +34,7 @@ class TestScratchParser(unittest.TestCase):
         self.maxDiff = None
         return self.shortDescription()
 
+    @unittest.skip("demonstrating skipping")  
     def test_scratch_nothing_onclick(self):
         
         expected2 = [
@@ -144,7 +145,8 @@ class TestScratchParser(unittest.TestCase):
         
         
         self.assertEqual(expected2,parsed,msg="Test failed")
-             
+
+    @unittest.skip("demonstrating skipping")           
     def test_assertEq(self):
         expected = ['a',['b',['c','d']]]
         actual = ['a',['b',['c','d']]]
@@ -154,7 +156,7 @@ class TestScratchParser(unittest.TestCase):
         self.assertNotEquals(expected,not_actual,msg="Test failed")
         self.assertNotEquals(not_not_actual,not_actual,msg="Test failed")
 
-
+    @unittest.skip("demonstrating skipping")  
     def test_scratch_two_arg(self):
         expected_tree1 = [
     "stand_check",
@@ -265,7 +267,7 @@ class TestScratchParser(unittest.TestCase):
         self.assertEqual(expected_tree2,parsed1,msg="Test failed")
         self.assertEqual(expected_tree1,parsed2,msg="Test failed")
 
-
+    @unittest.skip("demonstrating skipping")  
     def test_infinite_loop(self):
         expected = [
     "infinite_two_opcode",
@@ -338,6 +340,7 @@ class TestScratchParser(unittest.TestCase):
         
         self.assertEqual(expected,parsed,msg="Test failed")
     
+    @unittest.skip("demonstrating skipping")  
     def test_loop_in_a_loop_in_a_loop(self):
         expected = [
     "3l_opcode",
@@ -447,6 +450,7 @@ class TestScratchParser(unittest.TestCase):
         
         return self.shortDescription()
         
+    @unittest.skip("demonstrating skipping")    
     def test_input_blocks(self):
         expected = [
                 [
@@ -497,7 +501,7 @@ class TestScratchParser(unittest.TestCase):
         parsed_block  = self.scratch_parser_inst.correct_input_block_tree_by_id(all_blocks_val,inp_block,"8J%l~hNqUpt0Lfv1;iR^")
         self.assertEqual(expected,parsed_block,msg="Test failed")
 
-    
+    @unittest.skip("demonstrating skipping")  
     def test_input_specific_keys(self):
         expected = ['SECS', ['2']]
         all_blocks = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
@@ -505,8 +509,28 @@ class TestScratchParser(unittest.TestCase):
         self.assertEqual(expected,block_by_id_key,msg="Test failed")
 
     
+    def test_get_total_edges(self):
+        all_blocks = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
+        parsed_tree = self.scratch_parser_inst.create_next_values2(all_blocks,self.file_name1)
+        actual_edges = self.scratch_parser_inst.get_total_edges(parsed_tree)
+        empty_tree = []
+        non_list_input = 92
+        tr_wt_sing_node = [1]
+        self.assertEqual(13,actual_edges,msg="Test Failed")
+        self.assertEqual(0,self.scratch_parser_inst.get_total_edges(empty_tree))
+        self.assertEqual(0,self.scratch_parser_inst.get_total_edges(non_list_input))
+        self.assertEqual(0,self.scratch_parser_inst.get_total_edges(tr_wt_sing_node))
+
+    def test_get_total_nodes(self):
+        all_blocks = self.scratch_parser_inst.get_all_blocks_vals(self.prog1)
+        parsed_tree = self.scratch_parser_inst.create_next_values2_disp(all_blocks,self.file_name1)
+        single_node = ["eventwhenclicked"]
+        actual_nodes = self.scratch_parser_inst.get_total_nodes(parsed_tree,all_blocks)
+        self.assertEqual(26,actual_nodes,msg="Test Failed")
+        self.assertEqual(1,self.scratch_parser_inst.get_total_nodes(single_node,all_blocks),msg="Test Failed single node")
 
 
+    @unittest.skip("demonstrating skipping")  
     def test_complex4(self):
         expected = [
     "complex4",

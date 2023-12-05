@@ -1,3 +1,1 @@
-17Snap
-angstromctf_2019_writeups
-scratch1
+Zombie-Shooter-in-Scratch
