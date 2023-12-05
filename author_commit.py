@@ -2,7 +2,7 @@ import os
 import subprocess
 
 def author_commit(path):
-    all_projects = []
+    
     if os.path.isdir(path):
         for i in os.listdir(path):
             if not os.path.isdir(f'{path}/{i}'):
