@@ -14,5 +14,4 @@ while read p; do
         echo $p,$k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/author_1.csv
         echo $p,$k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/commit_message_1.csv
     done < $INPUT2
-        rm /media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/commits_1.txt
 done < $INPUT
