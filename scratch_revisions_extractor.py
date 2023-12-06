@@ -23,10 +23,10 @@ def is_sha1(maybe_sha):
         return False
     return True
 
-connection = pysqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
 #print("total connection changes", connection.total_changes())
-cursor.execute('BEGIN TRANSACTION')
+#cursor.execute('BEGIN TRANSACTION')
 
 def calculate_sha256(content):
     # Convert data to bytes if it’s not already
@@ -191,8 +191,11 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 root_name = Path(new_original_file_name).stem
                 
                 #insert revisions and hashes to database
-                cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
+                cursor.execute("""INSERT INTO Revisions VALUES({project_name},{new_original_file_name},{new_name},{c},{parsed_date_str},{hash_value},{nodes_count},{edges_count})""")
+                #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
+
+                #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
                 #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
