@@ -4,7 +4,7 @@ import os
 
 
 
-def get_nodes_edges_per_file_distribution(file_path:str,plot_result_path):
+def plot_histogram_per_distribution(file_path:str,plot_result_path,xlabel,ylabel,title,fig_title):
     df = pd.read_csv(file_path)
     nodes = df['Nodes'].values
     edges = df['Edges'].values
@@ -12,11 +12,11 @@ def get_nodes_edges_per_file_distribution(file_path:str,plot_result_path):
     plt.hist(nodes,color='lightblue', ec='black',bins=20)
     plt.yscale('log')
     plt.ticklabel_format(axis='x',style='plain')
-    plt.xlabel('Number of Nodes Per File')
-    plt.ylabel('Number of Files (Log Scale)')
-    plt.title('Histogram of Number of Nodes Per Scratch(.sb3) File')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
     plt.show()
-    return plt.savefig(f'{plot_result_path}/nodes_edges_distribution.pdf')
+    return plt.savefig(f'{plot_result_path}/{fig_title}.pdf')
 
 
-get_nodes_edges_per_file_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_per_file2.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results")
+plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_per_file2.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Nodes Per File","Number of Files (Log Scale)","Histogram of Number of Nodes Per Scratch(.sb3) File","nodes_edges_distribution_per_file")
