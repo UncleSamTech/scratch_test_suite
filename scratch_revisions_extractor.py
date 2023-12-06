@@ -25,7 +25,7 @@ def is_sha1(maybe_sha):
 
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
-print('cursor',cursor)
+
 
 #cursor.execute('BEGIN TRANSACTION')
 
@@ -202,9 +202,9 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
                 #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                 #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
-
-                cursor.execute("INSERT INTO Revisions VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                cursor.execute("INSERT INTO Hashes VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
+                with connection:
+                    cursor.execute("INSERT INTO Revisions VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                    cursor.execute("INSERT INTO Hashes VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
                 #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
@@ -291,7 +291,7 @@ def main2(project_path: str):
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
-                connection.commit()
+                #connection.commit()
                 #connection.close()
                 
                 #connection.close()
