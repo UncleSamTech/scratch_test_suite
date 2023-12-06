@@ -178,7 +178,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 try:
                     filename_key = os.path.splitext(f)[0] if ".sb3" in f else f
                     filename_key = f'{filename_key}_summary'
-                    print(filename_key)
+                    print('node_egde_key',filename_key)
                     nodes_count = stats["stats"][filename_key]["number_of_nodes"]
                     edges_count = stats["stats"][filename_key]["number_of_edges"]
                 except:
@@ -264,9 +264,9 @@ def main2(project_path: str):
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
-                    print(repo)
-                    print(proj_name)
-                    print(main_branch)
+                    #print(repo)
+                    #print(proj_name)
+                    #print(main_branch)
                     v = get_revisions_and_run_parser(repo, proj_name, main_branch)
                     if v == -1:
                         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
@@ -280,7 +280,7 @@ def main2(project_path: str):
                 finally:
                     print("done")
                 connection.commit()
-                connection.close()
+                #connection.close()
             else:
                 print("skipped")
                 continue
@@ -288,6 +288,6 @@ def main2(project_path: str):
             print("skipped")
             continue
 
-
+    connection.close()
 main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
 
