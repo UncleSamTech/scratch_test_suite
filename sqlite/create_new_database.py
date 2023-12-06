@@ -14,7 +14,7 @@ df4.columns = df4.columns.str.strip()
 
 
 # step 3: create/connect to database
-connection = sqlite3.connect("scratch_revisions.db")
+connection = sqlite3.connect("scratch_revisions_database.db")
 
 # step 4: load data file to sqlite
 df.to_sql("Projects", connection, if_exists='replace', index=False)
