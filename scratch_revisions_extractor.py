@@ -28,11 +28,11 @@ cursor.execute('BEGIN TRANSACTION')
 
 def calculate_sha256(content):
     # Convert data to bytes if it’s not already
-    if isinstance(data, str):
-        data = data.encode()
+    if isinstance(content, str):
+        content = content.encode()
 
     # Calculate SHA-256 hash
-    sha256_hash = hashlib.sha256(data).hexdigest()
+    sha256_hash = hashlib.sha256(content).hexdigest()
     return sha256_hash
 
 
@@ -288,6 +288,6 @@ def main2(project_path: str):
             print("skipped")
             continue
 
-    connection.close()
+    #connection.close()
 main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
 
