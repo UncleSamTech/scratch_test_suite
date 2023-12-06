@@ -4,11 +4,14 @@ import json
 from pydriller.git import Git
 import tempfile
 from datetime import datetime
+import hashlib
 import subprocess
 from unzip_scratch import unzip_scratch
 from pathlib import Path
 from scratch_parser import scratch_parser
 import logging
+import pysqlite3
+
 
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
@@ -18,6 +21,20 @@ def is_sha1(maybe_sha):
     except ValueError:
         return False
     return True
+
+connection = pysqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
+cursor = connection.cursor()
+cursor.execute('BEGIN TRANSACTION')
+
+def calculate_sha256(content):
+    # Convert data to bytes if it’s not already
+    if isinstance(data, str):
+        data = data.encode()
+
+    # Calculate SHA-256 hash
+    sha256_hash = hashlib.sha256(data).hexdigest()
+    return sha256_hash
+
 
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     sp = scratch_parser()
@@ -136,8 +153,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter.txt", "a") as outfile:
-                    outfile.write(form_file) 
+                #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter.txt", "a") as outfile:
+                    #outfile.write(form_file) 
                     
 
 
@@ -157,18 +174,31 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 stats["commit_sha"] = c
                 
                 json_output = json.dumps(stats, indent=4)
-                print(json_output)
-            
+                hash_value = calculate_sha256(str(json_output))
+                try:
+                    filename_key = os.path.splitext(f)[0] if ".sb3" in f else f
+                    filename_key = f'{filename_key}_summary'
+                    print(filename_key)
+                    nodes_count = stats["stats"][filename_key]["number_of_nodes"]
+                    edges_count = stats["stats"][filename_key]["number_of_edges"]
+                except:
+                    nodes_count = 0
+                    edges_count = 0
+
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
+                
+                #insert revisions and hashes to database
+                cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
-                com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
-                print(com)
+                #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
+                #com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
+                #print(com)
             
-                with open(com,"w") as outfile:
-                    outfile.write(json_output)
+                #with open(com,"w") as outfile:
+                    #outfile.write(json_output)
         return 1
             
 
@@ -249,6 +279,8 @@ def main2(project_path: str):
                     pass
                 finally:
                     print("done")
+                connection.commit()
+                connection.close()
             else:
                 print("skipped")
                 continue
@@ -257,5 +289,5 @@ def main2(project_path: str):
             continue
 
 
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
 
