@@ -26,7 +26,7 @@ def is_sha1(maybe_sha):
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
 print('cursor',cursor)
-print("total connection changes", connection.total_changes)
+
 #cursor.execute('BEGIN TRANSACTION')
 
 def calculate_sha256(content):
@@ -282,14 +282,14 @@ def main2(project_path: str):
                     if v == -1:
                         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
                         continue
+                    
                 except Exception as e:
                     f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions2.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
-                    pass
-                finally:
-                    print("done")
+                connection.commit()
+                #connection.close()
                 
                 #connection.close()
             else:
@@ -298,7 +298,6 @@ def main2(project_path: str):
         else:
             print("skipped")
             continue
-    connection.commit()
-    connection.close()
+    
 main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
 
