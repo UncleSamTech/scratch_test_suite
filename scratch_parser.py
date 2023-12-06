@@ -1240,7 +1240,7 @@ class scratch_parser:
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
         top = self.print_tree_top(all_blocks_value,file_name)
-        print(top)
+        #print(top)
         #print(non_opc)
         #print(self.get_all_unique_opcodes(all_blocks_value))
         #v = self.get_total_nodes(next_val2,all_blocks_value)
