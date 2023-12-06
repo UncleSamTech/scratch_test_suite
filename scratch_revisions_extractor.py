@@ -23,8 +23,9 @@ def is_sha1(maybe_sha):
         return False
     return True
 
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
+connection = pysqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
+#print("total connection changes", connection.total_changes())
 cursor.execute('BEGIN TRANSACTION')
 
 def calculate_sha256(content):
@@ -280,7 +281,7 @@ def main2(project_path: str):
                     pass
                 finally:
                     print("done")
-                connection.commit()
+                
                 #connection.close()
             else:
                 print("skipped")
@@ -288,7 +289,7 @@ def main2(project_path: str):
         else:
             print("skipped")
             continue
-
-    #connection.close()
+    connection.commit()
+    connection.close()
 main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
 
