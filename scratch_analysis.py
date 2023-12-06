@@ -19,4 +19,4 @@ def plot_histogram_per_distribution(file_path:str,plot_result_path,xlabel,ylabel
     return plt.savefig(f'{plot_result_path}/{fig_title}.pdf')
 
 
-plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_per_file2.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Nodes Per File","Number of Files (Log Scale)","Histogram of Number of Nodes Per Scratch(.sb3) File","nodes_edges_distribution_per_file")
+plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_per_project2.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Nodes Per Projects","Number of Projects (Log Scale)","Histogram of Number of Nodes Per Scratch Project","nodes_edges_distribution_per_projects")
