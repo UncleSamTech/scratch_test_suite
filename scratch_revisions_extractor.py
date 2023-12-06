@@ -10,6 +10,7 @@ from unzip_scratch import unzip_scratch
 from pathlib import Path
 from scratch_parser import scratch_parser
 import logging
+import sqlite3
 import pysqlite3
 
 
@@ -22,7 +23,7 @@ def is_sha1(maybe_sha):
         return False
     return True
 
-connection = pysqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
 cursor.execute('BEGIN TRANSACTION')
 
