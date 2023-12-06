@@ -25,7 +25,7 @@ def is_sha1(maybe_sha):
 
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
 cursor = connection.cursor()
-#print("total connection changes", connection.total_changes())
+print("total connection changes", connection.total_changes())
 #cursor.execute('BEGIN TRANSACTION')
 
 def calculate_sha256(content):
