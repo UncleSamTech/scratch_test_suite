@@ -13,6 +13,9 @@ import logging
 import sqlite3
 import pysqlite3
 
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db",isolation_level=None)
+cursor = connection.cursor()
+
 
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
@@ -23,8 +26,6 @@ def is_sha1(maybe_sha):
         return False
     return True
 
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db")
-cursor = connection.cursor()
 
 
 #cursor.execute('BEGIN TRANSACTION')
