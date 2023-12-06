@@ -206,11 +206,14 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                 #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
                 conn,cur = get_connection()
+                val = None
                 if conn != None:
-                    cur.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",[project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count])
+                    val = cur.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",[project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count])
                     cur.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",[hash_value,str(json_output)])
                 else:
-                    raise "Connection failed"
+                    if val != None:
+                        print("executed")
+                    print("connection failed")
                 #conn.commit()
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
