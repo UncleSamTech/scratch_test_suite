@@ -26,7 +26,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -315,5 +315,5 @@ def main2(project_path: str):
             print("skipped")
             continue
     
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/extracted_test")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
