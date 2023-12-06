@@ -177,6 +177,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 json_output = json.dumps(stats, indent=4)
                 hash_value = calculate_sha256(str(json_output))
+                nodes_count = 0 
+                edges_count = 0
                 try:
                     filename_key = os.path.splitext(f)[0] if ".sb3" in f else f
                     filename_key = f'{filename_key}_summary'
@@ -186,16 +188,19 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 except:
                     nodes_count = 0
                     edges_count = 0
+                
+                print('nodes_count',nodes_count)
+                print('edges_count',edges_count)
 
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
                 
                 #insert revisions and hashes to database
-                cursor.execute("""INSERT INTO Revisions VALUES({project_name},{new_original_file_name},{new_name},{c},{parsed_date_str},{hash_value},{nodes_count},{edges_count})""")
+                #cursor.execute("""INSERT INTO Revisions VALUES({project_name},{new_original_file_name},{new_name},{c},{parsed_date_str},{hash_value},{nodes_count},{edges_count})""")
                 #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
 
-                #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
+                cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
                 #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
