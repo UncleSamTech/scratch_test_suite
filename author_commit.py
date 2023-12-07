@@ -12,13 +12,13 @@ def author_commit(path):
                     continue
                 else:
                     try:
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/projnames2.txt","w") as wf:
-                            wf.write("{}\n".format(i))
-                        subprocess.call(['sh', '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/author_commit_message.sh'])
+                        #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/projnames2.txt","w") as wf:
+                            #wf.write("{}\n".format(i))
+                        subprocess.call(['sh', '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/extract_parent_commit.sh'])
                     except Exception as e:
-                        f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/commit_exceptions.txt", "a")
+                        f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/parent_commit_exceptions.txt", "a")
                         f.write("{}\n".format(e))
                         f.close()
         
                     
-author_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2")
+author_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
