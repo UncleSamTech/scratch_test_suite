@@ -21,7 +21,7 @@ def plot_histogram_per_distribution(file_path:str,plot_result_path,xlabel,ylabel
 def merge_csv_files(csv_file1,csv_file2,new_file_name):
     csv1 = pd.read_csv(csv_file1)
     csv2 = pd.read_csv(csv_file2)
-    merged_data = pd.merge(csv1,csv2,on=['Project_Name','Commit_SHA'],how='inner')
+    merged_data = pd.merge(csv1,csv2,on='Commit_SHA',how='inner')
     return merged_data.to_csv(f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/{new_file_name}.csv',index=False)
 
 
