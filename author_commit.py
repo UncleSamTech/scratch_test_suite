@@ -12,8 +12,8 @@ def author_commit(path):
                     continue
                 else:
                     try:
-                        #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/projnames2.txt","w") as wf:
-                            #wf.write("{}\n".format(i))
+                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/projnames2.txt","w") as wf:
+                            wf.write("{}\n".format(i))
                         subprocess.call(['sh', '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/extract_parent_commit.sh'])
                     except Exception as e:
                         f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/parent_commit_exceptions.txt", "a")
