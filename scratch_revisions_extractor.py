@@ -11,7 +11,7 @@ from pathlib import Path
 from scratch_parser import scratch_parser
 import logging
 import sqlite3
-import pysqlite3
+
 
 
 
@@ -30,7 +30,7 @@ def get_connection():
     cursor =  conn.cursor()
     return conn,cursor
 
-#cursor.execute('BEGIN TRANSACTION')
+
 
 def calculate_sha256(content):
     # Convert data to bytes if it’s not already
@@ -181,6 +181,10 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 json_output = json.dumps(stats, indent=4)
                 hash_value = calculate_sha256(str(json_output))
+                prev_node_count = 0
+                prev_edge_count = 0 
+                diff_node_count = 0
+                diff_edge_count = 0
                 nodes_count = 0 
                 edges_count = 0
                 try:
@@ -195,9 +199,14 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 print('nodes_count',nodes_count)
                 print('edges_count',edges_count)
+                diff_node_count = nodes_count - prev_node_count
+                diff_edge_count = edges_count - prev_edge_count
 
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
+
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/difference_1.txt", "a") as outfile:
+                    outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
                 
                 #insert revisions and hashes to database
                 #cursor.execute("""INSERT INTO Revisions VALUES({project_name},{new_original_file_name},{new_name},{c},{parsed_date_str},{hash_value},{nodes_count},{edges_count})""")
@@ -205,18 +214,18 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
                 #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                 #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
-                insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
-                insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
-                tree_value = str(json_output)
-                conn,cur = get_connection()
-                val = None
-                if conn != None:
-                    cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                    cur.execute(insert_hash_statement,(hash_value,tree_value))
-                else:
-                    if val != None:
-                        print("executed")
-                    print("connection failed")
+                #insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
+                #insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
+                #tree_value = str(json_output)
+                #conn,cur = get_connection()
+                #val = None
+                #if conn != None:
+                    #cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                    #cur.execute(insert_hash_statement,(hash_value,tree_value))
+                #else:
+                    #if val != None:
+                        #print("executed")
+                    #print("connection failed")
                 #conn.commit()
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
