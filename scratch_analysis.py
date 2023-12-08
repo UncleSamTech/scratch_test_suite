@@ -30,8 +30,8 @@ def merge_csv_files(csv_file1,csv_file2,new_file_name):
 
 def describe_data(csv_file):
     val = pd.read_csv(csv_file)
-    val[["Nodes","Edges"]].describe()
-    resp = val.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_description.csv")
+    new = val[["Nodes","Edges"]].describe()
+    resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/nodes_edges_description.csv")
     return resp
 
 #merge_csv_files("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/authors_hashed2_for_merge.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_uniq_proje_for_merge.csv","authors_project_unique_filtered_hashed2")
