@@ -1281,8 +1281,8 @@ class scratch_parser:
         all = self.get_all(all_blocks_value,all_keys)
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
-        top = self.print_tree_top(all_blocks_value,file_name)
-        print(top)
+        #top = self.print_tree_top(all_blocks_value,file_name)
+        #print(top)
         #print(non_opc)
         #print(self.get_all_unique_opcodes(all_blocks_value))
         #v = self.get_total_nodes(next_val2,all_blocks_value)
@@ -1290,31 +1290,23 @@ class scratch_parser:
         #ed = self.get_total_edges(next_val2)
         #print(ed)
         #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
-        #fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        fin_val = {}
-
-        
-        
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+       
         return fin_val
         
     def decode_scratch_bytes(self, raw_bytes):
         with BytesIO(raw_bytes) as f:
-            with zipfile.ZipFile(f,"r") as zipf:
-                zip_contents = zipf.read("project.json") 
-
-                scr_str = zip_contents.decode("utf-8")
-                self.scr_proj = json.loads(scr_str)
+            self.scr_proj = self.sb3class.unpack_sb3(f)
         return self.scr_proj
     
     def parse_scratch(self,scr_proj,file_name):
-        all_blocks_value = self.get_all_blocks_vals(scr_proj)
         
+        all_blocks_value = self.get_all_blocks_vals(json.loads(scr_proj))
         
-
         file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-
+        
         return fin_val
         
 
@@ -1325,6 +1317,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/complex4.sb3")
+scratch_parser_inst.read_files("files/test.sb3")
 
     
