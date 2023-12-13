@@ -50,12 +50,12 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
-    proc3 = subprocess.run(['grep -i ".sb2$\|.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True) 
+    proc3 = subprocess.run(['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True) 
     
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     filenames = proc4.stdout.decode().strip().split('\n')
-    print(filenames)
+    
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
         return -1
@@ -139,8 +139,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
                 all_sha_dates[c] = parsed_date
 
-                # fill in the gaps
-                prev_fn = f
+            # fill in the gaps
+            prev_fn = f
             for c in all_sha_names.keys():
                 if all_sha_names[c] is None:
                     all_sha_names[c] = prev_fn
@@ -152,15 +152,15 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
            
                 new_name = all_sha_names[c]
             
-                print(c)
+                
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
-                form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
-                print(form_file)
+                #form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
+                #print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter2.txt", "a") as outfile:
-                    outfile.write(form_file) 
+                #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter2.txt", "a") as outfile:
+                    #outfile.write(form_file) 
                     
 
 
@@ -188,9 +188,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 nodes_count = 0 
                 edges_count = 0
                 try:
-                    filename_key = os.path.splitext(f)[0] if ".sb3" in f else f
-                    filename_key = f'{filename_key}_summary'
-                    print('node_egde_key',filename_key)
+                    
                     nodes_count = stats["stats"]["number_of_nodes"]
                     edges_count = stats["stats"]["number_of_edges"]
                 except:
@@ -205,8 +203,10 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 new_name = new_name.replace(",","_COMMA_")
 
                 
-                
+                print(new_original_file_name)
+                print(new_name)
                 #insert revisions and hashes to database
+                
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
@@ -220,6 +220,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         print("executed")
                     print("connection failed")
                 conn.commit()
+                
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
                 #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project3'
@@ -296,12 +297,17 @@ def main2(project_path: str):
                     #print(repo)
                     #print(proj_name)
                     #print(main_branch)
-                    v = get_revisions_and_run_parser(repo, proj_name, main_branch)
-                    if v == -1:
+                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
+                    if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
+                        print('no revision found')
                         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
                         continue
+                    else:
+                        get_revisions_and_run_parser(repo, proj_name, main_branch)
+
                     
                 except Exception as e:
+                    
                     f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions3.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
@@ -317,5 +323,7 @@ def main2(project_path: str):
             print("skipped")
             continue
     
+
+#main2("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/repos")
 main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
