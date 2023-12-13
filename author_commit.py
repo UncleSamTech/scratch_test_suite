@@ -33,11 +33,12 @@ def parent_commit(path):
 
                     if len(parent_sha) == 0:
                         with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/parent_commits_result.csv","a") as pc:
-                            pc.write(commit_sha + "__SEP__" + "None\n")
+                            pc.write(commit_sha + "," + "None\n")
                     else:
                         for p in parent_sha:
                             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/parent_commits_result.csv","a") as pc:
-                                pc.write(commit_sha + "__SEP__" + p)
+                                pc.write(commit_sha + "," + f'{p}\n')
+                                
 
                     
 #author_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
