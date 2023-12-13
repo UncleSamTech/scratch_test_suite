@@ -46,7 +46,7 @@ def get_valid_parents_recursive(c, parents_of_c, commits_which_modified_file_f, 
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-    proc3 = subprocess.run(['grep -i "\.pd$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    proc3 = subprocess.run(['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     filenames = proc4.stdout.decode().strip().split('\n')
 
@@ -181,13 +181,12 @@ def main2(project_path: str):
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
-            print(main_branch)
-            print(repo)
+            
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
-                    #print(repo)
-                    #print(proj_name)
-                    #print(main_branch)
+                    print(repo)
+                    print(proj_name)
+                    print(main_branch)
                     #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
                     if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
                         print('no revision found')
