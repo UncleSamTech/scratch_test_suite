@@ -201,8 +201,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 print('edges_count',edges_count)
                 
 
-                new_original_file_name = f.replace("/", "_FFF_")
-                root_name = Path(new_original_file_name).stem
+                new_original_file_name = f.replace(",", "_COMMA_")
+                new_name = new_name.replace(",","_COMMA_")
 
                 
                 
@@ -222,12 +222,12 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 conn.commit()
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project3'
-                com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
-                print(com)
+                #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project3'
+                #com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
+                #print(com)
             
-                with open(com,"w") as outfile:
-                    outfile.write(json_output)
+                #with open(com,"w") as outfile:
+                    #outfile.write(json_output)
         return 1
             
 
