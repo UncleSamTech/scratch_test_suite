@@ -171,18 +171,18 @@ def main2(project_path: str):
     proj_names = []
     for i in os.listdir(project_path):
         if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
+            print(project_path)
             proj_names.append(i)
         else:
             continue
-    #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames3.txt","w") as pna:
-        #if len(proj_names) > 0:
-            #for i in proj_names:
-               #pna.write("{}\n".format(i))
+   
     for proj_name in proj_names:
         if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
+            print(main_branch)
+            print(repo)
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
                     #print(repo)
