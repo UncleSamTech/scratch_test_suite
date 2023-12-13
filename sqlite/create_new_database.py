@@ -36,5 +36,6 @@ df5.to_sql("Commit_Parents",connection,if_exists='replace',index=False)
 #hash_obj.execute(hash_table)
 
 
-# step 5: close connection
+# step 5: close 
+connection.commit()
 connection.close()
