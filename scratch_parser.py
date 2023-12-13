@@ -1075,14 +1075,17 @@ class scratch_parser:
                            recur_val = {}
                            next_opcode = ''
                            next_rec = {}
-                           opcode_par  = self.get_opcode_from_id(block,id)  
-                           if input_block != None or input_block != {} or block != None or block != {}:
-                               input_block = input_block["inputs"] if input_block["inputs"] != {} or input_block["inputs"] != None else {}
-        
-                               if input_block != {} or input_block != None:
-                                    if isinstance(input_block,dict) and bool(input_block):
+                           another_block = {}
+                           opcode_par  = self.get_opcode_from_id(block,id) 
+                           
+                           if input_block != {} or input_block != None and block != {} or block != None:
+                               if isinstance(input_block,dict) and bool(input_block) and "inputs" in input_block.keys():
+                                    another_block = input_block["inputs"]
+
+                               if another_block != {} or another_block != None:
+                                    if isinstance(another_block,dict) and bool(another_block):
             
-                                        for k,v in input_block.items():   
+                                        for k,v in another_block.items():   
                                             if opcode_par in self.substack_replacement.keys():
                                                 if opcode_par != "control_if_else":
                         
@@ -1098,15 +1101,21 @@ class scratch_parser:
                                                             elif isinstance(v[1],str) and len(v[1]) > 0:
                                                                 opcode =  self.get_opcode_from_id(block,v[1])
                                                                 
-
-                                                                
                                                                 any_block = self.get_any_block_by_id(block,v[1]) 
+                                                                recur_val = iterate_leaf(block,any_block,v[1])
                                                                 if any_block == None or any_block == {}:
-
                                                                     all_dict.update({new_key:opcode})
                                                                 else:
+                                                                    
                                                                     recur_val = iterate_leaf(block,any_block,v[1])
-                                                                    all_dict.update({new_key:{opcode:recur_val}})
+                                                                    next_opcode = self.get_opcode_from_id(block,any_block["next"])
+                                                                    next_rec = iterate_leaf(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"])
+                                                                    if any_block["next"] != None and recur_val != {} or recur_val != None and next_rec != {} or next_rec != None:
+                                                                        all_dict.update({new_key:{opcode:recur_val,next_opcode:next_rec}})
+                                                                    elif any_block["next"] == None:
+                                                                        if recur_val != {} or recur_val != None and next_rec == {} or next_rec == None:
+                                                                            all_dict.update({new_key:{opcode:recur_val}})
+                                                                    
                                      
                                                                 
                                                                 #next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
@@ -1131,12 +1140,16 @@ class scratch_parser:
                                                                     all_dict.update({new_key:opcode})
                                                                 else:
                                                                     recur_val = iterate_leaf(block,any_block,v[1])
-                                                                    all_dict.update({new_key:{opcode:recur_val}})
-                                                                #next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
-                                                                #next_rec  = self.get_all_inp_keys(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"])
+                                                                    next_opcode = self.get_opcode_from_id(block,any_block["next"])
+                                                                    next_rec = iterate_leaf(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"])
+                                                                    if any_block["next"] != None and recur_val != {} or recur_val != None and next_rec != {} or next_rec != None:
+                                                                        all_dict.update({new_key:{opcode:recur_val,next_opcode:next_rec}})
+                                                                    elif any_block["next"] == None:
+                                                                        if recur_val != {} or recur_val != None and next_rec == {} or next_rec == None:
+                                                                            all_dict.update({new_key:{opcode:recur_val}})
+                                                                
                                         
                                                             elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
-                                    
                                                                 all_dict.update({new_key:v[1][1]})
                                     
                                                                 
@@ -1154,8 +1167,12 @@ class scratch_parser:
                                                                 all_dict.update({k:opcode})
                                                             else:
                                                                 recur_val = iterate_leaf(block,any_block,v[1])
-                                                                
-                                                                all_dict.update({k:{opcode:recur_val}})
+                                                                next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
+                                                                next_rec  = iterate_leaf(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"]) 
+                                                                if any_block["next"] != None and recur_val != {} or recur_val != None and len(next_opcode) > 0 and next_rec != {}:
+                                                                    all_dict.update({k:{opcode:recur_val,next_opcode:next_rec}})
+                                                                elif any_block["next"] == None and next_rec == {} or next_rec == None:
+                                                                    all_dict.update({k:{opcode:recur_val}})
                                                             
                                 
                                                             #next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
@@ -1163,24 +1180,49 @@ class scratch_parser:
                                         
                                           
                                         return all_dict
-                                    
+
+                               else:
+                                   return {} 
                         vals = iterate_leaf(block_values,self.get_any_block_by_id(block_values,v),v)
                         def flatten(vals):
                             if isinstance(vals,dict) and bool(vals):
-                                for keys,values in vals.items():
-                                    self.edge += 1
-                                    print(f'            |')
-                                    print(f'        +---+{keys}')
-                                    if not isinstance(values,dict):
-                                       self.edge += 1
-                                       print(f'                |')
-                                       print(f'            +---+{values}')
+                                for keys_inner,vals_inner in vals.items():
+                                    if isinstance(vals_inner,dict) and bool(vals_inner):
+                                        flatten(vals_inner)
                                     else:
-                                        flatten(values)
+                                        if keys_inner != None and vals_inner != None:
+                                            if len(keys_inner) > 0 and len(vals_inner) > 0:
+                                                self.edge += 2
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif len(keys_inner) < 1 and len(vals_inner) > 0:
+                                                self.edge += 1
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif len(keys_inner) > 0 and len(vals_inner) < 1:
+                                                self.edge += 1
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                        else:
+                                            if keys_inner == None and vals_inner == None:
+                                                self.edge += 2
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif keys_inner == None and vals_inner != None:
+                                                self.edge += 1
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif  keys_inner != None and vals_inner == None:
+                                                self.edge += 1
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                            
                                         
                         flatten(vals)
-                              
-                        
             return self.edge
     
     def generate_summary_stats(self,blocks_values,file_name,scratch_tree):
@@ -1221,7 +1263,7 @@ class scratch_parser:
         
 
             
-        self.scratch_stats[f'{file_name}_summary'] = {"number_of_nodes": nodes_val, "number_of_edges" : int(self.get_total_edges(scratch_tree) / 3),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
         return self.scratch_stats 
 
     def read_files(self, parsed_file):
@@ -1240,7 +1282,7 @@ class scratch_parser:
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
         top = self.print_tree_top(all_blocks_value,file_name)
-        #print(top)
+        print(top)
         #print(non_opc)
         #print(self.get_all_unique_opcodes(all_blocks_value))
         #v = self.get_total_nodes(next_val2,all_blocks_value)
@@ -1248,7 +1290,9 @@ class scratch_parser:
         #ed = self.get_total_edges(next_val2)
         #print(ed)
         #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
-        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+        #fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+        fin_val = {}
+
         
         
         return fin_val
@@ -1281,6 +1325,6 @@ class scratch_parser:
         
 
 scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/test.sb3")
+scratch_parser_inst.read_files("files/complex4.sb3")
 
     
