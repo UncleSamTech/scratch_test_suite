@@ -46,7 +46,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     sp = scratch_parser()
     un = unzip_scratch()
     json_output = ''
-    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" origin/{} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
@@ -159,32 +159,32 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter.txt", "a") as outfile:
-                    #outfile.write(form_file) 
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_changes.txt", "a") as outfile:
+                    outfile.write(form_file) 
                     
 
 
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                #print('contents1',contents1)
-                val = sp.decode_scratch_bytes(contents1.stdout)
+                
+                try:
+                    val = sp.decode_scratch_bytes(contents1.stdout)
             
-                file_contents = val
+                    file_contents = val
             
             
-                stats = sp.parse_scratch(file_contents,new_name)
-                print(stats)
+                    stats = sp.parse_scratch(file_contents,new_name)
+                    print(stats)
             
-                stats["commit_date"] = parsed_date_str
-                stats["commit_sha"] = c
+                    #stats["commit_date"] = parsed_date_str
+                    #stats["commit_sha"] = c
+                except:
+                    stats = {"parsed_tree":[],"stats":{}}
                 
                 json_output = json.dumps(stats, indent=4)
                 hash_value = calculate_sha256(str(json_output))
-                prev_node_count = 0
-                prev_edge_count = 0 
-                diff_node_count = 0
-                diff_edge_count = 0
+                
                 nodes_count = 0 
                 edges_count = 0
                 try:
@@ -199,42 +199,35 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 print('nodes_count',nodes_count)
                 print('edges_count',edges_count)
-                diff_node_count = nodes_count - prev_node_count
-                diff_edge_count = edges_count - prev_edge_count
+                
 
                 new_original_file_name = f.replace("/", "_FFF_")
                 root_name = Path(new_original_file_name).stem
 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/difference_1.txt", "a") as outfile:
-                    outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
+                
                 
                 #insert revisions and hashes to database
-                #cursor.execute("""INSERT INTO Revisions VALUES({project_name},{new_original_file_name},{new_name},{c},{parsed_date_str},{hash_value},{nodes_count},{edges_count})""")
-                #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
-
-                #cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?))",(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                #cursor.execute("INSERT INTO Hashes (Hash,Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING",(hash_value),str(json_output))
-                #insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
-                #insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
-                #tree_value = str(json_output)
-                #conn,cur = get_connection()
-                #val = None
-                #if conn != None:
-                    #cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                    #cur.execute(insert_hash_statement,(hash_value,tree_value))
-                #else:
-                    #if val != None:
-                        #print("executed")
-                    #print("connection failed")
-                #conn.commit()
+                insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
+                insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
+                tree_value = str(json_output)
+                conn,cur = get_connection()
+                val = None
+                if conn != None:
+                    cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                    cur.execute(insert_hash_statement,(hash_value,tree_value))
+                else:
+                    if val != None:
+                        print("executed")
+                    print("connection failed")
+                conn.commit()
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
-                #com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
-                #print(com)
+                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
+                com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
+                print(com)
             
-                #with open(com,"w") as outfile:
-                    #outfile.write(json_output)
+                with open(com,"w") as outfile:
+                    outfile.write(json_output)
         return 1
             
 
