@@ -159,7 +159,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
                 print(form_file)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_changes.txt", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter2.txt", "a") as outfile:
                     outfile.write(form_file) 
                     
 
@@ -191,8 +191,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                     filename_key = os.path.splitext(f)[0] if ".sb3" in f else f
                     filename_key = f'{filename_key}_summary'
                     print('node_egde_key',filename_key)
-                    nodes_count = stats["stats"][filename_key]["number_of_nodes"]
-                    edges_count = stats["stats"][filename_key]["number_of_edges"]
+                    nodes_count = stats["stats"]["number_of_nodes"]
+                    edges_count = stats["stats"]["number_of_edges"]
                 except:
                     nodes_count = 0
                     edges_count = 0
@@ -222,7 +222,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 conn.commit()
                 # suggestion: save the original file name extension here to avoid manual fixes later :(
             
-                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project2'
+                com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project3'
                 com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
                 print(com)
             
@@ -282,10 +282,10 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
-    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames2.txt","w") as pna:
-        if len(proj_names) > 0:
-            for i in proj_names:
-                pna.write("{}\n".format(i))
+    #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames3.txt","w") as pna:
+        #if len(proj_names) > 0:
+            #for i in proj_names:
+               #pna.write("{}\n".format(i))
     for proj_name in proj_names:
         if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
@@ -302,7 +302,7 @@ def main2(project_path: str):
                         continue
                     
                 except Exception as e:
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions2.txt", "a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions3.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
