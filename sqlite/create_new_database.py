@@ -5,7 +5,7 @@ import pandas as pd
 #df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/proj_branch/projectnames_branch_names2.csv')
 #df3 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/authors_hashed2.csv')
 #df4 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_unique2.csv')
-df5 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/parent_commits_result_unique.csv')
+df5 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/content_parents/content_parents_unique.csv')
 
 
 # step 2: clean data
@@ -23,7 +23,7 @@ connection = sqlite3.connect("scratch_revisions_database.db")
 #df3.to_sql("Authors", connection, if_exists='replace', index=False)
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
-df5.to_sql("Commit_Parents",connection,if_exists='replace',index=False)
+df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
 
 #create the revision table to be used later
 #revision_obj = connection.cursor()
