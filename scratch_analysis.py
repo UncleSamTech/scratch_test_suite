@@ -24,7 +24,8 @@ def plot_histogram_per_distribution(file_path:str,plot_result_path,xlabel,ylabel
 
 def generate_cleaned_csv(file_path,cleaned_data_path):
     df = pd.read_csv(file_path)
-    df = df[df.Nodes != 0 and df.Edges != 0]
+    df = df[df.Nodes != 0]
+    df = df[df.Edges != 0]
     return df.to_csv(cleaned_data_path)
 
 
