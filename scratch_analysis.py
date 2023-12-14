@@ -35,7 +35,7 @@ def merge_csv_files(csv_file1,csv_file2,new_file_name):
 
 def describe_data(csv_file):
     val = pd.read_csv(csv_file)
-    new = val["Total_Commits"].describe()
+    new = val[["Source_File_Count","Revision_Count","Author_Count"]].describe()
     resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/final_file_revisions_authors_descriptions.csv")
     return resp
 
