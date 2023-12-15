@@ -35,7 +35,7 @@ def merge_csv_files(csv_file1,csv_file2,new_file_name):
 
 def describe_data(csv_file):
     val = pd.read_csv(csv_file)
-    new = val["Revision_Count"].describe()
+    new = val["Total_Commits"].describe()
     resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/count_distinct_file_rev_descriptions.csv")
     return resp
 
@@ -44,5 +44,5 @@ def describe_data(csv_file):
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/differences_final_cleaned_unique.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Differences in Edges Per Revision of a  Scratch(sb3) File","Number of Total Revisions (Log Scale)","Histogram of Difference in Edges Per Revision of a Scratch(sb3) File","final_differences_edges_distribution_per_file","Edges",20)
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/all_revisions_explore.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Nodes Per Scracth(sb3) File","Number of Scratch File (Log Scale)","Histogram of Number of Nodes Per Scratch(sb3) File","main_nodes_scratch_files_distribution_per_projects","Nodes",20)
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/all_revisions_explore.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Edges Per Scracth(sb3) File","Number of Scratch File (Log Scale)","Histogram of Number of Edges Per Scratch(sb3) File","main_edges_scratch_files_distribution_per_projects2","Edges",25)
-describe_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/count_distinct_file_rev.csv")
+describe_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/projects_commits_analysis.csv")
 #generate_cleaned_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/differences_final_cleaned_unique.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/differences_final_cleaned_without_zero_unique.csv")
