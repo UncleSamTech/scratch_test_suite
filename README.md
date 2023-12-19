@@ -34,20 +34,20 @@ ORDER BY Total_Commits DESC
 LIMIT 5;
 ```
 
->> Example 2: Get all information about a Scratch file `lib/szkola/2019-2020/praca/Obliczenia.sb3` relating to project to `igorkowalczyk.github.io`
+>> Example 2: Get all information about a Scratch file `aa desafio1.sb3` relating to project to `logica-de-programacao-em-scratch`
 ```
 SELECT * 
 FROM REVISIONS
-WHERE Project_Name = "igorkowalczyk.github.io" and File = "lib/szkola/2019-2020/praca/Obliczenia.sb3";
+WHERE Project_Name = "logica-de-programacao-em-scratch" and File = "aa desafio1.sb3";
 ```
 
->> Example 3: Get the parsed content of the revision of a Scratch file `lib/szkola/2019-2020/praca/Obliczenia.sb3` from the Contents table where the project name is `igorkowalczyk.github.io` and commitid is `013a7ab6887e32ceca2066fc544726c6e5499e463ed94c68e08`
+>> Example 3: Get the parsed content of the revision of a Scratch file `aa desafio1.sb3` from the Contents table where the project name is `logica-de-programacao-em-scratch` and commitid is `e6c8652392eff332a8176aeff1ccda2da7006d8a`
 
 ```
 SELECT cont.Content
 FROM Contents cont
 JOIN Revisions rev ON cont.Hash = rev.Hash
-WHERE rev.Project_Name = "igorkowalczyk.github.io" and rev.File = "lib/szkola/2019-2020/praca/Obliczenia.sb3" and rev.Commit_SHA = "013a7ab6887e32ceca2066fc544726c6e5499e463ed94c68e08";
+WHERE rev.Project_Name = "logica-de-programacao-em-scratch" and rev.File = "aa desafio1.sb3" and rev.Commit_SHA = "e6c8652392eff332a8176aeff1ccda2da7006d8a";
 ```
 
 >> Example 4 : Get all authors of the project `igorkowalczyk.github.io` that modifed the Scratch file
@@ -88,4 +88,15 @@ JOIN (
         File_Count DESC
     LIMIT 3
 ) rev ON proj.Project_Name = rev.Project_Name;
+```
+
+### 3. Get the JSON Content of the revision of a Scratch file
+>> Use the query below to view the content of scratch file `aa desafio1.sb3` located in project `logica-de-programacao-em-scratch`
+
+
+```
+SELECT cont.Content
+FROM Contents cont
+JOIN Revisions rev ON cont.Hash = rev.Hash
+WHERE rev.Project_Name = "logica-de-programacao-em-scratch" and rev.File = "aa desafio1.sb3" and rev.Commit_SHA = "e6c8652392eff332a8176aeff1ccda2da7006d8a";
 ```
