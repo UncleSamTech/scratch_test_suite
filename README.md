@@ -22,7 +22,7 @@
 ![Screenshot](/files/Schema%20(1)-1.png)
 ### 1. Activate the sqlite command line interface
 Our database is embedded in sqlite giving you the flexibility to query our datasets on the go without standing up a seperate server. 
-- Load the database using the command : `sqlite3 scratch_revisions_database.db`. This will automatically activate the command line for curating several queries
+>> Load the database using the command : `sqlite3 scratch_revisions_database.db`. This will automatically activate the command line for curating several queries
 
 ### 2. SAMPLE QUERIES
 
