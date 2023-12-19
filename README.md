@@ -34,6 +34,18 @@ ORDER BY Total_Commits DESC
 LIMIT 5;
 ```
 
+>>> Example 2: Get all information about a Scratch file `lib/szkola/2019-2020/praca/Obliczenia.sb3` relating to project to `igorkowalczyk.github.io`
+```
+SELECT * 
+FROM REVISIONS
+WHERE Project_Name = "igorkowalczyk.github.io" and File = "lib/szkola/2019-2020/praca/Obliczenia.sb3";
+```
 
+>>> Example 3: Get the parsed content of the revision of a Scratch file `lib/szkola/2019-2020/praca/Obliczenia.sb3` from the Contents table where the project name is `igorkowalczyk.github.io` and commitid is `013a7ab6887e32ceca2066fc544726c6e5499e463ed94c68e08`
 
-
+```
+SELECT cont.Content
+FROM Contents cont
+JOIN Revisions rev ON cont.Hash = rev.Hash
+WHERE rev.Project_Name = "igorkowalczyk.github.io" and rev.File = "lib/szkola/2019-2020/praca/Obliczenia.sb3" and r.Commit_SHA = "013a7ab6887e32ceca2066fc544726c6e5499e463ed94c68e08";
+```
