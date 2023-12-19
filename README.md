@@ -18,6 +18,8 @@
 
 ## Usage of the Database(scratch_revision_db)
 
+### Schema of our Database
+![Screenshot](/files/Schema%20(1)-1.png)
 ### 1. Activate the sqlite command line interface
 Our database is embedded in sqlite giving you the flexibility to query our datasets on the go without standing up a seperate server. 
 - Load the database using the command : `sqlite3 scratch_revisions_database.db`. This will automatically activate the command line for curating several queries
@@ -29,7 +31,7 @@ Our database is embedded in sqlite giving you the flexibility to query our datas
 SELECT Project_Name, Total_Commits
 FROM Projects
 ORDER BY Total_Commits DESC
-LIMIT 3;
+LIMIT 5;
 ```
 
 
