@@ -1,5 +1,5 @@
 # Nope Scratch That: A Historical Datasets of Revisions to Scratch Files
->> This is the code base needed to replicate the DataPaper on `Nope Scratch That: A Historical Datasets of Revisions to Scratch Files. It contains the following elements 
+>> This is the code base needed to replicate the DataPaper on `Nope Scratch That: A Historical Datasets of Revisions to Scratch Files. This is built off of on this project ![Opening the Valve on Pure Data: Collecting the data, creating the csvs, populating the database, and the usage of the database](https://github.com/anishaislam8/visual_code_revisions) It contains the following elements 
 - Information Retreival Scripts from World of Code
 
 - Commit Details Information Retreival such as:
