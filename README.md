@@ -14,6 +14,6 @@
 >>> Install all the dependencies needed for the project by running `pip3 install requirements.txt`
 
 ## Methodology of our Project. 
-![Alt Methodology of our Project](https://github.com/UncleSamTech/scratch_test_suite/tree/main/files/msr_flow-1.png)
+![Screenshot](/files/msr_flow-1.png)
 
 
