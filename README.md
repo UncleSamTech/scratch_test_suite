@@ -91,7 +91,7 @@ JOIN (
 ```
 
 ### 3. Get the JSON Content of the revision of a Scratch file
->> Use the query below to view the content of scratch file `aa desafio1.sb3` located in project `logica-de-programacao-em-scratch`
+>> Use the query below to view the content of scratch file `aa desafio1.sb3` located in project `logica-de-programacao-em-scratch` and has commit id `e6c8652392eff332a8176aeff1ccda2da7006d8a`
 
 
 ```
@@ -100,3 +100,24 @@ FROM Contents cont
 JOIN Revisions rev ON cont.Hash = rev.Hash
 WHERE rev.Project_Name = "logica-de-programacao-em-scratch" and rev.File = "aa desafio1.sb3" and rev.Commit_SHA = "e6c8652392eff332a8176aeff1ccda2da7006d8a";
 ```
+
+### 4. Unzip the git repos of the scratch project (scratch_mirrored.tar.gz)
+
+This is a large file with a size of x gig. Check for enough memory on your computer before unzipping it
+
+>> Change to destination folder : Go to your target location where git repos would be unzipped and run the command on the command line `cd <destination folder>`
+
+>> Unzip the Repos :  Run this command to unzip `tar -xzf scratch_mirrored.tar.gz`
+
+### 5. Get the raw contents of a Scratch file
+Getting the raw contents of a scratch file named `aa desafio1.sb3` from project `logica-de-programacao-em-scratch` with commit id `e6c8652392eff332a8176aeff1ccda2da7006d8a` involves the following steps
+
+>> Change to the project directory : `cd logica-de-programacao-em-scratch`
+
+>> Show the raw contents of the Scratch file `git show e6c8652392eff332a8176aeff1ccda2da7006d8a:"aa desafio1.sb3" `
+
+### 6 Manually parse a scratch file
+
+
+
+
