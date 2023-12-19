@@ -11,9 +11,27 @@
 
 - Database Construction.
 
->>> Install all the dependencies needed for the project by running `pip3 install requirements.txt`
+>> Install all the dependencies needed for the project by running `pip3 install requirements.txt`
 
 ## Methodology of our Project. 
 ![Screenshot](/files/msr_flow-1.png)
+
+## Usage of the Database(scratch_revision_db)
+
+### 1. Activate the sqlite command line interface
+Our database is embedded in sqlite giving you the flexibility to query our datasets on the go without standing up a seperate server. 
+- Load the database using the command : `sqlite3 scratch_revisions_database.db`. This will automatically activate the command line for curating several queries
+
+### 2. SAMPLE QUERIES
+
+>>> Example 1: Load five projects with the highest commit count
+```
+SELECT Project_Name, Total_Commits
+FROM Projects
+ORDER BY Total_Commits DESC
+LIMIT 3;
+```
+
+
 
 
