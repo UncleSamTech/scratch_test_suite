@@ -125,4 +125,4 @@ You can parse a Scratch file by looking into the scratch_parser.py script
 ### 7 Architecture of the Parsed Contents
 The parsed content of a Scratch file has two main facets `parsed_tree` and the `stats`
 - parsed_tree : This is a dictionary key name with it's value being a list containing the generated tree of the Scratch file. This has the various blocks parsed in chronological order
-- stats : This contains a little more details about the statistics of the Scratch file. These details includes [number_of_nodes], [number_of_edges],[opcode_statistics],[most_common_non_opcodes_statistics],[most_common_opcodes_statistics],[most_common_non_opcodes_statistics]
+- stats : This contains a little more details about the statistics of the Scratch file. These details includes **number_of_nodes, number_of_edges,opcode_statistics,most_common_non_opcodes_statistics,most_common_opcodes_statistics,most_common_non_opcodes_statistics**
