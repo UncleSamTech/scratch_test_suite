@@ -1,0 +1,148 @@
+{
+    "parsed_tree": [
+        "test",
+        [
+            [
+                "event_whenflagclicked",
+                [
+                    [
+                        "looks_sayforsecs",
+                        [
+                            [
+                                "MESSAGE",
+                                [
+                                    "Hello!"
+                                ]
+                            ],
+                            [
+                                "SECS",
+                                [
+                                    "2"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "motion_movesteps",
+                        [
+                            [
+                                "STEPS",
+                                [
+                                    "10"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "control_repeat_until",
+                        [
+                            [
+                                "BodyBlock",
+                                [
+                                    "sensing_askandwait",
+                                    [
+                                        [
+                                            [
+                                                "QUESTION",
+                                                [
+                                                    "How old are you?"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ],
+                            [
+                                "CONDITION",
+                                [
+                                    "operator_equals",
+                                    [
+                                        [
+                                            [
+                                                "OPERAND1",
+                                                [
+                                                    "sensing_answer",
+                                                    [
+                                                        []
+                                                    ]
+                                                ]
+                                            ],
+                                            [
+                                                "OPERAND2",
+                                                [
+                                                    "50"
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "looks_thinkforsecs",
+                        [
+                            [
+                                "MESSAGE",
+                                [
+                                    "Hmm..."
+                                ]
+                            ],
+                            [
+                                "SECS",
+                                [
+                                    "2"
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    "stats": {
+        "number_of_nodes": 26,
+        "number_of_edges": 22,
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "motion_movesteps": 1,
+            "operator_equals": 1,
+            "sensing_askandwait": 1,
+            "control_repeat_until": 1,
+            "looks_thinkforsecs": 1,
+            "sensing_answer": 1
+        },
+        "non_opcodes_statistics": {
+            "2": 2,
+            "SECS": 2,
+            "Hmm...": 1,
+            "MESSAGE": 2,
+            "50": 1,
+            "OPERAND2": 1,
+            "OPERAND1": 1,
+            "CONDITION": 1,
+            "How old are you?": 1,
+            "QUESTION": 1,
+            "BodyBlock": 1,
+            "10": 1,
+            "STEPS": 1,
+            "Hello!": 1,
+            "test": 1
+        },
+        "most_common_opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "looks_sayforsecs": 1,
+            "motion_movesteps": 1,
+            "operator_equals": 1,
+            "sensing_askandwait": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "2": 2,
+            "SECS": 2,
+            "MESSAGE": 2,
+            "Hmm...": 1,
+            "50": 1
+        }
+    }
+}

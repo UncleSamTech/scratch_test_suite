@@ -117,7 +117,9 @@ Getting the raw contents of a scratch file named `aa desafio1.sb3` from project 
 >> Show the raw contents of the Scratch file `git show e6c8652392eff332a8176aeff1ccda2da7006d8a:"aa desafio1.sb3" `
 
 ### 6 Manually parse a scratch file
+You can parse a Scratch file by looking into the scratch_parser.py script
 
+>> Parse a Scratch file using this command `python3 scratch_parser.py <file_name>`. This generates an Abstract Syntax tree saved in `/scratch_tester/scratch_test_suite/files` folder as a json file with the name of the Scratch file used. For instance if pass a Scratch file `scratch_simulate.sb3`, it would generate a `scratch_simulate.json` file in that folder.
 
 
 

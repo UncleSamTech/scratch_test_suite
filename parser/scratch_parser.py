@@ -4,7 +4,7 @@ import sys
 import collections
 from unzip_scratch import unzip_scratch
 from io import BytesIO
-import zipfile
+#import zipfile
 
 class scratch_parser:
 
@@ -13,7 +13,7 @@ class scratch_parser:
         self.blocs_json = None
         self.blocks_values = []
         self.scr_pro = None
-        self.sb3class = unzip_scratch()
+        #self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
         self.all_opcodes = []
         self.scratch_tree_list = []
@@ -1291,9 +1291,7 @@ class scratch_parser:
         #print(ed)
         #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        with open(f"/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/{file_name}.json","w") as wr:
-            wr.write(json.dumps(fin_val,indent=4))
-               
+        print(json.dumps(fin_val,indent=4))       
         return fin_val
         
     def decode_scratch_bytes(self, raw_bytes):
@@ -1311,6 +1309,10 @@ class scratch_parser:
         
         return fin_val
         
+
+
+    
+
 scratch_parser_inst = scratch_parser()
         
 def main(filename: str):
