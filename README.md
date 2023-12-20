@@ -122,4 +122,7 @@ You can parse a Scratch file by looking into the scratch_parser.py script
 >> Parse a Scratch file using this command `python3 scratch_parser.py <file_name>`. This generates an Abstract Syntax tree saved in `/scratch_tester/scratch_test_suite/files` folder as a json file with the name of the Scratch file used. For instance if pass a Scratch file `scratch_simulate.sb3`, it would generate a `scratch_simulate.json` file in that folder.
 
 
-
+### 7 Architecture of the Parsed Contents
+The parsed content of a Scratch file has two main facets `parsed_tree` and the `stats`
+- parsed_tree : This is a dictionary key name with it's value being a list containing the generated tree of the Scratch file. This has the various blocks parsed in chronological order
+- stats : This contains a little more details about the statistics of the Scratch file. These details includes [number_of_nodes], [number_of_edges],[opcode_statistics],[most_common_non_opcodes_statistics],[most_common_opcodes_statistics],[most_common_non_opcodes_statistics]
