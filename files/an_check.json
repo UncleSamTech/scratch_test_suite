@@ -1,0 +1,245 @@
+{
+    "parsed_tree": [
+        "an_check",
+        [
+            [
+                "event_whenflagclicked",
+                [
+                    [
+                        "motion_movesteps",
+                        [
+                            [
+                                "STEPS",
+                                [
+                                    "10"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "motion_gotoxy",
+                        [
+                            [
+                                "X",
+                                [
+                                    "8"
+                                ]
+                            ],
+                            [
+                                "Y",
+                                [
+                                    "10"
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        "motion_turnright",
+                        [
+                            [
+                                "DEGREES",
+                                [
+                                    "15"
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "event_whenkeypressed",
+                [
+                    "KEY_OPTION_space",
+                    [
+                        [
+                            "motion_turnleft",
+                            [
+                                [
+                                    "DEGREES",
+                                    [
+                                        "15"
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            "motion_goto",
+                            [
+                                [
+                                    "TO",
+                                    [
+                                        "motion_goto_menu",
+                                        [
+                                            []
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                "event_whenbackdropswitchesto",
+                [
+                    "BACKDROP_backdrop1",
+                    [
+                        [
+                            "control_repeat",
+                            [
+                                [
+                                    "TIMES",
+                                    [
+                                        "10"
+                                    ]
+                                ],
+                                [
+                                    "BodyBlock",
+                                    [
+                                        "looks_thinkforsecs",
+                                        [
+                                            [
+                                                [
+                                                    "MESSAGE",
+                                                    [
+                                                        "Hmm..."
+                                                    ]
+                                                ],
+                                                [
+                                                    "SECS",
+                                                    [
+                                                        "2"
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
+                        [
+                            "control_if",
+                            [
+                                [
+                                    "CONDITION",
+                                    [
+                                        "sensing_coloristouchingcolor",
+                                        [
+                                            [
+                                                [
+                                                    "COLOR",
+                                                    [
+                                                        "#cfb2cf"
+                                                    ]
+                                                ],
+                                                [
+                                                    "COLOR2",
+                                                    [
+                                                        "#91f599"
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ],
+                                [
+                                    "ThenBranch",
+                                    [
+                                        "motion_turnright",
+                                        [
+                                            [
+                                                [
+                                                    "DEGREES",
+                                                    [
+                                                        "operator_random",
+                                                        [
+                                                            [
+                                                                [
+                                                                    "FROM",
+                                                                    [
+                                                                        "1"
+                                                                    ]
+                                                                ],
+                                                                [
+                                                                    "TO",
+                                                                    [
+                                                                        "10"
+                                                                    ]
+                                                                ]
+                                                            ]
+                                                        ]
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    "stats": {
+        "number_of_nodes": 47,
+        "number_of_edges": 40,
+        "opcodes_statistics": {
+            "event_whenflagclicked": 1,
+            "motion_movesteps": 1,
+            "motion_gotoxy": 1,
+            "motion_turnright": 2,
+            "event_whenkeypressed": 1,
+            "motion_turnleft": 1,
+            "motion_goto": 1,
+            "motion_goto_menu": 1,
+            "event_whenbackdropswitchesto": 1,
+            "control_repeat": 1,
+            "looks_thinkforsecs": 1,
+            "control_if": 1,
+            "sensing_coloristouchingcolor": 1,
+            "operator_random": 1
+        },
+        "non_opcodes_statistics": {
+            "10": 4,
+            "TO": 2,
+            "1": 1,
+            "FROM": 1,
+            "DEGREES": 3,
+            "ThenBranch": 1,
+            "#91f599": 1,
+            "COLOR2": 1,
+            "#cfb2cf": 1,
+            "COLOR": 1,
+            "CONDITION": 1,
+            "2": 1,
+            "SECS": 1,
+            "Hmm...": 1,
+            "MESSAGE": 1,
+            "BodyBlock": 1,
+            "TIMES": 1,
+            "BACKDROP_backdrop1": 1,
+            "15": 2,
+            "KEY_OPTION_space": 1,
+            "Y": 1,
+            "8": 1,
+            "X": 1,
+            "STEPS": 1,
+            "an_check": 1
+        },
+        "most_common_opcodes_statistics": {
+            "motion_turnright": 2,
+            "event_whenflagclicked": 1,
+            "motion_movesteps": 1,
+            "motion_gotoxy": 1,
+            "event_whenkeypressed": 1
+        },
+        "most_common_non_opcodes_statistics": {
+            "10": 4,
+            "DEGREES": 3,
+            "TO": 2,
+            "15": 2,
+            "1": 1
+        }
+    }
+}
