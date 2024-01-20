@@ -181,7 +181,6 @@ class scratch_parser:
                             opcode = f'{k}_{v[0]}_{v[1]}'
             return opcode    
                    
-
     def get_opcode_from_id2(self,blocks_values,block_id):
        if block_id == None or block_id == '' or block_id == None or blocks_values == {} or blocks_values == None:
             return '' 
@@ -220,9 +219,7 @@ class scratch_parser:
             return ''
         
         return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None or block_values['blocks'][block_id]['opcode'] != ''  else ''
-        
-            
-        
+                  
     def get_fields_values(self,blocks_values,block_id):
         if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
             return ""
@@ -245,11 +242,7 @@ class scratch_parser:
             return ""
         if self.check_if_id_is_parent(blocks_values,block_id):
             return self.get_parent_complete_opcode(blocks_values,block_id)
-
-            
-            
-            
-        
+   
     def return_all_opcodes(self,blocks_values):
         return [self.get_opcode_from_id(blocks_values,k2) for k,v in blocks_values.items() for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2)]
     
@@ -269,15 +262,12 @@ class scratch_parser:
 
         return all_unique_opcodes
         
-
-
     def get_parent_opcode(self,blocks_values):
         if blocks_values == None or blocks_values == {}:
             return ''
         par = [v2['opcode'] for k,v in blocks_values.items() for v2 in v.values() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2) and 'opcode' in v2.keys() and 'parent' in v2.keys() and v2["parent"] == None]
         return par[0] if len(par) == 1 else par
-         
-    
+           
     def read_input_values_by_id(self,blocks_values,id):
         if id == None or id == '' or blocks_values == None or blocks_values == {}:
             return {}
@@ -295,8 +285,7 @@ class scratch_parser:
         if not isinstance(dict_val,dict) or not bool(dict_val):
             return depth
         return max(self.check_dict_depth(v,depth+1) for k,v in dict_val.items())
-
-    
+  
     def get_children_key_recursively(self,blocks_values,spec_block):
         if spec_block == None or spec_block == {} or blocks_values == None or blocks_values == {}:
             return []
@@ -668,8 +657,6 @@ class scratch_parser:
                         elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
                             corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values,ids,k))
         return corr_block_tree
-
-    
 
     def create_next_values2(self,blocks_values,file_name):  
         tr = [] 
@@ -1291,7 +1278,7 @@ class scratch_parser:
         #print(ed)
         #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        with open(f"/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/{file_name}.json","w") as wr:
+        with open(f"/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/{file_name}.json","w") as wr:
             wr.write(json.dumps(fin_val,indent=4))
                
         return fin_val
@@ -1299,6 +1286,7 @@ class scratch_parser:
     def decode_scratch_bytes(self, raw_bytes):
         with BytesIO(raw_bytes) as f:
             self.scr_proj = self.sb3class.unpack_sb3(f)
+        print('ACT_CONT',self.scr_pro)
         return self.scr_proj
     
     def parse_scratch(self,scr_proj,file_name):
@@ -1319,11 +1307,11 @@ def main(filename: str):
         
 
 
-if __name__ == "__main__":
-    file_name = sys.argv[1]
-    main(file_name)
+#if __name__ == "__main__":
+    #file_name = sys.argv[1]
+    #main(file_name)
 
 #scratch_parser_inst = scratch_parser()
-#scratch_parser_inst.read_files("files/test.sb3")
+scratch_parser_inst.read_files("files/an_check.sb3")
 
     
