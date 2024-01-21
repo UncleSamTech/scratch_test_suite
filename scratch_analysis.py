@@ -35,14 +35,14 @@ def merge_csv_files(csv_file1,csv_file2,new_file_name):
 
 def describe_data(csv_file):
     val = pd.read_csv(csv_file)
-    new = val["Revision"].describe()
-    resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/revisions_per_scratch_file_description.csv")
+    new = val["Author_Count"].describe()
+    resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/authors_per_project_description.csv")
     return resp
 
 #merge_csv_files("/media/crouton/siwuchuk/newdir/vscode_repos_files/total_commits.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/proj_branch/projectnames_branch_names2.csv","projects")
-#plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/new_nodes_edges_per_file.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results","Number of Nodes Per Scratch(sb3) Files","Number of Scratch Files (Log Scale)","Histogram of Number of Nodes Per Scratch(sb3) File","nodes_distribution_per_file","Nodes",15)
+plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/authors_per_project_distribution.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results","Number of Authors Per Scratch(sb3) Project","Number of Scratch Projects (Log Scale)","Histogram of Number of Authors Per Scratch(sb3) Project","authors_per_scratch_project_distribution","Author_Count",15)
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/new_nodes_edges_per_file.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results","Number of Edges Per Scratch(sb3) Files","Number of Scratch Files (Log Scale)","Histogram of Number of Edges Per Scratch(sb3) File","edges_distribution_per_file","Edges",25)
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/all_revisions_explore.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Nodes Per Scracth(sb3) File","Number of Scratch File (Log Scale)","Histogram of Number of Nodes Per Scratch(sb3) File","main_nodes_scratch_files_distribution_per_projects","Nodes",20)
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/all_revisions_explore.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/all_plots_results","Number of Edges Per Scracth(sb3) File","Number of Scratch File (Log Scale)","Histogram of Number of Edges Per Scratch(sb3) File","main_edges_scratch_files_distribution_per_projects2","Edges",25)
-describe_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/revision_per_scratch_file_distribution.csv")
+describe_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/authors_per_project_distribution.csv")
 #generate_cleaned_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/differences_final_cleaned_unique.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/nodes_edges/nodes_edges_folder/differences_final_cleaned_without_zero_unique.csv")
