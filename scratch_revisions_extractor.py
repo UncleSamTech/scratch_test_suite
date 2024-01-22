@@ -212,7 +212,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     edges_count = 0
                 
                 
-                
+                print(json_output)
 
                 new_original_file_name = f.replace(",", "_COMMA_")
                 new_name = new_name.replace(",","_COMMA_")
