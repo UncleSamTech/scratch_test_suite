@@ -1286,7 +1286,7 @@ class scratch_parser:
     def decode_scratch_bytes(self, raw_bytes):
         with BytesIO(raw_bytes) as f:
             self.scr_proj = self.sb3class.unpack_sb3(f)
-        print('ACT_CONT',self.scr_pro)
+        
         return self.scr_proj
     
     def parse_scratch(self,scr_proj,file_name):
@@ -1312,6 +1312,6 @@ def main(filename: str):
     #main(file_name)
 
 #scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/an_check.sb3")
+#scratch_parser_inst.read_files("files/an_check.sb3")
 
     
