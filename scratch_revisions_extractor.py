@@ -173,7 +173,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
                 
                
-
+                print(f'details commit_date => {commit_date} , parsed_date {parsed_date}, date str {parsed_date_str}')
 
                 file_contents = ''
 
