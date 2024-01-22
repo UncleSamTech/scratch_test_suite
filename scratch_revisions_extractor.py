@@ -222,13 +222,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 tree_value = str(json_output)
                 conn,cur = get_connection()
                 val = None
-                if conn != None:
-                    cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                    cur.execute(insert_hash_statement,(hash_value,tree_value))
-                else:
-                    if val != None:
-                        print("executed")
-                    print("connection failed")
+                #if conn != None:
+                    #cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                    #cur.execute(insert_hash_statement,(hash_value,tree_value))
+                #else:
+                    #if val != None:
+                        #print("executed")
+                    #print("connection failed")
                 conn.commit()
                 
                 
@@ -308,8 +308,8 @@ def main2(project_path: str):
                     
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -321,6 +321,6 @@ def main2(project_path: str):
             continue
     
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
