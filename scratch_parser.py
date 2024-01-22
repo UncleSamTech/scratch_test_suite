@@ -1278,8 +1278,8 @@ class scratch_parser:
         #print(ed)
         #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        with open(f"/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/{file_name}.json","w") as wr:
-            wr.write(json.dumps(fin_val,indent=4))
+        #with open(f"/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/{file_name}.json","w") as wr:
+            #wr.write(json.dumps(fin_val,indent=4))
                
         return fin_val
         
