@@ -46,7 +46,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     sp = scratch_parser()
     un = unzip_scratch()
     json_output = ''
-    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {}'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" origin/{} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
@@ -75,6 +75,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
+            print('filename shas', filename_shas)
             
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
         #if 3 ¬ then it is not renamed (includes renamed filename, original filename, commit)
