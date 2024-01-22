@@ -222,13 +222,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 tree_value = str(json_output)
                 conn,cur = get_connection()
                 val = None
-                #if conn != None:
-                    #cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
-                    #cur.execute(insert_hash_statement,(hash_value,tree_value))
-                #else:
-                    #if val != None:
-                        #print("executed")
-                    #print("connection failed")
+                if conn != None:
+                    cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
+                    cur.execute(insert_hash_statement,(hash_value,tree_value))
+                else:
+                    if val != None:
+                        print("executed")
+                    print("connection failed")
                 conn.commit()
                 
                 
