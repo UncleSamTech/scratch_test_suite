@@ -221,8 +221,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
               
                 #insert revisions and hashes to database
-                
-                
+                  
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
