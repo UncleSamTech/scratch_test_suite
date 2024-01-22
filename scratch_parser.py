@@ -1268,18 +1268,9 @@ class scratch_parser:
         all = self.get_all(all_blocks_value,all_keys)
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
-        #top = self.print_tree_top(all_blocks_value,file_name)
-        #print(top)
-        #print(non_opc)
-        #print(self.get_all_unique_opcodes(all_blocks_value))
-        #v = self.get_total_nodes(next_val2,all_blocks_value)
-        #print(v)
-        #ed = self.get_total_edges(next_val2)
-        #print(ed)
-        #print(self.generate_summary_stats(all_blocks_value,file_name,next_val2))
+       
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        #with open(f"/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/{file_name}.json","w") as wr:
-            #wr.write(json.dumps(fin_val,indent=4))
+        
                
         return fin_val
         
@@ -1307,9 +1298,9 @@ def main(filename: str):
         
 
 
-#if __name__ == "__main__":
-    #file_name = sys.argv[1]
-    #main(file_name)
+if __name__ == "__main__":
+    file_name = sys.argv[1]
+    main(file_name)
 
 #scratch_parser_inst = scratch_parser()
 #scratch_parser_inst.read_files("files/an_check.sb3")

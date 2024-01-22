@@ -172,18 +172,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
                 
-                #form_file = "{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str)
-                #print(form_file)
-                
-                #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/project_file_revision_commitsha_commitdate_alter2.txt", "a") as outfile:
-                    #outfile.write(form_file) 
-                    
+               
 
 
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                
+                print(f'raw sb3 contents {contents1.stdout} ')
                 
                 try:
                     val = sp.decode_scratch_bytes(contents1.stdout)
@@ -194,8 +189,6 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     stats = sp.parse_scratch(file_contents,new_name)
                     print('parsed_content',stats)
             
-                    #stats["commit_date"] = parsed_date_str
-                    #stats["commit_sha"] = c
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
                 
@@ -237,14 +230,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     print("connection failed")
                 conn.commit()
                 
-                # suggestion: save the original file name extension here to avoid manual fixes later :(
+                
             
-                #com = f'/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/project3'
-                #com = com + "/" +  project_name + "/" + new_original_file_name + "_CMMT_" + c + ".json"
-                #print(com)
-            
-                #with open(com,"w") as outfile:
-                    #outfile.write(json_output)
         return 1
             
 
@@ -299,10 +286,7 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
-    #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/revisions_projectnames3.txt","w") as pna:
-        #if len(proj_names) > 0:
-            #for i in proj_names:
-               #pna.write("{}\n".format(i))
+    
     for proj_name in proj_names:
         
         if proj_name != '' and len(proj_name) > 1:
@@ -311,13 +295,10 @@ def main2(project_path: str):
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
-                    #print(repo)
-                    #print(proj_name)
-                    #print(main_branch)
-                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
+                    
                     if get_revisions_and_run_parser(repo, main_branch,proj_name) == -1:
                         print('no revision found')
-                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
+                        
                         continue
                     else:
                         print('found')
@@ -330,11 +311,7 @@ def main2(project_path: str):
                     #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
-                    #logging.error(f'skipped {project_name}  to {logging.ERROR}')
-                #connection.commit()
-                #connection.close()
-                
-                #connection.close()
+                    
             else:
                 print("skipped")
                 continue
