@@ -47,13 +47,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     un = unzip_scratch()
     json_output = ''
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
-    print('1',proc1.stdout)
+    
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-    print('2',proc2.stdout)
+    
     proc3 = subprocess.run(['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True) 
-    print('3',proc3.stdout)
+    
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-    print('4',proc4.stdout)
+    
     filenames = proc4.stdout.decode().strip().split('\n')
     
     
@@ -66,13 +66,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         # for all sb3 files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print('5',proc1.stdout)
+            
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print('6',proc2.stdout)
+            
             proc3 = subprocess.run(["sed 's/\d0/¬/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print('7',proc3.stdout)
+            
             proc4 = subprocess.run(['xargs -0 echo'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print('8',proc4.stdout)
+            
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
             
@@ -82,7 +82,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         #if 1 ¬ then it is a beginning file with no diff; skip
 
             proc1 = subprocess.run(['git --no-pager log --all --pretty=tformat:"%H" -- "{}"'.format(f)], stdout=subprocess.PIPE, cwd=cwd, shell=True) # Does not produce renames
-            print('9',proc1.stdout)
+            
             all_shas = proc1.stdout.decode().strip().split('\n') 
             
             all_shas = [x for x in all_shas if x != '']
@@ -130,14 +130,14 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 # print(split_line[-1])
                     new_name = split_line[0]
                     c = split_line[-1]
-                    print('c2',c)
+                    
                     if not is_sha1(c):
                         # Edge case where line doesn't have a sha
                         #print(split_line)
                         continue
 
                     all_sha_names[c] = new_name
-                    print('chec',all_sha_names)
+                    
                     #print("Separator count 3: assigning {} to {}".format(c, split_line[-3]))
 
                 elif separator_count == 1:
@@ -183,7 +183,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                print('contents',contents1)
+                
                 
                 try:
                     val = sp.decode_scratch_bytes(contents1.stdout)
@@ -192,7 +192,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     
             
                     stats = sp.parse_scratch(file_contents,new_name)
-                    print(stats)
+                    print('parsed_content',stats)
             
                     #stats["commit_date"] = parsed_date_str
                     #stats["commit_sha"] = c
