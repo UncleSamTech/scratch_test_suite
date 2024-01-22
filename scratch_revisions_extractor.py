@@ -55,7 +55,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     filenames = proc4.stdout.decode().strip().split('\n')
-    
+    print('filenames',filenames)
     
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
