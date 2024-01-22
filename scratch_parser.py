@@ -1302,7 +1302,7 @@ class scratch_parser:
     #file_name = sys.argv[1]
     #main(file_name)
 
-scratch_parser_inst = scratch_parser()
-scratch_parser_inst.read_files("files/an_check.sb3")
+#scratch_parser_inst = scratch_parser()
+#scratch_parser_inst.read_files("files/an_check.sb3")
 
     

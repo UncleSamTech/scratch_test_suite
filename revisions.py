@@ -194,8 +194,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
                 except Exception as e:
                     stats = {"parsed_tree":[],"stats":{}}
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                 
@@ -222,7 +222,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
               
                 #insert revisions and hashes to database
 
-                '''  
+                
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
@@ -236,7 +236,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                         print("executed")
                     print("connection failed")
                 conn.commit()
-                '''
+                
                 
             
         return 1
@@ -314,8 +314,8 @@ def main2(project_path: str):
                     
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -327,6 +327,6 @@ def main2(project_path: str):
             continue
     
 
-#main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
