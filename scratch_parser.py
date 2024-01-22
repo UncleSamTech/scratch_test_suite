@@ -1290,17 +1290,17 @@ class scratch_parser:
         
         return fin_val
         
-scratch_parser_inst = scratch_parser()
+
         
-def main(filename: str):
-    pars = scratch_parser_inst.read_files(filename)   
-    return pars
+#def main(filename: str):
+    #pars = scratch_parser_inst.read_files(filename)   
+    #return pars
         
 
 
-if __name__ == "__main__":
-    file_name = sys.argv[1]
-    main(file_name)
+#if __name__ == "__main__":
+    #file_name = sys.argv[1]
+    #main(file_name)
 
 #scratch_parser_inst = scratch_parser()
 #scratch_parser_inst.read_files("files/an_check.sb3")
