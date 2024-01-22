@@ -183,10 +183,9 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                print('found contents', contents1.stdout)
+                
                 
                 try:
-                    print('entered decoding')
                     val = sp.decode_scratch_bytes(contents1.stdout)
             
                     file_contents = val
@@ -345,5 +344,5 @@ def main2(project_path: str):
     
 
 #main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test")
 
