@@ -55,7 +55,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     filenames = proc4.stdout.decode().strip().split('\n')
-    print('filenames',filenames)
+    
     
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
@@ -75,7 +75,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
-            print('filename shas', filename_shas)
+         
             
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
         #if 3 ¬ then it is not renamed (includes renamed filename, original filename, commit)
@@ -87,7 +87,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             all_shas = proc1.stdout.decode().strip().split('\n') 
             
             all_shas = [x for x in all_shas if x != '']
-            print('all sha',all_shas)
+           
             all_sha_names = {}
         
             for x in all_shas:
@@ -102,13 +102,13 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
                 split_line = fn.strip('¬').split('¬')
                 file_contents = ''
-                print(f'splitline => {split_line} seperator count => {separator_count}')
+                
                 if separator_count == 2:
                     c = split_line[-1]
-                    print('commit',c)
+                    
                     
                     if not is_sha1(c):
-                        print('invalid')
+                        
                     # Edge case where line doesn't have a sha
                     #print(split_line)
                         continue
@@ -121,7 +121,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     c = split_line[-1]
 
                     if not is_sha1(c):
-                        print('invalid')
+                        
                     # Edge case where line doesn't have a sha
                     #print(split_line)
                         continue
@@ -136,7 +136,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     c = split_line[-1]
                     
                     if not is_sha1(c):
-                        print('invalid')
+                       
                         # Edge case where line doesn't have a sha
                         #print(split_line)
                         continue
@@ -156,7 +156,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
-                print('commit date',commit_date)
+                
                 all_sha_dates[c] = parsed_date
 
             # fill in the gaps
@@ -176,14 +176,12 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
-                
                
-                print(f'details commit_date => {commit_date} , parsed_date {parsed_date}, date str {parsed_date_str}')
 
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                print(f'raw sb3 contents {contents1.stdout} ')
+                
                 
                 try:
                     val = sp.decode_scratch_bytes(contents1.stdout)
@@ -215,7 +213,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     edges_count = 0
                 
                 
-                print(json_output)
+                
                 print(f'nodes count => {nodes_count} edges count => {edges_count}' )
                 new_original_file_name = f.replace(",", "_COMMA_")
                 new_name = new_name.replace(",","_COMMA_")
