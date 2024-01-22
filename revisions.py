@@ -194,8 +194,12 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     stats = sp.parse_scratch(file_contents,new_name)
                     print('parsed_content',stats)
             
-                except:
+                except Exception as e:
                     stats = {"parsed_tree":[],"stats":{}}
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f.write("{}\n".format(e))
+                    f.close()
                 
                 json_output = json.dumps(stats, indent=4)
                 hash_value = calculate_sha256(str(json_output))

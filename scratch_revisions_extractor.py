@@ -46,7 +46,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     sp = scratch_parser()
     un = unzip_scratch()
     json_output = ''
-    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" origin/{} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
