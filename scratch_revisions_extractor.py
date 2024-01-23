@@ -308,8 +308,8 @@ def main2(project_path: str):
                     
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -321,6 +321,6 @@ def main2(project_path: str):
             continue
     
 
-main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
