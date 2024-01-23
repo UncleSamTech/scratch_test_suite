@@ -330,5 +330,5 @@ def main2(project_path: str):
     
 
 #main2("/mnt/c/Users/USER/Documents/remtest/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test")
 
