@@ -299,7 +299,7 @@ def main2(project_path: str):
         if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             init_com = subprocess.run(['git init'],stdout=subprocess.PIPE,cwd=repo,shell=True)
-            main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], input=init_com, stdout=subprocess.PIPE, cwd=repo, shell=True)
+            main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], input=init_com.stdout, stdout=subprocess.PIPE, cwd=repo, shell=True)
             
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
