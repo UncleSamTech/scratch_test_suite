@@ -254,3 +254,284 @@ Unknown case for file
 Unknown case for file
 Unknown case for file
 Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+local variable 'c' referenced before assignment
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+unable to open database file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+no such table: Contents
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file

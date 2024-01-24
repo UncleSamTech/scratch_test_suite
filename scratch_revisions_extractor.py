@@ -30,7 +30,10 @@ def get_connection():
     cursor =  conn.cursor()
     return conn,cursor
 
-
+def get_connection2():
+    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_database.db",isolation_level=None)
+    cursor =  conn.cursor()
+    return conn,cursor
 
 def calculate_sha256(content):
     # Convert data to bytes if it’s not already
@@ -46,7 +49,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     sp = scratch_parser()
     un = unzip_scratch()
     json_output = ''
-    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" origin/{} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    all_sha_names = {}
+    proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
@@ -55,28 +59,29 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     filenames = proc4.stdout.decode().strip().split('\n')
-    print('filenames',filenames)
     
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
         return -1
 
     else:
+
         
         # for all sb3 files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            
-            proc3 = subprocess.run(["sed 's/\d0/¬/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+           
+            proc3 = subprocess.run(["sed 's/\d0/-/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
             proc4 = subprocess.run(['xargs -0 echo'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
             filename_shas = proc4.stdout.decode().strip().split('\n')
-            filename_shas = [x for x in filename_shas if x != '']
-            print('filename shas', filename_shas)
             
+            filename_shas = [x for x in filename_shas if x != '']
+           
+           
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
         #if 3 ¬ then it is not renamed (includes renamed filename, original filename, commit)
         #if starts with ¬ then it is renamed (includes pre-filename, renamed filename, original filename, commit)
@@ -85,11 +90,12 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             proc1 = subprocess.run(['git --no-pager log --all --pretty=tformat:"%H" -- "{}"'.format(f)], stdout=subprocess.PIPE, cwd=cwd, shell=True) # Does not produce renames
             
             all_shas = proc1.stdout.decode().strip().split('\n') 
+
             
             all_shas = [x for x in all_shas if x != '']
             
-            all_sha_names = {}
-        
+            
+           
             for x in all_shas:
                 all_sha_names[x] = None
             
@@ -98,11 +104,11 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             for fn in filename_shas: # start reversed, oldest to newest
                 
-                separator_count = fn.strip().count('¬')
+                separator_count = fn.strip().count('-')
                 
-                split_line = fn.strip('¬').split('¬')
+                split_line = fn.strip('-').split('-')
                 file_contents = ''
-
+                
                 if separator_count == 2:
                     c = split_line[-1]
                     
@@ -114,7 +120,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     all_sha_names[c] = split_line[0]
                     #print("Separator count 2: assigning {} to {}".format(c, split_line[0]))
             
-                elif fn[0] == '¬':
+                elif fn[0] == '-':
+                    
                     new_name = split_line[0]
                     c = split_line[-1]
 
@@ -129,6 +136,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
 
                 elif separator_count == 3:
                 # print(split_line[-1])
+                    
                     new_name = split_line[0]
                     c = split_line[-1]
                     
@@ -142,18 +150,22 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     #print("Separator count 3: assigning {} to {}".format(c, split_line[-3]))
 
                 elif separator_count == 1:
+                    #print(all_sha_names)
                     continue
         
                 else:
                     raise ValueError('Unknown case for file')
-            
+                
             all_sha_dates = {}
+            
+            
             for c in all_sha_names.keys():
                 
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
-                print('commit date',commit_date)
+    
                 all_sha_dates[c] = parsed_date
+                
 
             # fill in the gaps
             prev_fn = f
@@ -174,12 +186,11 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
                 
                
-                print(f'details commit_date => {commit_date} , parsed_date {parsed_date}, date str {parsed_date_str}')
-
+                
                 file_contents = ''
 
                 contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                print(f'raw sb3 contents {contents1.stdout} ')
+                
                 
                 try:
                     val = sp.decode_scratch_bytes(contents1.stdout)
@@ -188,8 +199,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     
             
                     stats = sp.parse_scratch(file_contents,new_name)
-                    print('parsed_content',stats)
-            
+                    
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
                 
@@ -207,24 +217,22 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     edges_count = 0
                 
                 
-                print(json_output)
-                print(f'nodes count => {nodes_count} edges count => {edges_count}' )
                 new_original_file_name = f.replace(",", "_COMMA_")
                 new_name = new_name.replace(",","_COMMA_")
 
-                
-              
                 #insert revisions and hashes to database
                 
-                
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
-                insert_hash_statement = """INSERT INTO Hashes (Hash,Content) VALUES(?,?);"""
+                insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
                 conn,cur = get_connection()
                 val = None
+
+                
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                     cur.execute(insert_hash_statement,(hash_value,tree_value))
+                    #cur.execute(insert_hash_statement,(hash_value,tree_value))
                 else:
                     if val != None:
                         print("executed")
@@ -297,12 +305,14 @@ def main2(project_path: str):
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
                     
+                    
                     if get_revisions_and_run_parser(repo, main_branch,proj_name) == -1:
                         print('no revision found')
                         
                         continue
                     else:
                         print('found')
+                    
                         get_revisions_and_run_parser(repo, main_branch,proj_name)
 
                     
