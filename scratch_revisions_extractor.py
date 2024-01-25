@@ -304,6 +304,7 @@ def main2(project_path: str):
         else:
             continue
     projects_to_skip = get_all_projects_in_db()
+    print('project list',projects_to_skip)
     for proj_name in proj_names:
         
         if proj_name != '' and len(proj_name) > 1 and proj_name not in projects_to_skip:
