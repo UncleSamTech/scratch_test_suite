@@ -35,6 +35,21 @@ def get_connection2():
     cursor =  conn.cursor()
     return conn,cursor
 
+
+def get_all_projects_in_db():
+    select_projects = """SELECT Project_Name from revisions;"""
+    val = []
+    conn,curr = get_connection()
+    if conn != None:
+         curr.execute(select_projects)  
+         proj_names = curr.fetchall()[0][0].strip()
+         val.append(proj_names)             
+    else:
+        print("connection failed")
+    conn.commit()
+    return val
+    
+
 def calculate_sha256(content):
     # Convert data to bytes if it’s not already
     if isinstance(content, str):
@@ -78,7 +93,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
-            print('filename shas', filename_shas)
+            
             
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
         #if 3 ¬ then it is not renamed (includes renamed filename, original filename, commit)
@@ -196,7 +211,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
                 json_output = json.dumps(stats, indent=4)
                 hash_value = calculate_sha256(str(json_output))
-                
+                print(json_output)
                 nodes_count = 0 
                 edges_count = 0
                 try:
@@ -208,8 +223,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     edges_count = 0
                 
                 
-                print(json_output)
-                print(f'nodes count => {nodes_count} edges count => {edges_count}' )
+             
                 new_original_file_name = f.replace(",", "_COMMA_")
                 new_name = new_name.replace(",","_COMMA_")
 
@@ -283,20 +297,24 @@ def main(filename: str):
 
 def main2(project_path: str):
     proj_names = []
+    visited_projects = set()
     for i in os.listdir(project_path):
         if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
             proj_names.append(i)
         else:
             continue
-    
+    projects_to_skip = get_all_projects_in_db()
     for proj_name in proj_names:
         
-        if proj_name != '' and len(proj_name) > 1:
+        if proj_name != '' and len(proj_name) > 1 and proj_name not in projects_to_skip:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
+            
+            
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
+                    
                     
                     if get_revisions_and_run_parser(repo, main_branch,proj_name) == -1:
                         print('no revision found')
@@ -306,16 +324,18 @@ def main2(project_path: str):
                         print('found')
                         get_revisions_and_run_parser(repo, main_branch,proj_name)
 
-                    
+                    visited_projects.add(proj_name)
+
+
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
             else:
-                print("skipped")
+                print("skipped or visited")
                 continue
         else:
             print("skipped")
