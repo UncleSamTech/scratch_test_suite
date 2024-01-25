@@ -49,7 +49,6 @@ def get_all_projects_in_db():
     else:
         print("connection failed")
     conn.commit()
-    print(len(fin_resp))
     return fin_resp
     
 
@@ -76,11 +75,12 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     filenames = proc4.stdout.decode().strip().split('\n')
-    
+    all_sha_names = {}
     
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
         #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
         return -1
+
 
     else:
         
@@ -109,7 +109,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             all_shas = [x for x in all_shas if x != '']
             
-            all_sha_names = {}
+            
         
             for x in all_shas:
                 all_sha_names[x] = None
@@ -301,17 +301,16 @@ def main(filename: str):
 
 def main2(project_path: str):
     proj_names = []
-    visited_projects = set()
     for i in os.listdir(project_path):
         if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
             proj_names.append(i)
         else:
             continue
     projects_to_skip = get_all_projects_in_db()
-    print('project list',projects_to_skip)
+    
     for proj_name in proj_names:
         
-        if proj_name != '' and len(proj_name) > 1 and proj_name not in projects_to_skip:
+        if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
@@ -329,7 +328,7 @@ def main2(project_path: str):
                         print('found')
                         get_revisions_and_run_parser(repo, main_branch,proj_name)
 
-                    visited_projects.add(proj_name)
+                    
 
 
                 except Exception as e:
@@ -343,7 +342,7 @@ def main2(project_path: str):
                 print("skipped or visited")
                 continue
         else:
-            print("skipped")
+            print(f"skipped {proj_name}")
             continue
     
 
