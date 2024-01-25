@@ -39,15 +39,18 @@ def get_connection2():
 def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
+    fin_resp = []
     conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
-         proj_names = curr.fetchall()[0][0].strip()
-         val.append(proj_names)             
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+                     
     else:
         print("connection failed")
     conn.commit()
-    return val
+    print(len(fin_resp))
+    return fin_resp
     
 
 def calculate_sha256(content):
@@ -240,6 +243,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                     cur.execute(insert_hash_statement,(hash_value,tree_value))
+                    
                 else:
                     if val != None:
                         print("executed")
