@@ -36,7 +36,7 @@ def merge_csv_files(csv_file1,csv_file2,new_file_name):
 def describe_data(csv_file):
     val = pd.read_csv(csv_file)
     new = val[["Nodes","Edges"]].describe()
-    resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/diff_node_edges_description.csv")
+    resp = new.to_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/all_node_edges_description.csv")
 
 #merge_csv_files("/media/crouton/siwuchuk/newdir/vscode_repos_files/total_commits.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/revisions_projects/proj_branch/projectnames_branch_names2.csv","projects")
 #plot_histogram_per_distribution("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/diff_sorted_cleaned.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results","Difference in node count of a commit and its content parents","Number of Total Revisions (Log Scale)","Histogram of Difference in node count","differences_node_count_parents","Nodes",15)
