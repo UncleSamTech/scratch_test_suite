@@ -18,6 +18,26 @@ def is_sha1(maybe_sha):
         return False
     return True
 
+def get_connection():
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db",isolation_level=None)
+    cursor =  conn.cursor()
+    return conn,cursor
+
+def get_all_projects_in_db():
+    select_projects = """SELECT Project_Name from revisions;"""
+    val = []
+    fin_resp = []
+    conn,curr = get_connection()
+    if conn != None:
+         curr.execute(select_projects)  
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+                     
+    else:
+        print("connection failed")
+    conn.commit()
+    return fin_resp
+
 
 def get_content_parents_of_c(project_name, file_name, c):
     
@@ -170,9 +190,11 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
+    
+    all_projects = get_all_projects_in_db()
    
     for proj_name in proj_names:
-        if proj_name != '' and len(proj_name) > 1:
+        if proj_name not in all_projects and proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
