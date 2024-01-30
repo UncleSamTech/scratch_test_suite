@@ -191,10 +191,10 @@ def main2(project_path: str):
         else:
             continue
     
-    all_projects = get_all_projects_in_db()
+    #all_projects = get_all_projects_in_db()
    
     for proj_name in proj_names:
-        if proj_name not in all_projects and proj_name != '' and len(proj_name) > 1:
+        if proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
