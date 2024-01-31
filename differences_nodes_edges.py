@@ -26,6 +26,8 @@ def get_connection():
 def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
+
+    
     fin_resp = []
     conn,curr = get_connection()
     if conn != None:
