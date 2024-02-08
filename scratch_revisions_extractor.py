@@ -31,7 +31,7 @@ def get_connection():
     return conn,cursor
 
 def get_connection2():
-    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_database.db",isolation_level=None)
+    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_database2.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
