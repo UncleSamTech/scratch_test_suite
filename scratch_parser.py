@@ -3,6 +3,7 @@ import json
 import sys
 import collections
 from unzip_scratch import unzip_scratch
+
 from io import BytesIO
 import zipfile
 
@@ -15,6 +16,7 @@ class scratch_parser:
         self.scr_pro = None
         self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
+        self.new_connections = []
         self.all_opcodes = []
         self.scratch_tree_list = []
         self.scratch_stats = {}
@@ -38,6 +40,34 @@ class scratch_parser:
         if isinstance(json_data,dict) and bool(json_data):
             return json_data["targets"] if 'targets' in json_data.keys() else {}
         
+    def list_to_dict(self,lst):
+        if not isinstance(lst, list):
+            return lst
+        elif len(lst) == 2 and isinstance(lst[0], str):
+           
+            return {lst[0]: self.list_to_dict(lst[1])}
+        else:
+            
+            return [self.list_to_dict(sublist) for sublist in lst]
+    
+    def implement_directed_graph(self,graph,current):
+        if current not in graph:
+            return None
+        
+        
+        stack_store = [current]
+        while len(stack_store) > 0:
+            curr = stack_store.pop()
+            self.new_connections.append(curr)
+       
+            if isinstance(curr,str) or isinstance(curr,int) or isinstance(curr,float) or isinstance(curr,bool):
+                if isinstance(graph,dict) and curr in graph.keys() and isinstance(graph[curr],list):
+                
+                    for neigbour in graph[curr]:
+                        stack_store.append({current:neigbour})
+        self.new_connections.remove(current)
+        
+        return self.new_connections
     
     def get_all_blocks_vals(self,blocks_values):
         targ = self.get_all_targets(blocks_values)
@@ -1268,8 +1298,11 @@ class scratch_parser:
         all = self.get_all(all_blocks_value,all_keys)
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
+        gp_tr = self.list_to_dict(next_val2)
        
-        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+        root = list(gp_tr.keys())
+        #print('here',self.implement_directed_graph(gp_tr,root[0]))
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2),"connections":self.implement_directed_graph(gp_tr,root[0])}
         
                
         return fin_val
@@ -1302,7 +1335,7 @@ class scratch_parser:
     #file_name = sys.argv[1]
     #main(file_name)
 
-#scratch_parser_inst = scratch_parser()
-#scratch_parser_inst.read_files("files/an_check.sb3")
+scratch_parser_inst = scratch_parser()
+print(scratch_parser_inst.read_files("files/an_check_for.sb3"))
 
     
