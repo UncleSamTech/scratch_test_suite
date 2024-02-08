@@ -1279,8 +1279,11 @@ class scratch_parser:
         #nodes, edges = self.count_nodes_and_edges(scratch_tree)
         
 
-            
-        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree}
+        gp_tr = self.list_to_dict(scratch_tree)
+       
+        root = list(gp_tr.keys())
+        
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":self.implement_directed_graph(gp_tr,root[0])}
         return self.scratch_stats 
 
     def read_files(self, parsed_file):
@@ -1302,7 +1305,7 @@ class scratch_parser:
        
         root = list(gp_tr.keys())
         #print('here',self.implement_directed_graph(gp_tr,root[0]))
-        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2),"connections":self.implement_directed_graph(gp_tr,root[0])}
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
                
         return fin_val
