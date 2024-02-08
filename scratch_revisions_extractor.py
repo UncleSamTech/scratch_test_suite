@@ -26,7 +26,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database2.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
