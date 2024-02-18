@@ -250,7 +250,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     print("connection failed")
                 conn.commit()
                 
-                
+               
             
         return 1
             
@@ -311,6 +311,7 @@ def main2(project_path: str):
     for proj_name in proj_names:
         
         if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
+        #if  proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
