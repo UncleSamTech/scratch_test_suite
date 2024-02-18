@@ -13,6 +13,7 @@ class scratch_parser:
         
         self.blocs_json = None
         self.blocks_values = []
+        self.final_list_result = []
         self.scr_pro = None
         self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
@@ -69,10 +70,39 @@ class scratch_parser:
         
         return self.new_connections
     
+    def get_connections(self,node,visited,blocks):
+       
+
+        tree_parsed = self.create_next_values2_disp(blocks)
+        
+        if len(tree_parsed[1:]) == 0:
+            set_val = list(visited)
+            return set_val
+        else:
+            for each_child in tree_parsed:
+                if isinstance(each_child,str) or isinstance(each_child,int) or isinstance(each_child,bool) or isinstance(each_child,float):
+                    visited.add([each_child])
+                self.get_connections(each_child,node+visited,blocks)
+
     def get_all_blocks_vals(self,blocks_values):
         targ = self.get_all_targets(blocks_values)
         return {'blocks':each_block['blocks'] for each_block in targ if isinstance(each_block,dict) and 'blocks' in each_block.keys()}
     
+    def flatten_tree(self,tree):
+        result = []
+        stack = [(tree, [])]
+
+        while len(stack) > 0:
+            node, path = stack.pop()
+
+            if isinstance(node, list):
+                if node:
+                    stack.extend((child, path + [index]) for index, child in enumerate(node[::-1]))
+            else:
+                result.append((node, path))
+
+        return result
+
     def get_only_blocks(self,block_targ):
         if block_targ == None or block_targ == {}:
             return {}
@@ -1282,9 +1312,147 @@ class scratch_parser:
         gp_tr = self.list_to_dict(scratch_tree)
        
         root = list(gp_tr.keys())
-        
-        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":self.implement_directed_graph(gp_tr,root[0])}
+        connec = self.convert_lst_to_nested_list(scratch_tree)
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":connec,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
         return self.scratch_stats 
+
+    def convert_to_flat_list(self,tree):
+        result = []
+
+        def dfs(node, path):
+            nonlocal result
+            if isinstance(node, list):
+                for index, child in enumerate(node):
+                    dfs(child, path + [index])
+            else:
+                result.append([])
+                for index in path:
+                    result[-1].append(repr(tree[index]))
+                result[-1].append(repr(node))
+
+        dfs(tree, [])
+        return result
+    
+    def convert_to_connections(self,node,tree,dst):
+        paths = []
+        new_connections = []
+        stack = [node]
+        
+        new_connections.append([node])
+        if isinstance(node,str) or isinstance(node,int) or isinstance(node,bool) or isinstance(node,float) and isinstance(tree,dict) and node in tree.keys():
+            
+            for each_neigbour in tree[node]:
+                if each_neigbour == dst:
+                    self.convert_to_connections(each_neigbour,tree,dst)
+        '''
+        while len(stack) > 0:
+            current = stack.pop()
+            paths.append(current)
+            
+
+            if isinstance(tree,dict) and bool(tree) and isinstance(current,str) or isinstance(current,int) or isinstance(current,bool) or isinstance(current,float) and current in tree.keys() and isinstance(tree[current],list):
+                for neigbour in tree[current]:
+                    stack.append(neigbour)
+                    if neigbour == dst:
+                        
+                        paths.append(neigbour)
+                        new_connections.append(paths)
+                        print(paths)
+            #for each_val in tree:
+                #stack.append(each_val)
+        '''
+        return new_connections
+    
+    def find_nodes_between(self,source, dest,graph):
+        visited = set()
+        print(graph)
+        def dfs(node):
+            nonlocal visited
+            visited.add(node)
+
+            print(node,end='')
+
+            if node == dest:
+                return
+            
+            for neigbour in graph[node]:
+                print(neigbour)
+                if neigbour not in visited:
+                    dfs(neigbour)
+        if source not in graph or dest not in graph:
+            print('source or destination node not found')
+            return
+        print("nodes between {} and {} :" .format(source,dest),end='')
+        dfs(source)
+        print()
+
+    def convert_lst_to_nested_list(self,lst, current_path=[]):
+        print(len(lst))
+        if isinstance(lst, list):
+            current_path.append(lst[0])
+            self.final_list_result.append(current_path)
+            if len(lst) > 1:
+                for item in lst[1]:
+                    self.convert_lst_to_nested_list(item,list(current_path))
+        else:
+            current_path.append(lst)
+            self.final_list_result.append(list(current_path))
+        '''
+        for item in lst:
+            if isinstance(item,list):
+                current_path.append(item[0])
+                #self.final_list_result.append(list(current_path))
+                self.convert_lst_to_nested_list(item[1],current_path)
+            else:
+                current_path.append(item)
+                self.final_list_result.append(list(current_path))
+                current_path.pop()
+        if current_path:
+            current_path.pop()
+        '''
+        
+        
+        return self.final_list_result
+
+
+        
+
+
+
+    #connections = convert_to_connections(nested_list)
+    def get_all_nodes(self,block,tree,file_name):
+        all_nodes = []
+
+        opcodes = self.return_all_opcodes(block)
+        non_op = self.iterate_tree_for_non_opcodes2(tree,block)
+       
+        all_nodes.extend(non_op)
+        all_nodes.extend(opcodes)
+        if file_name in all_nodes:
+            all_nodes.remove(file_name)
+        return all_nodes
+    
+    def find_paths_final(self,tree, root, destination):
+        path = []
+        def dfs(node, paths):
+            
+            
+                if node is None:
+                    return
+                else:
+                    print(node)
+                    #path.append(node)
+                    if node == destination:
+                        print(path)
+                        #paths.append(list(path))
+            
+                    for child in tree[1:]:
+                        dfs(child,  paths)
+                    path.pop()
+
+        paths = []
+        dfs(root,  paths)
+        return paths
 
     def read_files(self, parsed_file):
         self.parsed_value = self.sb3class.unpack_sb3(parsed_file)
@@ -1292,7 +1460,7 @@ class scratch_parser:
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
         
-        
+        #print(all_blocks_value)
 
         file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
@@ -1302,9 +1470,39 @@ class scratch_parser:
         
         non_opc = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
         gp_tr = self.list_to_dict(next_val2)
-       
+        flt = self.flatten_tree(next_val2)
+        #print(flt)
+        flt2 = self.convert_to_flat_list(next_val2)
+        #print(flt2)
         root = list(gp_tr.keys())
+        s =set()
+        non_opcode = self.iterate_tree_for_non_opcodes2(next_val2,all_blocks_value)
+        #print(non_opcode)
+        opcode = self.return_all_opcodes(all_blocks_value)
+        #print(opcode)
+        al_no = self.get_all_nodes(all_blocks_value,next_val2,file_name)
+        #print(al_no)
+        #print(gp_tr)
+        #v = gp_tr.values()
+        #print(next_val2)
+        #all_v = [self.find_nodes_between("event_whenflagclicked","STEPS",each_val) for k,v in gp_tr.items() for each_val in v][0]
+        #print(all_v)
+        result_list = []
+        #val = self.convert_lst_to_nested_list(next_val2)
+        #print(val)
+        #print(type(gp_tr))
+        #res_cont = self.convert_dict_to_list(gp_tr)
+        #print(res_cont)
+        #print(v)
+        #nd_btw = self.find_nodes_between(root[0],"STEPS",gp_tr)
+        #print(nd_btw)
+        #for v in al_no:
+        #print(self.find_paths_final([1,[2,[[4,5]],3,[[6,7]]]],1,6))
+        #print(self.convert_to_connections(root[0],gp_tr,"KEY_OPTION_space"))
+   
+        
         #print('here',self.implement_directed_graph(gp_tr,root[0]))
+        
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
                
@@ -1326,6 +1524,8 @@ class scratch_parser:
         
         return fin_val
         
+    
+
 
         
 #def main(filename: str):
@@ -1339,6 +1539,6 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
-print(scratch_parser_inst.read_files("files/an_check_for.sb3"))
+print(scratch_parser_inst.read_files("files/see_some.sb3"))
 
     
