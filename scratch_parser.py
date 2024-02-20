@@ -1312,7 +1312,10 @@ class scratch_parser:
         gp_tr = self.list_to_dict(scratch_tree)
        
         root = list(gp_tr.keys())
+        firs = self.convert_lst_to_nested_list(scratch_tree)[0]
         connec = self.convert_lst_to_nested_list(scratch_tree)
+        #print('co',connec)
+        connec.remove(firs)
         self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":connec,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
         return self.scratch_stats 
 
@@ -1386,17 +1389,33 @@ class scratch_parser:
         dfs(source)
         print()
 
+    def flatten_nested_list(self,lst):
+        result = []
+        def flatten_helper(sublist,current_path):
+            for item in sublist:
+                if isinstance(item,list):
+                    flatten_helper(item[1],current_path + [item[0]])
+                else:
+                    result.append(current_path + [item])
+        flatten_helper(lst,[])
+        return result
+    
     def convert_lst_to_nested_list(self,lst, current_path=[]):
-        print(len(lst))
+        
         if isinstance(lst, list):
-            current_path.append(lst[0])
-            self.final_list_result.append(current_path)
+            if lst[0] not in current_path:
+                current_path.append(lst[0])
+            if current_path not in self.final_list_result:
+                self.final_list_result.append(current_path)
             if len(lst) > 1:
                 for item in lst[1]:
                     self.convert_lst_to_nested_list(item,list(current_path))
         else:
-            current_path.append(lst)
-            self.final_list_result.append(list(current_path))
+            if lst not in current_path:
+                current_path.append(lst)
+            if current_path not in self.final_list_result:
+                self.final_list_result.append(list(current_path))
+
         '''
         for item in lst:
             if isinstance(item,list):
@@ -1410,8 +1429,7 @@ class scratch_parser:
         if current_path:
             current_path.pop()
         '''
-        
-        
+      
         return self.final_list_result
 
 
@@ -1472,7 +1490,7 @@ class scratch_parser:
         gp_tr = self.list_to_dict(next_val2)
         flt = self.flatten_tree(next_val2)
         #print(flt)
-        flt2 = self.convert_to_flat_list(next_val2)
+        #flt2 = self.convert_to_flat_list(next_val2)
         #print(flt2)
         root = list(gp_tr.keys())
         s =set()
@@ -1499,9 +1517,13 @@ class scratch_parser:
         #for v in al_no:
         #print(self.find_paths_final([1,[2,[[4,5]],3,[[6,7]]]],1,6))
         #print(self.convert_to_connections(root[0],gp_tr,"KEY_OPTION_space"))
-   
-        
+        f = self.convert_lst_to_nested_list(next_val2)[0]
+        #print('for',f)
+        v = self.convert_lst_to_nested_list(next_val2)
+        v.remove(f)
+        #print(result_list)
         #print('here',self.implement_directed_graph(gp_tr,root[0]))
+        print('tree',next_val2)
         
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
@@ -1539,6 +1561,6 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
-print(scratch_parser_inst.read_files("files/see_some.sb3"))
+#print(scratch_parser_inst.read_files("files/okay_check.sb3"))
 
     
