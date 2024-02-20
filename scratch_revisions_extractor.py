@@ -233,7 +233,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
               
                 #insert revisions and hashes to database
-                '''
+                
                 
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
@@ -250,7 +250,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     print("connection failed")
                 conn.commit()
                 
-'''
+
             
         return 1
             
@@ -306,12 +306,12 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
-    #projects_to_skip = get_all_projects_in_db()
+    projects_to_skip = get_all_projects_in_db()
     
     for proj_name in proj_names:
         
-        #if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
-        if  proj_name != '' and len(proj_name) > 1:
+        if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
+        #if  proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
             main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
@@ -334,8 +334,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -347,6 +347,6 @@ def main2(project_path: str):
             continue
     
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
