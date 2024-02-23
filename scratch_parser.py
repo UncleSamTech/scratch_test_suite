@@ -1583,6 +1583,6 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
-print(scratch_parser_inst.read_files("files/okay_check.sb3"))
+#print(scratch_parser_inst.read_files("files/okay_check.sb3"))
 
     
