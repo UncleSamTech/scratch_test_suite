@@ -1315,8 +1315,10 @@ class scratch_parser:
         firs = self.convert_lst_to_nested_list(scratch_tree)[0]
         connec = self.convert_lst_to_nested_list(scratch_tree)
         flt = self.flatten_inner_nested_lists(connec)
+        fr = flt[0]
+        flt.remove(fr)
         #print('co',connec)
-        connec.remove(firs)
+        #connec.remove(firs)
         self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
         return self.scratch_stats 
 
@@ -1583,6 +1585,6 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
-#print(scratch_parser_inst.read_files("files/okay_check.sb3"))
+#print(scratch_parser_inst.read_files("files/simple_test.sb3"))
 
     
