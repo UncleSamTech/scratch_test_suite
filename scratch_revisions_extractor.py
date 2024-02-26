@@ -86,7 +86,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         
         # for all sb3 files in ths project
         for f in filenames:
-            proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}-%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
