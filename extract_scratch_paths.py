@@ -62,7 +62,6 @@ class Scratch_Path:
 
         for i in range(len(all_connections) - 1):
             scratch_graph.add_edge(all_connections[i],all_connections[i + 1])
-        
         return scratch_graph
 
     def generate_simple_graph(self,file_path,path_name):
