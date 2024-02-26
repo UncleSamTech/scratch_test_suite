@@ -1413,9 +1413,10 @@ class scratch_parser:
                 if isinstance(item, list):
                     self.flatten_inner_nested_lists(item)
                 else:
-                    flat_sublist.append(item)
-
-            flattened_list.append(flat_sublist)
+                    if item not in flat_sublist:
+                        flat_sublist.append(item)
+            if flat_sublist not in flattened_list:
+                flattened_list.append(flat_sublist)
 
         return flattened_list
     
