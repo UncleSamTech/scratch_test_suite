@@ -12,7 +12,7 @@ from scratch_parser import scratch_parser
 import logging
 import sqlite3
 
-
+import re
 
 
 
@@ -22,6 +22,7 @@ def is_sha1(maybe_sha):
     try:
         sha_int = int(maybe_sha, 16)
     except ValueError:
+        print(sha_int)
         return False
     return True
 
@@ -40,7 +41,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -61,7 +62,29 @@ def calculate_sha256(content):
     sha256_hash = hashlib.sha256(content).hexdigest()
     return sha256_hash
 
+def strip_pattern(input_string):
+    pattern = r'.*?\.sb3\b'
+    #pattern = r'\S*\.sb3\b'
+    matches = re.findall(pattern,input_string)
+    return matches
 
+def store_repl_matches(matches):
+    new_val = {}
+    i = 0
+    for each_match in matches:
+        i += 1
+        new_val[f'{each_match}#{i}'] = "TEMP"
+    return new_val
+        
+
+'''
+    #print("received",matches)
+    for match in matches:
+        new_pattern = re.sub(match,replacement,input_string)
+        replaced_values[match] = replacement
+    return new_pattern
+    '''
+    
 def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     sp = scratch_parser()
     un = unzip_scratch()
@@ -87,15 +110,18 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         # for all sb3 files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}-%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            
+            print("proc1",proc1.stdout)
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            
+            print("proc2", proc2.stdout)
             proc3 = subprocess.run(["sed 's/\d0/-/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            
+            print("proc3", proc3.stdout)
             proc4 = subprocess.run(['xargs -0 echo'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            print("proc4",proc4.stdout)
+            filename_shas = []
+            filename_shas2 = proc4.stdout.decode().strip().split('\n')
             
-            filename_shas = proc4.stdout.decode().strip().split('\n')
-            filename_shas = [x for x in filename_shas if x != '']
+                 
+            filename_shas = [x for x in filename_shas2 if x != '']
             
             
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
@@ -116,12 +142,37 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             
         # get filenames for each commit
-            
+            separator_count3 = ''
+            print("filename_shas second ", filename_shas)
             for fn in filename_shas: # start reversed, oldest to newest
+               
+                fn_copy = fn
+               
                 
+                print('complete',fn)
+                fn = fn.strip()
+                separator_count2 = strip_pattern(fn)
+                print("matches",separator_count2)
+                store = store_repl_matches(separator_count2)
+                print("final_store", store)
+                #print("maincount",separator_count2)
+                if isinstance(store,dict):
+                    for key in store.keys():
+                        while key.split("#")[0] in fn_copy:
+                            fn_copy = fn_copy.replace(key.split("#")[0],"TEMP").strip()
+                separator_count = fn_copy.strip().count("-")
+                print("hyphen count",separator_count)
+                #index_list = separator_count3.index(item for item in separator_count3) 
+                #if k.split("#")[0] in item)) for k in store.keys()]
+                #print("indexlist",index_list)
+                #fin_check = [separator_count3[separator_count3.index(next(item for item in separator_count3 if k.split("#")[0] in item))].replace(k.split("#")[0]) for k in store.keys() if isinstance(store,dict)]
+                #print("count",separator_count3)
+                #print("fincheck",fin_check)
+
                 separator_count = fn.strip().count('-')
-                
+                    #print("seperator count ", separator_count)
                 split_line = fn.strip('-').split('-')
+                #print("split line",split_line)
                 file_contents = ''
 
                 if separator_count == 2:
@@ -238,7 +289,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -334,8 +385,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -347,6 +398,6 @@ def main2(project_path: str):
             continue
     
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 

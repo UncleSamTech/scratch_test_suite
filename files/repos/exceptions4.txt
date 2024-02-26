@@ -317,3 +317,286 @@ Unknown case for file
 Unknown case for file
 Unknown case for file
 Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+str.translate() takes exactly one argument (2 given)
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+'dict' object has no attribute 'strip'
+'dict' object has no attribute 'strip'
+'dict' object has no attribute 'strip'
+'dict' object has no attribute 'strip'
+'NoneType' object has no attribute 'strip'
+'NoneType' object has no attribute 'strip'
+'NoneType' object has no attribute 'strip'
+'NoneType' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+strip_pattern() takes 1 positional argument but 2 were given
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'list' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+'int' object has no attribute 'strip'
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+
+
+
+
+
+
+
+
+
+
+
+
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x10175c2e0> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x10175c200> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x10175c430> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x10175c430> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x103a1c2e0> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x103a1c200> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x103a1c430> is not in list
+<generator object get_revisions_and_run_parser.<locals>.<genexpr> at 0x103a1c430> is not in list
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
