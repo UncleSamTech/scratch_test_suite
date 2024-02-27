@@ -27,7 +27,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database3.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_new.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -41,7 +41,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -178,7 +178,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 print("check store", store)
                 if isinstance(store,dict) and isinstance(split_line,list):
                     
-                    for k,v in store.items():
+                    for k in store.keys():
                         k = k.split("#")[0]
                         print("key",k)
                         split_line[0] = k
@@ -298,7 +298,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2()
+                conn,cur = get_connection()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -394,8 +394,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -407,6 +407,6 @@ def main2(project_path: str):
             continue
     
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 
