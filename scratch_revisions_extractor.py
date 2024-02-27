@@ -181,9 +181,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                     for k,v in store.items():
                         k = k.split("#")[0]
                         print("key",k)
-                        if v in split_line:
-                            pass
-                            split_line = [split_line for val in split_line val.replace(val,k)]
+                        split_line[0] = k
+                            
                 print("original split",split_line)
                 if separator_count == 2:
                     c = split_line[-1]
