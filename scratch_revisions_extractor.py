@@ -178,7 +178,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                             
                 with open("files_record.txt","a") as f:
                     f.write(f" files {new_list} seperator count {separator_count} original file values {fn} ")
-                    f.write("/n")
+                    f.write("\n")
                 if separator_count == 2:
                     c = new_list[-1]
                     
