@@ -76,6 +76,21 @@ def store_repl_matches(matches):
         new_val[f'{each_match}#{i}'] = f'TEMP{i}'
     return new_val
         
+def replace_parts(inp_str,inp_dict):
+    if isinstance(inp_dict,dict):
+        for k,v in inp_dict.items():
+            k = k.split("#")[0]
+            inp_str = inp_str.replace(k,v)
+    return inp_str
+
+def replace_list(inp_list,inp_dict):
+    if isinstance(inp_dict,dict) and isinstance(inp_list,list):
+        for k,v in inp_dict.items():
+            k = k.split("#")[0]
+            
+                
+            inp_list[0] = inp_list[0].replace(v,k)
+    return inp_list
 
 '''
     #print("received",matches)
@@ -110,18 +125,15 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         # for all sb3 files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}-%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print("proc1",proc1.stdout)
-            proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print("proc2", proc2.stdout)
-            proc3 = subprocess.run(["sed 's/\d0/-/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print("proc3", proc3.stdout)
-            proc4 = subprocess.run(['xargs -0 echo'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print("proc4",proc4.stdout)
-            filename_shas = []
-            filename_shas2 = proc4.stdout.decode().strip().split('\n')
             
-                 
-            filename_shas = [x for x in filename_shas2 if x != '']
+            proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
+            proc3 = subprocess.run(["sed 's/\d0/-/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
+            proc4 = subprocess.run(['xargs -0 echo'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
+            filename_shas = proc4.stdout.decode().strip().split('\n')             
+            filename_shas = [x for x in filename_shas if x != '']
             
             
         #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
@@ -142,8 +154,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             
         # get filenames for each commit
-            separator_count3 = ''
-            print("filename_shas second ", filename_shas)
+            
+            
             for fn in filename_shas: # start reversed, oldest to newest
                
                 fn_copy = fn
@@ -151,53 +163,35 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
                 
                 fn = fn.strip()
-                separator_count2 = strip_pattern(fn)
+                matches_list = strip_pattern(fn)
                 
-                store = store_repl_matches(separator_count2)
+                store = store_repl_matches(matches_list)
+                rep_str = replace_parts(fn_copy,store)
                 
-                #print("maincount",separator_count2)
-                if isinstance(store,dict):
-                    for key,val in store.items():
-                        while key.split("#")[0] in fn_copy:
-                            fn_copy = fn_copy.replace(key.split("#")[0],val).strip()
-                separator_count = fn_copy.strip().count("-")
-                split_line = fn_copy.split('-')
-                print("result",split_line)
-                #index_list = separator_count3.index(item for item in separator_count3) 
-                #if k.split("#")[0] in item)) for k in store.keys()]
-                #print("indexlist",index_list)
-                #fin_check = [separator_count3[separator_count3.index(next(item for item in separator_count3 if k.split("#")[0] in item))].replace(k.split("#")[0]) for k in store.keys() if isinstance(store,dict)]
-                #print("count",separator_count3)
-                #print("fincheck",fin_check)
-
-                #separator_count = fn.strip().count('-')
-                    #print("seperator count ", separator_count)
-                #split_line = fn.strip('-').split('-')
-                #print("split line",split_line)
+                separator_count = rep_str.strip().count("-")
+                
+                split_line = rep_str.split('-')
+                
                 file_contents = ''
-                print("check store", store)
-                if isinstance(store,dict) and isinstance(split_line,list):
-                    
-                    for k in store.keys():
-                        k = k.split("#")[0]
-                        print("key",k)
-                        split_line[0] = k
+                
+                new_list = replace_list(split_line,store)
                             
-                print("original split",split_line)
+                
+                print(f" files {new_list} seperator count {separator_count}")
                 if separator_count == 2:
-                    c = split_line[-1]
+                    c = new_list[-1]
                     
                     if not is_sha1(c):
                     # Edge case where line doesn't have a sha
                     #print(split_line)
                         continue
                     
-                    all_sha_names[c] = split_line[0]
+                    all_sha_names[c] = new_list[0]
                     #print("Separator count 2: assigning {} to {}".format(c, split_line[0]))
             
                 elif fn[0] == '-':
-                    new_name = split_line[0]
-                    c = split_line[-1]
+                    new_name = new_list[0]
+                    c = new_list[-1]
 
                     if not is_sha1(c):
                     # Edge case where line doesn't have a sha
@@ -210,8 +204,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
 
                 elif separator_count == 3:
                 # print(split_line[-1])
-                    new_name = split_line[0]
-                    c = split_line[-1]
+                    new_name = new_list[0]
+                    c = new_list[-1]
                     
                     if not is_sha1(c):
                         # Edge case where line doesn't have a sha
