@@ -16,7 +16,7 @@ class Scratch_Path:
         self.all_nodes = None
 
     def get_connection(self):
-        conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database2.db",isolation_level=None)
+        conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database3.db",isolation_level=None)
         cursor =  conn.cursor()
         return conn,cursor
     
@@ -28,7 +28,7 @@ class Scratch_Path:
     
     def get_all_contents(self,hash):
         
-        conn,curr = self.get_connection2()
+        conn,curr = self.get_connection()
         if conn != None:
          curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:

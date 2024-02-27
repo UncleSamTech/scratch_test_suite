@@ -73,7 +73,7 @@ def store_repl_matches(matches):
     i = 0
     for each_match in matches:
         i += 1
-        new_val[f'{each_match}#{i}'] = "TEMP"
+        new_val[f'{each_match}#{i}'] = f'TEMP{i}'
     return new_val
         
 
@@ -149,19 +149,20 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 fn_copy = fn
                
                 
-                print('complete',fn)
+                
                 fn = fn.strip()
                 separator_count2 = strip_pattern(fn)
-                print("matches",separator_count2)
+                
                 store = store_repl_matches(separator_count2)
-                print("final_store", store)
+                
                 #print("maincount",separator_count2)
                 if isinstance(store,dict):
-                    for key in store.keys():
+                    for key,val in store.items():
                         while key.split("#")[0] in fn_copy:
-                            fn_copy = fn_copy.replace(key.split("#")[0],"TEMP").strip()
+                            fn_copy = fn_copy.replace(key.split("#")[0],val).strip()
                 separator_count = fn_copy.strip().count("-")
-                print("hyphen count",separator_count)
+                split_line = fn_copy.split('-')
+                print("result",split_line)
                 #index_list = separator_count3.index(item for item in separator_count3) 
                 #if k.split("#")[0] in item)) for k in store.keys()]
                 #print("indexlist",index_list)
@@ -169,12 +170,21 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 #print("count",separator_count3)
                 #print("fincheck",fin_check)
 
-                separator_count = fn.strip().count('-')
+                #separator_count = fn.strip().count('-')
                     #print("seperator count ", separator_count)
-                split_line = fn.strip('-').split('-')
+                #split_line = fn.strip('-').split('-')
                 #print("split line",split_line)
                 file_contents = ''
-
+                print("check store", store)
+                if isinstance(store,dict) and isinstance(split_line,list):
+                    
+                    for k,v in store.items():
+                        k = k.split("#")[0]
+                        print("key",k)
+                        if v in split_line:
+                            pass
+                            split_line = [split_line for val in split_line val.replace(val,k)]
+                print("original split",split_line)
                 if separator_count == 2:
                     c = split_line[-1]
                     
@@ -245,7 +255,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
                 
-               
+                
                
                 file_contents = ''
 
