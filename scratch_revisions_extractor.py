@@ -177,7 +177,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 new_list = replace_list(split_line,store)
                             
                 
-                print(f" files {new_list} seperator count {separator_count} original file values {filename_shas} ")
+                print(f" files {new_list} seperator count {separator_count} original file values {fn} ")
                 if separator_count == 2:
                     c = new_list[-1]
                     
