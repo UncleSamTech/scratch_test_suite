@@ -41,7 +41,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -92,6 +92,11 @@ def replace_list(inp_list,inp_dict):
             inp_list[0] = inp_list[0].replace(v,k)
     return inp_list
 
+def escape_special_chars(input_string):
+    escaped_string = subprocess.check_output(['echo', input_string], universal_newlines=True)
+    escaped_string = subprocess.check_output(['sed', 's/[\\\/^$.*+?()[\]{}|[:space:]]/\\\\&/g'], input=escaped_string, universal_newlines=True)
+    return escaped_string.strip()
+
 '''
     #print("received",matches)
     for match in matches:
@@ -112,7 +117,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
     
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
-    filenames = proc4.stdout.decode().strip().split('\n')
+    filenames = escape_special_chars(proc4.stdout.decode().strip()).split('\n')
     all_sha_names = {}
     
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
@@ -124,6 +129,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
         
         # for all sb3 files in ths project
         for f in filenames:
+            f = escape_special_chars(f)
+            print(f"filename {f} type {type(f)}")
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}-%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
@@ -158,10 +165,10 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
             
             for fn in filename_shas: # start reversed, oldest to newest
                
-                fn_copy = fn
-               
+                fn_copy = escape_special_chars(fn)
+                fn_copy = escape_special_chars(fn)
                 
-                
+                print("escaped ", fn_copy)
                 fn = fn.strip()
                 matches_list = strip_pattern(fn)
                 
@@ -170,29 +177,29 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 
                 separator_count = rep_str.strip().count("-")
                 
-                split_line = rep_str.split('-')
+                split_line = rep_str.strip("-").split('-')
                 
                 file_contents = ''
                 
-                new_list = replace_list(split_line,store)
+                split_line = replace_list(split_line,store)
                             
                 with open("files_record.txt","a") as f:
-                    f.write(f" files {new_list} seperator count {separator_count} original file values {fn} ")
+                    f.write(f" files {split_line} seperator count {separator_count} original file values {fn} ")
                     f.write("\n")
                 if separator_count == 2:
-                    c = new_list[-1]
+                    c = split_line[-1]
                     
                     if not is_sha1(c):
                     # Edge case where line doesn't have a sha
                     #print(split_line)
                         continue
                     
-                    all_sha_names[c] = new_list[0]
+                    all_sha_names[c] = split_line[0]
                     #print("Separator count 2: assigning {} to {}".format(c, split_line[0]))
             
                 elif fn[0] == '-':
-                    new_name = new_list[0]
-                    c = new_list[-1]
+                    new_name = split_line[0]
+                    c = split_line[-1]
 
                     if not is_sha1(c):
                     # Edge case where line doesn't have a sha
@@ -205,8 +212,8 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
 
                 elif separator_count == 3:
                 # print(split_line[-1])
-                    new_name = new_list[0]
-                    c = new_list[-1]
+                    new_name = split_line[0]
+                    c = split_line[-1]
                     
                     if not is_sha1(c):
                         # Edge case where line doesn't have a sha
@@ -293,7 +300,7 @@ def get_revisions_and_run_parser(cwd,main_branch,project_name, debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -389,8 +396,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -402,6 +409,7 @@ def main2(project_path: str):
             continue
     
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#print(escape_special_chars("high dhiie \sfr\de'exfw'"))
 
