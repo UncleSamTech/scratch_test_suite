@@ -710,3 +710,1057 @@ Unknown case for file
 Unknown case for file
 Unknown case for file
 Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+argument of type 'CompletedProcess' is not iterable
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+non-hexadecimal number found in fromhex() arg at position 1
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+source code string cannot contain null bytes
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+local variable 'new_byte' referenced before assignment
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+a bytes-like object is required, not 'str'
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+replace() argument 1 must be str, not bytes
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+unknown encoding: utg-8
+unknown encoding: utg-8
+unknown encoding: utg-8
+unknown encoding: utg-8
+unknown encoding: utg-8
+unknown encoding: utg-8
+unknown encoding: utg-8
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+memoryview: a bytes-like object is required, not 'str'
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+embedded null byte
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+name 're' is not defined
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 33: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 19: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 26: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 33: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 16: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 12: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 18: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 25: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 32: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 15: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 11: invalid start byte
+'utf-8' codec can't decode byte 0xac in position 17: invalid start byte
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+'bytes' object has no attribute 'encode'
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'decoded_string' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+local variable 'split_line' referenced before assignment
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
+Unknown case for file
