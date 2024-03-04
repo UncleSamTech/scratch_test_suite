@@ -81,7 +81,10 @@ class Scratch_Path:
                         with open(path_name + each_hash + ".txt","a") as fp:
                             for each_connection in self.all_connections:
                                 for i in range(len(each_connection)):
-                                    fp.write(each_connection[i] + " ")
+                                    if each_connection[i] is None:
+                                        continue
+                                    else:
+                                        fp.write(each_connection[i] + " ")
                                 fp.write("\n")
                     else: 
                         continue 
