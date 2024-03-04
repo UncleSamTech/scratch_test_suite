@@ -23,7 +23,7 @@ cursor.execute('BEGIN TRANSACTION')
 '''
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database5.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database6.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
