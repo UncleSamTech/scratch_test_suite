@@ -1,0 +1,8 @@
+CS50 - Problem Set 0 v2 (1) event_whenflagclicked control_forever BodyBlock control_create_clone_of
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked looks_show
+CS50 - Problem Set 0 v2 (1) control_start_as_clone
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 1
+CS50 - Problem Set 0 v2 (1) event_whenflagclicked control_forever BodyBlock
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked looks_show
+CS50 - Problem Set 0 v2 (1) control_start_as_clone control_if
