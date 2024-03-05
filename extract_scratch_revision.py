@@ -15,15 +15,10 @@ import sqlite3
 from unzip_scratch import unzip_scratch
 import hashlib
 
-'''
-# fix the database location
-connection = pysqlite3.connect("../../database.db")
-cursor = connection.cursor()
-cursor.execute('BEGIN TRANSACTION')
-'''
+
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database6.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_final.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -91,9 +86,9 @@ def quick_convert(input_sequence):
     inp_strin = input_sequence.decode('utf-8') if isinstance(input_sequence,bytes) else input_sequence
 
     sed_comm = f"{inp_strin} | sed 's/\\x00/\\x2d/g'"
-    print("sed com",sed_comm)
+    
     res_str = subprocess.check_output(sed_comm,shell=True, stderr=subprocess.PIPE).decode('utf-8')
-    print("res str",res_str)
+   
     res_seq  = res_str.encode('utf-8')
     return res_seq
 
@@ -154,7 +149,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -189,7 +184,7 @@ def split_file(file_byte):
 
 def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
     sp = scratch_parser()
-    #un = unzip_scratch()
+    
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
@@ -201,7 +196,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
     
 
     if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
-        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
+        
         return -1
     else:
     # for all sb3 files in ths project
@@ -213,12 +208,12 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             
             
             proc3_ = correct_code_replace(proc2.stdout)
-            print("inside view",proc3_)
-            #proc_main3 = correct_code_replace2(proc3_)
+            
+            
             proc4 = subprocess.run(['xargs -0 echo'], input=proc3_, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            print("inside view decode", proc4.stdout)
+            
             decoded_proc4 = proc4.stdout.decode()
-            print("decoded_values parsed",decoded_proc4)
+            
             filename_shas = proc4.stdout.decode().strip().split('\n')
             
             filename_shas = [x for x in filename_shas if x != '']
@@ -241,9 +236,9 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             for fn in filename_shas: # start reversed, oldest to newest
                 
                 print("filename",fn)
-                separator_count = fn.strip().count("¬")
+                separator_count = count_seperator(fn)
                 #separator_count = fn.strip().count("#")
-                #split_line = rep_str.strip("-").split('-')
+                
                 
                 
                 
@@ -272,12 +267,11 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     c = split_line[-1]
 
                     if not is_sha1(c):
-                        # Edge case where line doesn't have a sha
-                        #print(split_line)
+                        
                         continue
 
                     all_sha_names[c] = new_name
-                    #print("starting with separator: assigning {} to {}".format(c, split_line[-4]))
+                    
                 
                 elif separator_count == 3:
                     # print(split_line[-1])
@@ -330,32 +324,29 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
 
 
-            # with open("/pd_parsed/csvs/project_file_revision_commitsha_commitdate_1.txt", "a") as outfile:
-            #   ß  outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, new_name, c, parsed_date_str))
-
-
                 file_contents = ''
             
                 try:
                     contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
-                    '''
-                    contents2 = subprocess.run(["sed 's/\\;/_SLASH_SEMICOLON_/g'"], input=contents1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    contents3 = subprocess.run(["sed 's/;#X/;\\n#X/g'"], input=contents2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    contents4 = subprocess.run(["sed 's/;#N/;\\n#N/g'"], input=contents3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    contents5 = subprocess.run(["sed 's/; #X/;\\n#X/g'"], input=contents4.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    contents6 = subprocess.run(["sed 's/; #N/;\\n#N/g'"], input=contents5.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    contents7 = subprocess.run(["sed 's/_SLASH_SEMICOLON_/\\;/g'"], input=contents6.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-                    '''
-                    #file_contents = contents1.stdout.decode("utf-8", "ignore")
-                    val34 = contents1.stdout
-                    if val34 is None:
+                    
+                    
+                    with open("logs_git_show_command.txt","a") as fk:
+                        fk.write(f" commit_sha {c} file name {new_name}    contents {contents1.stdout}  ")
+                        fk.write("/n")
+                    
+                    
+                    
+                    scratch_bytes_content = contents1.stdout
+                    if b'PK' not in scratch_bytes_content:
                         continue
-                    val = sp.decode_scratch_bytes(val34)
+
+                    else:
+                        val = sp.decode_scratch_bytes(scratch_bytes_content)
             
-                    file_contents = val
+                        file_contents = val
                     
             
-                    stats = sp.parse_scratch(file_contents,new_name)
+                        stats = sp.parse_scratch(file_contents,new_name)
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -369,15 +360,10 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                 except:
                     nodes_count = 0
                     edges_count = 0
-                '''
-                try:
-                    node = stats["nodes"]
-                    edge = stats["edges"]
-                except:
-                    node = 0
-                    edge = 0
-                '''
+               
                 json_output = json.dumps(stats, indent=4)
+
+                
                 hash_value = calculate_sha256(str(json_output))
             
                 new_original_file_name = f.replace(",", "_COMMA_")
@@ -386,7 +372,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2()
+                conn,cur = get_connection()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -397,26 +383,11 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                         print("executed")
                     print("connection failed")
                     conn.commit()
-            '''
-            cursor.execute("INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?)", (project_name, new_original_file_name, new_name, c, parsed_date_str, hash_value, node, edge))
-            cursor.execute("INSERT INTO Contents (Hash, Content) VALUES(?,?) ON CONFLICT(Hash) DO NOTHING", (hash_value, str(json_output)))
-            '''
+            
         return 1
 
         
-'''
-def main(filename: str):
-    project_name, main_branch = filename.split(',')
-    print(project_name)
-    git_object = Git(f'pd_mirrored_extracted/{project_name}')
-    git_object.checkout(main_branch)
-    try:
-        get_revisions_and_run_parser(f'pd_mirrored_extracted/{project_name}', project_name, main_branch)
-    except Exception as e:
-        print(e)
-    connection.commit()
-    connection.close()
-'''
+
 def main2(project_path: str):
     proj_names = []
     for i in os.listdir(project_path):
@@ -452,8 +423,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -464,12 +435,8 @@ def main2(project_path: str):
             print(f"skipped {proj_name}")
             continue
 
-'''
-if __name__ == "__main__":
-    filename = sys.argv[1]
-    main(filename)
-'''
+
 
 #main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 #quick_convert(b'CS50 - Problem Set 0 v2 (1).sb3\xc2\xac83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a\x00\nCS50 - Problem Set 0 v2 (1).sb3\x00\n')
