@@ -143,12 +143,12 @@ def get_connection2():
     cursor =  conn.cursor()
     return conn,cursor
 
-
+'''
 def escape_special_chars(input_string):
     escaped_string = subprocess.check_output(['echo', input_string], universal_newlines=True)
     escaped_string = subprocess.check_output(['sed', 's/[\\\/^$.*+?()[\]{}|[:space:]]/\\\\&/g'], input=escaped_string, universal_newlines=True)
     return escaped_string.strip()
-
+'''
 
 def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
