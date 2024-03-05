@@ -1,0 +1,24 @@
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever BodyBlock 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever BodyBlock control_if 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 1 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto TO 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto TO motion_goto_menu 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked looks_show 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 20 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever BodyBlock 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_forever BodyBlock control_if 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 1 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto TO 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked motion_goto TO motion_goto_menu 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked looks_show 
+CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait DURATION 20 

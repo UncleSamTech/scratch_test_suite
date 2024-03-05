@@ -85,10 +85,10 @@ class nltkmodel:
         model = MLE(n)
         train_data,padded_sents = self.tokenize(words,n)
         model.fit(train_data,padded_sents)
-        print(model.vocab)
-        print(model.counts("event_whenflagclicked"))
-        print(model.score("event_whenflagclicked"))
-        print(model.vocab.lookup("event_whenflagclicked"))
+        #print(model.vocab)
+        #print(model.counts("event_whenflagclicked"))
+        #print(model.score("event_whenflagclicked"))
+        #print(model.vocab.lookup("event_whenflagclicked"))
 
     def large_train(self,file_name,n):
         if os.path.isfile(file_name):
