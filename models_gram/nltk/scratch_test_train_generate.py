@@ -18,6 +18,6 @@ def test_train_test_split(pickle_data,test_data_name,train_data_name):
             file_test.write(token + '\n')
 
 
-test_train_test_split("scratch_data.pkl","scratch_test_data_10.txt","scratch_train_data_90.txt")
+test_train_test_split("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt")
 
     
