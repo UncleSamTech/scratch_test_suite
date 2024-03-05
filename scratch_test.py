@@ -4,6 +4,8 @@ import json
 import sys
 import os
 from scratch_parser import scratch_parser
+from extract_scratch_revision import correct_code_replace,count_seperator
+
 
 class TestScratchParser(unittest.TestCase):
         
@@ -1884,6 +1886,14 @@ class TestScratchParser(unittest.TestCase):
         all_blocks_val = self.scratch_parser_inst.get_all_blocks_vals(self.prog6)
         parsed = self.scratch_parser_inst.create_next_values2_disp(all_blocks_val,self.file_name6)
         self.assertEqual(expected,parsed,msg="Test failed")
+
+    def test_val_replacement(self):
+        corr_rep = correct_code_replace(b'CS50 - Problem Set 0 v2 (1).sb3\xc2\xac83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a\x00\nCS50 - Problem Set 0 v2 (1).sb3\x00\n\n')
+        self.assertEqual(b'CS50 - Problem Set 0 v2 (1).sb3\xc2\xac83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a\xc2\xac\nCS50 - Problem Set 0 v2 (1).sb3\xc2\xac\n\n',corr_rep)
+
+    def test_seperator_count(self):
+        count = count_seperator("CS50 - Problem Set 0 v2 (1).sb3¬83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a¬\nCS50 - Problem Set 0 v2 (1).sb3¬\n\n")
+        self.assertEqual(3,count)
 
 if __name__ == '__main__':
     unittest.main()
