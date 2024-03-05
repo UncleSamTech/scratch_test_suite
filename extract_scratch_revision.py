@@ -47,6 +47,30 @@ def replace_parts(inp_str,inp_dict):
             k = k.split("#")[0]
             inp_str = inp_str.replace(k,v)
     return inp_str
+'''
+def replace_null_bytes_correct(byte_val):
+    decoded_strings = []
+    val  = re.split(b'[\xc2\x00]',byte_val)
+    print('1',val)
+
+    try:
+        for item in val:
+            decoded_string = item.decode('utf-8')
+            decoded_strings.append(decoded_string)
+    except UnicodeDecodeError:
+        print(f"Error decoding byte value : {item}")
+
+    print('2',decoded_strings)
+    val3  = [v2+"#" for v2 in decoded_strings]
+    print('3',val3)
+    val4 = ''.join(val3)
+    print('4',val4)
+    val_enc = val4.encode('utf-8')
+    print('5',val_enc)
+    #decode = b'#'.join(val2)
+ 
+    return val_enc
+'''
 
 def replace_list(inp_list,inp_dict):
     if isinstance(inp_dict,dict) and isinstance(inp_list,list):
@@ -85,19 +109,30 @@ def is_valid_encoding(byte_string,encoding='utf-8'):
 def correct_code_replace(byte_val):
     if (is_valid_encoding(byte_val)):
         #decode the byte
-        decoded_byte = byte_val.decode('utf-8').strip()
+        
+        
+        decoded_byte = byte_val.decode('utf-8')
+        
         
         #replace values
         replace_val = decoded_byte.replace('\xc2','¬') if '\xc2' in decoded_byte else decoded_byte
         replace_val = replace_val.replace('\x00','¬') if '\x00' in replace_val else replace_val
+        
         
         #replace_val = decoded_byte.replace('\xc2','#').replace('\x00','#') if '\xc2' in decoded_byte or '\x00' in decoded_byte else decoded_byte
         
         #encode it back
         encoded_byte = replace_val.encode('utf-8')
         
+        print(f"original {byte_val} after decode {decoded_byte} after replacement {replace_val} final value {encoded_byte}")
+      
         return encoded_byte
-    
+
+def count_seperator(fn):
+    if isinstance(fn,str):
+        #return fn.strip().count("#")
+        return fn.strip().count("¬")
+       
 def correct_code_replace2(byte_val):
   
     inp = byte_val.replace(b'\xc2',b'#') if b'\xc2' in byte_val else byte_val
@@ -108,18 +143,18 @@ def get_connection2():
     cursor =  conn.cursor()
     return conn,cursor
 
-'''
+
 def escape_special_chars(input_string):
     escaped_string = subprocess.check_output(['echo', input_string], universal_newlines=True)
     escaped_string = subprocess.check_output(['sed', 's/[\\\/^$.*+?()[\]{}|[:space:]]/\\\\&/g'], input=escaped_string, universal_newlines=True)
     return escaped_string.strip()
-'''
+
 
 def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -178,10 +213,12 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             
             
             proc3_ = correct_code_replace(proc2.stdout)
-            
+            print("inside view",proc3_)
             #proc_main3 = correct_code_replace2(proc3_)
             proc4 = subprocess.run(['xargs -0 echo'], input=proc3_, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            
+            print("inside view decode", proc4.stdout)
+            decoded_proc4 = proc4.stdout.decode()
+            print("decoded_values parsed",decoded_proc4)
             filename_shas = proc4.stdout.decode().strip().split('\n')
             
             filename_shas = [x for x in filename_shas if x != '']
@@ -203,7 +240,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             
             for fn in filename_shas: # start reversed, oldest to newest
                 
-                
+                print("filename",fn)
                 separator_count = fn.strip().count("¬")
                 #separator_count = fn.strip().count("#")
                 #split_line = rep_str.strip("-").split('-')
@@ -310,7 +347,10 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     contents7 = subprocess.run(["sed 's/_SLASH_SEMICOLON_/\\;/g'"], input=contents6.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
                     '''
                     #file_contents = contents1.stdout.decode("utf-8", "ignore")
-                    val = sp.decode_scratch_bytes(contents1.stdout)
+                    val34 = contents1.stdout
+                    if val34 is None:
+                        continue
+                    val = sp.decode_scratch_bytes(val34)
             
                     file_contents = val
                     
@@ -346,7 +386,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -412,8 +452,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -431,5 +471,5 @@ if __name__ == "__main__":
 '''
 
 #main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 #quick_convert(b'CS50 - Problem Set 0 v2 (1).sb3\xc2\xac83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a\x00\nCS50 - Problem Set 0 v2 (1).sb3\x00\n')
