@@ -18,7 +18,7 @@ import hashlib
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_final.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_final_update.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -382,7 +382,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     if val != None:
                         print("executed")
                     print("connection failed")
-                    conn.commit()
+                conn.commit()
             
         return 1
 
