@@ -17,7 +17,7 @@ import pandas as pd
 
 # step 3: create/connect to database
 #connection = sqlite3.connect("scratch_revisions_database.db")
-connection = sqlite3.connect("scratch_revisions_database_final_update.db")
+connection = sqlite3.connect("scratch_revisions_main.db")
 
 # step 4: load data file to sqlite
 #df.to_sql("Projects", connection, if_exists='replace', index=False)
@@ -25,6 +25,15 @@ connection = sqlite3.connect("scratch_revisions_database_final_update.db")
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
+
+revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
+revision_project_index="""CREATE INDEX "sc_Revisions_Projects_index" ON "Revisions" ("Project_Name"); """
+revision_commit_index="""CREATE INDEX "sc_Revisions_Commit_index" ON "Revisions" ("Commit_SHA"); """
+project_project_name_index="""CREATE INDEX "sc_Projects_index" ON "Projects" ("Project_Name"); """
+authors_author_index="""CREATE INDEX "sc_Authors_index" ON "Authors" ("Commit_SHA"); """
+commit_messages_commit_sha_index="""CREATE INDEX "sc_Commit_Messages_index" ON "Commit_Messages" ("Commit_SHA"); """
+commit_parents_commit_sha_index="""CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parents" ("Commit_SHA"); """
+content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "Content_Parents" ("Commit_SHA"); """
 
 #create the revision table to be used later
 revision_obj = connection.cursor()

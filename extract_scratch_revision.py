@@ -18,7 +18,7 @@ import hashlib
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_final_update.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -149,7 +149,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -195,10 +195,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
     filenames = proc4.stdout.decode().strip().split('\n')
     
 
-    if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
-        
-        return -1
-    else:
+    if len(filenames) > 1:
     # for all sb3 files in ths project
         for f in filenames:
             #f = escape_special_chars(f)
@@ -318,21 +315,18 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
            
                 new_name = all_sha_names[c]
             
-
+                
                 commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
                 parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
                 parsed_date_str = parsed_date.strftime('%Y-%m-%d %H:%M:%S %z')
 
 
                 file_contents = ''
-            
                 try:
                     contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
                     
                     
-                    with open("logs_git_show_command.txt","a") as fk:
-                        fk.write(f" commit_sha {c} file name {new_name}    contents {contents1.stdout}  ")
-                        fk.write("/n")
+                    
                     
                     
                     
@@ -341,15 +335,23 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                         continue
 
                     else:
-                        val = sp.decode_scratch_bytes(scratch_bytes_content)
-            
-                        file_contents = val
-                    
-            
-                        stats = sp.parse_scratch(file_contents,new_name)
+                        vals = sp.decode_scratch_bytes(scratch_bytes_content)
+                        #val = sp.decode2(scratch_bytes_content,new_name)
+                        with open("logs_file.txt","a") as fo:
+                            fo.write(f"file name {new_name} raw byte {scratch_bytes_content} ")
+                            fo.write("/n")
+                        file_contents = vals
+                        
+                        
+                        #stats = file_contents
+
+                        stats = sp.parse_scratch(file_contents,new_name) if len(file_contents) > 0 else {"parsed_tree":[],"stats":{}}
+
+                        with open("logs_file2.txt","a") as fo:
+                            fo.write(f"file {new_name} contents {stats}")
+                            fo.write("/n")
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
-            
             
                 
                 nodes_count = 0 
@@ -372,7 +374,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -384,7 +386,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     print("connection failed")
                 conn.commit()
             
-        return 1
+        
 
         
 
@@ -409,22 +411,12 @@ def main2(project_path: str):
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
                     
-                    
-                    if get_revisions_and_run_parser(repo, main_branch,proj_name) == -1:
-                        print('no revision found')
-                        
-                        continue
-                    else:
-                        print('found')
-                        get_revisions_and_run_parser(repo, main_branch,proj_name)
-
-                    
-
+                    get_revisions_and_run_parser(repo,main_branch,proj_name)
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -437,6 +429,5 @@ def main2(project_path: str):
 
 
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-#quick_convert(b'CS50 - Problem Set 0 v2 (1).sb3\xc2\xac83143c732cdf6bc646d32701b9b1fb9c6ec3bf6a\x00\nCS50 - Problem Set 0 v2 (1).sb3\x00\n')
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/tmprepo")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")

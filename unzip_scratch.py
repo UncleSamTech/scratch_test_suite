@@ -8,12 +8,15 @@ class unzip_scratch:
         pass
 
     def unpack_sb3(self,sb3_file,sprite=False):
-        need = "project.json" if sprite else "project.json"
+        json_file = "project.json" if sprite else "project.json"
         with zipfile.ZipFile(sb3_file) as sb3zip:
             names = sb3zip.namelist()
             
-            if need not in names:
-                print('sprite3 must contain sprite.json')
+            if json_file in names:
+                
+                get_zipped_content_bytes = sb3zip.read(json_file).decode("utf-8")
+                loaded_json = json.loads(get_zipped_content_bytes)
+                return json.dumps(loaded_json)
             else:
-                json_file =  json.loads(sb3zip.read(need).decode("utf-8"))
-                return json.dumps(json_file)
+                return ""
+            

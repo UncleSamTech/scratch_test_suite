@@ -6,6 +6,7 @@ from unzip_scratch import unzip_scratch
 
 from io import BytesIO
 import zipfile
+import zlib
 
 class scratch_parser:
 
@@ -19,10 +20,12 @@ class scratch_parser:
         self.ommited_block_keys_parent = {"opcode"}
         self.new_connections = []
         self.all_opcodes = []
+        self.parse_error=None
         self.scratch_tree_list = []
         self.scratch_stats = {}
         self.next_val_tree = {}
         self.input_block = {}
+        self.fin_val = None
         self.sec_val = None
         self.in_val = None
         self.new_parent_tree_met = {}
@@ -38,7 +41,7 @@ class scratch_parser:
 
     
     def get_all_targets(self,json_data):
-        if isinstance(json_data,dict) and bool(json_data):
+        if isinstance(json_data,dict) and bool(json_data):          
             return json_data["targets"] if 'targets' in json_data.keys() else {}
         
     def list_to_dict(self,lst):
@@ -1498,7 +1501,9 @@ class scratch_parser:
 
     def read_files(self, parsed_file):
         self.parsed_value = self.sb3class.unpack_sb3(parsed_file)
-        self.blocs_json = json.loads(self.parsed_value)
+        print("unpacked", {self.parsed_value})
+        if len(self.parsed_value) > 0:
+            self.blocs_json = json.loads(self.parsed_value)
         #block values
         all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
         
@@ -1555,21 +1560,34 @@ class scratch_parser:
                
         return fin_val
         
-    def decode_scratch_bytes(self, raw_bytes):
+    def decode_scratch_bytes(self, raw_bytes):   
+        
         with BytesIO(raw_bytes) as f:
             self.scr_proj = self.sb3class.unpack_sb3(f)
-        
         return self.scr_proj
+    
+
+    def decode2(self,raw_bytes):
+        decompressed_byte = zlib.decompress(raw_bytes)
+        virtual_file = BytesIO(decompressed_byte)
+
+        with zipfile.ZipFile(virtual_file,'r') as zip_file:
+            self.fin_val = self.sb3class.unpack_sb3(zip_file)
+        return self.fin_val
     
     def parse_scratch(self,scr_proj,file_name):
         
-        all_blocks_value = self.get_all_blocks_vals(json.loads(scr_proj))
+        if len(scr_proj) > 0:
+            val = json.loads(scr_proj)
+            all_blocks_value = self.get_all_blocks_vals(val)
+            with open("allparsedblocks.txt","a") as ab:
+                ab.write(f'file_name {file_name} contents {all_blocks_value}')
+                ab.write("\n")
+            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+            next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
-        file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
-        next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        
-        return fin_val
+            return fin_val
         
     
 
@@ -1586,6 +1604,6 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
-#print(scratch_parser_inst.read_files("files/simple_test.sb3"))
+#print(scratch_parser_inst.read_files("files/Chicken Clicker remix-4.sb3"))
 
     
