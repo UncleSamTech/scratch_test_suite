@@ -18,8 +18,8 @@ class scratch_train_mle:
 
         with open(train_data,"r",encoding="utf-8") as f:
             lines = f.readlines()
-            sublines = lines[:10000]
-            tokenized_scratch_data = [list(word_tokenize(sent.strip())) for sent in sublines]
+            #sublines = lines[:10000]
+            tokenized_scratch_data = [list(word_tokenize(sent.strip())) for sent in lines]
             train_data,padded_sents = padded_everygram_pipeline(n,tokenized_scratch_data)
         
         try:
