@@ -31,7 +31,7 @@ class scratch_train_mle:
         except Exception as es:
             print("error as a result of ", es)
 
-    '''       
+           
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
             self.loaded_scratch_model = pickle.load(f)
@@ -39,7 +39,7 @@ class scratch_train_mle:
             print(self.loaded_scratch_model.vocab)
             #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
             print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            #print(self.loaded_scratch_model.vocab.lookup("stop"))
+            print(self.loaded_scratch_model.vocab.lookup("stop"))
         return self.loaded_scratch_model
     
    
@@ -88,8 +88,8 @@ class scratch_train_mle:
         recall = recall_score(y_true, y_pred, average='weighted')
         print(f"accuracy {accuracy} precisions {precision} recall {recall}")
         return accuracy,precision,recall
-    '''
+    
 tr_scr = scratch_train_mle()
-tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",5,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
-#tr_scr.load_trained_model("scratch_trained_model.pkl")
+#tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",5,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
+tr_scr.load_trained_model("scratch_trained_model.pkl")
 #tr_scr.scratch_evaluate_model_nltk("scratch_test_data_10.txt","scratch_trained_model.pkl") 
