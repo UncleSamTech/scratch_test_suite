@@ -38,7 +38,7 @@ class scratch_train_mle:
             print(self.loaded_scratch_model.vocab)
             #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
             print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            print(self.loaded_scratch_model.vocab.lookup("stop"))
+            #print(self.loaded_scratch_model.vocab.lookup("stop"))
         return self.loaded_scratch_model
 
     def predict_next_scratch_token(self,model_name,context_data):
@@ -62,7 +62,7 @@ class scratch_train_mle:
             random.shuffle(lines)
             lines_lenght = len(lines)
             print("lenght",lines_lenght)
-            offset_lenght = lines_lenght - 3
+            offset_lenght = lines_lenght - 2
             new_lines = lines[:offset_lenght]
             
             for line in new_lines:
@@ -87,6 +87,6 @@ class scratch_train_mle:
         return accuracy,precision,recall
 
 tr_scr = scratch_train_mle()
-#tr_scr.train_mle("scratch_train_data_90.txt",5,"scratch_trained_model.pkl")
+tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",5,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
 #tr_scr.load_trained_model("scratch_trained_model.pkl")
-tr_scr.scratch_evaluate_model_nltk("scratch_test_data_10.txt","scratch_trained_model.pkl")
+#tr_scr.scratch_evaluate_model_nltk("scratch_test_data_10.txt","scratch_trained_model.pkl")
