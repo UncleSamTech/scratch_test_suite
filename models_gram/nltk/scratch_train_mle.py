@@ -66,7 +66,7 @@ class scratch_train_mle:
             random.shuffle(lines)
             lines_lenght = len(lines)
             print("lenght",lines_lenght)
-            offset_lenght = lines_lenght - 2
+            offset_lenght = lines_lenght - 50
             new_lines = lines[:offset_lenght]
             
             for line in new_lines:
