@@ -77,8 +77,10 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-
-                print(f"for context {context} next token {predicted_next_word}")
+                with open("seelogs.txt","") as fp:
+                    fp.write(f"for context {context} next token {predicted_next_word}")
+                    fp.write("\n")
+                
                 i+=1
                 if i%500 == 0:
                     print("see it",i)
