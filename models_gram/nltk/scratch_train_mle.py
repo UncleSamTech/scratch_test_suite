@@ -39,7 +39,7 @@ class scratch_train_mle:
             print(self.loaded_scratch_model.vocab)
             #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
             print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            print(self.loaded_scratch_model.vocab.lookup("sayHello"))
+            print(self.loaded_scratch_model.vocab.lookup("event_whenflagclicked"))
         return self.loaded_scratch_model
     
    
