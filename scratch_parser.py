@@ -3,6 +3,7 @@ import json
 import sys
 import collections
 from unzip_scratch import unzip_scratch
+import tempfile
 
 from io import BytesIO
 import zipfile
@@ -1559,30 +1560,49 @@ class scratch_parser:
         
                
         return fin_val
+
+    def correct_parse(self,parsed_file):
+        parsed_value = self.sb3class.unpack_sb3(parsed_file)
+        if len(parsed_value) > 0:
+            self.blocs_json = json.loads(parsed_value)
+        #block values
+        all_blocks_value = self.get_all_blocks_vals(self.blocs_json)
         
+        #print(all_blocks_value)
+
+        file_name = os.path.basename(parsed_file).split('/')[-1].split('.sb3')[0]
+        next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+
     def decode_scratch_bytes(self, raw_bytes):   
         
         with BytesIO(raw_bytes) as f:
-            self.scr_proj = self.sb3class.unpack_sb3(f)
+            #self.scr_proj = f
+
+            with tempfile.TemporaryFile(delete=False) as fp:
+                fp.write(f)
+            self.scr_proj = self.sb3class.unpack_sb3(fp.name)
+
         return self.scr_proj
     
 
-    def decode2(self,raw_bytes):
-        decompressed_byte = zlib.decompress(raw_bytes)
-        virtual_file = BytesIO(decompressed_byte)
-
-        with zipfile.ZipFile(virtual_file,'r') as zip_file:
-            self.fin_val = self.sb3class.unpack_sb3(zip_file)
-        return self.fin_val
-    
+    def decode2(self,raw_bytes,file_name):
+        with BytesIO(raw_bytes) as f:
+            self.scr_proj = self.sb3class.unpack_sb3(f)
+            val = json.loads(self.scr_proj)
+            all_blocks_value = self.get_all_blocks_vals(val)
+            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+            next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+            
+            
+            return fin_val
     def parse_scratch(self,scr_proj,file_name):
         
         if len(scr_proj) > 0:
             val = json.loads(scr_proj)
             all_blocks_value = self.get_all_blocks_vals(val)
-            with open("allparsedblocks.txt","a") as ab:
-                ab.write(f'file_name {file_name} contents {all_blocks_value}')
-                ab.write("\n")
+            
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}

@@ -5,7 +5,7 @@ import sys
 import json
 from pydriller.git import Git
 import re
-#import tempfile
+import tempfile
 from datetime import datetime
 import ast
 import subprocess
@@ -119,7 +119,7 @@ def correct_code_replace(byte_val):
         #encode it back
         encoded_byte = replace_val.encode('utf-8')
         
-        print(f"original {byte_val} after decode {decoded_byte} after replacement {replace_val} final value {encoded_byte}")
+        #print(f"original {byte_val} after decode {decoded_byte} after replacement {replace_val} final value {encoded_byte}")
       
         return encoded_byte
 
@@ -209,7 +209,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             
             proc4 = subprocess.run(['xargs -0 echo'], input=proc3_, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             
-            decoded_proc4 = proc4.stdout.decode()
+            #decoded_proc4 = proc4.stdout.decode()
             
             filename_shas = proc4.stdout.decode().strip().split('\n')
             
@@ -232,7 +232,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
             
             for fn in filename_shas: # start reversed, oldest to newest
                 
-                print("filename",fn)
+                #print("filename",fn)
                 separator_count = count_seperator(fn)
                 #separator_count = fn.strip().count("#")
                 
@@ -331,25 +331,26 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     
                     
                     scratch_bytes_content = contents1.stdout
-                    if b'PK' not in scratch_bytes_content:
-                        continue
+                    #print("b4 int", scratch_bytes_content)
+                    cont_val = scratch_bytes_content.decode("utf-8")
+                    vals = None
 
-                    else:
-                        vals = sp.decode_scratch_bytes(scratch_bytes_content)
-                        #val = sp.decode2(scratch_bytes_content,new_name)
-                        with open("logs_file.txt","a") as fo:
-                            fo.write(f"file name {new_name} raw byte {scratch_bytes_content} ")
-                            fo.write("/n")
-                        file_contents = vals
+                    with tempfile.NamedTemporaryFile(delete=False) as fp:
+                        fp.write(cont_val)
+
+                        fp.seek(0)
+                        condkf = fp.read(100)
+                        with open("logfilesa.txt","a") as fnp:
+                            fnp.write(f"b4 inter {scratch_bytes_content} after read {condkf}")
+                            fnp.write("\n")                              
+                    vals = sp.correct_parse(fp.name)
+                    
+                    #print("decoded",vals)
+                    
+                    stats = vals
+                    #stats = sp.parse_scratch(vals) if len(file_contents) > 0 else {"parsed_tree":[],"stats":{}}
+
                         
-                        
-                        #stats = file_contents
-
-                        stats = sp.parse_scratch(file_contents,new_name) if len(file_contents) > 0 else {"parsed_tree":[],"stats":{}}
-
-                        with open("logs_file2.txt","a") as fo:
-                            fo.write(f"file {new_name} contents {stats}")
-                            fo.write("/n")
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -429,5 +430,5 @@ def main2(project_path: str):
 
 
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/tmprepo")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
 #main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")

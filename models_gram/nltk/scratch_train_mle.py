@@ -49,6 +49,7 @@ class scratch_train_mle:
         scratch_next_probaility_tokens = {}
 
         for prospect_token in loaded_model.vocab:
+            print("see token" , prospect_token)
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
