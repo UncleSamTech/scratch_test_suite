@@ -26,7 +26,7 @@ class scratch_train_mle:
             self.scratch_model = MLE(n)
             self.scratch_model.fit(train_data,padded_sents)
 
-            with open(f'{trained_model_data}_{n}',"wb") as fd:
+            with open(f'{trained_model_data}_{n}.pkl',"wb") as fd:
                 pickle.dump(self.scratch_model,fd)
         except Exception as es:
             print("error as a result of ", es)
@@ -97,6 +97,6 @@ class scratch_train_mle:
         return accuracy,precision,recall
     
 tr_scr = scratch_train_mle()
-#tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",2,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
-tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
+tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",2,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model")
+#tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model.pkl") 
