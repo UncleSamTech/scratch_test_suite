@@ -77,7 +77,7 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                with open("seelogs.txt","") as fp:
+                with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
