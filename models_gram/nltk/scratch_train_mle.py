@@ -49,7 +49,7 @@ class scratch_train_mle:
         scratch_next_probaility_tokens = {}
 
         for prospect_token in loaded_model.vocab:
-            print("see token" , prospect_token)
+            #print("see token" , prospect_token)
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
@@ -77,12 +77,16 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
+
+                print(f"for context {context} next token {predicted_next_word}")
                 i+=1
                 if i%500 == 0:
-                    print(i)
+                    print("see it",i)
             
                 y_true.append(true_next_word)
                 y_pred.append(predicted_next_word)
+
+
         
         accuracy = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='weighted')
