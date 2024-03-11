@@ -26,7 +26,7 @@ class scratch_train_mle:
             self.scratch_model = MLE(n)
             self.scratch_model.fit(train_data,padded_sents)
 
-            with open(trained_model_data,"wb") as fd:
+            with open(f'{trained_model_data}_{n}',"wb") as fd:
                 pickle.dump(self.scratch_model,fd)
         except Exception as es:
             print("error as a result of ", es)
@@ -35,11 +35,11 @@ class scratch_train_mle:
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
             self.loaded_scratch_model = pickle.load(f)
-            print(type(self.loaded_scratch_model))
-            print(self.loaded_scratch_model.vocab)
+            #print(type(self.loaded_scratch_model))
+            #print(self.loaded_scratch_model.vocab)
             #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
-            print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            print(self.loaded_scratch_model.vocab.lookup("stop"))
+            #print(self.loaded_scratch_model.score("event_whenflagclicked"))
+            #print(self.loaded_scratch_model.vocab.lookup("stop"))
         return self.loaded_scratch_model
     
    
