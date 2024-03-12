@@ -36,10 +36,10 @@ class scratch_train_mle:
         with open(model_name,"rb") as f:
             self.loaded_scratch_model = pickle.load(f)
             #print(type(self.loaded_scratch_model))
-            #print(self.loaded_scratch_model.vocab)
-            #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
-            #print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            #print(self.loaded_scratch_model.vocab.lookup("event_whenflagclicked"))
+            print(self.loaded_scratch_model.vocab)
+            print(self.loaded_scratch_model.counts("event_whenflagclicked"))
+            print(self.loaded_scratch_model.score("event_whenflagclicked"))
+            print(self.loaded_scratch_model.vocab.lookup("event_whenflagclicked"))
         return self.loaded_scratch_model
     
    
