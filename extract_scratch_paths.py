@@ -91,12 +91,14 @@ class Scratch_Path:
                     if isinstance(self.all_connections,list) and len(self.all_connections) > 0:
                         with open(path_name + each_hash + ".txt","a") as fp:
                             for each_connection in self.all_connections:
-                                
-                                val = self.slice_from_start(each_connection)
-                                if val is None:
+                                if each_connection is not None:
+                                    val = self.slice_from_start(each_connection)
+                                    if val is None:
+                                        continue
+                                    fp.write(val + " ")
+                                    fp.write("\n")
+                                else:
                                     continue
-                                fp.write(val + " ")
-                                fp.write("\n")
                     else: 
                         continue 
       
