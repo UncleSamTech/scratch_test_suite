@@ -14,9 +14,9 @@ class unzip_scratch:
             
             if json_file in names:
                 
-                get_zipped_content_bytes = sb3zip.read(json_file).decode("utf-8")
-                loaded_json = json.loads(get_zipped_content_bytes)
-                print("value lodaded json ",loaded_json)
+                get_zipped_content_bytes = sb3zip.read(json_file).decode('utf-8')
+                loaded_json = json.loads(sb3zip.read(json_file).decode('utf-8'))
+                #print("value lodaded json ",loaded_json)
                 return json.dumps(loaded_json)
             else:
                 return ""

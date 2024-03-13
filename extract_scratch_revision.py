@@ -331,24 +331,14 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     
                     
                     scratch_bytes_content = contents1.stdout
-                    #print("b4 int", scratch_bytes_content)
-                    cont_val = scratch_bytes_content.decode("utf-8")
-                    vals = None
-
-                    with tempfile.NamedTemporaryFile(delete=False) as fp:
-                        fp.write(cont_val)
-
-                        fp.seek(0)
-                        condkf = fp.read(100)
-                        with open("logfilesa.txt","a") as fnp:
-                            fnp.write(f"b4 inter {scratch_bytes_content} after read {condkf}")
-                            fnp.write("\n")                              
-                    vals = sp.correct_parse(fp.name)
                     
-                    #print("decoded",vals)
+                    if b'PK' not in scratch_bytes_content:
+                        continue
+
+                    vals = sp.decode_scratch_bytes(scratch_bytes_content)
                     
-                    stats = vals
-                    #stats = sp.parse_scratch(vals) if len(file_contents) > 0 else {"parsed_tree":[],"stats":{}}
+                    
+                    stats = sp.parse_scratch(vals,new_name) if len(vals) > 0 else {"parsed_tree":[],"stats":{}}
 
                         
                 except:
