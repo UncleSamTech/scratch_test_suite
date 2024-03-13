@@ -61,14 +61,19 @@ class Scratch_Path:
 
 
     def slice_from_start(self,string_val):
+        val = ''
         if string_val is not None:
-            val = " ".join(string_val)
+            try:
+                val = " ".join(string_val)
+            except:
+                val = ''
             keywords = ["event_","control_","procedures_"]
-            start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
-            if start_position != -1:
-                extr_text = val[start_position:]
+            if len(val) > 0:
+                start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
+                if start_position != -1:
+                    extr_text = val[start_position:]
             
-                return extr_text
+                    return extr_text
             
     def generate_simple_graph(self,file_path,path_name):
         
@@ -92,8 +97,11 @@ class Scratch_Path:
                         with open(path_name + each_hash + ".txt","a") as fp:
                             for each_connection in self.all_connections:
                                 if each_connection is not None:
-                                    val = self.slice_from_start(each_connection)
-                                    if val is None:
+                                    try:
+                                        val = self.slice_from_start(each_connection)
+                                    except:
+                                        val = ''
+                                    if val is None or len(val) < 1:
                                         continue
                                     fp.write(val + " ")
                                     fp.write("\n")
