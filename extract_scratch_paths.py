@@ -28,7 +28,7 @@ class Scratch_Path:
     
     def get_all_contents(self,hash):
         
-        conn,curr = self.get_connection2()
+        conn,curr = self.get_connection()
         if conn != None:
          curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:
@@ -59,6 +59,15 @@ class Scratch_Path:
             scratch_graph.add_edge(all_connections[i],all_connections[i + 1])
         return scratch_graph
 
+
+    def slice_from_start(self,string_val):
+        val = " ".join(string_val)
+        keywords = ["event_","control_","procedures_"]
+        start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
+        if start_position != -1:
+            extr_text = val[start_position:]
+            
+            return extr_text
     def generate_simple_graph(self,file_path,path_name):
         
         hashes = self.get_all_hashes(file_path)
@@ -80,11 +89,11 @@ class Scratch_Path:
                     if isinstance(self.all_connections,list) and len(self.all_connections) > 0:
                         with open(path_name + each_hash + ".txt","a") as fp:
                             for each_connection in self.all_connections:
-                                for i in range(len(each_connection)):
-                                    if each_connection[i] is None:
-                                        continue
-                                    else:
-                                        fp.write(each_connection[i] + " ")
+                                
+                                val = self.slice_from_start(each_connection)
+                                if val is None:
+                                    continue
+                                fp.write(val + " ")
                                 fp.write("\n")
                     else: 
                         continue 
@@ -102,8 +111,8 @@ sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 #print(sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 
-#sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths2/")
-sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
+sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths3/")
+#sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
 
 #v = sc_path.get_all_contents("cfbab365b6dd7f4138823df8ff2e89a108f43dbf8c9950ab27ac8cc981b9adac")
 #vis = sc_path.visualize_graph(gr)

@@ -16,7 +16,7 @@ class scratch_parser:
         self.blocs_json = None
         self.blocks_values = []
         self.final_list_result = []
-        self.scr_pro = None
+        self.scr_pro = ""
         self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
         self.new_connections = []
@@ -1409,10 +1409,11 @@ class scratch_parser:
     
     def flatten_inner_nested_lists(self,original_list):
         flattened_list = []
+        flat_sublist = []
 
         for sublist in original_list:
             flat_sublist = [sublist[0]]
-
+            
             for item in sublist[1:]:
                 if isinstance(item, list):
                     self.flatten_inner_nested_lists(item)
@@ -1577,15 +1578,11 @@ class scratch_parser:
     def decode_scratch_bytes(self, raw_bytes):   
         
         with BytesIO(raw_bytes) as f:
-            #self.scr_proj = f
-
-            with tempfile.TemporaryFile(delete=False) as fp:
-                fp.write(f)
-            self.scr_proj = self.sb3class.unpack_sb3(fp.name)
-
-        return self.scr_proj
+            self.scr_pro += self.sb3class.unpack_sb3(f)
+            
+        return self.scr_pro
     
-
+    '''
     def decode2(self,raw_bytes,file_name):
         with BytesIO(raw_bytes) as f:
             self.scr_proj = self.sb3class.unpack_sb3(f)
@@ -1597,6 +1594,8 @@ class scratch_parser:
             
             
             return fin_val
+    '''
+    
     def parse_scratch(self,scr_proj,file_name):
         
         if len(scr_proj) > 0:
