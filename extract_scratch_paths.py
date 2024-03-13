@@ -61,13 +61,15 @@ class Scratch_Path:
 
 
     def slice_from_start(self,string_val):
-        val = " ".join(string_val)
-        keywords = ["event_","control_","procedures_"]
-        start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
-        if start_position != -1:
-            extr_text = val[start_position:]
+        if string_val is not None:
+            val = " ".join(string_val)
+            keywords = ["event_","control_","procedures_"]
+            start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
+            if start_position != -1:
+                extr_text = val[start_position:]
             
-            return extr_text
+                return extr_text
+            
     def generate_simple_graph(self,file_path,path_name):
         
         hashes = self.get_all_hashes(file_path)
