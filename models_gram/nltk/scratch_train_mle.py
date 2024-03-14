@@ -7,7 +7,7 @@ import nltk
 import matplotlib.pyplot as plt
 import pandas as pd
 import random
-from sklearn.metrics import accuracy_score, precision_score, recall_score,classification_report,precision_recall_curve
+from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
 class scratch_train_mle:
 
@@ -91,12 +91,13 @@ class scratch_train_mle:
                 y_pred.append(predicted_next_word)
 
 
-        self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+        #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
         accuracy = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='weighted')
         recall = recall_score(y_true, y_pred, average='weighted')
-        print(f"accuracy {accuracy} precisions {precision} recall {recall}")
-        return accuracy,precision,recall
+        f1score = f1_score(y_true,y_pred,average="weighted")
+        print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
+        return accuracy,precision,recall,f1score
     
     def plot_precision_recall_curve(self,ytest,ypred,plot_name):
         precision,recall,thresholds = precision_recall_curve(ytest,ypred)
