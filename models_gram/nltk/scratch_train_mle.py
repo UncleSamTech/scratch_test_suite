@@ -100,7 +100,7 @@ class scratch_train_mle:
     
     def plot_precision_recall_curve(self,ytest,ypred,plot_name):
         precision,recall,thresholds = precision_recall_curve(ytest,ypred)
-        plt.figure(figsize=(10,8))
+        plt.figure(figsize=(10,6))
         plt.plot([0,1.5],[1.5,3])
         plt.plot(recall,precision,label='N-gram')
         plt.xlabel('recall')
@@ -115,4 +115,4 @@ class scratch_train_mle:
 tr_scr = scratch_train_mle()
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",6,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl")
-tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl","6-gram_prc.pdf") 
+tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl","6-gram_prc") 
