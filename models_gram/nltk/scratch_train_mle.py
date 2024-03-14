@@ -57,7 +57,7 @@ class scratch_train_mle:
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
         return scratch_predicted_next_token
     
-    def scratch_evaluate_model_nltk(self,test_data,model_name):
+    def scratch_evaluate_model_nltk(self,test_data,model_name,fig_name):
 
         y_true = []
         i=0
@@ -91,7 +91,7 @@ class scratch_train_mle:
                 y_pred.append(predicted_next_word)
 
 
-        
+        self.plot_precision_recall_curve(y_true,y_pred,fig_name)
         accuracy = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='weighted')
         recall = recall_score(y_true, y_pred, average='weighted')
@@ -107,7 +107,7 @@ class scratch_train_mle:
         plt.ylabel('precision')
         plt.title('N-gram order for Scratch dataset PRC curve')
         plt.savefig(f'{plot_name}.pdf')
-        plt.show()
+        #plt.show()
 
 
 
@@ -115,4 +115,4 @@ class scratch_train_mle:
 tr_scr = scratch_train_mle()
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",6,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl")
-tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl") 
+tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_6.pkl","6-gram_prc.pdf") 
