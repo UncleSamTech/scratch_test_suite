@@ -4,8 +4,10 @@ from nltk.lm import MLE
 from nltk.lm.preprocessing import padded_everygram_pipeline
 from nltk import word_tokenize
 import nltk
+import matplotlib.pyplot as plt
+import pandas as pd
 import random
-from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score,classification_report,precision_recall_curve
 
 class scratch_train_mle:
 
@@ -95,6 +97,20 @@ class scratch_train_mle:
         recall = recall_score(y_true, y_pred, average='weighted')
         print(f"accuracy {accuracy} precisions {precision} recall {recall}")
         return accuracy,precision,recall
+    
+    def plot_precision_recall_curve(self,ytest,ypred,plot_name):
+        precision,recall,thresholds = precision_recall_curve(ytest,ypred)
+        plt.figure(figsize=(10,8))
+        plt.plot([0,1.5],[1.5,3])
+        plt.plot(recall,precision,label='N-gram')
+        plt.xlabel('recall')
+        plt.ylabel('precision')
+        plt.title('N-gram order for Scratch dataset PRC curve')
+        plt.savefig(f'{plot_name}.pdf')
+        plt.show()
+
+
+
     
 tr_scr = scratch_train_mle()
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",6,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
