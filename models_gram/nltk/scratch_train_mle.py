@@ -111,9 +111,23 @@ class scratch_train_mle:
         #plt.show()
 
 
+    def multiple_train(self,list_ngrams,test_data,model_name,train_data):
+        final_result = {}
+        for each_gram in list_ngrams:
+            try:
+                self.train_mle(train_data,each_gram,f'{model_name}')
+                acc,prec,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
+
+                final_result[f'{each_gram}-gram_nltk'] = [acc,prec,rec,f1_score]
+            except:
+                final_result = {f'{each_gram}-gram_nltk':[0,0,0,0]}
+        
+        return final_result
+
 
     
 tr_scr = scratch_train_mle()
+tr_scr.multiple_train([9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
-tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
+#tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
