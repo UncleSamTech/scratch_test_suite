@@ -5,7 +5,7 @@ from nltk.lm.preprocessing import padded_everygram_pipeline
 from nltk import word_tokenize
 import nltk
 import matplotlib.pyplot as plt
-import pandas as pd
+#import pandas as pd
 import random
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
@@ -99,14 +99,29 @@ class scratch_train_mle:
         print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
-    def plot_precision_recall_curve(self,ytest,ypred,plot_name):
-        precision,recall,thresholds = precision_recall_curve(ytest,ypred)
-        plt.figure(figsize=(10,6))
-        plt.plot([0,1.5],[1.5,3])
-        plt.plot(recall,precision,label='N-gram')
-        plt.xlabel('recall')
-        plt.ylabel('precision')
-        plt.title('N-gram order for Scratch dataset PRC curve')
+    def plot_precision_recall_curve(self,plot_name):
+
+        Accuracy = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367]
+        Precision = [0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743,0.2264853658226743,0.22696845761011392]
+        Recall = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367]
+        F1 = [0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387,0.21718121691450387,0.2176643087019435]
+        Ngrams = [2,3,4,5,6,7,8,9,10]
+
+        Accuracy2 = [0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328,0.24589371980676328]
+        Precision2 = [0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372,0.22721000350383372]
+        Recall2 = [0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328,0.24589371980676328]
+        F1_2 = [0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699,0.2179863698935699]
+        Ngrams2 = [10,11,12,13,14,15]
+
+        plt.plot(Ngrams, Accuracy, label = "Accuracy")
+        plt.plot(Ngrams, Precision, label = "Precision")
+        plt.plot(Ngrams, Recall, label = "Recall")
+        plt.plot(Ngrams, F1, label = "F1")
+        plt.xlabel('Ngram-order')
+        plt.ylabel('Model-Scores')
+        plt.title('Nltk_Model Scores vs N-Gram Orders')
+        plt.legend()
+        
         plt.savefig(f'{plot_name}.pdf')
         #plt.show()
 
@@ -127,7 +142,8 @@ class scratch_train_mle:
 
     
 tr_scr = scratch_train_mle()
-tr_scr.multiple_train([9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt")
+#tr_scr.multiple_train([9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
+tr_scr.plot_precision_recall_curve("nltk-plot_first")
