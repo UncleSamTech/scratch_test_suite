@@ -1575,10 +1575,10 @@ class scratch_parser:
         next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
 
-    def decode_scratch_bytes(self, raw_bytes):   
+    def decode_scratch_bytes(self, raw_bytes,filename):   
         
         with BytesIO(raw_bytes) as f:
-            self.scr_pro += self.sb3class.unpack_sb3(f)
+            self.scr_pro += self.sb3class.unpack_sb3(f,filename)
             
         return self.scr_pro
     

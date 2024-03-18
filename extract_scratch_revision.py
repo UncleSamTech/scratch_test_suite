@@ -3,7 +3,7 @@ import os
 
 import sys
 import json
-from pydriller.git import Git
+#from pydriller.git import Git
 import re
 import tempfile
 from datetime import datetime
