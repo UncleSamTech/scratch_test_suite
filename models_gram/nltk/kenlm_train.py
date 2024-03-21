@@ -23,7 +23,8 @@ class kenlm_train:
             with open(file_path,"r") as each_sentence:
                 each_line = each_sentence.readlines()
                 val = self.tokenize_kenlm(each_line)
-                module_train = subprocess.run('',stdout=subprocess.PIPE, cwd=cwd, shell=True)
+                print(val)
+                #module_train = subprocess.run(['/mnt/c/Users/USER/Documents/model_train/online/kenlm/build/bin/lmplz -o 3 > kenlm.arpa'],stdin=val,stdout=subprocess.PIPE, cwd=cwd, shell=True)
 
 
 kn = kenlm_train()
@@ -31,6 +32,6 @@ kn = kenlm_train()
 
 
 
-print(kn.main("Whereupon neither the first testament was dedicated without blood.")) 
+print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
         
