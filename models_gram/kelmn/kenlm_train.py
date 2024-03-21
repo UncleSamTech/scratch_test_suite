@@ -62,5 +62,5 @@ kn = kenlm_train()
 
 #print(kn.access_train_data_kenlm("/mnt/c/Users/USER/Documents/model_train/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/scratch_test_suite/online/kenlm/build/bin/lmplz -o 5 > an_kenlm.arpa")) 
 
-print(kn.access_train_data_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90_check.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin -o 5 > an_kenlm.arpa")) 
+print(kn.access_train_data_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90_check.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 5 > an_kenlm.arpa")) 
      
