@@ -26,8 +26,8 @@ class kenlm_train:
                 new_val = " ".join(token_sentlist).lower()
                 reasp = " " + new_val
                 print(reasp)
-                #val = reasp.encode('utf-8')
-                command = f"{command_link} {reasp}"
+                val = reasp.encode('utf-8')
+                command = f"{command_link} {val}"
                 module_train = subprocess.run(command,shell=True)
 
         return module_train.stdout
