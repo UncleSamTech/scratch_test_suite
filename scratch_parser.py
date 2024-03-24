@@ -4,7 +4,7 @@ import sys
 import collections
 from unzip_scratch import unzip_scratch
 import tempfile
-
+import random
 from io import BytesIO
 import zipfile
 import zlib
@@ -2276,9 +2276,36 @@ class scratch_parser:
       
         return self.final_list_result
 
-
+    
         
    
+    def all_paths_from(self,current,prefix,seen,edge_map):
+        if prefix is None:
+            prefix = []
+        if seen is None:
+            seen = {}
+        paths = []
+        for k in edge_map[current]:
+            if k in seen:
+                continue
+            new_prefix = prefix + [k]
+            paths.append(new_prefix)
+            seen[k] = 1
+            paths = paths + self.all_paths_from(k,new_prefix,seen,edge_map)
+        return paths
+    def get_all_all_paths(self,nodes,edge_map):
+        all_paths = []
+        for i in nodes:
+            all_paths = all_paths + (self.all_paths_from(i,[],{},edge_map))
+        return all_paths
+    
+    def make_edge_map(self,nodes,edges):
+        edge_map = dict([(i,dict()) for i in nodes])
+        for a,b in edges:
+            edge_map[a][b] = 1
+        return edge_map
+
+
             
    
 
@@ -2448,7 +2475,7 @@ class scratch_parser:
             
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
-            print("check blocks", next_val2)
+            
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
         
             return fin_val
