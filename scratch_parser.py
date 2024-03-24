@@ -16,6 +16,7 @@ class scratch_parser:
         self.blocs_json = None
         self.blocks_values = []
         self.final_list_result = []
+        self.all_parents_keys_val = []
         self.scr_pro = ""
         self.sb3class = unzip_scratch()
         self.ommited_block_keys_parent = {"opcode"}
@@ -89,8 +90,28 @@ class scratch_parser:
                 self.get_connections(each_child,node+visited,blocks)
 
     def get_all_blocks_vals(self,blocks_values):
+        all_blocks = {}
+        i= 0
         targ = self.get_all_targets(blocks_values)
-        return {'blocks':each_block['blocks'] for each_block in targ if isinstance(each_block,dict) and 'blocks' in each_block.keys()}
+        if isinstance(targ,list) and len(targ) > 0:
+            for each_block in targ:
+                i+=1
+                if isinstance(each_block,dict) and 'blocks' in each_block.keys():
+                    all_blocks[f'blocks{i}'] = each_block['blocks']
+        return all_blocks
+    
+    def get_all_blocks_vals_modified(self,blocks_values):
+        all_blocks = []
+        i= 0
+        targ = self.get_all_targets(blocks_values)
+        if isinstance(targ,list) and len(targ) > 0:
+            for each_block in targ:
+                
+                if isinstance(each_block,dict) and 'blocks' in each_block.keys():
+                    all_blocks.append(each_block['blocks'])
+        return all_blocks
+
+        #return {'blocks':each_block['blocks'] for each_block in targ if isinstance(each_block,dict) and 'blocks' in each_block.keys()}
     
     def flatten_tree(self,tree):
         result = []
@@ -113,10 +134,26 @@ class scratch_parser:
         all_blocks =  self.get_all_blocks_vals(block_targ)
         return all_blocks['blocks']
     
+    def get_all_blockkeys_from_block(self,blocks_val):
+        all_keys_blocks = [keys for keys in blocks_val.keys() if isinstance(blocks_val,dict) and keys.startswith('blocks')]
+        return all_keys_blocks
+
+
     def get_any_block_by_id(self,blocks_values,key):
-        if key == None or key == '' or blocks_values == None or blocks_values == {} or blocks_values['blocks'] == None or blocks_values['blocks'] == {} or blocks_values['blocks'][key] == None or blocks_values['blocks'][key] == {}:
+        val = blocks_values.keys()
+        if key == None or key == '' or blocks_values == None or blocks_values == {}:
             return {}
-        return blocks_values['blocks'][key]
+        val = [blocks_values[keys][key] for keys in self.get_all_blockkeys_from_block(blocks_values) if key in blocks_values[keys].keys()]
+        return val[0]
+    
+    
+    def get_any_block_by_id_modified(self,blocks_values,key):
+        #val = blocks_values.keys()
+        if key == None or key == '' or blocks_values == None or blocks_values == []:
+            return {}
+        val_main = [each_block[key] for each_block in blocks_values if isinstance(blocks_values,list) and len(blocks_values) > 0 and isinstance(each_block,dict) and key in each_block.keys()]
+        #val = [blocks_values[keys][key] for keys in self.get_all_blockkeys_from_block(blocks_values) if key in blocks_values[keys].keys()]
+        return val_main[0]
         
     def check_if_id_is_parent(self,blocks_values,block_id):
         if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
@@ -244,23 +281,97 @@ class scratch_parser:
                         elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
                             opcode = f'{k}_{v[0]}_{v[1]}'
             return opcode    
+        
+
+
+    def get_complete_fields_inputs_modified(self,blocks_values,block_id):
+        opcode = ""
+        if block_id == "" or block_id == None or blocks_values == [] or blocks_values == None:
+            return opcode
+        block = self.get_any_block_by_id_modified(blocks_values,block_id)
+        if block == None or block == {}:
+            return opcode
+        inputs = block["inputs"] if "inputs" in block.keys() else {}
+        fields = block["fields"] if "fields" in block.keys() else {}
+        main_opcode = block["parent"] if "parent" in block.keys() else ''
+        
+        if main_opcode == None or main_opcode == "":
+            
+            if inputs == {} and fields == {} :
+                    return opcode
+            
+            if inputs != {}  and fields != {}: 
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and  isinstance(v[1],str) and len(v[1]) > 0:
+                            
+                            opcode = f'{k}_{v[0]}_{v[1]}'
+                            
+                        if isinstance(v[0],str) and len(v[0]) > 0:
+                            
+                            opcode = f'{k}_{v[0]}' 
+                
+                        
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1]}'
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{opcode}_{k}_{v[1][1]}'
+                
+                return opcode
+            elif inputs != {}  and fields == {} :
+                
+                for k,v in inputs.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{k}_{v[1]}'
+                            
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            opcode = f'{k}_{v[1][1]}'
+                return opcode
+
+            elif inputs == {}  and fields != {} :
+                            
+                for k,v in fields.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[0],str) and len(v[0]) > 0 and v[1] == None:
+                            opcode = f'{k}_{v[0]}'
+                            
+                        elif isinstance(v[0],str) and len(v[0]) > 0 and isinstance(v[1],str) and len(v[1]) > 0:
+                            opcode = f'{k}_{v[0]}_{v[1]}'
+            return opcode  
                    
     def get_opcode_from_id2(self,blocks_values,block_id):
        if block_id == None or block_id == '' or block_id == None or blocks_values == {} or blocks_values == None:
             return '' 
-       return blocks_values['blocks'][block_id]['opcode'] if blocks_values['blocks'][block_id]['opcode'] != None else ''
+       val = [blocks_values[keys][block_id]['opcode'] for keys in self.get_all_blockkeys_from_block(blocks_values) if blocks_values[keys][block_id]['opcode'] != None and block_id in blocks_values[keys].keys()]
+       return val[0]
+       #return blocks_values['blocks'][block_id]['opcode'] if blocks_values['blocks'][block_id]['opcode'] != None else ''
+
+    def get_opcode_from_id2_modified(self,blocks_values,block_id):
+       if block_id == None or block_id == '' or block_id == None or blocks_values == [] or blocks_values == None:
+            return ''
+       val_main = [each_block[block_id]['opcode'] for each_block in blocks_values  if isinstance(blocks_values,list) and len(blocks_values) > 0 and isinstance(each_block,dict) and block_id in each_block.keys()] 
+       #val = [blocks_values[keys][block_id]['opcode'] for keys in self.get_all_blockkeys_from_block(blocks_values) if blocks_values[keys][block_id]['opcode'] != None and block_id in blocks_values[keys].keys()]
+       return val_main[0]
 
     def get_opcode_from_id_main(self,block_values,block_id):
+        field_block = [block_values[keys][block_id]['fields'] for keys in self.get_all_blockkeys_from_block(block_values) if block_id in block_values[keys].keys()]
+        opcode_block = [block_values[keys][block_id]['opcode'] for keys in self.get_all_blockkeys_from_block(block_values) if block_id in block_values[keys].keys()]
         if block_id == None or block_id == '':
             return ''
-        elif block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
-            return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
+        
+        
+        elif field_block[0] == {} or field_block[0] == None:
+            return opcode_block[0] if opcode_block[0] != None else ''
         
         if self.check_if_id_is_parent(block_values,block_id):
             return self.get_parent_complete_opcode(block_values,block_id)
         
-        elif block_values['blocks'][block_id]['fields'] == {} or block_values['blocks'][block_id]['fields'] == None:
-            return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None else ''
+        elif field_block[0] == {} or field_block[0] == None:
+            return opcode_block[0] if opcode_block[0] != None else ''
 
         else:
             block = self.get_any_block_by_id(block_values,block_id)
@@ -279,10 +390,21 @@ class scratch_parser:
             return opcode
     
     def get_opcode_from_id(self,block_values,block_id):
-        if block_id == '' or block_id == None or block_values == {} or block_values == None or block_values['blocks'] == {} or block_values['blocks'] == None or block_values['blocks'][block_id] == {} or block_values['blocks'][block_id] == None:
+        val = [block_values[keys] for keys in self.get_all_blockkeys_from_block(block_values)]
+        val2 = [block_values[keys][block_id] for keys in self.get_all_blockkeys_from_block(block_values) if block_id in block_values[keys].keys()]
+        if block_id == '' or block_id == None or block_values == {} or block_values == None or val == [] or val == None or val2[0] == {} or val2[0] == None:
             return ''
         
-        return block_values['blocks'][block_id]['opcode'] if block_values['blocks'][block_id]['opcode'] != None or block_values['blocks'][block_id]['opcode'] != ''  else ''
+        return val2[0]['opcode'] if val2[0]['opcode'] != None or val2[0]['opcode'] != ''  else ''
+    
+    
+    def get_opcode_from_id_modified(self,block_values,block_id):
+        val_main = [each_block[block_id] for each_block in block_values if isinstance(block_values,list) and len(block_values) > 0 and isinstance(each_block,dict) and block_id in each_block.keys()]
+       
+        if block_id == '' or block_id == None or block_values == [] or block_values == None or val_main == [] or val_main == None:
+            return ''
+        
+        return val_main[0]['opcode'] if val_main[0]['opcode'] != None or val_main[0]['opcode'] != ''  else ''
                   
     def get_fields_values(self,blocks_values,block_id):
         if block_id == None or block_id == '' or blocks_values == None or blocks_values == {}:
@@ -310,6 +432,10 @@ class scratch_parser:
     def return_all_opcodes(self,blocks_values):
         return [self.get_opcode_from_id(blocks_values,k2) for k,v in blocks_values.items() for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2)]
     
+    def return_all_opcodes_modified(self,blocks_values):
+        return [self.get_opcode_from_id_modified(blocks_values,k2) for v in blocks_values for k2,v2 in v.items() if isinstance(v,dict) and bool(v) and isinstance(v2,dict) and bool(v2)]
+    
+
     def get_all_unique_opcodes(self,blocks_values):
         all_unique_opcodes = []
         if blocks_values == None or blocks_values == {}:
@@ -319,6 +445,22 @@ class scratch_parser:
                 if isinstance(v,dict) and bool(v):
                     for k2 in v.keys():
                         opcodes = self.get_opcode_from_id(blocks_values,k2)
+                        if opcodes not in all_unique_opcodes:
+                            all_unique_opcodes.append(opcodes)
+                        else:
+                            continue
+
+        return all_unique_opcodes
+    
+    def get_all_unique_opcodes_modified(self,blocks_values):
+        all_unique_opcodes = []
+        if blocks_values == None or blocks_values == []:
+            return []
+        if isinstance(blocks_values,list) and len(blocks_values) > 0:
+            for v in blocks_values:
+                if isinstance(v,dict) and bool(v):
+                    for k2 in v.keys():
+                        opcodes = self.get_opcode_from_id_modified(blocks_values,k2)
                         if opcodes not in all_unique_opcodes:
                             all_unique_opcodes.append(opcodes)
                         else:
@@ -335,16 +477,26 @@ class scratch_parser:
     def read_input_values_by_id(self,blocks_values,id):
         if id == None or id == '' or blocks_values == None or blocks_values == {}:
             return {}
-        if isinstance(blocks_values,dict) and bool(blocks_values) and isinstance(blocks_values['blocks'],dict) and bool(blocks_values['blocks']):
-            block = blocks_values['blocks']
+        
+        if isinstance(blocks_values,dict) and bool(blocks_values):
+            vall = [blocks_values[keys][id] for keys in self.get_all_blockkeys_from_block(blocks_values) if id in blocks_values[keys].keys()]
+            #block = blocks_values['blocks']
             
-            if isinstance(block,dict) and bool(block) and id in block.keys():
-                block_val = block[id]
+            
                 
-                if isinstance(block_val,dict) and bool(block_val) and 'inputs' in block_val.keys():
-                    return block_val['inputs']
-            #return blocks_values['blocks'][id]['inputs'] if 'inputs' in blocks_values['blocks'][id].keys() else {}
-    
+            if isinstance(vall[0],dict) and bool(vall[0]) and 'inputs' in vall[0].keys():
+                return vall[0]['inputs']
+            
+    def read_input_values_by_id_modified(self,blocks_values,id):
+        if id == None or id == '' or blocks_values == None or blocks_values == []:
+            return {}
+        
+        if isinstance(blocks_values,list) and len(blocks_values) > 0:
+            vall = [each_block[id] for each_block in blocks_values if isinstance(each_block,dict) and id in each_block.keys()]
+                
+            if isinstance(vall[0],dict) and bool(vall[0]) and 'inputs' in vall[0].keys():
+                return vall[0]['inputs']
+            
     def check_dict_depth(self,dict_val,depth=1):
         if not isinstance(dict_val,dict) or not bool(dict_val):
             return depth
@@ -369,12 +521,40 @@ class scratch_parser:
                                     break                
         return self.child_input_keys
     
+    def get_children_key_recursively_modified(self,blocks_values,spec_block):
+        if spec_block == None or spec_block == {} or blocks_values == None or blocks_values == []:
+            return []
+        
+        inp_block = spec_block["inputs"] if isinstance(spec_block,dict)  and "inputs" in spec_block.keys() else {}
+        if isinstance(inp_block,dict) and bool(inp_block):
+            for k,v in inp_block.items():
+                if isinstance(v,list) and len(v) > 0:
+                    for each_val in v:
+                        if isinstance(each_val,str):
+                            if len(each_val) > 0:
+                                self.child_input_keys.append(each_val)
+                                bloc = self.get_any_block_by_id_modified(blocks_values,each_val)
+                                if bloc["inputs"] != None or bloc["inputs"] != {}:
+                                    self.get_children_key_recursively_modified(blocks_values,bloc) 
+                                else:
+                                    break                
+        return self.child_input_keys
+    
     
     def get_next_child_keys(self,blocks_values,inp_block):
         all_next_keys = []
         all_child_keys = self.get_children_key_recursively(blocks_values,inp_block)
         for each_key in all_child_keys:
             block = self.get_any_block_by_id(blocks_values,each_key)
+            if isinstance(block,dict) and bool(block) and 'next' in block.keys():
+                all_next_keys.append(block['next'])
+        return all_next_keys
+    
+    def get_next_child_keys_modified(self,blocks_values,inp_block):
+        all_next_keys = []
+        all_child_keys = self.get_children_key_recursively_modified(blocks_values,inp_block)
+        for each_key in all_child_keys:
+            block = self.get_any_block_by_id_modified(blocks_values,each_key)
             if isinstance(block,dict) and bool(block) and 'next' in block.keys():
                 all_next_keys.append(block['next'])
         return all_next_keys
@@ -391,6 +571,21 @@ class scratch_parser:
                             all_parent_keys.append(k2)
         return all_parent_keys
     
+    def get_all_parent_keys_modified(self,blocks_values):
+        self.all_parents_keys_val = []
+        if blocks_values == None or blocks_values == []:
+            return []
+        if isinstance(blocks_values,list) and len(blocks_values) > 0:
+            for v in blocks_values:
+                if isinstance(v,dict) and bool(v):
+                    for k2,v2 in v.items():
+                        if isinstance(v2,dict) and bool(v2) and 'parent' in v2.keys() and v2['parent'] == None:
+                            
+        
+                            self.all_parents_keys_val.append(k2)
+        
+        return self.all_parents_keys_val
+    
     def compare_parent_keys(self,blocks_values,block_key,parent_key):
         if blocks_values == None or blocks_values == {} or block_key == None or block_key == {} or parent_key == None or parent_key == '':
             return False
@@ -402,6 +597,19 @@ class scratch_parser:
             
             else:
                 next_par = self.compare_parent_keys(blocks_values,parent_block,parent_key)
+                return next_par
+            
+    def compare_parent_keys_modified(self,blocks_values,block_key,parent_key):
+        if blocks_values == None or blocks_values == [] or block_key == None or block_key == {} or parent_key == None or parent_key == '':
+            return False
+        
+        if isinstance(block_key,dict) and bool(block_key) and 'parent' in block_key.keys():
+            parent_block = self.get_any_block_by_id_modified(blocks_values,block_key['parent'])
+            if block_key['parent'] != None and block_key['parent'] == parent_key:
+                return True
+            
+            else:
+                next_par = self.compare_parent_keys_modified(blocks_values,parent_block,parent_key)
                 return next_par
         
 
@@ -416,12 +624,33 @@ class scratch_parser:
                         if parent_key in self.get_all_parent_keys(blocks_values) and v2["next"] not in self.get_children_key_recursively(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and v2["next"] not in self.get_next_child_keys(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and self.compare_parent_keys(blocks_values,self.get_any_block_by_id(blocks_values,v2["next"]),parent_key):
                             spec.append(v2["next"])
         return spec
+    
+    def break_down_modified(self,blocks_values,parent_key):
+        spec = []
+        if blocks_values == None or blocks_values == [] or parent_key == None or parent_key == '':
+            return []
+        for v in blocks_values:
+            if isinstance(v,dict) and bool(v):
+                for k2,v2 in v.items():
+                    if isinstance(v2,dict) and bool(v2):
+                        
+                        if parent_key in self.get_all_parent_keys_modified(blocks_values) and v2["next"] not in self.get_children_key_recursively_modified(blocks_values,self.get_any_block_by_id_modified(blocks_values,k2)) and v2["next"] not in self.get_next_child_keys_modified(blocks_values,self.get_any_block_by_id_modified(blocks_values,k2)) and self.compare_parent_keys_modified(blocks_values,self.get_any_block_by_id_modified(blocks_values,v2["next"]),parent_key):
+                            spec.append(v2["next"])
+        #print("another ",spec)
+        return spec
                         
 
     def get_all_next_id_test(self,blocks_values):
        if blocks_values == None or blocks_values == {}:
             return {}                                                   
        return {each_value:self.break_down(blocks_values,each_value) for each_value in self.get_all_parent_keys(blocks_values)}
+    
+    def get_all_next_id_test_modified(self,blocks_values):
+       
+       if blocks_values == None or blocks_values == []:
+            return {}                                                   
+       return {each_value:self.break_down_modified(blocks_values,each_value) for each_value in self.get_all_parent_keys_modified(blocks_values)}
+
 
     def get_input_block_by_id_key(self,block_values,bid,key):
         if key == None or len(key) < 1 or block_values == None or block_values == {} or bid == None or len(bid) < 1:
@@ -480,6 +709,52 @@ class scratch_parser:
                         for each_val in value_block:
                             if isinstance(each_val,str) and len(each_val) > 0:
                                 opcode = self.get_opcode_from_id(block_values,each_val)
+                                specific_input_by_id_key = [key,[opcode]]
+                            elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                specific_input_by_id_key = [key,[each_val[1]]]
+
+        return specific_input_by_id_key
+    
+    def get_input_block_by_id_key_disp_modified(self,block_values,bid,key):
+        
+        if key == None or len(key) < 1  or block_values == [] or block_values == None or bid == None or len(bid) < 1:
+            return []
+        specific_input_by_id_key = []
+        input_block = self.read_input_values_by_id_modified(block_values,bid)
+        opcode_par  = self.get_opcode_from_id_modified(block_values,bid)
+        
+        if isinstance(input_block,dict) and bool(input_block): 
+            if opcode_par in self.substack_replacement.keys() :
+                if key in input_block.keys():
+                    value_block =  input_block[key]
+                    if isinstance(value_block,list) and len(value_block) > 0:
+                        for each_val in value_block:
+                            if opcode_par != "control_if_else":
+                                if isinstance(each_val,str) and len(each_val) > 0:
+                                    opcode = self.get_opcode_from_id_modified(block_values,each_val)
+                                    specific_input_by_id_key = [self.substack_replacement[opcode_par]  if isinstance(key,str) and key.startswith("SUBS")  else key,[opcode]]
+                                elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                    specific_input_by_id_key = [self.substack_replacement[opcode_par] if isinstance(key,str) and key.startswith("SUBS")  else key,[each_val[1]]]
+                            else:
+                                if isinstance(each_val,str) and len(each_val) > 0:
+                                    opcode = self.get_opcode_from_id_modified(block_values,each_val)
+                                    if isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][0],[opcode]]
+                                    elif isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK2"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][1],[opcode]]
+                                elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
+                                    if isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][0],[each_val[1]]]
+                                    elif isinstance(key,str) and key.startswith("SUBS") and key.endswith("TACK2"):
+                                        specific_input_by_id_key = [self.substack_replacement[opcode_par][1],[each_val[1]]]
+                                
+            else:
+                if key in input_block.keys():
+                    value_block =  input_block[key]
+                    if isinstance(value_block,list) and len(value_block) > 0:
+                        for each_val in value_block:
+                            if isinstance(each_val,str) and len(each_val) > 0:
+                                opcode = self.get_opcode_from_id_modified(block_values,each_val)
                                 specific_input_by_id_key = [key,[opcode]]
                             elif isinstance(each_val,list) and len(each_val) > 0 and isinstance(each_val[1],str) and len(each_val[1]) > 0:
                                 specific_input_by_id_key = [key,[each_val[1]]]
@@ -722,6 +997,85 @@ class scratch_parser:
                             corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values,ids,k))
         return corr_block_tree
 
+
+    def correct_input_block_tree_by_id_disp_modified(self,blocks_values,input_block,ids):
+        opcode_par  = self.get_opcode_from_id_modified(blocks_values,ids)    
+
+        corr_block_tree = []
+        if input_block == None or input_block == {} or blocks_values == None or blocks_values == []:
+            return []
+        if isinstance(input_block,dict) and bool(input_block):
+            if opcode_par in self.substack_replacement.keys():
+                for k,v in input_block.items():
+                    if opcode_par != "control_if_else":
+                        if isinstance(v,list) and len(v) > 0:
+                            if isinstance(v[1] ,str) and len(v[1]) > 0:
+                                opcode = self.get_opcode_from_id_modified(blocks_values,v[1])  
+                                recur_val = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v[1]),v[1])  
+                        
+                                any_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                                next_opcode = self.get_opcode_from_id_modified(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                                next_rec  = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,any_block["next"]),any_block["next"]) 
+                                if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                                elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,[opcode,[recur_val]]])
+                                elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                    corr_block_tree.append([self.substack_replacement[opcode_par]  if isinstance(k,str) and k.startswith("SUBS")  else k,opcode])
+                            elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                corr_block_tree.append(self.get_input_block_by_id_key_disp_modified(blocks_values,ids,k))
+                    else:
+                        if isinstance(v,list) and len(v) > 0:
+                            if isinstance(v[1] ,str) and len(v[1]) > 0:
+                                opcode = self.get_opcode_from_id_modified(blocks_values,v[1])  
+                                recur_val = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v[1]),v[1])  
+                        
+                                any_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                                next_opcode = self.get_opcode_from_id_modified(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                                next_rec  = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,any_block["next"]),any_block["next"]) 
+                                if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],[opcode,[recur_val],next_opcode,[next_rec]]])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],[opcode,[recur_val],next_opcode,[next_rec]]])
+                                    else:
+                                        corr_block_tree.append([k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                                elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],[opcode,[recur_val]]])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],[opcode,[recur_val]]])
+                                    else:
+                                        corr_block_tree.append([k,[opcode,[recur_val]]])
+                                elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                    if isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][0],opcode])
+                                    elif isinstance(k,str) and k.startswith("SUBS") and k.endswith("TACK2"):
+                                        corr_block_tree.append([self.substack_replacement[opcode_par][1],opcode])
+                                    else:
+                                        corr_block_tree.append([k,opcode])
+                            elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                corr_block_tree.append(self.get_input_block_by_id_key_disp_modified(blocks_values,ids,k))
+            else:
+                for k,v in input_block.items():
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1] ,str) and len(v[1]) > 0:
+                            opcode = self.get_opcode_from_id_modified(blocks_values,v[1])  
+                            recur_val = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v[1]),v[1])  
+                        
+                            any_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            next_opcode = self.get_opcode_from_id_modified(blocks_values,any_block["next"])  if any_block["next"] != None else {} 
+                            next_rec  = self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,any_block["next"]),any_block["next"]) 
+                            if any_block["next"] != None and next_rec != [] and len(next_rec) > 0 :
+                                corr_block_tree.append([k,[opcode,[recur_val],next_opcode,[next_rec]]])
+                            elif any_block["next"] ==  None and next_rec != None or next_rec != [] and len(next_rec) > 0:
+                                corr_block_tree.append([k,[opcode,[recur_val]]])
+                            elif any_block["next"] == None and next_rec == [] or next_rec == None:
+                                corr_block_tree.append([k,opcode])
+                        elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                            corr_block_tree.append(self.get_input_block_by_id_key_disp_modified(blocks_values,ids,k))
+        return corr_block_tree
+
     def create_next_values2(self,blocks_values,file_name):  
         tr = [] 
         final_tree = []
@@ -772,6 +1126,33 @@ class scratch_parser:
         final_tree = [file_name,tr]
         return final_tree
     
+    def create_next_values2_disp_modified(self,blocks_values,file_name):  
+        tr = [] 
+        final_tree = []
+        
+        
+        all_val = self.get_all_next_id_test_modified(blocks_values)     
+        
+        if all_val == None or all_val == {}:
+            return []
+        if isinstance(all_val,dict) and bool(all_val):
+            for ks,vs in all_val.items():
+                
+                if isinstance(vs,list) and len(vs) > 0:
+                    if isinstance(self.get_opcode_from_id_modified(blocks_values,ks),str) and self.get_opcode_from_id_modified(blocks_values,ks).startswith("event") or self.get_opcode_from_id_modified(blocks_values,ks).startswith("control"):
+                        
+                        val =  [[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)] if self.get_complete_fields_inputs_modified(blocks_values,v2) == '' or self.get_complete_fields_inputs_modified(blocks_values,v2) == None else [self.get_opcode_from_id_modified(blocks_values,v2),[self.get_complete_fields_inputs_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs ]
+                        
+                        tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val] if self.get_complete_fields_inputs_modified(blocks_values,ks) == "" or self.get_complete_fields_inputs_modified(blocks_values,ks) == None else [self.get_opcode_from_id_modified(blocks_values,ks),[self.get_complete_fields_inputs_modified(blocks_values,ks),val]])
+                    else:
+                        if self.get_opcode_from_id2_modified(blocks_values, ks) == self.get_opcode_from_id_modified(blocks_values,ks):
+                            blocks = self.get_any_block_by_id_modified(blocks_values,ks)
+                            val = [[self.iterate_procedure_input_modified(blocks_values,blocks),[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                                
+                            tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val])                        
+        final_tree = [file_name,tr]
+        return final_tree
+    
 
     def get_first_proc_sec(self,blocks_values,input_block):
         child_list = []    
@@ -794,6 +1175,28 @@ class scratch_parser:
                             chil_opc = child_block["opcode"] if "opcode" in child_block.keys() else ''
                             child_list.append(chil_opc)
         return child_list
+    
+    def get_first_proc_sec_modified(self,blocks_values,input_block):
+        child_list = []    
+        if input_block != None or blocks_values != []:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input_modified(blocks_values,child_block)
+                            chil_opc = child_block["opcode"] if "opcode" in child_block.keys() else ''
+                            child_list.append(chil_opc)
+        return child_list
 
     def get_mutation(self,blocks_values,input_block):
         child_list = []    
@@ -813,6 +1216,31 @@ class scratch_parser:
                             child_block = self.get_any_block_by_id(blocks_values,v[1])
                             if child_block != {} or child_block != None:
                                 self.iterate_procedure_input(blocks_values,child_block)
+                            mutation = child_block["mutation"] if "mutation" in child_block.keys() else {}
+                            mut_val = mutation["proccode"] if "proccode" in mutation.keys() else ''
+                            
+                            mut_val = mut_val.replace(' %s %b ','_') if ' %s %b ' in mut_val else mut_val
+                            child_list.append(mut_val)
+        return child_list
+    
+    def get_mutation_modified(self,blocks_values,input_block):
+        child_list = []    
+        if input_block != None or blocks_values != []:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input_modified(blocks_values,child_block)
                             mutation = child_block["mutation"] if "mutation" in child_block.keys() else {}
                             mut_val = mutation["proccode"] if "proccode" in mutation.keys() else ''
                             
@@ -845,6 +1273,32 @@ class scratch_parser:
                                     opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
                                     child_list.append(opcode_ch) 
             return child_list
+    
+    def get_mutation_input_modified(self,blocks_values,input_block):
+        child_list = []    
+        if input_block != None or blocks_values != []:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input_modified(blocks_values,child_block)
+
+                            for k,v in child_block["inputs"].items():
+                                if isinstance(v,list) and len(v) > 0 and isinstance(v[1],str) and len(v[1]) == 20:
+                                    inner_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                                    opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
+                                    child_list.append(opcode_ch) 
+            return child_list
         
     def get_mutation_input_val(self,blocks_values,input_block):
         child_list = []
@@ -869,6 +1323,36 @@ class scratch_parser:
                             for k,v in child_block["inputs"].items():
                                 if isinstance(v,list) and len(v) > 0 and isinstance(v[1],str) and len(v[1]) == 20:
                                     inner_block = self.get_any_block_by_id(blocks_values,v[1])
+                                    opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
+                                    fields2 = inner_block["fields"] if "fields" in inner_block.keys() else {}
+                                    fields_v = [f'{k2}_{v2[0]}' for k2,v2 in fields2.items() if fields2 != {} or fields2 != None and isinstance(v2,list) and len(v2) > 0 and isinstance(v2[0],str) and len(v2[0]) > 0]
+                                    child_dict.update({opcode_ch:fields_v[0] if len(fields_v) > 0 else ''})
+                                    #child_list.append(fields_v[0] if len(fields_v) > 0 else '') 
+        return child_dict
+    
+    def get_mutation_input_val_modified(self,blocks_values,input_block):
+        child_list = []
+        child_dict = {}    
+        if input_block != None or blocks_values != []:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input_modified(blocks_values,child_block)
+
+                            for k,v in child_block["inputs"].items():
+                                if isinstance(v,list) and len(v) > 0 and isinstance(v[1],str) and len(v[1]) == 20:
+                                    inner_block = self.get_any_block_by_id_modified(blocks_values,v[1])
                                     opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
                                     fields2 = inner_block["fields"] if "fields" in inner_block.keys() else {}
                                     fields_v = [f'{k2}_{v2[0]}' for k2,v2 in fields2.items() if fields2 != {} or fields2 != None and isinstance(v2,list) and len(v2) > 0 and isinstance(v2[0],str) and len(v2[0]) > 0]
@@ -917,7 +1401,49 @@ class scratch_parser:
 
                                 
                 return child_list
+    
                             
+    def iterate_procedure_input_modified(self,blocks_values,input_block):
+        child_list = []    
+        if input_block != None or blocks_values != []:
+            
+            inputs = input_block["inputs"] if "inputs" in input_block.keys() else {}
+            fields = input_block["fields"] if "fields" in input_block.keys() else {}
+            
+            
+            
+            if inputs != {} or inputs != None and fields == {} or fields == None:
+                
+                for k,v in inputs.items():
+                    
+                    if isinstance(v,list) and len(v) > 0:
+                        if isinstance(v[1],str) and len(v[1]) == 20:
+                            child_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                            if child_block != {} or child_block != None:
+                                self.iterate_procedure_input_modified(blocks_values,child_block)
+                            chil_opc = child_block["opcode"] if "opcode" in child_block.keys() else ''
+                            mutation = child_block["mutation"] if "mutation" in child_block.keys() else {}
+                            mut_val = mutation["proccode"] if "proccode" in mutation.keys() else ''
+                            
+                            mut_val = mut_val.replace(' %s %b ','_') if ' %s %b ' in mut_val else mut_val
+                            child_list = [chil_opc,[[mut_val]]]
+                            
+                            
+                            for k,v in child_block["inputs"].items():
+                                if isinstance(v,list) and len(v) > 0 and isinstance(v[1],str) and len(v[1]) == 20:
+                                    inner_block = self.get_any_block_by_id_modified(blocks_values,v[1])
+                                    opcode_ch = inner_block["opcode"] if "opcode" in inner_block.keys() else ''
+                                    fields = inner_block["fields"] if "fields" in inner_block.keys() else {}
+                                    fields_v = [f'{k2}_{v2[0]}' for k2,v2 in fields.items() if fields != {} or fields != None and isinstance(v2,list) and len(v2) > 0 and isinstance(v2[0],str) and len(v2[0]) > 0]
+                                    if isinstance(child_list[-1],list) and len(child_list[-1]) > 0:
+
+                                        child_list[-1].append([opcode_ch,[fields_v[0]] if len(fields_v) > 0 else f'{opcode_ch}']) 
+                                    else:
+                                        child_list.append([opcode_ch,[fields_v[0]] if len(fields_v) > 0 else f'{opcode_ch}'])
+                                        
+
+                                
+                return child_list
     def rep_sub(self,block,op):
         if block == None or block == {} or op == None or op == '':
             return ''
@@ -927,6 +1453,17 @@ class scratch_parser:
 
     def count_opcodes(self,blocks_values):
         all_opcodes = self.return_all_opcodes(blocks_values)
+        if blocks_values == None or blocks_values == {}:
+           return {}
+           
+        if all_opcodes == None or all_opcodes == []:
+               return {}
+           
+        count_val = collections.Counter(all_opcodes)
+        return count_val 
+    
+    def count_opcodes_modified(self,blocks_values):
+        all_opcodes = self.return_all_opcodes_modified(blocks_values)
         if blocks_values == None or blocks_values == {}:
            return {}
            
@@ -973,8 +1510,33 @@ class scratch_parser:
         self.all_met.extend(flattened_tree)
         return flattened_tree
     
+    def iterate_tree_for_non_opcodes2_modified(self, scratch_tree, blocks_values):
+        if not scratch_tree or not blocks_values:
+            return []
+
+        flattened_tree = []
+        stack = [scratch_tree]
+
+        while stack:
+            current_node = stack.pop()
+            if isinstance(current_node, list):
+                stack.extend(current_node)
+            elif current_node not in self.get_all_unique_opcodes_modified(blocks_values):
+                flattened_tree.append(current_node)
+
+        self.all_met.extend(flattened_tree)
+        return flattened_tree
+    
     def count_non_opcodes(self,blocks_values,scratch_tree):
         non_opcodes = self.iterate_tree_for_non_opcodes2(scratch_tree,blocks_values)
+        if blocks_values == None or blocks_values == {} or scratch_tree == None or scratch_tree == [] or non_opcodes == None or non_opcodes == []:
+           return {}
+           
+        count_val = collections.Counter(non_opcodes)
+        return count_val
+    
+    def count_non_opcodes_modified(self,blocks_values,scratch_tree):
+        non_opcodes = self.iterate_tree_for_non_opcodes2_modified(scratch_tree,blocks_values)
         if blocks_values == None or blocks_values == {} or scratch_tree == None or scratch_tree == [] or non_opcodes == None or non_opcodes == []:
            return {}
            
@@ -1276,6 +1838,209 @@ class scratch_parser:
                         flatten(vals)
             return self.edge
     
+    def print_tree_top_modified(self,block_values,filename):
+        
+        self.edge = 0
+        if filename != '' or len(filename) > 0 and block_values != {} or block_values != None:
+            
+            print(f'{filename}')
+            val_sub = None
+            for each_value in self.get_all_parent_keys_modified(block_values):
+                self.edge += 1
+                val =  self.break_down_modified(block_values,each_value)
+                print(f'|')
+                print(f'+---+{self.get_opcode_from_id_modified(block_values,each_value)}')
+                if len(self.get_complete_fields_inputs_modified(block_values,each_value)) > 0 and self.get_opcode_from_id_modified(block_values,each_value).startswith("event") or self.get_opcode_from_id_modified(block_values,each_value).startswith("control"):
+                    self.edge += 1
+                    print(f'    |')
+                    print(f'    +---+{self.get_complete_fields_inputs_modified(block_values,each_value)}') 
+                if len(self.get_opcode_from_id_modified(block_values,each_value)) > 0 and self.get_opcode_from_id_modified(block_values,each_value).startswith("procedure"):
+                    self.edge += 1
+                    proc_input = self.get_any_block_by_id_modified(block_values,each_value)
+                    proc_call = self.get_first_proc_sec_modified(block_values,proc_input)
+                    mut_cal = self.get_mutation_modified(block_values,proc_input)
+                    mut_inp = self.get_mutation_input_modified(block_values,proc_input)
+                    mut_inp_val = self.get_mutation_input_val_modified(block_values,proc_input)
+                    if isinstance(proc_call,list) and len(proc_call) > 0:
+                        for each_val in proc_call:
+                            self.edge += 1
+                            print(f'    |')
+                            print(f'    +---+{each_val}')
+                        for each_mut in mut_cal:
+                            self.edge += 1
+                            print(f'        |')
+                            print(f'        +---+{each_mut}')
+                        if isinstance(mut_inp_val,dict) and bool(mut_inp_val):
+                            for each_val_inp_opcode,each_mut_inp in mut_inp_val.items():
+                                self.edge += 2
+                                print(f'            |')
+                                print(f'            +---+{each_val_inp_opcode}')
+                                print(f'                |')
+                                print(f'                +---+{each_mut_inp}')
+
+                for v in val:
+                    self.edge += 1
+                    if len(self.get_opcode_from_id_modified(block_values,v)) > 0: 
+                        print(f'        |')
+                        print(f'    +---+{self.get_opcode_from_id_modified(block_values,v)}')
+                        
+
+                        def iterate_leaf(block,input_block,id):
+                           all_dict = {}
+                           recur_val = {}
+                           next_opcode = ''
+                           next_rec = {}
+                           another_block = {}
+                           opcode_par  = self.get_opcode_from_id_modified(block,id) 
+                           
+                           if input_block != {} or input_block != None and block != {} or block != None:
+                               if isinstance(input_block,dict) and bool(input_block) and "inputs" in input_block.keys():
+                                    another_block = input_block["inputs"]
+
+                               if another_block != {} or another_block != None:
+                                    if isinstance(another_block,dict) and bool(another_block):
+            
+                                        for k,v in another_block.items():   
+                                            if opcode_par in self.substack_replacement.keys():
+                                                if opcode_par != "control_if_else":
+                        
+                                                    if isinstance(v,list) and len(v) > 0:
+                            
+                                                        if isinstance(k,str): 
+                                                            new_key = self.substack_replacement[opcode_par] if k.startswith("SUBS") else k
+                                                            if isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                                                   
+                                                                all_dict.update({new_key:v[1][1]})
+                                                        
+                                    
+                                                            elif isinstance(v[1],str) and len(v[1]) > 0:
+                                                                opcode =  self.get_opcode_from_id_modified(block,v[1])
+                                                                
+                                                                any_block = self.get_any_block_by_id_modified(block,v[1]) 
+                                                                recur_val = iterate_leaf(block,any_block,v[1])
+                                                                if any_block == None or any_block == {}:
+                                                                    all_dict.update({new_key:opcode})
+                                                                else:
+                                                                    
+                                                                    recur_val = iterate_leaf(block,any_block,v[1])
+                                                                    next_opcode = self.get_opcode_from_id_modified(block,any_block["next"])
+                                                                    next_rec = iterate_leaf(block,self.get_any_block_by_id_modified(block,any_block["next"]),any_block["next"])
+                                                                    if any_block["next"] != None and recur_val != {} or recur_val != None and next_rec != {} or next_rec != None:
+                                                                        all_dict.update({new_key:{opcode:recur_val,next_opcode:next_rec}})
+                                                                    elif any_block["next"] == None:
+                                                                        if recur_val != {} or recur_val != None and next_rec == {} or next_rec == None:
+                                                                            all_dict.update({new_key:{opcode:recur_val}})
+                                                                    
+                                     
+                                                                
+                                                                #next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
+                                                                #next_rec  = self.get_all_inp_keys(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"])
+                                               
+                                                else:
+                                                    if isinstance(v,list) and len(v) > 0:
+                                                        if isinstance(k,str):
+
+                                                            new_key = ''
+                                                            if k.endswith("TACK"):
+                                                                new_key = self.substack_replacement[opcode_par][0]
+                                                            elif k.endswith("TACK2"):
+                                                                new_key = self.substack_replacement[opcode_par][-1]
+                                                            else:
+                                                                new_key = k
+                                                            if isinstance(v[1],str) and len(v[1]) > 0:
+                                                                
+                                                                opcode = self.get_opcode_from_id_modified(block,v[1]) 
+                                                                any_block = self.get_any_block_by_id_modified(block,v[1])  
+                                                                if any_block == {} or any_block == None:
+                                                                    all_dict.update({new_key:opcode})
+                                                                else:
+                                                                    recur_val = iterate_leaf(block,any_block,v[1])
+                                                                    next_opcode = self.get_opcode_from_id_modified(block,any_block["next"])
+                                                                    next_rec = iterate_leaf(block,self.get_any_block_by_id_modified(block,any_block["next"]),any_block["next"])
+                                                                    if any_block["next"] != None and recur_val != {} or recur_val != None and next_rec != {} or next_rec != None:
+                                                                        all_dict.update({new_key:{opcode:recur_val,next_opcode:next_rec}})
+                                                                    elif any_block["next"] == None:
+                                                                        if recur_val != {} or recur_val != None and next_rec == {} or next_rec == None:
+                                                                            all_dict.update({new_key:{opcode:recur_val}})
+                                                                
+                                        
+                                                            elif isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                                                all_dict.update({new_key:v[1][1]})
+                                    
+                                                                
+                                            else:
+                                                if isinstance(v,list) and len(v) > 0:
+                                                    
+                                                    if isinstance(k,str): 
+                                                        if isinstance(v[1],list) and len(v[1]) > 0 and isinstance(v[1][1],str) and len(v[1][1]) > 0:
+                                                            all_dict.update({k:v[1][1]})
+                                
+                                                        elif isinstance(v[1],str) and len(v[1]) > 0:
+                                                            opcode = self.get_opcode_from_id_modified(block,v[1]) 
+                                                            any_block = self.get_any_block_by_id_modified(block,v[1])
+                                                            if any_block == {} or any_block == None:   
+                                                                all_dict.update({k:opcode})
+                                                            else:
+                                                                recur_val = iterate_leaf(block,any_block,v[1])
+                                                                next_opcode = self.get_opcode_from_id_modified(block,any_block["next"])  if any_block["next"] != None else '' 
+                                                                next_rec  = iterate_leaf(block,self.get_any_block_by_id_modified(block,any_block["next"]),any_block["next"]) 
+                                                                if any_block["next"] != None and recur_val != {} or recur_val != None and len(next_opcode) > 0 and next_rec != {}:
+                                                                    all_dict.update({k:{opcode:recur_val,next_opcode:next_rec}})
+                                                                elif any_block["next"] == None and next_rec == {} or next_rec == None:
+                                                                    all_dict.update({k:{opcode:recur_val}})
+                                                            
+                                
+                                                            #next_opcode = self.get_opcode_from_id(block,any_block["next"])  if any_block["next"] != None else '' 
+                                                            #next_rec  = self.get_all_inp_keys(block,self.get_any_block_by_id(block,any_block["next"]),any_block["next"]) if any_block["next"] != None else {}
+                                        
+                                          
+                                        return all_dict
+
+                               else:
+                                   return {} 
+                        vals = iterate_leaf(block_values,self.get_any_block_by_id_modified(block_values,v),v)
+                        def flatten(vals):
+                            if isinstance(vals,dict) and bool(vals):
+                                for keys_inner,vals_inner in vals.items():
+                                    if isinstance(vals_inner,dict) and bool(vals_inner):
+                                        flatten(vals_inner)
+                                    else:
+                                        if keys_inner != None and vals_inner != None:
+                                            if len(keys_inner) > 0 and len(vals_inner) > 0:
+                                                self.edge += 2
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif len(keys_inner) < 1 and len(vals_inner) > 0:
+                                                self.edge += 1
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif len(keys_inner) > 0 and len(vals_inner) < 1:
+                                                self.edge += 1
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                        else:
+                                            if keys_inner == None and vals_inner == None:
+                                                self.edge += 2
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif keys_inner == None and vals_inner != None:
+                                                self.edge += 1
+                                                print(f'                |')
+                                                print(f'                +---+{vals_inner}')
+                                            elif  keys_inner != None and vals_inner == None:
+                                                self.edge += 1
+                                                print(f'            |')
+                                                print(f'            +---+{keys_inner}')
+                                            
+                                        
+                        flatten(vals)
+            return self.edge
+    
+
     def generate_summary_stats(self,blocks_values,file_name,scratch_tree):
         
         opcodes = self.count_opcodes(blocks_values)
@@ -1324,6 +2089,57 @@ class scratch_parser:
         #print('co',connec)
         #connec.remove(firs)
         self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
+        return self.scratch_stats 
+    
+    
+    def generate_summary_stats_modified(self,blocks_values,file_name,scratch_tree):
+        
+        opcodes = self.count_opcodes_modified(blocks_values)
+        non_opcodes = self.count_non_opcodes_modified(blocks_values,scratch_tree)
+        opcode_tree = {}
+        non_opcode_tree = {}
+        most_common_opcode_tree = {}
+        most_common_non_opcode_tree = {}
+        opcode_key = None
+        opcode_val = None
+        non_opcode_key = None
+        non_opcode_val = None
+        for k in opcodes:
+            opcode_key = k
+            opcode_val = opcodes[k]
+            opcode_tree[opcode_key] = opcode_val
+        for mc in non_opcodes:
+            non_opcode_key = mc
+            non_opcode_val = non_opcodes[mc]
+            non_opcode_tree[non_opcode_key] = non_opcode_val
+        
+        for mc in opcodes.most_common(5):
+            most_common_opcode_key = mc[0]
+            most_common_opcode_val = mc[1]
+            most_common_opcode_tree[most_common_opcode_key] = most_common_opcode_val
+        
+        for nmc in non_opcodes.most_common(5):
+            most_common_non_opcode_key = nmc[0]
+            most_common_non_opcode_val = nmc[1]
+            most_common_non_opcode_tree[most_common_non_opcode_key] = most_common_non_opcode_val
+        
+
+        nodes_val = sum(opcode_tree.values()) + sum(non_opcode_tree.values())
+        
+        #nodes, edges = self.count_nodes_and_edges(scratch_tree)
+        
+
+        gp_tr = self.list_to_dict(scratch_tree)
+       
+        root = list(gp_tr.keys())
+        firs = self.convert_lst_to_nested_list(scratch_tree)[0]
+        connec = self.convert_lst_to_nested_list(scratch_tree)
+        flt = self.flatten_inner_nested_lists(connec)
+        fr = flt[0]
+        flt.remove(fr)
+        #print('co',connec)
+        #connec.remove(firs)
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.print_tree_top_modified(blocks_values,file_name),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes_modified(blocks_values,scratch_tree,file_name)}
         return self.scratch_stats 
 
     def convert_to_flat_list(self,tree):
@@ -1479,6 +2295,19 @@ class scratch_parser:
             all_nodes.remove(file_name)
         return all_nodes
     
+    def get_all_nodes_modified(self,block,tree,file_name):
+        all_nodes = []
+
+        opcodes = self.return_all_opcodes_modified(block)
+        non_op = self.iterate_tree_for_non_opcodes2_modified(tree,block)
+       
+        all_nodes.extend(non_op)
+        all_nodes.extend(opcodes)
+        if file_name in all_nodes:
+            all_nodes.remove(file_name)
+        return all_nodes
+    
+
     def find_paths_final(self,tree, root, destination):
         path = []
         def dfs(node, paths):
@@ -1575,11 +2404,11 @@ class scratch_parser:
         next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
 
-    def decode_scratch_bytes(self, raw_bytes,filename):   
+    def decode_scratch_bytes(self, raw_bytes):   
         
         with BytesIO(raw_bytes) as f:
-            self.scr_pro += self.sb3class.unpack_sb3(f,filename)
-            
+            self.scr_pro += self.sb3class.unpack_sb3(f)
+          
         return self.scr_pro
     
     '''
@@ -1601,13 +2430,28 @@ class scratch_parser:
         if len(scr_proj) > 0:
             val = json.loads(scr_proj)
             all_blocks_value = self.get_all_blocks_vals(val)
-            
+            with open("seete.txt","a") as fp:
+                fp.write(f"contents {all_blocks_value}")
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+            print("check blocks", next_val2)
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
             return fin_val
         
+    def parse_scratch_modified(self,scr_proj,file_name):
+        
+        if len(scr_proj) > 0:
+            val = json.loads(scr_proj)
+            all_blocks_value = self.get_all_blocks_vals_modified(val)
+            
+            
+            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+            next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
+            print("check blocks", next_val2)
+            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
+        
+            return fin_val
     
 
 
@@ -1623,6 +2467,9 @@ class scratch_parser:
     #main(file_name)
 
 scratch_parser_inst = scratch_parser()
+#val = scratch_parser.get_any_block_by_id({'blocks1': {'M.hxK,hM)Q@bk=85rp0T': {'opcode': 'event_whenbroadcastreceived', 'next': '%bD(N8zD]GQ.,Zl4bRbd', 'parent': None, 'inputs': {}, 'fields': {'BROADCAST_OPTION': ['Game Over', '`?i+5`LP/(CoksWKG3RL']}, 'shadow': False, 'topLevel': True, 'x': -409, 'y': -870}, '%bD(N8zD]GQ.,Zl4bRbd': {'opcode': 'control_forever', 'next': None, 'parent': 'M.hxK,hM)Q@bk=85rp0T', 'inputs': {'SUBSTACK': [2, 'v?J]t+R9sobr`bKO));b']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v?J]t+R9sobr`bKO));b': {'opcode': 'sound_playuntildone', 'next': None, 'parent': '%bD(N8zD]GQ.,Zl4bRbd', 'inputs': {'SOUND_MENU': [1, ',:l6=EGVw#+0nf;%h8Iv']}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',:l6=EGVw#+0nf;%h8Iv': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'v?J]t+R9sobr`bKO));b', 'inputs': {}, 'fields': {'SOUND_MENU': ['emotional-titanic-flute', None]}, 'shadow': True, 'topLevel': False}}, 'blocks2': {'C23D/+bAbUxTrv:1RzxP': {'opcode': 'event_whenflagclicked', 'next': ']c_DN9ktwJPSD+[-_h0o', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 44, 'y': -1466}, ']c_DN9ktwJPSD+[-_h0o': {'opcode': 'looks_switchbackdropto', 'next': 'V37-D2@$bG!8BV13$!Zz', 'parent': 'C23D/+bAbUxTrv:1RzxP', 'inputs': {'BACKDROP': [1, '8U`qk764%G4gH8n9ieIF']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '8U`qk764%G4gH8n9ieIF': {'opcode': 'looks_backdrops', 'next': None, 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {'BACKDROP': ['backdrop1', None]}, 'shadow': True, 'topLevel': False}, 'V37-D2@$bG!8BV13$!Zz': {'opcode': 'looks_show', 'next': '?+UNT~w3BXEz?f#DZy`;', 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?+UNT~w3BXEz?f#DZy`;': {'opcode': 'control_forever', 'next': None, 'parent': 'V37-D2@$bG!8BV13$!Zz', 'inputs': {'SUBSTACK': [2, 'yd_p9f#IngzGTV~V3=Hh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'yd_p9f#IngzGTV~V3=Hh': {'opcode': 'motion_pointtowards', 'next': 'UUw%cjUNV?WYn7O{fv~]', 'parent': '?+UNT~w3BXEz?f#DZy`;', 'inputs': {'TOWARDS': [1, 'bK6m@kv)FAnr;l/}HfjN']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'bK6m@kv)FAnr;l/}HfjN': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, 'UUw%cjUNV?WYn7O{fv~]': {'opcode': 'control_if', 'next': ',J%S|S81q]X[zP9^{`])', 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {'CONDITION': [2, 'm%4M,~F5ipSR4G0FP/.('], 'SUBSTACK': [2, '1me78w3pJ{!I-zT-]Q-;']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'm%4M,~F5ipSR4G0FP/.(': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'KEY_OPTION': [1, '01)[R?;VDtZ|qsI/CKB@']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '01)[R?;VDtZ|qsI/CKB@': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': 'm%4M,~F5ipSR4G0FP/.(', 'inputs': {}, 'fields': {'KEY_OPTION': ['w', None]}, 'shadow': True, 'topLevel': False}, '1me78w3pJ{!I-zT-]Q-;': {'opcode': 'motion_movesteps', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'STEPS': [1, [4, '5']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',J%S|S81q]X[zP9^{`])': {'opcode': 'control_if', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'CONDITION': [2, '!uPYOZkLcwS3Yaq8`Iww'], 'SUBSTACK': [2, 'rpoTX*P$xiR_wApsQK|{']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '!uPYOZkLcwS3Yaq8`Iww': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'iA%MPkQ5+;]8YbY9amIJ']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iA%MPkQ5+;]8YbY9amIJ': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '!uPYOZkLcwS3Yaq8`Iww', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 'rpoTX*P$xiR_wApsQK|{': {'opcode': 'looks_switchbackdropto', 'next': 'ck2)._e?hfzp|$3wa_Wq', 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'BACKDROP': [1, 'GpNUNKj+gW;=uvJqp~Ep']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'GpNUNKj+gW;=uvJqp~Ep': {'opcode': 'looks_backdrops', 'next': None, 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {'BACKDROP': ['Blue Sky 2 ', None]}, 'shadow': True, 'topLevel': False}, 'ck2)._e?hfzp|$3wa_Wq': {'opcode': 'looks_hide', 'next': 'YM7CbUT8Vw?Pb~?^94E7', 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'YM7CbUT8Vw?Pb~?^94E7': {'opcode': 'event_broadcast', 'next': ')s5sHEJ?G|eQM0*zKw#M', 'parent': 'ck2)._e?hfzp|$3wa_Wq', 'inputs': {'BROADCAST_INPUT': [1, [11, 'Game Over', '`?i+5`LP/(CoksWKG3RL']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ')s5sHEJ?G|eQM0*zKw#M': {'opcode': 'control_stop', 'next': None, 'parent': 'YM7CbUT8Vw?Pb~?^94E7', 'inputs': {}, 'fields': {'STOP_OPTION': ['all', None]}, 'shadow': False, 'topLevel': False, 'mutation': {'tagName': 'mutation', 'children': [], 'hasnext': 'false'}}, 'GKIN6^K)vBF@fY1{38m!': {'opcode': 'event_whenflagclicked', 'next': '*xRI^_Oe53h8rVtVTumr', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 47, 'y': -735}, '*xRI^_Oe53h8rVtVTumr': {'opcode': 'data_setvariableto', 'next': 'Hqa}iTkhIAQ+Wb^$YUw:', 'parent': 'GKIN6^K)vBF@fY1{38m!', 'inputs': {'VALUE': [1, [10, '0']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, 'Hqa}iTkhIAQ+Wb^$YUw:': {'opcode': 'control_forever', 'next': None, 'parent': '*xRI^_Oe53h8rVtVTumr', 'inputs': {'SUBSTACK': [2, 'G}j,hNT[cXqLy*K+}t}A']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'G}j,hNT[cXqLy*K+}t}A': {'opcode': 'control_if', 'next': None, 'parent': 'Hqa}iTkhIAQ+Wb^$YUw:', 'inputs': {'CONDITION': [2, '.Mz3D6{aFT=};E?e0?mm'], 'SUBSTACK': [2, 'WULxY9~=$g+V80IE!Tmh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '.Mz3D6{aFT=};E?e0?mm': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'KEY_OPTION': [1, 'iV*ZiTLD)^q]SR#fv?(p']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iV*ZiTLD)^q]SR#fv?(p': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': '.Mz3D6{aFT=};E?e0?mm', 'inputs': {}, 'fields': {'KEY_OPTION': ['space', None]}, 'shadow': True, 'topLevel': False}, 'WULxY9~=$g+V80IE!Tmh': {'opcode': 'sound_play', 'next': ';4[b=j~`[{jr6FIyYjk/', 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'SOUND_MENU': [1, 'xDLKKDz!*:h~65oW6nQE']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'xDLKKDz!*:h~65oW6nQE': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {}, 'fields': {'SOUND_MENU': ['rifle-shot-echo', None]}, 'shadow': True, 'topLevel': False}, ';4[b=j~`[{jr6FIyYjk/': {'opcode': 'control_create_clone_of', 'next': '[RIo0bTesL@IFi*[t%#w', 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {'CLONE_OPTION': [1, 'cQ@q?X+sIed#+Pt+7)73']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'cQ@q?X+sIed#+Pt+7)73': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {}, 'fields': {'CLONE_OPTION': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '[RIo0bTesL@IFi*[t%#w': {'opcode': 'control_wait', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {'DURATION': [1, [5, '0.2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}}, 'blocks3': {'*XuesH$(rU;CZ,@yboEv': {'opcode': 'event_whenflagclicked', 'next': '|9K7Y:sgA!%9ip7=AMHO', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 19, 'y': 49}, '|9K7Y:sgA!%9ip7=AMHO': {'opcode': 'looks_hide', 'next': 's(#l*BXY37auR-ua_D)@', 'parent': '*XuesH$(rU;CZ,@yboEv', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1+Iin9A%Ar?bXfp(spxF': {'opcode': 'control_start_as_clone', 'next': '$/1(*,Had=NDQ]:d+`/:', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 22, 'y': 273}, '$/1(*,Had=NDQ]:d+`/:': {'opcode': 'looks_show', 'next': '/NoF~j-iwMIQbiCM!rMN', 'parent': '1+Iin9A%Ar?bXfp(spxF', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/NoF~j-iwMIQbiCM!rMN': {'opcode': 'motion_goto', 'next': '@tg/1x-(z3?td=uh2S3g', 'parent': '$/1(*,Had=NDQ]:d+`/:', 'inputs': {'TO': [1, 'p.?](gie|65$5;t[:GKm']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p.?](gie|65$5;t[:GKm': {'opcode': 'motion_goto_menu', 'next': None, 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {}, 'fields': {'TO': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, '@tg/1x-(z3?td=uh2S3g': {'opcode': 'motion_pointtowards', 'next': '0cW.-LDctKr[C9JSiHgM', 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {'TOWARDS': [1, 'L15F~L/k1~po}h9UW{2J']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'L15F~L/k1~po}h9UW{2J': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, '0cW.-LDctKr[C9JSiHgM': {'opcode': 'control_repeat_until', 'next': '/);uyV.(Y.US2rLY$uz4', 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {'CONDITION': [2, '?YsW!rj;UB%Ow3GXAI/Y'], 'SUBSTACK': [2, 'cyXNaFXd$,@E?]@_DhK_']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'wazvHMCR*7Y,YYKHfu/=': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'j4gg+qJfw0n$HT@ejg+t']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'j4gg+qJfw0n$HT@ejg+t': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'wazvHMCR*7Y,YYKHfu/=', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['_edge_', None]}, 'shadow': True, 'topLevel': False}, 'cyXNaFXd$,@E?]@_DhK_': {'opcode': 'motion_movesteps', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'STEPS': [1, [4, '20']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/);uyV.(Y.US2rLY$uz4': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?YsW!rj;UB%Ow3GXAI/Y': {'opcode': 'operator_or', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'OPERAND1': [2, 'wazvHMCR*7Y,YYKHfu/='], 'OPERAND2': [2, 'vi5.T|yaXk%T4p].8k33']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'vi5.T|yaXk%T4p].8k33': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, '=[)vc6yI/p=p!Q@(bM#s']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '=[)vc6yI/p=p!Q@(bM#s': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'vi5.T|yaXk%T4p].8k33', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 's(#l*BXY37auR-ua_D)@': {'opcode': 'looks_gotofrontback', 'next': None, 'parent': '|9K7Y:sgA!%9ip7=AMHO', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}}, 'blocks4': {'bqXyGzon`N83+r2c7wmD': {'opcode': 'event_whenflagclicked', 'next': 'fRO|fy72P6nw~K9SjMfU', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 70, 'y': -275}, 'fRO|fy72P6nw~K9SjMfU': {'opcode': 'looks_hide', 'next': 'oR^QMp!Uq#h4!sz;B#~Q', 'parent': 'bqXyGzon`N83+r2c7wmD', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oR^QMp!Uq#h4!sz;B#~Q': {'opcode': 'looks_gotofrontback', 'next': ';)9Xe3uJxp-JLonqEQ2|', 'parent': 'fRO|fy72P6nw~K9SjMfU', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}, ';)9Xe3uJxp-JLonqEQ2|': {'opcode': 'control_forever', 'next': None, 'parent': 'oR^QMp!Uq#h4!sz;B#~Q', 'inputs': {'SUBSTACK': [2, 'rSxz;wVoy!dd}^Kdti.S']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'rSxz;wVoy!dd}^Kdti.S': {'opcode': 'control_wait', 'next': 'oOf=GugPe;FdhylZZBAd', 'parent': ';)9Xe3uJxp-JLonqEQ2|', 'inputs': {'DURATION': [1, [5, '2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oOf=GugPe;FdhylZZBAd': {'opcode': 'control_create_clone_of', 'next': None, 'parent': 'rSxz;wVoy!dd}^Kdti.S', 'inputs': {'CLONE_OPTION': [1, 'AFa@0;S(~[No/^63VSb?']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'AFa@0;S(~[No/^63VSb?': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': 'oOf=GugPe;FdhylZZBAd', 'inputs': {}, 'fields': {'CLONE_OPTION': ['_myself_', None]}, 'shadow': True, 'topLevel': False}, 'llpHw(s60:eEy!SXEUAx': {'opcode': 'control_start_as_clone', 'next': ',ojgTgdz;YO@s8H?RfvT', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 106, 'y': 330}, ',ojgTgdz;YO@s8H?RfvT': {'opcode': 'looks_show', 'next': 'Rk@T$*H^Yuu0vFpXgajB', 'parent': 'llpHw(s60:eEy!SXEUAx', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Rk@T$*H^Yuu0vFpXgajB': {'opcode': 'motion_gotoxy', 'next': 'QmU3Eldf1Hl{(Uau=OQ,', 'parent': ',ojgTgdz;YO@s8H?RfvT', 'inputs': {'X': [1, [4, '240']], 'Y': [3, '7,-[~JHPw-,HkZcnGpKZ', [4, '-12']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '7,-[~JHPw-,HkZcnGpKZ': {'opcode': 'operator_random', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'FROM': [1, [4, '170']], 'TO': [1, [4, '-170']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'QmU3Eldf1Hl{(Uau=OQ,': {'opcode': 'control_forever', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'SUBSTACK': [2, 'v%]~us3a974{TSZ/Cb39']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v%]~us3a974{TSZ/Cb39': {'opcode': 'motion_pointtowards', 'next': 'h1[6F}6P~.%T-mk`dcVb', 'parent': 'QmU3Eldf1Hl{(Uau=OQ,', 'inputs': {'TOWARDS': [1, '1ApyPf#j3F4z,iy@e`o1']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1ApyPf#j3F4z,iy@e`o1': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {}, 'fields': {'TOWARDS': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, 'h1[6F}6P~.%T-mk`dcVb': {'opcode': 'motion_movesteps', 'next': 'p:kV()f[,r#*]k:@3pU|', 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {'STEPS': [1, [4, '1']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p:kV()f[,r#*]k:@3pU|': {'opcode': 'control_if', 'next': None, 'parent': 'h1[6F}6P~.%T-mk`dcVb', 'inputs': {'CONDITION': [2, '%P5`n@dBP!sOtljY1~M1'], 'SUBSTACK': [2, '70U0KKAgTO~a$axeFxVi']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '%P5`n@dBP!sOtljY1~M1': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'TOUCHINGOBJECTMENU': [1, '/k9;;f}WDSaD$PxGca9Q']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/k9;;f}WDSaD$PxGca9Q': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '%P5`n@dBP!sOtljY1~M1', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '70U0KKAgTO~a$axeFxVi': {'opcode': 'data_changevariableby', 'next': '5IQcd}[th0$)zd-1a8[1', 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'VALUE': [1, [4, '1']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, '5IQcd}[th0$)zd-1a8[1': {'opcode': 'control_wait', 'next': '$1W2j?_Z:vQ}y,#dpV|1', 'parent': '70U0KKAgTO~a$axeFxVi', 'inputs': {'DURATION': [1, [5, '.05']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '$1W2j?_Z:vQ}y,#dpV|1': {'opcode': 'sound_play', 'next': 'D#2k,Hb,kbsAe~Wx[57m', 'parent': '5IQcd}[th0$)zd-1a8[1', 'inputs': {'SOUND_MENU': [1, 'Su:q4(=e704--)v=Xb-6']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Su:q4(=e704--)v=Xb-6': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {'SOUND_MENU': ['Zombie groan', None]}, 'shadow': True, 'topLevel': False}, 'D#2k,Hb,kbsAe~Wx[57m': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}}},"dXFi$0R|t1}*%]BdX?*O")
+#print(val)
+#print(scratch_parser.get_all_blockkeys_from_block({'blocks1': {'M.hxK,hM)Q@bk=85rp0T': {'opcode': 'event_whenbroadcastreceived', 'next': '%bD(N8zD]GQ.,Zl4bRbd', 'parent': None, 'inputs': {}, 'fields': {'BROADCAST_OPTION': ['Game Over', '`?i+5`LP/(CoksWKG3RL']}, 'shadow': False, 'topLevel': True, 'x': -409, 'y': -870}, '%bD(N8zD]GQ.,Zl4bRbd': {'opcode': 'control_forever', 'next': None, 'parent': 'M.hxK,hM)Q@bk=85rp0T', 'inputs': {'SUBSTACK': [2, 'v?J]t+R9sobr`bKO));b']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v?J]t+R9sobr`bKO));b': {'opcode': 'sound_playuntildone', 'next': None, 'parent': '%bD(N8zD]GQ.,Zl4bRbd', 'inputs': {'SOUND_MENU': [1, ',:l6=EGVw#+0nf;%h8Iv']}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',:l6=EGVw#+0nf;%h8Iv': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'v?J]t+R9sobr`bKO));b', 'inputs': {}, 'fields': {'SOUND_MENU': ['emotional-titanic-flute', None]}, 'shadow': True, 'topLevel': False}}, 'blocks2': {'C23D/+bAbUxTrv:1RzxP': {'opcode': 'event_whenflagclicked', 'next': ']c_DN9ktwJPSD+[-_h0o', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 44, 'y': -1466}, ']c_DN9ktwJPSD+[-_h0o': {'opcode': 'looks_switchbackdropto', 'next': 'V37-D2@$bG!8BV13$!Zz', 'parent': 'C23D/+bAbUxTrv:1RzxP', 'inputs': {'BACKDROP': [1, '8U`qk764%G4gH8n9ieIF']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '8U`qk764%G4gH8n9ieIF': {'opcode': 'looks_backdrops', 'next': None, 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {'BACKDROP': ['backdrop1', None]}, 'shadow': True, 'topLevel': False}, 'V37-D2@$bG!8BV13$!Zz': {'opcode': 'looks_show', 'next': '?+UNT~w3BXEz?f#DZy`;', 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?+UNT~w3BXEz?f#DZy`;': {'opcode': 'control_forever', 'next': None, 'parent': 'V37-D2@$bG!8BV13$!Zz', 'inputs': {'SUBSTACK': [2, 'yd_p9f#IngzGTV~V3=Hh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'yd_p9f#IngzGTV~V3=Hh': {'opcode': 'motion_pointtowards', 'next': 'UUw%cjUNV?WYn7O{fv~]', 'parent': '?+UNT~w3BXEz?f#DZy`;', 'inputs': {'TOWARDS': [1, 'bK6m@kv)FAnr;l/}HfjN']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'bK6m@kv)FAnr;l/}HfjN': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, 'UUw%cjUNV?WYn7O{fv~]': {'opcode': 'control_if', 'next': ',J%S|S81q]X[zP9^{`])', 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {'CONDITION': [2, 'm%4M,~F5ipSR4G0FP/.('], 'SUBSTACK': [2, '1me78w3pJ{!I-zT-]Q-;']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'm%4M,~F5ipSR4G0FP/.(': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'KEY_OPTION': [1, '01)[R?;VDtZ|qsI/CKB@']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '01)[R?;VDtZ|qsI/CKB@': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': 'm%4M,~F5ipSR4G0FP/.(', 'inputs': {}, 'fields': {'KEY_OPTION': ['w', None]}, 'shadow': True, 'topLevel': False}, '1me78w3pJ{!I-zT-]Q-;': {'opcode': 'motion_movesteps', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'STEPS': [1, [4, '5']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',J%S|S81q]X[zP9^{`])': {'opcode': 'control_if', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'CONDITION': [2, '!uPYOZkLcwS3Yaq8`Iww'], 'SUBSTACK': [2, 'rpoTX*P$xiR_wApsQK|{']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '!uPYOZkLcwS3Yaq8`Iww': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'iA%MPkQ5+;]8YbY9amIJ']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iA%MPkQ5+;]8YbY9amIJ': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '!uPYOZkLcwS3Yaq8`Iww', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 'rpoTX*P$xiR_wApsQK|{': {'opcode': 'looks_switchbackdropto', 'next': 'ck2)._e?hfzp|$3wa_Wq', 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'BACKDROP': [1, 'GpNUNKj+gW;=uvJqp~Ep']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'GpNUNKj+gW;=uvJqp~Ep': {'opcode': 'looks_backdrops', 'next': None, 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {'BACKDROP': ['Blue Sky 2 ', None]}, 'shadow': True, 'topLevel': False}, 'ck2)._e?hfzp|$3wa_Wq': {'opcode': 'looks_hide', 'next': 'YM7CbUT8Vw?Pb~?^94E7', 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'YM7CbUT8Vw?Pb~?^94E7': {'opcode': 'event_broadcast', 'next': ')s5sHEJ?G|eQM0*zKw#M', 'parent': 'ck2)._e?hfzp|$3wa_Wq', 'inputs': {'BROADCAST_INPUT': [1, [11, 'Game Over', '`?i+5`LP/(CoksWKG3RL']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ')s5sHEJ?G|eQM0*zKw#M': {'opcode': 'control_stop', 'next': None, 'parent': 'YM7CbUT8Vw?Pb~?^94E7', 'inputs': {}, 'fields': {'STOP_OPTION': ['all', None]}, 'shadow': False, 'topLevel': False, 'mutation': {'tagName': 'mutation', 'children': [], 'hasnext': 'false'}}, 'GKIN6^K)vBF@fY1{38m!': {'opcode': 'event_whenflagclicked', 'next': '*xRI^_Oe53h8rVtVTumr', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 47, 'y': -735}, '*xRI^_Oe53h8rVtVTumr': {'opcode': 'data_setvariableto', 'next': 'Hqa}iTkhIAQ+Wb^$YUw:', 'parent': 'GKIN6^K)vBF@fY1{38m!', 'inputs': {'VALUE': [1, [10, '0']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, 'Hqa}iTkhIAQ+Wb^$YUw:': {'opcode': 'control_forever', 'next': None, 'parent': '*xRI^_Oe53h8rVtVTumr', 'inputs': {'SUBSTACK': [2, 'G}j,hNT[cXqLy*K+}t}A']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'G}j,hNT[cXqLy*K+}t}A': {'opcode': 'control_if', 'next': None, 'parent': 'Hqa}iTkhIAQ+Wb^$YUw:', 'inputs': {'CONDITION': [2, '.Mz3D6{aFT=};E?e0?mm'], 'SUBSTACK': [2, 'WULxY9~=$g+V80IE!Tmh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '.Mz3D6{aFT=};E?e0?mm': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'KEY_OPTION': [1, 'iV*ZiTLD)^q]SR#fv?(p']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iV*ZiTLD)^q]SR#fv?(p': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': '.Mz3D6{aFT=};E?e0?mm', 'inputs': {}, 'fields': {'KEY_OPTION': ['space', None]}, 'shadow': True, 'topLevel': False}, 'WULxY9~=$g+V80IE!Tmh': {'opcode': 'sound_play', 'next': ';4[b=j~`[{jr6FIyYjk/', 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'SOUND_MENU': [1, 'xDLKKDz!*:h~65oW6nQE']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'xDLKKDz!*:h~65oW6nQE': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {}, 'fields': {'SOUND_MENU': ['rifle-shot-echo', None]}, 'shadow': True, 'topLevel': False}, ';4[b=j~`[{jr6FIyYjk/': {'opcode': 'control_create_clone_of', 'next': '[RIo0bTesL@IFi*[t%#w', 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {'CLONE_OPTION': [1, 'cQ@q?X+sIed#+Pt+7)73']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'cQ@q?X+sIed#+Pt+7)73': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {}, 'fields': {'CLONE_OPTION': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '[RIo0bTesL@IFi*[t%#w': {'opcode': 'control_wait', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {'DURATION': [1, [5, '0.2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}}, 'blocks3': {'*XuesH$(rU;CZ,@yboEv': {'opcode': 'event_whenflagclicked', 'next': '|9K7Y:sgA!%9ip7=AMHO', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 19, 'y': 49}, '|9K7Y:sgA!%9ip7=AMHO': {'opcode': 'looks_hide', 'next': 's(#l*BXY37auR-ua_D)@', 'parent': '*XuesH$(rU;CZ,@yboEv', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1+Iin9A%Ar?bXfp(spxF': {'opcode': 'control_start_as_clone', 'next': '$/1(*,Had=NDQ]:d+`/:', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 22, 'y': 273}, '$/1(*,Had=NDQ]:d+`/:': {'opcode': 'looks_show', 'next': '/NoF~j-iwMIQbiCM!rMN', 'parent': '1+Iin9A%Ar?bXfp(spxF', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/NoF~j-iwMIQbiCM!rMN': {'opcode': 'motion_goto', 'next': '@tg/1x-(z3?td=uh2S3g', 'parent': '$/1(*,Had=NDQ]:d+`/:', 'inputs': {'TO': [1, 'p.?](gie|65$5;t[:GKm']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p.?](gie|65$5;t[:GKm': {'opcode': 'motion_goto_menu', 'next': None, 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {}, 'fields': {'TO': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, '@tg/1x-(z3?td=uh2S3g': {'opcode': 'motion_pointtowards', 'next': '0cW.-LDctKr[C9JSiHgM', 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {'TOWARDS': [1, 'L15F~L/k1~po}h9UW{2J']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'L15F~L/k1~po}h9UW{2J': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, '0cW.-LDctKr[C9JSiHgM': {'opcode': 'control_repeat_until', 'next': '/);uyV.(Y.US2rLY$uz4', 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {'CONDITION': [2, '?YsW!rj;UB%Ow3GXAI/Y'], 'SUBSTACK': [2, 'cyXNaFXd$,@E?]@_DhK_']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'wazvHMCR*7Y,YYKHfu/=': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'j4gg+qJfw0n$HT@ejg+t']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'j4gg+qJfw0n$HT@ejg+t': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'wazvHMCR*7Y,YYKHfu/=', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['_edge_', None]}, 'shadow': True, 'topLevel': False}, 'cyXNaFXd$,@E?]@_DhK_': {'opcode': 'motion_movesteps', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'STEPS': [1, [4, '20']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/);uyV.(Y.US2rLY$uz4': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?YsW!rj;UB%Ow3GXAI/Y': {'opcode': 'operator_or', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'OPERAND1': [2, 'wazvHMCR*7Y,YYKHfu/='], 'OPERAND2': [2, 'vi5.T|yaXk%T4p].8k33']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'vi5.T|yaXk%T4p].8k33': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, '=[)vc6yI/p=p!Q@(bM#s']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '=[)vc6yI/p=p!Q@(bM#s': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'vi5.T|yaXk%T4p].8k33', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 's(#l*BXY37auR-ua_D)@': {'opcode': 'looks_gotofrontback', 'next': None, 'parent': '|9K7Y:sgA!%9ip7=AMHO', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}}, 'blocks4': {'bqXyGzon`N83+r2c7wmD': {'opcode': 'event_whenflagclicked', 'next': 'fRO|fy72P6nw~K9SjMfU', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 70, 'y': -275}, 'fRO|fy72P6nw~K9SjMfU': {'opcode': 'looks_hide', 'next': 'oR^QMp!Uq#h4!sz;B#~Q', 'parent': 'bqXyGzon`N83+r2c7wmD', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oR^QMp!Uq#h4!sz;B#~Q': {'opcode': 'looks_gotofrontback', 'next': ';)9Xe3uJxp-JLonqEQ2|', 'parent': 'fRO|fy72P6nw~K9SjMfU', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}, ';)9Xe3uJxp-JLonqEQ2|': {'opcode': 'control_forever', 'next': None, 'parent': 'oR^QMp!Uq#h4!sz;B#~Q', 'inputs': {'SUBSTACK': [2, 'rSxz;wVoy!dd}^Kdti.S']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'rSxz;wVoy!dd}^Kdti.S': {'opcode': 'control_wait', 'next': 'oOf=GugPe;FdhylZZBAd', 'parent': ';)9Xe3uJxp-JLonqEQ2|', 'inputs': {'DURATION': [1, [5, '2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oOf=GugPe;FdhylZZBAd': {'opcode': 'control_create_clone_of', 'next': None, 'parent': 'rSxz;wVoy!dd}^Kdti.S', 'inputs': {'CLONE_OPTION': [1, 'AFa@0;S(~[No/^63VSb?']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'AFa@0;S(~[No/^63VSb?': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': 'oOf=GugPe;FdhylZZBAd', 'inputs': {}, 'fields': {'CLONE_OPTION': ['_myself_', None]}, 'shadow': True, 'topLevel': False}, 'llpHw(s60:eEy!SXEUAx': {'opcode': 'control_start_as_clone', 'next': ',ojgTgdz;YO@s8H?RfvT', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 106, 'y': 330}, ',ojgTgdz;YO@s8H?RfvT': {'opcode': 'looks_show', 'next': 'Rk@T$*H^Yuu0vFpXgajB', 'parent': 'llpHw(s60:eEy!SXEUAx', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Rk@T$*H^Yuu0vFpXgajB': {'opcode': 'motion_gotoxy', 'next': 'QmU3Eldf1Hl{(Uau=OQ,', 'parent': ',ojgTgdz;YO@s8H?RfvT', 'inputs': {'X': [1, [4, '240']], 'Y': [3, '7,-[~JHPw-,HkZcnGpKZ', [4, '-12']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '7,-[~JHPw-,HkZcnGpKZ': {'opcode': 'operator_random', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'FROM': [1, [4, '170']], 'TO': [1, [4, '-170']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'QmU3Eldf1Hl{(Uau=OQ,': {'opcode': 'control_forever', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'SUBSTACK': [2, 'v%]~us3a974{TSZ/Cb39']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v%]~us3a974{TSZ/Cb39': {'opcode': 'motion_pointtowards', 'next': 'h1[6F}6P~.%T-mk`dcVb', 'parent': 'QmU3Eldf1Hl{(Uau=OQ,', 'inputs': {'TOWARDS': [1, '1ApyPf#j3F4z,iy@e`o1']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1ApyPf#j3F4z,iy@e`o1': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {}, 'fields': {'TOWARDS': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, 'h1[6F}6P~.%T-mk`dcVb': {'opcode': 'motion_movesteps', 'next': 'p:kV()f[,r#*]k:@3pU|', 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {'STEPS': [1, [4, '1']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p:kV()f[,r#*]k:@3pU|': {'opcode': 'control_if', 'next': None, 'parent': 'h1[6F}6P~.%T-mk`dcVb', 'inputs': {'CONDITION': [2, '%P5`n@dBP!sOtljY1~M1'], 'SUBSTACK': [2, '70U0KKAgTO~a$axeFxVi']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '%P5`n@dBP!sOtljY1~M1': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'TOUCHINGOBJECTMENU': [1, '/k9;;f}WDSaD$PxGca9Q']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/k9;;f}WDSaD$PxGca9Q': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '%P5`n@dBP!sOtljY1~M1', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '70U0KKAgTO~a$axeFxVi': {'opcode': 'data_changevariableby', 'next': '5IQcd}[th0$)zd-1a8[1', 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'VALUE': [1, [4, '1']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, '5IQcd}[th0$)zd-1a8[1': {'opcode': 'control_wait', 'next': '$1W2j?_Z:vQ}y,#dpV|1', 'parent': '70U0KKAgTO~a$axeFxVi', 'inputs': {'DURATION': [1, [5, '.05']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '$1W2j?_Z:vQ}y,#dpV|1': {'opcode': 'sound_play', 'next': 'D#2k,Hb,kbsAe~Wx[57m', 'parent': '5IQcd}[th0$)zd-1a8[1', 'inputs': {'SOUND_MENU': [1, 'Su:q4(=e704--)v=Xb-6']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Su:q4(=e704--)v=Xb-6': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {'SOUND_MENU': ['Zombie groan', None]}, 'shadow': True, 'topLevel': False}, 'D#2k,Hb,kbsAe~Wx[57m': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}}}))
 #print(scratch_parser_inst.read_files("files/Chicken Clicker remix-4.sb3"))
 
     

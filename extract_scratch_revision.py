@@ -138,18 +138,13 @@ def get_connection2():
     cursor =  conn.cursor()
     return conn,cursor
 
-'''
-def escape_special_chars(input_string):
-    escaped_string = subprocess.check_output(['echo', input_string], universal_newlines=True)
-    escaped_string = subprocess.check_output(['sed', 's/[\\\/^$.*+?()[\]{}|[:space:]]/\\\\&/g'], input=escaped_string, universal_newlines=True)
-    return escaped_string.strip()
-'''
+
 
 def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -188,7 +183,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
-    proc3 = subprocess.run(['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    proc3 = subprocess.run(['grep -i "\\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     
@@ -332,15 +327,18 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name,  debug=False):
                     
                     scratch_bytes_content = contents1.stdout
                     
+                    
                     if b'PK' not in scratch_bytes_content:
                         continue
 
-                    vals = sp.decode_scratch_bytes(scratch_bytes_content)
+                    decoded_vals = sp.decode_scratch_bytes(scratch_bytes_content)
                     
                     
-                    stats = sp.parse_scratch(vals,new_name) if len(vals) > 0 else {"parsed_tree":[],"stats":{}}
-
-                        
+                    stats = sp.parse_scratch_modified(decoded_vals,new_name) if len(decoded_vals) > 0 else {"parsed_tree":[],"stats":{}}
+                    
+                    with open("eac_dec.txt","a") as ed:
+                        ed.write(f"each decoded {decoded_vals} tree_content {stats}")
+                        ed.write("\n")  
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -406,8 +404,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -420,5 +418,5 @@ def main2(project_path: str):
 
 
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test")
