@@ -134,16 +134,20 @@ class scratch_train_mle:
                 acc,prec,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,prec,rec,f1_score]
+                with open("trained_data_prec_rec_acc.txt","a") as prec:
+                    prec.write(f"{each_gram} order accuracy {acc} precision {prec} recall {rec} f1score {f1_score}")
+                    prec.write("\n")
             except:
                 final_result = {f'{each_gram}-gram_nltk':[0,0,0,0]}
+
         
         return final_result
 
 
     
 tr_scr = scratch_train_mle()
-#tr_scr.multiple_train([9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt")
+tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_trained_model_version3","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_train_data_90.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
-tr_scr.plot_precision_recall_curve("nltk-plot_first")
+#tr_scr.plot_precision_recall_curve("nltk-plot_first")
