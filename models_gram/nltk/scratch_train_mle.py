@@ -131,12 +131,12 @@ class scratch_train_mle:
         for each_gram in list_ngrams:
             try:
                 self.train_mle(train_data,each_gram,model_name)
-                acc,prec,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
+                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
 
-                final_result[f'{each_gram}-gram_nltk'] = [acc,prec,rec,f1_score]
-                with open("trained_data_prec_rec_acc.txt","a") as prec:
-                    prec.write(f"{each_gram} order accuracy {acc} precision {prec} recall {rec} f1score {f1_score}")
-                    prec.write("\n")
+                final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
+                with open("trained_data_prec_rec_acc.txt","a") as precs:
+                    precs.write(f"{each_gram} order accuracy {acc} precision {precision} recall {rec} f1score {f1_score}")
+                    precs.write("\n")
             except:
                 final_result = {f'{each_gram}-gram_nltk':[0,0,0,0]}
 
