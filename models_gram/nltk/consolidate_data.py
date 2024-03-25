@@ -25,7 +25,7 @@ def load_data(filepath):
     with open(filepath,'rb') as fp:
         file = pickle.load(fp)
         print(type(file))
-        print(file)
+        #print(file)
 
 #dump_data_in_pickle("scratch_data.pkl","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths")
 #dump_data_in_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data_version3.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths4")
