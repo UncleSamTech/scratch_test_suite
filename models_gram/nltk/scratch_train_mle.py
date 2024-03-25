@@ -113,13 +113,18 @@ class scratch_train_mle:
         F1_2 = [0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699,0.2179863698935699]
         Ngrams2 = [10,11,12,13,14,15]
 
-        plt.plot(Ngrams, Accuracy, label = "Accuracy")
-        plt.plot(Ngrams, Precision, label = "Precision")
-        plt.plot(Ngrams, Recall, label = "Recall")
-        plt.plot(Ngrams, F1, label = "F1")
+        Accuracy3 = [0.025120772946859903,0.21690821256038648,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222]
+        Precision3  = [0.0033068915888476084,0.1932486508468289,0.19904575229610424,0.19904575229610424,0.19904575229610424,0.19904575229610424,0.19904575229610424,0.19904575229610424]
+        Recall3 = [0.025120772946859903,0.21690821256038648,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222]
+        F1_3 = [0.005844424726412303,0.1908012224104309,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736]
+        Ngrams3 = [2,3,4,5,6,7,8,9]
+        plt.plot(Ngrams3, Accuracy3, label = "Accuracy")
+        plt.plot(Ngrams3, Precision3, label = "Precision")
+        plt.plot(Ngrams3, Recall3, label = "Recall")
+        plt.plot(Ngrams3, F1_3, label = "F1")
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
-        plt.title('Nltk_Model Scores vs N-Gram Orders')
+        plt.title('Nltk_Model Scores vs N-Gram Orders for replaced tokens')
         plt.legend()
         
         plt.savefig(f'{plot_name}.pdf')
@@ -146,8 +151,8 @@ class scratch_train_mle:
 
     
 tr_scr = scratch_train_mle()
-tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_trained_model_version3","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_train_data_90.txt")
+#tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_trained_model_version3","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_train_data_90.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
-#tr_scr.plot_precision_recall_curve("nltk-plot_first")
+tr_scr.plot_precision_recall_curve("nltk-plot_first_replaced_tokens")
