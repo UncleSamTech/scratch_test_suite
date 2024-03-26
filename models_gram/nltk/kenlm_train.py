@@ -66,9 +66,7 @@ class kenlm_train:
                 true_next_word = sentence_tokens[-1]
             
                 predicted_next_word = self.predict_next_token_kenlm(model_name,context)
-                with open("seelogs.txt","a") as fp:
-                    fp.write(f"for context {context} next token {predicted_next_word}")
-                    fp.write("\n")
+                
                 
                 i+=1
                 if i%500 == 0:
@@ -111,7 +109,7 @@ class kenlm_train:
     #context_tokens = context.split(" ")
         next_token_probabilities = {}
 
-        with open("trained_models/kenlm_8_without_padding.vocab", "r", encoding="utf8") as vocab_f:
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3.vocab", "r", encoding="utf8") as vocab_f:
             vocabulary = vocab_f.readlines()
             for candidate_word in vocabulary:
                 candidate_word = candidate_word.strip()
