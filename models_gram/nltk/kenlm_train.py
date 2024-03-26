@@ -58,7 +58,7 @@ class kenlm_train:
             
             
             for line in lines:
-                line = self.replace_non_vs_string_with_tokens(line)
+                #line = self.replace_non_vs_string_with_tokens(line)
                 line = line.strip()
                 sentence_tokens = line.split()
             
