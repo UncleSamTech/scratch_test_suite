@@ -2,7 +2,10 @@ import os
 import kenlm
 import sys
 import nltk
+import numpy as np
 import subprocess
+import random
+from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
 class kenlm_train:
 
@@ -30,12 +33,54 @@ class kenlm_train:
     def test_kenlm(self,arpa_file):
         model = kenlm.Model(arpa_file)
         print(model.score("event_whenflagclicked",bos=True,eos=True))
+        return model
+
+    
+    def scratch_evaluate_model_kenlm(self,test_data,model_name):
+
+        y_true = []
+        i=0
+        y_pred = []
+
+        with open(test_data,"r",encoding="utf-8") as f:
+            lines= f.readlines()
+            random.shuffle(lines)
+            
+            
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split()
+            
+                context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
+                true_next_word = sentence_tokens[-1]
+            
+                predicted_next_word = self.predict_next_scratch_token(model_name,context)
+                with open("seelogs.txt","a") as fp:
+                    fp.write(f"for context {context} next token {predicted_next_word}")
+                    fp.write("\n")
+                
+                i+=1
+                if i%500 == 0:
+                    print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
+            
+                y_true.append(true_next_word)
+                y_pred.append(predicted_next_word)
+
+
+        #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+        recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+        f1score = f1_score(y_true,y_pred,average="weighted")
+        #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
+        return accuracy,precision,recall,f1score
 
 kn = kenlm_train()
 
 
-print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
-
+#print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
+model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
+val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_test_data_10.txt",model_evaluated)
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 #lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas2       
