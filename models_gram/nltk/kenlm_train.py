@@ -1,5 +1,5 @@
 import os
-#import kenlm
+import kenlm
 import sys
 import nltk
 import subprocess
@@ -27,6 +27,10 @@ class kenlm_train:
                 #module_train = subprocess.run(['/mnt/c/Users/USER/Documents/model_train/online/kenlm/build/bin/lmplz -o 3 > kenlm.arpa'],stdin=val,stdout=subprocess.PIPE, cwd=cwd, shell=True)
 
 
+    def test_kenlm(self,arpa_file):
+        model = kenlm.Model(arpa_file)
+        print(model.score("event_whenflagclicked",bos=True,eos=True))
+
 kn = kenlm_train()
 
 
@@ -34,4 +38,4 @@ kn = kenlm_train()
 
 print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
-        
+#lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas2       
