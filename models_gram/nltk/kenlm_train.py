@@ -75,6 +75,25 @@ class kenlm_train:
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
 
+
+    def create_vocab(self,arpa_file,vocab_file):
+        with open(arpa_file,"r",encoding="utf-8") as fr:
+            lines = fr.readlines()
+            one_grams_seen = False
+            i = 0
+            for line in lines:
+                val=line.strip()
+                if val == "\\1-grams":
+                    one_grams_seen = True
+                    continue
+                if line == "\\2-grams:" :
+                    break
+                if one_grams_seen:
+                    i+=1
+                    print(i)
+                    token=line.split('\t')[1]
+                    with open(vocab_file,"a") as vf:
+                        vf.write(token+"\n") 
 kn = kenlm_train()
 
 
