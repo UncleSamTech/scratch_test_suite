@@ -34,6 +34,16 @@ class kenlm_train:
         model = kenlm.Model(arpa_file)
         print(model.score("event_whenflagclicked",bos=True,eos=True))
         return model
+    
+    def replace_non_vs_string_with_tokens(self,string_val):
+        if isinstance(string_val,str) and len(string_val) > 0:
+            val2 = string_val.split()
+            print("see tokens" , val2)
+            new_list = ['<S>' if word not in self.valid_opcodes and word not in self.valid_other_field_codes  else word for word in val2  ]
+            print("replaced tokens" , new_list)
+            return " ".join(new_list)
+        else:
+            return ""
 
     
     def scratch_evaluate_model_kenlm(self,test_data,model_name):
@@ -48,13 +58,14 @@ class kenlm_train:
             
             
             for line in lines:
+                line = self.replace_non_vs_string_with_tokens(line)
                 line = line.strip()
                 sentence_tokens = line.split()
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
             
-                predicted_next_word = self.predict_next_scratch_token(model_name,context)
+                predicted_next_word = self.predict_next_token_kenln(model_name,context)
                 with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
@@ -94,6 +105,21 @@ class kenlm_train:
                     token=line.split('\t')[1]
                     with open(vocab_file,"a") as vf:
                         vf.write(token+"\n") 
+
+
+    def predict_next_token_kenlm(model, context):
+    #context_tokens = context.split(" ")
+        next_token_probabilities = {}
+
+        with open("trained_models/kenlm_8_without_padding.vocab", "r", encoding="utf8") as vocab_f:
+            vocabulary = vocab_f.readlines()
+            for candidate_word in vocabulary:
+                candidate_word = candidate_word.strip()
+                context_with_candidate = context + " " + candidate_word
+                next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+        return predicted_next_token
 kn = kenlm_train()
 
 
