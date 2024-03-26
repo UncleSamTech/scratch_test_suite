@@ -124,15 +124,19 @@ class scratch_train_mle:
         Recall4 = [0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222,0.2222222222222222]
         F1_4 = [0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736]
         Ngrams4 = [10,11,12,13,14,15]
-        plt.plot(Ngrams3, Accuracy3, label = "Accuracy")
-        plt.plot(Ngrams3, Precision3, label = "Precision")
-        plt.plot(Ngrams3, Recall3, label = "Recall")
-        plt.plot(Ngrams3, F1_3, label = "F1")
+        
+        plt.plot(Ngrams3, Accuracy3, label = "Accuracy",color="blue",marker="o",linestyle="-")
+        plt.plot(Ngrams3, Precision3, label = "Precision",color="red")
+        plt.plot(Ngrams3, Recall3, label = "Recall",color="yellow")
+        plt.plot(Ngrams3, F1_3, label = "F1",color="green")
+        
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
         plt.title('Nltk_Model Scores vs N-Gram Orders for replaced tokens')
         plt.legend()
-        
+        #plt.xlim(min(Ngrams3), max(Ngrams3))
+        #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
+
         plt.savefig(f'{plot_name}.pdf')
         #plt.show()
 
@@ -161,4 +165,4 @@ tr_scr = scratch_train_mle()
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
-tr_scr.plot_precision_recall_curve("nltk-plot_firstmain_replaced_tokens")
+tr_scr.plot_precision_recall_curve("nltk-plot_firstmain_replaced_tokens_upd_debug_mark_line_further")
