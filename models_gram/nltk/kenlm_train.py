@@ -107,7 +107,7 @@ class kenlm_train:
                         vf.write(token+"\n") 
 
 
-    def predict_next_token_kenlm(model, context):
+    def predict_next_token_kenlm(self,model, context):
     #context_tokens = context.split(" ")
         next_token_probabilities = {}
 
