@@ -92,7 +92,7 @@ class kenlm_train:
             i = 0
             for line in lines:
                 line=line.strip()
-                if val == "\\1-grams":
+                if line == "\\1-grams":
                     one_grams_seen = True
                     continue
                 if line == "\\2-grams:" :
