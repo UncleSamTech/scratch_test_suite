@@ -95,6 +95,7 @@ class kenlm_train:
                 #line=line.strip()
                 
                 if line == "\\1-grams": 
+                    print(line)
                     one_gram_seen = True
                     if one_gram_seen:
                         token=line.split("\t")[1]
