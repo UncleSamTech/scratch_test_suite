@@ -257,7 +257,10 @@ class Scratch_Path:
                                     try:
                                         val = self.slice_from_start(each_connection)
                                         sec_val  = self.replace_non_vs_string_with_tokens(val)
-                                        print(f"old val {val} replaced value {sec_val}")
+                                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs.txt","a") as exp:
+                                            exp.write(f"old val {val} replaced value {sec_val}")
+                                            exp.write("\n")
+                                        
                                     except:
                                         sec_val = ''
                                     if sec_val is None or len(sec_val) < 1:
