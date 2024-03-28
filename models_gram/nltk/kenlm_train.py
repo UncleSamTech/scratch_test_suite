@@ -93,7 +93,7 @@ class kenlm_train:
             for line in lines:
                 
                 line=line.strip()
-                print(line)
+                #print(line)
                 
                 if "\1-grams" in line:
                     print("yes") 
