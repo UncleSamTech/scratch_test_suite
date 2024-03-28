@@ -183,7 +183,7 @@ class Scratch_Path:
     
     def get_all_contents(self,hash):
         int_val = None
-        conn,curr = self.get_connection2()
+        conn,curr = self.get_connection()
         if conn != None:
          curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:
