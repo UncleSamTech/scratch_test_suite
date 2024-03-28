@@ -99,8 +99,10 @@ class kenlm_train:
                     one_grams_seen = True
                     continue
                 if one_grams_seen:
-                    while not "\\2-grams" in line:
-                        print(line)
+                    
+                    print(line)
+                elif "\\2-grams" in line:
+                    print("another")
                         #with open(vocab_file,"a") as vf:
                             #token = line.split("\t")[1]
                             #print("seetoken",token)
