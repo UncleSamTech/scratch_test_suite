@@ -103,8 +103,7 @@ class kenlm_train:
                         
                         vf.write(token+"\n") 
                     
-                    if line == " " or "" in line or " " in line or  len(line) < 1 or "\\2-grams" in line:
-                        break
+                   
                 
 
 
