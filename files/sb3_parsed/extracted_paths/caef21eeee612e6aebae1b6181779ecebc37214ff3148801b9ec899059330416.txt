@@ -520,3 +520,69 @@ event_whenflagclicked motion_goto <S>
 event_whenflagclicked motion_goto <S> motion_goto_menu 
 event_whenflagclicked looks_show 
 event_whenflagclicked control_wait DURATION <S> 
+event_whenflagclicked 
+event_whenflagclicked data_setvariableto 
+event_whenflagclicked data_setvariableto VALUE 
+event_whenflagclicked data_setvariableto VALUE <S> 
+event_whenflagclicked data_setvariableto VALUE <S> 
+event_whenflagclicked motion_pointindirection 
+event_whenflagclicked motion_pointindirection DIRECTION 
+event_whenflagclicked motion_pointindirection DIRECTION <S> 
+event_whenflagclicked motion_gotoxy 
+event_whenflagclicked motion_gotoxy <S> 
+event_whenflagclicked motion_gotoxy <S> <S> 
+event_whenflagclicked motion_gotoxy <S> 
+event_whenflagclicked motion_gotoxy <S> <S> 
+event_whenflagclicked sensing_setdragmode 
+event_whenflagclicked control_forever 
+event_whenflagclicked control_forever BodyBlock 
+event_whenflagclicked control_forever BodyBlock motion_ifonedgebounce 
+event_whenflagclicked control_forever BodyBlock motion_movesteps 
+event_whenflagclicked control_wait 
+event_whenflagclicked control_wait DURATION 
+event_whenflagclicked control_wait DURATION <S> 
+event_whenkeypressed 
+event_whenkeypressed KEY_OPTION_down arrow 
+event_whenkeypressed KEY_OPTION_up arrow 
+event_whenkeypressed KEY_OPTION_right arrow 
+event_whenkeypressed KEY_OPTION_left arrow 
+event_whenflagclicked control_forever BodyBlock control_if 
+event_whenflagclicked control_wait DURATION <S> 
+event_whenflagclicked motion_goto 
+event_whenflagclicked motion_goto <S> 
+event_whenflagclicked motion_goto <S> motion_goto_menu 
+event_whenflagclicked looks_show 
+event_whenflagclicked control_wait DURATION <S> 
+event_whenflagclicked 
+event_whenflagclicked data_setvariableto 
+event_whenflagclicked data_setvariableto VALUE 
+event_whenflagclicked data_setvariableto VALUE <S> 
+event_whenflagclicked data_setvariableto VALUE <S> 
+event_whenflagclicked motion_pointindirection 
+event_whenflagclicked motion_pointindirection DIRECTION 
+event_whenflagclicked motion_pointindirection DIRECTION <S> 
+event_whenflagclicked motion_gotoxy 
+event_whenflagclicked motion_gotoxy <S> 
+event_whenflagclicked motion_gotoxy <S> <S> 
+event_whenflagclicked motion_gotoxy <S> 
+event_whenflagclicked motion_gotoxy <S> <S> 
+event_whenflagclicked sensing_setdragmode 
+event_whenflagclicked control_forever 
+event_whenflagclicked control_forever BodyBlock 
+event_whenflagclicked control_forever BodyBlock motion_ifonedgebounce 
+event_whenflagclicked control_forever BodyBlock motion_movesteps 
+event_whenflagclicked control_wait 
+event_whenflagclicked control_wait DURATION 
+event_whenflagclicked control_wait DURATION <S> 
+event_whenkeypressed 
+event_whenkeypressed KEY_OPTION_down arrow 
+event_whenkeypressed KEY_OPTION_up arrow 
+event_whenkeypressed KEY_OPTION_right arrow 
+event_whenkeypressed KEY_OPTION_left arrow 
+event_whenflagclicked control_forever BodyBlock control_if 
+event_whenflagclicked control_wait DURATION <S> 
+event_whenflagclicked motion_goto 
+event_whenflagclicked motion_goto <S> 
+event_whenflagclicked motion_goto <S> motion_goto_menu 
+event_whenflagclicked looks_show 
+event_whenflagclicked control_wait DURATION <S> 
