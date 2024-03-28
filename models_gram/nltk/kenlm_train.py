@@ -102,7 +102,7 @@ class kenlm_train:
                     
                     print(line)
                 elif "\\2-grams" in line:
-                    print("another")
+                    break
                         #with open(vocab_file,"a") as vf:
                             #token = line.split("\t")[1]
                             #print("seetoken",token)
