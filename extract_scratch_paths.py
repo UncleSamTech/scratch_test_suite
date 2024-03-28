@@ -161,9 +161,9 @@ class Scratch_Path:
     def replace_non_vs_string_with_tokens(self,string_val):
         if isinstance(string_val,str) and len(string_val) > 0:
             val2 = string_val.split()
-            print("see tokens" , val2)
-            new_list = ['<S>' if word not in self.valid_opcodes and word not in self.valid_other_field_codes  else word for word in val2  ]
-            print("replaced tokens" , new_list)
+            
+            new_list = ['<S>' if word not in self.valid_opcodes and word not in self.valid_other_field_codes and not word.startswith("BROADCAST_")  else word for word in val2  ]
+            
             return " ".join(new_list)
         else:
             return ""
@@ -183,7 +183,7 @@ class Scratch_Path:
     
     def get_all_contents(self,hash):
         int_val = None
-        conn,curr = self.get_connection()
+        conn,curr = self.get_connection2()
         if conn != None:
          curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:
@@ -257,7 +257,7 @@ class Scratch_Path:
                                     try:
                                         val = self.slice_from_start(each_connection)
                                         sec_val  = self.replace_non_vs_string_with_tokens(val)
-                                        
+                                        print(f"old val {val} replaced value {sec_val}")
                                     except:
                                         sec_val = ''
                                     if sec_val is None or len(sec_val) < 1:
@@ -282,7 +282,7 @@ sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 #print(sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 
-sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths4/")
+sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths5/")
 #sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
 
 #v = sc_path.get_all_contents("cfbab365b6dd7f4138823df8ff2e89a108f43dbf8c9950ab27ac8cc981b9adac")
