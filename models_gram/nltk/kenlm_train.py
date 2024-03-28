@@ -94,15 +94,11 @@ class kenlm_train:
                 
                 #line=line.strip()
                 
-                if line == "\\1-grams":
-                    one_grams_seen = True
-                    if one_grams_seen:
-                        i+=1
-                        print(i)
-                        token=line.split('\t')[1]
-                        print(token)
-                        with open(vocab_file,"a") as vf:
-                            vf.write(token+"\n") 
+                if line == "\\1-grams": 
+                    token=line.split('\t')[1]
+                    print(token)
+                    with open(vocab_file,"a") as vf:
+                        vf.write(token+"\n") 
                 elif line == "\\2-grams:":
                     break
                 
