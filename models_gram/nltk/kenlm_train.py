@@ -99,10 +99,11 @@ class kenlm_train:
                     one_grams_seen = True
                 if one_grams_seen:
                     while not "\\2-grams" in line:
-                        with open(vocab_file,"a") as vf:
-                            token = line.split("\t")[1]
-                            print("seetoken",token)
-                            vf.write(token+"\n") 
+                        print(line)
+                        #with open(vocab_file,"a") as vf:
+                            #token = line.split("\t")[1]
+                            #print("seetoken",token)
+                            #vf.write(token+"\n") 
                 #elif line == "\\2-grams:":
                     #break
                 
