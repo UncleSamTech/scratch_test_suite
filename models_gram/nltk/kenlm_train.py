@@ -93,20 +93,18 @@ class kenlm_train:
             for line in lines:
                 
                 line=line.strip()
-                #print(line)
                 
                 if "\\1-grams" in line:
                     one_grams_seen = True
                     continue
                 if one_grams_seen:
-                    #print(line)
-                
                     with open(vocab_file,"a") as vf:
                         token = line.split("\t")[1]
-                        print("seetoken",token)
+                        
                         vf.write(token+"\n") 
-                #elif line == "\\2-grams:":
-                    #break
+                    
+                    if line == " " or "" in line or " " in line or  len(line) < 1 or "\\2-grams" in line:
+                        break
                 
 
 
@@ -125,7 +123,7 @@ class kenlm_train:
         return predicted_next_token
 kn = kenlm_train()
 
-kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
+kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order3.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order3.vocab")
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
 #val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram2/scratch_test_data_10.txt",model_evaluated)
