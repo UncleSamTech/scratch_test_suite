@@ -51,6 +51,7 @@ class kenlm_train:
         y_true = []
         i=0
         y_pred = []
+        model = kenlm.Model(model_name)
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
@@ -65,7 +66,7 @@ class kenlm_train:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
             
-                predicted_next_word = self.predict_next_token_kenlm(model_name,context)
+                predicted_next_word = self.predict_next_token_kenlm(model,context)
                 
                 
                 i+=1
