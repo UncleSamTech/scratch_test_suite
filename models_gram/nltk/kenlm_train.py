@@ -99,9 +99,10 @@ class kenlm_train:
                         i+=1
                         print(i)
                         token=line.split('\t')[1]
+                        print(token)
                         with open(vocab_file,"a") as vf:
                             vf.write(token+"\n") 
-                if line == "\\2-grams:" :
+                elif line == "\\2-grams:":
                     break
                 
 
