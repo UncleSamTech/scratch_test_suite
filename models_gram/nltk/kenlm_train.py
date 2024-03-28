@@ -97,6 +97,7 @@ class kenlm_train:
                 
                 if "\\1-grams" in line:
                     one_grams_seen = True
+                    continue
                 if one_grams_seen:
                     while not "\\2-grams" in line:
                         print(line)
