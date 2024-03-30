@@ -1,10 +1,13 @@
 import os
-import kenlm
+#import kenlm
 import sys
 import nltk
 import numpy as np
 import subprocess
 import random
+
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
 class kenlm_train:
@@ -107,9 +110,6 @@ class kenlm_train:
                         vf.write(token+"\n") 
                     
                    
-                
-
-
     def predict_next_token_kenlm(self,model, context):
     #context_tokens = context.split(" ")
         next_token_probabilities = {}
@@ -123,6 +123,31 @@ class kenlm_train:
 
         predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
         return predicted_next_token
+    
+    def plot_precision_recall_curve(self,plot_name):
+
+        Accuracy = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798]
+        Precision = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737]
+        Recall = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798]
+        F1 = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169]
+        Ngrams = [2,3,4,5,6]
+
+        
+        
+        plt.plot(Ngrams, Accuracy, label = "Accuracy")
+        plt.plot(Ngrams, Precision, label = "Precision")
+        plt.plot(Ngrams, Recall, label = "Recall")
+        plt.plot(Ngrams, F1, label = "F1")
+        
+        
+        plt.xlabel('Ngram-order')
+        plt.ylabel('Model-Scores')
+        plt.title('Kenlm_Model Scores vs N-Gram Orders for replaced tokens')
+        plt.legend()
+        #plt.xlim(min(Ngrams3), max(Ngrams3))
+        #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
+
+        plt.savefig(f'{plot_name}.pdf')
 kn = kenlm_train()
 
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
@@ -130,6 +155,7 @@ kn = kenlm_train()
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
 val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa")
 print(val)
+#kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order2_6.pdf")
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order2.arpa       
