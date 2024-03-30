@@ -1,5 +1,5 @@
 import os
-#import kenlm
+import kenlm
 import sys
 import nltk
 import numpy as np
