@@ -132,12 +132,16 @@ class kenlm_train:
         F1 = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169]
         Ngrams = [2,3,4,5,6]
 
+        Accuracy2 = [0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004]
+        Precision2 = [0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7419880416193364]
+        Recall2 = [0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004]
+        F1_2 = [0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5352446315786005]
+        Ngrams2 = [7,8,9,10,11]
         
-        
-        plt.plot(Ngrams, Accuracy, label = "Accuracy")
-        plt.plot(Ngrams, Precision, label = "Precision")
-        plt.plot(Ngrams, Recall, label = "Recall")
-        plt.plot(Ngrams, F1, label = "F1")
+        plt.plot(Ngrams2, Accuracy2, label = "Accuracy")
+        plt.plot(Ngrams2, Precision2, label = "Precision")
+        plt.plot(Ngrams2, Recall2, label = "Recall")
+        plt.plot(Ngrams2, F1_2, label = "F1")
         
         
         plt.xlabel('Ngram-order')
@@ -153,9 +157,9 @@ kn = kenlm_train()
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
-print(val)
-#kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order2_6.pdf")
+#val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
+#print(val)
+kn.plot_precision_recall_curve("/media/crouton/siwuchuk/newdir/vscode_repos_files/plots/kenlm_prec_rec_curv_order2_6.pdf")
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 7  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa       
