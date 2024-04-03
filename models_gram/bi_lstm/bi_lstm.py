@@ -34,4 +34,5 @@ class bi_lstm_scratch:
 
 
 cl_ob = bi_lstm_scratch()
-cl_ob.tokenize_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt")
+#cl_ob.tokenize_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt")
+cl_ob.tokenize_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt")
