@@ -28,9 +28,9 @@ class bi_lstm_scratch:
             print("Word: ID")
             print("------------")
             print("<oov>: ", tokenizer.word_index['<oov>'])
-            print("event_whenflagclicked: ", tokenizer.word_index['event_whenflagclicked'])
-            print("control_forever: ", tokenizer.word_index['control_forever'])
-                #print("Consumption: ", tokenizer.word_index['consumption'])
+            #print("event_whenflagclicked: ", tokenizer.word_index['event_whenflagclicked'])
+            #print("control_forever: ", tokenizer.word_index['control_forever'])
+            #print("Consumption: ", tokenizer.word_index['consumption'])
 
 
 cl_ob = bi_lstm_scratch()
