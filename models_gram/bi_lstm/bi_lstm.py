@@ -28,8 +28,8 @@ class bi_lstm_scratch:
             print("Word: ID")
             print("------------")
             print("<oov>: ", tokenizer.word_index['<oov>'])
-                #print("Strong: ", tokenizer.word_index['strong'])
-                #print("And: ", tokenizer.word_index['and'])
+            print("event_whenflagclicked: ", tokenizer.word_index['event_whenflagclicked'])
+            print("control_forever: ", tokenizer.word_index['control_forever'])
                 #print("Consumption: ", tokenizer.word_index['consumption'])
 
 
