@@ -88,7 +88,7 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         history = self.train_stand_alone(total_words,max_len,xs,ys)
-        self.plot_graph(history,["accuracy","loss"])
+        self.plot_graph(history,"accuracy")
 
         print(history)
 
