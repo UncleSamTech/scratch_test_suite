@@ -1,8 +1,8 @@
-CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked control_wait
-CS50 - Problem Set 0 v2 (1) Bug-and-Apple event_whenflagclicked
-CS50 - Problem Set 0 v2 (1) control_start_as_clone sound_play SOUND_MENU
-CS50 - Problem Set 0 v2 (1) control_start_as_clone motion_gotoxy
-CS50 - Problem Set 0 v2 (1) control_start_as_clone control_forever BodyBlock
+event_whenflagclicked control_wait
+event_whenflagclicked
+control_start_as_clone sound_play SOUND_MENU
+control_start_as_clone motion_gotoxy
+control_start_as_clone control_forever BodyBlock
 CS50 - Problem Set 0 v2 (1) control_start_as_clone motion_gotoxy X 240
 CS50 - Problem Set 0 v2 (1) control_start_as_clone control_forever BodyBlock motion_pointtowards
 CS50 - Problem Set 0 v2 (1) control_start_as_clone control_if ThenBranch

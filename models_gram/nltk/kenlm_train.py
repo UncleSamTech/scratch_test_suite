@@ -1,5 +1,5 @@
 import os
-import kenlm
+#import kenlm
 import sys
 import nltk
 import numpy as np
@@ -138,16 +138,60 @@ class kenlm_train:
         F1_2 = [0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5352446315786005]
         Ngrams2 = [7,8,9,10,11]
         
-        plt.plot(Ngrams2, Accuracy2, label = "Accuracy")
-        plt.plot(Ngrams2, Precision2, label = "Precision")
-        plt.plot(Ngrams2, Recall2, label = "Recall")
-        plt.plot(Ngrams2, F1_2, label = "F1")
+        Accuracy3 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        Precision3 = [0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916]
+        Recall3 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        F1_3 = [0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815]
+        Ngrams3 = [12,13,14,15,16]
+
+        Accuracy4 = [0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        Precision4 = [0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
+        Recall4 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        F1_4 = [0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815]
+        Ngrams4 = [17,18,19,20]
+
+        Accuracy_all = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,
+                        0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004,
+                        0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,
+                        0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        Precision_all = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,
+                         0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7419880416193364,
+                         0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916,
+                         0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
+        Recall_all = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,
+                      0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004,
+                      0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,
+                      0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        F1_all  = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,
+                   0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5352446315786005,
+                   0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815,
+                   0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815
+                   ]
+        Ngrams_all = list(range(2,21))
+        #[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+
+        #fig = plt.figure()
+        #axes = fig.add_axes([0,0,1,1])
+        #axes.plot(Ngrams_all,Accuracy_all,label = "Accuracy")
+        #axes.plot(Ngrams_all,Precision_all,label = "Precision")
+        #axes.plot(Ngrams_all,Recall_all,label="Recall")
+        #axes.plot(Ngrams_all,F1_all,label="F1")
+        #axes.legend(loc ="center right")
+
+        
+        plt.plot(Ngrams_all, Precision_all, label = "Precision")
+        plt.plot(Ngrams_all, Recall_all, label = "Recall")
+        plt.plot(Ngrams_all, F1_all, label = "F1")
+        plt.plot(Ngrams_all, Accuracy_all, label = "Accuracy")
         
         
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
         plt.title('Kenlm_Model Scores vs N-Gram Orders for replaced tokens')
         plt.legend()
+        #plt.xlim(0,21)
+        #plt.ylim(0,0.79)
+        #plt.show()
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
@@ -159,7 +203,8 @@ kn = kenlm_train()
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
 #val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
 #print(val)
-kn.plot_precision_recall_curve("/media/crouton/siwuchuk/newdir/vscode_repos_files/plots/kenlm_prec_rec_curv_order2_6.pdf")
+kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order2_20_main")
+
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 7  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa       

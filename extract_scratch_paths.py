@@ -1,4 +1,4 @@
-import networkx as nx
+#import networkx as nx
 import sqlite3
 import json
 import matplotlib.pyplot as plt
@@ -183,7 +183,7 @@ class Scratch_Path:
     
     def get_all_contents(self,hash):
         int_val = None
-        conn,curr = self.get_connection()
+        conn,curr = self.get_connection2()
         if conn != None:
          curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:
@@ -285,8 +285,8 @@ sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 #print(sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 
-sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2_uniq.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths5_unique/")
-#sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
+#sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/sc_hash_local2_uniq.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths5_unique/")
+sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
 
 #v = sc_path.get_all_contents("cfbab365b6dd7f4138823df8ff2e89a108f43dbf8c9950ab27ac8cc981b9adac")
 #vis = sc_path.visualize_graph(gr)
