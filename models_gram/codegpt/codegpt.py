@@ -21,5 +21,5 @@ class code_gpt_model:
 
 
 cd_gpt = code_gpt_model()
-cd_gpt.convert_to_pickle("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/codegpt/train.txt")
+cd_gpt.convert_to_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/datadir/train.txt")
 
