@@ -52,7 +52,7 @@ class scratch_train_mle:
 
         for prospect_token in loaded_model.vocab:
             #print("see token" , prospect_token)
-            print(f"context data {context_data}")
+            #print(f"context data {context_data}")
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
@@ -85,6 +85,7 @@ class scratch_train_mle:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
+                print(f"predicted {predicted_next_word} true word {true_next_word}")
                 i+=1
                 if i%500 == 0:
                     print("see it",i)
