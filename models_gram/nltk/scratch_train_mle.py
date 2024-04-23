@@ -101,7 +101,7 @@ class scratch_train_mle:
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
-    def scratch_evaluate_model_nltk_first(self,test_data,model_name,ngram_length):
+    def scratch_evaluate_model_nltk_first(self,test_data,model_name):
 
         y_true = []
         i=0
@@ -119,9 +119,9 @@ class scratch_train_mle:
                 line = line.strip()
                 sentence_tokens = line.split()
                 
-                print("first word ", sentence_tokens[0])
-                context = ' '.join(sentence_tokens[ngram_length+1:])  # Use all words except the first one as context
-                true_next_word = sentence_tokens[ngram_length]
+                print("first word ", sentence_tokens[1])
+                context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
+                true_next_word = sentence_tokens[0]
                 #print("true next word ", true_next_word)
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
