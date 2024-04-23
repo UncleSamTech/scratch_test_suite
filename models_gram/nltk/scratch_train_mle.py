@@ -119,25 +119,37 @@ class scratch_train_mle:
                 line = line.strip()
                 sentence_tokens = line.split()
                 
-                print("first word ", sentence_tokens[1])
-                context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
-                true_next_word = sentence_tokens[0]
-                #print("true next word ", true_next_word)
+                if len(sentence_tokens) > 1:
+                    print("first word ", sentence_tokens[1])
+                    context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
+                    true_next_word = sentence_tokens[0]
+                    #print("true next word ", true_next_word)
             
-                predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                #print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
-                with open("seelogs.txt","a") as fp:
-                    fp.write(f"for context {context} next token {predicted_next_word}")
-                    fp.write("\n")
+                    predicted_next_word = self.predict_next_scratch_token(model_name,context)
+                    #print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
+                    with open("seelogs.txt","a") as fp:
+                        fp.write(f"for context {context} next token {predicted_next_word}")
+                        fp.write("\n")
                 
-                print(f"predicted {predicted_next_word} true word {true_next_word}")
+                    print(f"predicted {predicted_next_word} true word {true_next_word}")
                 
-                i+=1
-                if i%500 == 0:
-                    print("see it",i)
+                    i+=1
+                    if i%500 == 0:
+                        print("see it",i)
             
-                y_true.append(true_next_word)
-                y_pred.append(predicted_next_word)
+                    y_true.append(true_next_word)
+                    y_pred.append(predicted_next_word)
+                else:
+                    context = ' '.join(sentence_tokens)  # Use all words except the first one as context
+                    true_next_word = sentence_tokens[0]
+                    predicted_next_word = self.predict_next_scratch_token(model_name,context)
+
+                    i+=1
+                    if i%500 == 0:
+                        print("see it",i)
+            
+                    y_true.append(true_next_word)
+                    y_pred.append(predicted_next_word)
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
