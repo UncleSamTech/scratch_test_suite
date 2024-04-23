@@ -74,9 +74,51 @@ class scratch_train_mle:
             for line in lines:
                 line = line.strip()
                 sentence_tokens = line.split()
-            
+
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
+            
+                predicted_next_word = self.predict_next_scratch_token(model_name,context)
+                with open("seelogs.txt","a") as fp:
+                    fp.write(f"for context {context} next token {predicted_next_word}")
+                    fp.write("\n")
+                
+                i+=1
+                if i%500 == 0:
+                    print("see it",i)
+            
+                y_true.append(true_next_word)
+                y_pred.append(predicted_next_word)
+
+
+        #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred, average='weighted')
+        recall = recall_score(y_true, y_pred, average='weighted')
+        f1score = f1_score(y_true,y_pred,average="weighted")
+        #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
+        return accuracy,precision,recall,f1score
+    
+    def scratch_evaluate_model_nltk_first(self,test_data,model_name):
+
+        y_true = []
+        i=0
+        y_pred = []
+
+        with open(test_data,"r",encoding="utf-8") as f:
+            lines= f.readlines()
+            random.shuffle(lines)
+            lines_lenght = len(lines)
+            print("lenght",lines_lenght)
+            offset_lenght = lines_lenght - 50
+            new_lines = lines[:offset_lenght]
+            
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split()
+                
+                context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
+                true_next_word = sentence_tokens[0]
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
                 with open("seelogs.txt","a") as fp:
@@ -146,10 +188,10 @@ class scratch_train_mle:
         for each_gram in list_ngrams:
             try:
                 self.train_mle(train_data,each_gram,model_name)
-                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
+                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk_first(test_data,f'{model_name}_{each_gram}.pkl')
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc.txt","a") as precs:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_first.txt","a") as precs:
                     precs.write(f"{each_gram} order accuracy {acc} precision {precision} recall {rec} f1score {f1_score}")
                     precs.write("\n")
             except:
