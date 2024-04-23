@@ -51,7 +51,7 @@ class scratch_train_mle:
         scratch_next_probaility_tokens = {}
 
         for prospect_token in loaded_model.vocab:
-            #print("see token" , prospect_token)
+            print("see token" , prospect_token)
             #print(f"context data {context_data}")
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
