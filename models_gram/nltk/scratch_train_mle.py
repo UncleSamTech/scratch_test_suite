@@ -78,7 +78,7 @@ class scratch_train_mle:
 
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
-            
+
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
                 with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
@@ -120,9 +120,10 @@ class scratch_train_mle:
                 
                 context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
                 true_next_word = sentence_tokens[0]
+                print("true next word ", true_next_word)
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
+                #print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
                 with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
