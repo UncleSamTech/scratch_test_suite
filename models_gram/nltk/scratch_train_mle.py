@@ -106,6 +106,9 @@ class scratch_train_mle:
         y_true = []
         i=0
         y_pred = []
+        context = None
+        true_next_word = None
+        predicted_next_word = None
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
