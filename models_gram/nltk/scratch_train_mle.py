@@ -85,7 +85,6 @@ class scratch_train_mle:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
-                print(f"predicted {predicted_next_word} true word {true_next_word}")
                 i+=1
                 if i%500 == 0:
                     print("see it",i)
@@ -112,7 +111,7 @@ class scratch_train_mle:
             lines= f.readlines()
             random.shuffle(lines)
             lines_lenght = len(lines)
-            print("lenght",lines_lenght)
+            #print("lenght",lines_lenght)
             offset_lenght = lines_lenght - 50
             new_lines = lines[:offset_lenght]
             
@@ -122,13 +121,15 @@ class scratch_train_mle:
                 
                 context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
                 true_next_word = sentence_tokens[0]
-                print("true next word ", true_next_word)
+                #print("true next word ", true_next_word)
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
                 #print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
                 with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
+                
+                print(f"predicted {predicted_next_word} true word {true_next_word}")
                 
                 i+=1
                 if i%500 == 0:
