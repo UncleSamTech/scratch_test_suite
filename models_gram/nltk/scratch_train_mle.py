@@ -55,6 +55,7 @@ class scratch_train_mle:
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
+        print("predicted score ", scratch_next_probaility_tokens)
         return scratch_predicted_next_token
     
     def scratch_evaluate_model_nltk(self,test_data,model_name):
@@ -121,6 +122,7 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[0]
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
+                print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
                 with open("seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
