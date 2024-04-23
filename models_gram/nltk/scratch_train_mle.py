@@ -101,7 +101,7 @@ class scratch_train_mle:
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
-    def scratch_evaluate_model_nltk_first(self,test_data,model_name):
+    def scratch_evaluate_model_nltk_first(self,test_data,model_name,ngram_length):
 
         y_true = []
         i=0
@@ -119,8 +119,8 @@ class scratch_train_mle:
                 line = line.strip()
                 sentence_tokens = line.split()
                 
-                context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
-                true_next_word = sentence_tokens[0]
+                context = ' '.join(sentence_tokens[ngram_length+1:])  # Use all words except the first one as context
+                true_next_word = sentence_tokens[ngram_length]
                 #print("true next word ", true_next_word)
             
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
@@ -194,7 +194,7 @@ class scratch_train_mle:
         for each_gram in list_ngrams:
             try:
                 self.train_mle(train_data,each_gram,model_name)
-                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk_first(test_data,f'{model_name}_{each_gram}.pkl')
+                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk_first(test_data,f'{model_name}_{each_gram}.pkl',each_gram)
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
                 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_first.txt","a") as precs:
