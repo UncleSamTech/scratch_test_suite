@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
