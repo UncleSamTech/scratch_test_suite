@@ -156,7 +156,7 @@ class scratch_train_mle:
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
-        accuracy = accuracy_score(y_true, y_pred)
+        accuracy = accuracy_score(y_true, y_pred,average='weighted')
         precision = precision_score(y_true, y_pred, average='weighted')
         recall = recall_score(y_true, y_pred, average='weighted')
         f1score = f1_score(y_true,y_pred,average="weighted")
