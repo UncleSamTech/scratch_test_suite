@@ -5,6 +5,7 @@ import nltk
 import numpy as np
 import subprocess
 import random
+import scipy.stats as stats
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
@@ -196,7 +197,14 @@ class kenlm_train:
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
         plt.savefig(f'{plot_name}.pdf')
+
+    def paired_t_test(self,nltk_2_8,nltk_9_15):
+        if isinstance(nltk_2_8,list) and len(nltk_2_8) > 0 and isinstance(nltk_9_15,list) and len(nltk_9_15) > 0:
+            test_val = stats.ttest_rel(nltk_2_8,nltk_9_15)
+            print(test_val)
+            return test_val
 kn = kenlm_train()
+
 
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
@@ -204,6 +212,7 @@ kn = kenlm_train()
 #val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
 #print(val)
 kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order2_20_main")
+kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
 
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
