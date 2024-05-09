@@ -7,6 +7,7 @@ import nltk
 import matplotlib.pyplot as plt
 #import pandas as pd
 import random
+import scipy.stats as stats
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
 class scratch_train_mle:
@@ -163,6 +164,14 @@ class scratch_train_mle:
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
+    def shuffle_test_data(self,input_string):
+        if isinstance(input_string,str) and len(input_string) > 0:
+            #convert to list
+            list_string  = list(input_string)
+            shuffled_list = random.shuffle(list_string)
+            shuffled_res = ''.join(shuffled_list)
+            return shuffled_res
+    
     def plot_precision_recall_curve(self,plot_name):
 
         Accuracy = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367]
@@ -204,7 +213,12 @@ class scratch_train_mle:
         plt.savefig(f'{plot_name}.pdf')
         #plt.show()
 
-
+    def paired_t_test(self,nltk_2_10,nltk_11_19):
+        if isinstance(nltk_2_10,list) and len(nltk_2_10) > 0 and isinstance(nltk_11_19,list) and len(nltk_11_19) > 0:
+            test_val = stats.ttest_rel(nltk_2_10,nltk_11_19)
+            #print(test_val)
+            return test_val
+        
     def multiple_train(self,list_ngrams,test_data,model_name,train_data):
         final_result = {}
         for each_gram in list_ngrams:
@@ -225,7 +239,13 @@ class scratch_train_mle:
     
     
 tr_scr = scratch_train_mle()
-tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_trained_model_version4","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt")
+accuracy = tr_scr.paired_t_test([0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407],[0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328])
+print("accuracy parametric t-test result for nltk model ", accuracy)
+precision =tr_scr.paired_t_test([0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743],[0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372])
+print("precision parametric t-test for nltk model")
+f1 = tr_scr.paired_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
+print("f1 parametric ttest for nltk model")
+#tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_trained_model_version4","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
