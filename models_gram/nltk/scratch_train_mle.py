@@ -255,6 +255,13 @@ print("precision parametric t-test for nltk model",precision_wilcoxon)
 f1_wilcoxon = tr_scr.wilcon_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543],[0.21621503333962466,0.21718121691450387,0.21718121691450387,0.2176643087019435,0.2176643087019435])
 print("f1 parametric ttest for nltk model",f1_wilcoxon)
 
+
+accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328,0.24589371980676328])
+print("accuracy wilcoxon result for nltk model ", accuracy_wilcoxon_2)
+precision_wilcoxon_2 =tr_scr.wilcon_t_test([0.22551918224779507,0.2264853658226743,0.2264853658226743,0.22696845761011392,0.22696845761011392],[0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372,0.22721000350383372])
+print("precision parametric t-test for nltk model",precision_wilcoxon_2)
+f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.21621503333962466,0.21718121691450387,0.21718121691450387,0.2176643087019435,0.2176643087019435],[0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699,0.2179863698935699])
+print("f1 parametric ttest for nltk model",f1_wilcoxon_2)
 #tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_trained_model_version4","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
