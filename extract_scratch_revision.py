@@ -23,6 +23,12 @@ def get_connection():
     cursor =  conn.cursor()
     return conn,cursor
 
+def get_connection_test():
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train.db",isolation_level=None)
+    cursor =  conn.cursor()
+    return conn,cursor
+
+
 def strip_pattern(input_string):
     pattern = r'.*?\.sb3\b'
     #pattern = r'\S*\.sb3\b'
@@ -150,7 +156,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection_test()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -165,7 +171,7 @@ def get_all_projects_in_db_train():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2_train()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -382,7 +388,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2_train()
+                conn,cur = get_connection()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -580,7 +586,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2()
+                conn,cur = get_connection_test()
                 val = None
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
@@ -602,7 +608,7 @@ def main2(project_path: str):
         else:
             continue
     projects_to_skip = get_all_projects_in_db_train()
-    projects_to_skip_test = get_all_projects_in_db()
+    
     train_projects,test_projects = train_test_split(proj_names,test_size=0.2)
     
     for proj_name in train_projects:
@@ -621,8 +627,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -633,10 +639,10 @@ def main2(project_path: str):
             print(f"skipped {proj_name}")
             continue
 
-    
+    projects_to_skip_test = get_all_projects_in_db()
     for proj_name in test_projects:
         
-        if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
+        if proj_name not in projects_to_skip_test and proj_name != '' and len(proj_name) > 1:
         #if  proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
@@ -650,8 +656,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
