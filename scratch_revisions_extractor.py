@@ -11,8 +11,9 @@ from pathlib import Path
 from scratch_parser import scratch_parser
 import logging
 import sqlite3
-
+from sklearn.model_selection import train_test_split
 import re
+import random
 
 
 
@@ -27,7 +28,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database_new.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -368,9 +369,12 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
+    random.shuffle(proj_names)
+    train_projects,test_projects = train_test_split(proj_names,test_size=0.1,random_state=42)
+    print(type(train_projects))
     projects_to_skip = get_all_projects_in_db()
     
-    for proj_name in proj_names:
+    for proj_name in train_projects:
         
         if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
         #if  proj_name != '' and len(proj_name) > 1:

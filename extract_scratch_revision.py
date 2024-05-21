@@ -49,6 +49,7 @@ def replace_parts(inp_str,inp_dict):
             k = k.split("#")[0]
             inp_str = inp_str.replace(k,v)
     return inp_str
+
 '''
 def replace_null_bytes_correct(byte_val):
     decoded_strings = []
@@ -156,7 +157,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection_test()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -171,7 +172,7 @@ def get_all_projects_in_db_train():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2_train()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -358,12 +359,14 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                     if b'PK' not in scratch_bytes_content:
                         continue
 
-                    decoded_vals = sp.decode_scratch_bytes(scratch_bytes_content)
+                    decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
+                    print("decoded vals train ", decoded_vals)
                     
+                    stats = sp.parse_scratch(decoded_vals,new_name) 
+                    print("stats " , stats)
                     
-                    stats = sp.parse_scratch(decoded_vals,new_name) if len(decoded_vals) > 0 else {"parsed_tree":[],"stats":{}}
-                    
-                     
+                    with open("visibility_train.txt","a") as vs:
+                        vs.write(f"decoded value {decoded_vals} \n generated tree {stats} \n")
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -388,8 +391,9 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2_train()
                 val = None
+                
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                     cur.execute(insert_hash_statement,(hash_value,tree_value))
@@ -399,7 +403,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                         print("executed")
                     print("connection failed")
                 conn.commit()
-            
+                
         
 
 def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False):
@@ -556,12 +560,13 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                     if b'PK' not in scratch_bytes_content:
                         continue
 
-                    decoded_vals = sp.decode_scratch_bytes(scratch_bytes_content)
+                    decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
+                    print("decoded values ", decoded_vals)
+                    stats = sp.parse_scratch(decoded_vals,new_name) 
+                    print("stats ", stats)
+                    with open("visibility_train.txt","a") as vs:
+                        vs.write(f"decoded value {decoded_vals} \n generated tree {stats} \n")
                     
-                    
-                    stats = sp.parse_scratch(decoded_vals,new_name) if len(decoded_vals) > 0 else {"parsed_tree":[],"stats":{}}
-                    
-                     
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -586,8 +591,9 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection_test()
+                conn,cur = get_connection2()
                 val = None
+                
                 if conn != None:
                     cur.execute(insert_revision_statement,(project_name,new_original_file_name,new_name,c,parsed_date_str,hash_value,nodes_count,edges_count))
                     cur.execute(insert_hash_statement,(hash_value,tree_value))
@@ -597,7 +603,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                         print("executed")
                     print("connection failed")
                 conn.commit()
-    
+                
         
 
 def main2(project_path: str):
@@ -607,7 +613,7 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
-    projects_to_skip = get_all_projects_in_db_train()
+    projects_to_skip = get_all_projects_in_db()
     
     train_projects,test_projects = train_test_split(proj_names,test_size=0.2)
     
@@ -617,7 +623,7 @@ def main2(project_path: str):
         #if  proj_name != '' and len(proj_name) > 1:
             repo = f'{project_path}/{proj_name}'
             main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
-            main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
+            main_branch = main_branch.stdout.decode("utf-8") .strip('/n')[0:]
             
             
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
@@ -627,8 +633,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -656,7 +662,7 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4.txt", "a")
+                    f = open(" exceptions4.txt", "a")
                     #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
@@ -669,5 +675,5 @@ def main2(project_path: str):
             continue
 
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")

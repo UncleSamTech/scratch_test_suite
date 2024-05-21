@@ -17,7 +17,7 @@ import pandas as pd
 
 # step 3: create/connect to database
 #connection = sqlite3.connect("scratch_revisions_database.db")
-connection = sqlite3.connect("scratch_revisions_main_test.db")
+connection = sqlite3.connect("scratch_revisions_main_train2.db")
 
 # step 4: load data file to sqlite
 #df.to_sql("Projects", connection, if_exists='replace', index=False)
