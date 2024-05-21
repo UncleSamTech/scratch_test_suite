@@ -3544,3 +3544,286 @@ decoded value {
     }
 } 
  generated tree {'parsed_tree': ['simple_test', [['event_whenflagclicked', [['motion_movesteps', [['STEPS', ['10']]]], ['motion_turnright', [['DEGREES', ['15']]]]]]]], 'stats': {'number_of_nodes': 8, 'number_of_edges': 13, 'opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1, 'motion_turnright': 1}, 'non_opcodes_statistics': {'15': 1, 'DEGREES': 1, '10': 1, 'STEPS': 1, 'simple_test': 1}, 'most_common_opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1, 'motion_turnright': 1}, 'most_common_non_opcodes_statistics': {'15': 1, 'DEGREES': 1, '10': 1, 'STEPS': 1, 'simple_test': 1}, 'connections': [['CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived', 'BROADCAST_OPTION_Game Over_`?i+5`LP/(CoksWKG3RL'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP', 'looks_backdrops'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_show'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_if'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT', 'Game Over'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_stop'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE', '0'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION', '0.2'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_hide'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_gotofrontback'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'looks_show'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO', 'motion_goto_menu'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS', 'motion_pointtowards_menu'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION', 'operator_or'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock', 'motion_movesteps'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_delete_this_clone'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_wait'], ['CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_create_clone_of'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X', '240'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y', 'operator_random'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_movesteps'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'data_changevariableby'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'control_wait'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU'], ['CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU', 'sound_sounds_menu'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS', '10'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright', 'DEGREES'], ['CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright', 'DEGREES', '15']], 'all_nodes': ['15', 'DEGREES', '10', 'STEPS', 'event_whenflagclicked', 'motion_movesteps', 'motion_turnright']}} 
+decoded value {
+    "targets": [
+        {
+            "isStage": true,
+            "name": "Stage",
+            "variables": {
+                "`jEk@4|i[#Fk?(8x)AV.-my variable": [
+                    "my variable",
+                    0
+                ]
+            },
+            "lists": {},
+            "broadcasts": {},
+            "blocks": {},
+            "comments": {},
+            "currentCostume": 0,
+            "costumes": [
+                {
+                    "assetId": "cd21514d0531fdffb22204e0ec5ed84a",
+                    "name": "backdrop1",
+                    "md5ext": "cd21514d0531fdffb22204e0ec5ed84a.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 240,
+                    "rotationCenterY": 180
+                }
+            ],
+            "sounds": [
+                {
+                    "assetId": "83a9787d4cb6f3b7632b4ddfebf74367",
+                    "name": "pop",
+                    "dataFormat": "wav",
+                    "format": "",
+                    "rate": 48000,
+                    "sampleCount": 1123,
+                    "md5ext": "83a9787d4cb6f3b7632b4ddfebf74367.wav"
+                }
+            ],
+            "volume": 100,
+            "layerOrder": 0,
+            "tempo": 60,
+            "videoTransparency": 50,
+            "videoState": "on",
+            "textToSpeechLanguage": null
+        },
+        {
+            "isStage": false,
+            "name": "Sprite1",
+            "variables": {},
+            "lists": {},
+            "broadcasts": {},
+            "blocks": {
+                "dXFi$0R|t1}*%]BdX?*O": {
+                    "opcode": "event_whenflagclicked",
+                    "next": "cL~w*cbzioDnF5Tm6+ZC",
+                    "parent": null,
+                    "inputs": {},
+                    "fields": {},
+                    "shadow": false,
+                    "topLevel": true,
+                    "x": 274,
+                    "y": 141
+                },
+                "cL~w*cbzioDnF5Tm6+ZC": {
+                    "opcode": "motion_movesteps",
+                    "next": null,
+                    "parent": "dXFi$0R|t1}*%]BdX?*O",
+                    "inputs": {
+                        "STEPS": [
+                            1,
+                            [
+                                4,
+                                "10"
+                            ]
+                        ]
+                    },
+                    "fields": {},
+                    "shadow": false,
+                    "topLevel": false
+                }
+            },
+            "comments": {},
+            "currentCostume": 0,
+            "costumes": [
+                {
+                    "assetId": "bcf454acf82e4504149f7ffe07081dbc",
+                    "name": "costume1",
+                    "bitmapResolution": 1,
+                    "md5ext": "bcf454acf82e4504149f7ffe07081dbc.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 48,
+                    "rotationCenterY": 50
+                },
+                {
+                    "assetId": "0fb9be3e8397c983338cb71dc84d0b25",
+                    "name": "costume2",
+                    "bitmapResolution": 1,
+                    "md5ext": "0fb9be3e8397c983338cb71dc84d0b25.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 46,
+                    "rotationCenterY": 53
+                }
+            ],
+            "sounds": [
+                {
+                    "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                    "name": "Meow",
+                    "dataFormat": "wav",
+                    "format": "",
+                    "rate": 48000,
+                    "sampleCount": 40681,
+                    "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+                }
+            ],
+            "volume": 100,
+            "layerOrder": 1,
+            "visible": true,
+            "x": 0,
+            "y": 0,
+            "size": 100,
+            "direction": 90,
+            "draggable": false,
+            "rotationStyle": "all around"
+        }
+    ],
+    "monitors": [],
+    "extensions": [],
+    "meta": {
+        "semver": "3.0.0",
+        "vm": "0.2.0-prerelease.20220222132735",
+        "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Scratch/3.29.1 Chrome/94.0.4606.81 Electron/15.3.1 Safari/537.36"
+    }
+} 
+ generated tree {'parsed_tree': ['simple_test', [['event_whenflagclicked', [['motion_movesteps', [['STEPS', ['10']]]]]]]], 'stats': {'number_of_nodes': 5, 'number_of_edges': 8, 'opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1}, 'non_opcodes_statistics': {'10': 1, 'STEPS': 1, 'simple_test': 1}, 'most_common_opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1}, 'most_common_non_opcodes_statistics': {'10': 1, 'STEPS': 1, 'simple_test': 1}, 'connections': [['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived', 'BROADCAST_OPTION_Game Over_`?i+5`LP/(CoksWKG3RL'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP', 'looks_backdrops'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_show'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT', 'Game Over'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_stop'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE', '0'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION', '0.2'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_hide'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_gotofrontback'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'looks_show'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO', 'motion_goto_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS', 'motion_pointtowards_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION', 'operator_or'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_delete_this_clone'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_create_clone_of'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X', '240'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y', 'operator_random'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'data_changevariableby'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU', 'sound_sounds_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS', '10']], 'all_nodes': ['10', 'STEPS', 'event_whenflagclicked', 'motion_movesteps']}} 
+decoded value {
+    "targets": [
+        {
+            "isStage": true,
+            "name": "Stage",
+            "variables": {
+                "`jEk@4|i[#Fk?(8x)AV.-my variable": [
+                    "my variable",
+                    0
+                ]
+            },
+            "lists": {},
+            "broadcasts": {},
+            "blocks": {},
+            "comments": {},
+            "currentCostume": 0,
+            "costumes": [
+                {
+                    "assetId": "cd21514d0531fdffb22204e0ec5ed84a",
+                    "name": "backdrop1",
+                    "md5ext": "cd21514d0531fdffb22204e0ec5ed84a.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 240,
+                    "rotationCenterY": 180
+                }
+            ],
+            "sounds": [
+                {
+                    "assetId": "83a9787d4cb6f3b7632b4ddfebf74367",
+                    "name": "pop",
+                    "dataFormat": "wav",
+                    "format": "",
+                    "rate": 48000,
+                    "sampleCount": 1123,
+                    "md5ext": "83a9787d4cb6f3b7632b4ddfebf74367.wav"
+                }
+            ],
+            "volume": 100,
+            "layerOrder": 0,
+            "tempo": 60,
+            "videoTransparency": 50,
+            "videoState": "on",
+            "textToSpeechLanguage": null
+        },
+        {
+            "isStage": false,
+            "name": "Sprite1",
+            "variables": {},
+            "lists": {},
+            "broadcasts": {},
+            "blocks": {
+                "dXFi$0R|t1}*%]BdX?*O": {
+                    "opcode": "event_whenflagclicked",
+                    "next": "cL~w*cbzioDnF5Tm6+ZC",
+                    "parent": null,
+                    "inputs": {},
+                    "fields": {},
+                    "shadow": false,
+                    "topLevel": true,
+                    "x": 274,
+                    "y": 141
+                },
+                "cL~w*cbzioDnF5Tm6+ZC": {
+                    "opcode": "motion_movesteps",
+                    "next": "MTi_i]}1}vXb^v?/p$fQ",
+                    "parent": "dXFi$0R|t1}*%]BdX?*O",
+                    "inputs": {
+                        "STEPS": [
+                            1,
+                            [
+                                4,
+                                "10"
+                            ]
+                        ]
+                    },
+                    "fields": {},
+                    "shadow": false,
+                    "topLevel": false
+                },
+                "MTi_i]}1}vXb^v?/p$fQ": {
+                    "opcode": "motion_turnright",
+                    "next": null,
+                    "parent": "cL~w*cbzioDnF5Tm6+ZC",
+                    "inputs": {
+                        "DEGREES": [
+                            1,
+                            [
+                                4,
+                                "15"
+                            ]
+                        ]
+                    },
+                    "fields": {},
+                    "shadow": false,
+                    "topLevel": false
+                }
+            },
+            "comments": {},
+            "currentCostume": 0,
+            "costumes": [
+                {
+                    "assetId": "bcf454acf82e4504149f7ffe07081dbc",
+                    "name": "costume1",
+                    "bitmapResolution": 1,
+                    "md5ext": "bcf454acf82e4504149f7ffe07081dbc.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 48,
+                    "rotationCenterY": 50
+                },
+                {
+                    "assetId": "0fb9be3e8397c983338cb71dc84d0b25",
+                    "name": "costume2",
+                    "bitmapResolution": 1,
+                    "md5ext": "0fb9be3e8397c983338cb71dc84d0b25.svg",
+                    "dataFormat": "svg",
+                    "rotationCenterX": 46,
+                    "rotationCenterY": 53
+                }
+            ],
+            "sounds": [
+                {
+                    "assetId": "83c36d806dc92327b9e7049a565c6bff",
+                    "name": "Meow",
+                    "dataFormat": "wav",
+                    "format": "",
+                    "rate": 48000,
+                    "sampleCount": 40681,
+                    "md5ext": "83c36d806dc92327b9e7049a565c6bff.wav"
+                }
+            ],
+            "volume": 100,
+            "layerOrder": 1,
+            "visible": true,
+            "x": 0,
+            "y": 0,
+            "size": 100,
+            "direction": 90,
+            "draggable": false,
+            "rotationStyle": "all around"
+        }
+    ],
+    "monitors": [],
+    "extensions": [],
+    "meta": {
+        "semver": "3.0.0",
+        "vm": "0.2.0-prerelease.20220222132735",
+        "agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Scratch/3.29.1 Chrome/94.0.4606.81 Electron/15.3.1 Safari/537.36"
+    }
+} 
+ generated tree {'parsed_tree': ['simple_test', [['event_whenflagclicked', [['motion_movesteps', [['STEPS', ['10']]]], ['motion_turnright', [['DEGREES', ['15']]]]]]]], 'stats': {'number_of_nodes': 8, 'number_of_edges': 13, 'opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1, 'motion_turnright': 1}, 'non_opcodes_statistics': {'15': 1, 'DEGREES': 1, '10': 1, 'STEPS': 1, 'simple_test': 1}, 'most_common_opcodes_statistics': {'event_whenflagclicked': 1, 'motion_movesteps': 1, 'motion_turnright': 1}, 'most_common_non_opcodes_statistics': {'15': 1, 'DEGREES': 1, '10': 1, 'STEPS': 1, 'simple_test': 1}, 'connections': [['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenbroadcastreceived', 'BROADCAST_OPTION_Game Over_`?i+5`LP/(CoksWKG3RL'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_switchbackdropto', 'BACKDROP', 'looks_backdrops'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_show'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'event_broadcast', 'BROADCAST_INPUT', 'Game Over'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_stop'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'data_setvariableto', 'VALUE', '0'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_wait', 'DURATION', '0.2'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_hide'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'looks_gotofrontback'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'looks_show'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_goto', 'TO', 'motion_goto_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_pointtowards', 'TOWARDS', 'motion_pointtowards_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'CONDITION', 'operator_or'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_repeat_until', 'BodyBlock', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_delete_this_clone'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'event_whenflagclicked', 'control_forever', 'BodyBlock', 'control_create_clone_of'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'X', '240'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'motion_gotoxy', 'Y', 'operator_random'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_pointtowards'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_forever', 'BodyBlock', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'CONDITION', 'sensing_touchingobject'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'data_changevariableby'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'control_if', 'ThenBranch', 'control_wait'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'control_start_as_clone', 'sound_play', 'SOUND_MENU', 'sound_sounds_menu'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_movesteps', 'STEPS', '10'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright', 'DEGREES'], ['Bug-and-Apple', 'CS50 - Problem Set 0 v2 (1)', 'simple_test', 'event_whenflagclicked', 'motion_turnright', 'DEGREES', '15']], 'all_nodes': ['15', 'DEGREES', '10', 'STEPS', 'event_whenflagclicked', 'motion_movesteps', 'motion_turnright']}} 

@@ -2617,25 +2617,25 @@ class scratch_parser:
     
     def parse_scratch(self,scr_proj,file_name):
         with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
-            self.named_tempfile = fp.name
+            self.named_tempfile_pars = fp.name
 
-        with open(self.named_tempfile,"w") as temp_file:
+        with open(self.named_tempfile_pars,"w") as temp_file:
             temp_file.write(scr_proj)
 
-        with open(self.named_tempfile,"r") as read_temp:
+        with open(self.named_tempfile_pars,"r") as read_temp:
             read_data = read_temp.read()
-        if len(read_data) > 0:
-            val = json.loads(read_data)
+            if len(read_data) > 0:
+                val = json.loads(read_data)
             
-            all_blocks_value = self.get_all_blocks_vals(val)
+                all_blocks_value = self.get_all_blocks_vals(val)
             
             
-            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
-            next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+                file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+                next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
             
-            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+                fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         
-            return fin_val
+                return fin_val
         
     def parse_scratch_modified(self,scr_proj,file_name):
         
