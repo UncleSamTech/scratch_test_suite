@@ -142,12 +142,12 @@ def correct_code_replace2(byte_val):
     return inp
 
 def get_connection2():
-    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test.db",isolation_level=None)
+    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test2.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
 def get_connection2_train():
-    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train.db",isolation_level=None)
+    conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -157,7 +157,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection_test()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -172,7 +172,7 @@ def get_all_projects_in_db_train():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2_train()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -360,13 +360,12 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                         continue
 
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
-                    print("decoded vals train ", decoded_vals)
                     
-                    stats = sp.parse_scratch(decoded_vals,new_name) 
-                    print("stats " , stats)
                     
-                    with open("visibility_train.txt","a") as vs:
-                        vs.write(f"decoded value {decoded_vals} \n generated tree {stats} \n")
+                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
+                    
+                    print("tree",stats)
+                    
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
             
@@ -391,7 +390,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2_train()
                 val = None
                 
                 if conn != None:
@@ -549,11 +548,6 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                 try:
                     contents1 = subprocess.run(['git show {}:"{}"'.format(c, new_name)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True)
                     
-                    
-                    
-                    
-                    
-                    
                     scratch_bytes_content = contents1.stdout
                     
                     
@@ -561,11 +555,12 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                         continue
 
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
-                    print("decoded values ", decoded_vals)
-                    stats = sp.parse_scratch(decoded_vals,new_name) 
-                    print("stats ", stats)
-                    with open("visibility_train.txt","a") as vs:
-                        vs.write(f"decoded value {decoded_vals} \n generated tree {stats} \n")
+                    
+                    
+                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
+                    
+                    print("tree_test",stats)
+                    
                     
                 except:
                     stats = {"parsed_tree":[],"stats":{}}
@@ -591,7 +586,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection_test()
+                conn,cur = get_connection2()
                 val = None
                 
                 if conn != None:
@@ -604,7 +599,70 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                     print("connection failed")
                 conn.commit()
                 
+    
+def split_train_test_projects(all_projects):
+    if isinstance(all_projects,list) and len(all_projects) > 0:
+        train_projects,test_projects = train_test_split(all_projects,test_size=0.2)
+
+        for proj_train_name in train_projects:
+            proj_train_name=proj_train_name.strip()
+            insert_train_projects =  """INSERT INTO train_projects (project_name,number) VALUES (?,?);"""
+            conn,cur = get_connection2_train()
+            val_proj_train = None
+                
+            if conn != None:
+                cur.execute(insert_train_projects,(proj_train_name,"1"))
+                   
+            else:
+                if val_proj_train != None:
+                    print("executed")
+                print("connection failed")
+                conn.commit()
+        for proj_test_name in test_projects:
         
+            proj_test_name=proj_test_name.strip()
+            insert_test_projects =  """INSERT INTO test_projects (project_name,number) VALUES (?,?);"""
+            conn,cur = get_connection2()
+            val_proj_test = None
+                
+            if conn != None:
+                cur.execute(insert_test_projects,(proj_test_name,"1"))
+                   
+            else:
+                if val_proj_test != None:
+                    print("executed")
+                print("connection failed")
+                conn.commit()
+
+def get_all_train_projects():
+    select_projects = """SELECT project_name from train_projects;"""
+    val = []
+    fin_resp = []
+    conn,curr = get_connection2_train()
+    if conn != None:
+         curr.execute(select_projects)  
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+                     
+    else:
+        print("connection failed")
+    conn.commit()
+    return fin_resp
+
+def get_all_test_projects():
+    select_projects = """SELECT project_name from test_projects;"""
+    val = []
+    fin_resp = []
+    conn,curr = get_connection2()
+    if conn != None:
+         curr.execute(select_projects)  
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+                     
+    else:
+        print("connection failed")
+    conn.commit()
+    return fin_resp
 
 def main2(project_path: str):
     proj_names = []
@@ -613,10 +671,12 @@ def main2(project_path: str):
             proj_names.append(i)
         else:
             continue
+    
+    split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
     
-    train_projects,test_projects = train_test_split(proj_names,test_size=0.2)
-    
+    train_projects = get_all_train_projects()   
+    print(train_projects)  
     for proj_name in train_projects:
         
         if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
@@ -633,8 +693,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_train.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_train.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -646,6 +706,7 @@ def main2(project_path: str):
             continue
 
     projects_to_skip_test = get_all_projects_in_db()
+    test_projects = get_all_test_projects()
     for proj_name in test_projects:
         
         if proj_name not in projects_to_skip_test and proj_name != '' and len(proj_name) > 1:
@@ -662,8 +723,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_test.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_test.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -673,7 +734,7 @@ def main2(project_path: str):
         else:
             print(f"skipped {proj_name}")
             continue
+   
 
-
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")

@@ -9,6 +9,7 @@ from io import BytesIO
 import zipfile
 import io
 import zlib
+import ijson
 
 class scratch_parser:
 
@@ -31,12 +32,14 @@ class scratch_parser:
         self.input_block = {}
         self.fin_val = None
         self.sec_val = None
+        self.loaded_block = None
         self.in_val = None
         self.new_parent_tree_met = {}
         self.all_met = []
         self.inpt_2 = []
         self.missed_inp  = []
         self.missed_inp2  = []
+        self.next_val_dump = None
         self.child_input_keys = []
         self.flat = []
         self.named_tempfile_pars = None
@@ -46,7 +49,8 @@ class scratch_parser:
 
     
     def get_all_targets(self,json_data):
-        if isinstance(json_data,dict) and bool(json_data):          
+        loaded_blocks = self.tem_file_spit(json_data)
+        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):         
             return json_data["targets"] if 'targets' in json_data.keys() else {}
     
     def load_json_in_python(self,json_val):
@@ -98,7 +102,8 @@ class scratch_parser:
     def get_all_blocks_vals(self,blocks_values):
         all_blocks = {}
         i= 0
-        targ = self.get_all_targets(blocks_values)
+        val_data = self.tem_file_spit(blocks_values)
+        targ = self.get_all_targets(val_data)
         if isinstance(targ,list) and len(targ) > 0:
             for each_block in targ:
                 i+=1
@@ -109,7 +114,8 @@ class scratch_parser:
     def get_all_blocks_vals_modified(self,blocks_values):
         all_blocks = []
         i= 0
-        targ = self.get_all_targets(blocks_values)
+        val_data = self.tem_file_spit(blocks_values)
+        targ = self.get_all_targets(val_data)
         
         if isinstance(targ,list) and len(targ) > 0:
             for each_block in targ:
@@ -142,15 +148,17 @@ class scratch_parser:
         return all_blocks['blocks']
     
     def get_all_blockkeys_from_block(self,blocks_val):
-        all_keys_blocks = [keys for keys in blocks_val.keys() if isinstance(blocks_val,dict) and keys.startswith('blocks')]
+        loaded_blocks = self.tem_file_spit(blocks_val)
+        all_keys_blocks = [keys for keys in loaded_blocks.keys() if isinstance(loaded_blocks,dict) and keys.startswith('blocks')]
         return all_keys_blocks
 
 
     def get_any_block_by_id(self,blocks_values,key):
-        val = blocks_values.keys()
+        loaded_blocks = self.tem_file_spit(blocks_values)
+        val = loaded_blocks.keys()
         if key == None or key == '' or blocks_values == None or blocks_values == {}:
             return {}
-        val = [blocks_values[keys][key] for keys in self.get_all_blockkeys_from_block(blocks_values) if key in blocks_values[keys].keys()]
+        val = [loaded_blocks[keys][key] for keys in self.get_all_blockkeys_from_block(loaded_blocks) if key in loaded_blocks[keys].keys()]
         #print("checking ", val[0])
         return val[0] if len(val) > 0 else {}
     
@@ -514,6 +522,7 @@ class scratch_parser:
         if spec_block == None or spec_block == {} or blocks_values == None or blocks_values == {}:
             return []
         
+        loaded_blocks = self.tem_file_spit(blocks_values)
         inp_block = spec_block["inputs"] if "inputs" in spec_block.keys() else {}
         if isinstance(inp_block,dict) and bool(inp_block):
             for k,v in inp_block.items():
@@ -522,9 +531,9 @@ class scratch_parser:
                         if isinstance(each_val,str):
                             if len(each_val) > 0:
                                 self.child_input_keys.append(each_val)
-                                bloc = self.get_any_block_by_id(blocks_values,each_val)
+                                bloc = self.get_any_block_by_id(loaded_blocks,each_val)
                                 if bloc["inputs"] != None or bloc["inputs"] != {}:
-                                    self.get_children_key_recursively(blocks_values,bloc) 
+                                    self.get_children_key_recursively(loaded_blocks,bloc) 
                                 else:
                                     break                
         return self.child_input_keys
@@ -551,9 +560,10 @@ class scratch_parser:
     
     def get_next_child_keys(self,blocks_values,inp_block):
         all_next_keys = []
-        all_child_keys = self.get_children_key_recursively(blocks_values,inp_block)
+        loaded_blocks = self.tem_file_spit(blocks_values)
+        all_child_keys = self.get_children_key_recursively(loaded_blocks,inp_block)
         for each_key in all_child_keys:
-            block = self.get_any_block_by_id(blocks_values,each_key)
+            block = self.get_any_block_by_id(loaded_blocks,each_key)
             if isinstance(block,dict) and bool(block) and 'next' in block.keys():
                 all_next_keys.append(block['next'])
         return all_next_keys
@@ -571,8 +581,9 @@ class scratch_parser:
         all_parent_keys = []
         if blocks_values == None or blocks_values == {}:
             return []
-        if isinstance(blocks_values,dict) and bool(blocks_values):
-            for k,v in blocks_values.items():
+        loaded_blocks = self.tem_file_spit(blocks_values)
+        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):
+            for k,v in loaded_blocks.items():
                 if isinstance(v,dict) and bool(v):
                     for k2,v2 in v.items():
                         if isinstance(v2,dict) and bool(v2) and 'parent' in v2.keys() and v2['parent'] == None:
@@ -597,14 +608,14 @@ class scratch_parser:
     def compare_parent_keys(self,blocks_values,block_key,parent_key):
         if blocks_values == None or blocks_values == {} or block_key == None or block_key == {} or parent_key == None or parent_key == '':
             return False
-        
+        loaded_blocks = self.tem_file_spit(blocks_values)
         if isinstance(block_key,dict) and bool(block_key) and 'parent' in block_key.keys():
-            parent_block = self.get_any_block_by_id(blocks_values,block_key['parent'])
+            parent_block = self.get_any_block_by_id(loaded_blocks,block_key['parent'])
             if block_key['parent'] != None and block_key['parent'] == parent_key:
                 return True
             
             else:
-                next_par = self.compare_parent_keys(blocks_values,parent_block,parent_key)
+                next_par = self.compare_parent_keys(loaded_blocks,parent_block,parent_key)
                 return next_par
             
     def compare_parent_keys_modified(self,blocks_values,block_key,parent_key):
@@ -625,11 +636,12 @@ class scratch_parser:
         spec = []
         if blocks_values == None or blocks_values == {} or parent_key == None or parent_key == '':
             return []
-        for k,v in blocks_values.items():
+        loaded_blocks = self.tem_file_spit(blocks_values)
+        for k,v in loaded_blocks.items():
             if isinstance(v,dict) and bool(v):
                 for k2,v2 in v.items():
                     if isinstance(v2,dict) and bool(v2):
-                        if parent_key in self.get_all_parent_keys(blocks_values) and v2["next"] not in self.get_children_key_recursively(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and v2["next"] not in self.get_next_child_keys(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and self.compare_parent_keys(blocks_values,self.get_any_block_by_id(blocks_values,v2["next"]),parent_key):
+                        if parent_key in self.get_all_parent_keys(loaded_blocks) and v2["next"] not in self.get_children_key_recursively(loaded_blocks,self.get_any_block_by_id(loaded_blocks,k2)) and v2["next"] not in self.get_next_child_keys(loaded_blocks,self.get_any_block_by_id(loaded_blocks,k2)) and self.compare_parent_keys(loaded_blocks,self.get_any_block_by_id(loaded_blocks,v2["next"]),parent_key):
                             spec.append(v2["next"])
         return spec
     def json_dump_encoder(self,obj):
@@ -650,6 +662,27 @@ class scratch_parser:
         else:
             return repr(obj)
     
+    def tem_file_spit(self,json_obj):
+        dumped_val  = json.dumps(json_obj)
+        loaded_val = None
+
+        with tempfile.NamedTemporaryFile(mode="w+",delete=False) as fp:
+            tem_file_name  = fp.name
+        
+        with open(tem_file_name,"w") as tmp_file:
+            tmp_file.write(dumped_val)
+        
+        with open(tem_file_name,"r") as rf:
+            read_val = rf.read()
+
+            loaded_val = json.loads(read_val)
+            os.remove(tem_file_name)
+            return loaded_val
+
+
+
+        
+
     def break_down_modified(self,blocks_values,parent_key):
         spec = []
         if blocks_values == None or blocks_values == [] or parent_key == None or parent_key == '':
@@ -669,12 +702,12 @@ class scratch_parser:
        all_next_id = {}
        if blocks_values == None or blocks_values == {}:
             return {}   
-
-       for each_value in self.get_all_parent_keys(blocks_values):
-           all_next_id[each_value] = self.break_down(blocks_values,each_value)
+       loaded_blocks = self.tem_file_spit(blocks_values)
+       for each_value in self.get_all_parent_keys(loaded_blocks):
+           all_next_id[each_value] = self.break_down(loaded_blocks,each_value)
     
        #return all_next_id
-       return {each_value:self.break_down(blocks_values,each_value) for each_value in self.get_all_parent_keys(blocks_values)}
+       return {each_value:self.break_down(loaded_blocks,each_value) for each_value in self.get_all_parent_keys(loaded_blocks)}
     
     def get_all_next_id_test_modified(self,blocks_values):
        all_next_id = {}
@@ -1139,37 +1172,37 @@ class scratch_parser:
     def create_next_values2_disp(self,blocks_values,file_name):  
         tr = [] 
         final_tree = []
+        loaded_dump = self.tem_file_spit(blocks_values)
         
+        all_val = self.get_all_next_id_test(loaded_dump)  
         
-        all_val = self.get_all_next_id_test(blocks_values)  
-           
-    
+        print("all next id ", all_val)
         if all_val == None or all_val == {}:
             return []
         if isinstance(all_val,dict) and bool(all_val):
             for ks,vs in all_val.items():
                 
                 if isinstance(vs,list) and len(vs) > 0:
-                    if isinstance(self.get_opcode_from_id(blocks_values,ks),str) and self.get_opcode_from_id(blocks_values,ks).startswith("event") or self.get_opcode_from_id(blocks_values,ks).startswith("control"):
+                    if isinstance(self.get_opcode_from_id(loaded_dump,ks),str) and self.get_opcode_from_id(loaded_dump,ks).startswith("event") or self.get_opcode_from_id(loaded_dump,ks).startswith("control"):
                         
-                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] if self.get_complete_fields_inputs(blocks_values,v2) == '' or self.get_complete_fields_inputs(blocks_values,v2) == None else [self.get_opcode_from_id(blocks_values,v2),[self.get_complete_fields_inputs(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs ]
+                        val =  [[self.get_opcode_from_id(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)] if self.get_complete_fields_inputs(loaded_dump,v2) == '' or self.get_complete_fields_inputs(loaded_dump,v2) == None else [self.get_opcode_from_id(loaded_dump,v2),[self.get_complete_fields_inputs(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)]] for v2 in vs ]
                         
-                        tr.append([self.get_opcode_from_id(blocks_values,ks),val] if self.get_complete_fields_inputs(blocks_values,ks) == "" or self.get_complete_fields_inputs(blocks_values,ks) == None else [self.get_opcode_from_id(blocks_values,ks),[self.get_complete_fields_inputs(blocks_values,ks),val]])
+                        tr.append([self.get_opcode_from_id(loaded_dump,ks),val] if self.get_complete_fields_inputs(loaded_dump,ks) == "" or self.get_complete_fields_inputs(loaded_dump,ks) == None else [self.get_opcode_from_id(loaded_dump,ks),[self.get_complete_fields_inputs(loaded_dump,ks),val]])
                     else:
-                        if self.get_opcode_from_id2(blocks_values, ks) == self.get_opcode_from_id(blocks_values,ks):
-                            blocks = self.get_any_block_by_id(blocks_values,ks)
-                            val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                        if self.get_opcode_from_id2(loaded_dump, ks) == self.get_opcode_from_id(loaded_dump,ks):
+                            blocks = self.get_any_block_by_id(loaded_dump,ks)
+                            val = [[self.iterate_procedure_input(loaded_dump,blocks),[self.get_opcode_from_id(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
-                            tr.append([self.get_opcode_from_id(blocks_values,ks),val])                        
-        final_tree = [file_name,tr]
-        return final_tree
+                            tr.append([self.get_opcode_from_id(loaded_dump,ks),val])                        
+            final_tree = [file_name,tr]
+            return final_tree
     
     def create_next_values2_disp_modified(self,blocks_values,file_name):  
         tr = [] 
         final_tree = []
         
-        
-        all_val = self.get_all_next_id_test_modified(blocks_values)     
+        loaded_dump = self.tem_file_spit(blocks_values)
+        all_val = self.get_all_next_id_test_modified(loaded_dump)     
         
         if all_val == None or all_val == {}:
             return []
@@ -1177,17 +1210,17 @@ class scratch_parser:
             for ks,vs in all_val.items():
                 
                 if isinstance(vs,list) and len(vs) > 0:
-                    if isinstance(self.get_opcode_from_id_modified(blocks_values,ks),str) and self.get_opcode_from_id_modified(blocks_values,ks).startswith("event") or self.get_opcode_from_id_modified(blocks_values,ks).startswith("control"):
+                    if isinstance(self.get_opcode_from_id_modified(loaded_dump,ks),str) and self.get_opcode_from_id_modified(loaded_dump,ks).startswith("event") or self.get_opcode_from_id_modified(loaded_dump,ks).startswith("control"):
                         
-                        val =  [[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)] if self.get_complete_fields_inputs_modified(blocks_values,v2) == '' or self.get_complete_fields_inputs_modified(blocks_values,v2) == None else [self.get_opcode_from_id_modified(blocks_values,v2),[self.get_complete_fields_inputs_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs ]
+                        val =  [[self.get_opcode_from_id_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)] if self.get_complete_fields_inputs_modified(loaded_dump,v2) == '' or self.get_complete_fields_inputs_modified(loaded_dump,v2) == None else [self.get_opcode_from_id_modified(loaded_dump,v2),[self.get_complete_fields_inputs_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)]] for v2 in vs ]
                         
-                        tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val] if self.get_complete_fields_inputs_modified(blocks_values,ks) == "" or self.get_complete_fields_inputs_modified(blocks_values,ks) == None else [self.get_opcode_from_id_modified(blocks_values,ks),[self.get_complete_fields_inputs_modified(blocks_values,ks),val]])
+                        tr.append([self.get_opcode_from_id_modified(loaded_dump,ks),val] if self.get_complete_fields_inputs_modified(loaded_dump,ks) == "" or self.get_complete_fields_inputs_modified(loaded_dump,ks) == None else [self.get_opcode_from_id_modified(loaded_dump,ks),[self.get_complete_fields_inputs_modified(loaded_dump,ks),val]])
                     else:
-                        if self.get_opcode_from_id2_modified(blocks_values, ks) == self.get_opcode_from_id_modified(blocks_values,ks):
-                            blocks = self.get_any_block_by_id_modified(blocks_values,ks)
-                            val = [[self.iterate_procedure_input_modified(blocks_values,blocks),[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                        if self.get_opcode_from_id2_modified(loaded_dump, ks) == self.get_opcode_from_id_modified(loaded_dump,ks):
+                            blocks = self.get_any_block_by_id_modified(loaded_dump,ks)
+                            val = [[self.iterate_procedure_input_modified(loaded_dump,blocks),[self.get_opcode_from_id_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
-                            tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val])                        
+                            tr.append([self.get_opcode_from_id_modified(loaded_dump,ks),val])                        
         final_tree = [file_name,tr]
         return final_tree
     
@@ -2570,16 +2603,15 @@ class scratch_parser:
             read_data = read_temp.read()
 
             with zipfile.ZipFile(io.BytesIO(read_data)) as zp:
-                
                 json_file = zp.open('project.json')
                 
                 project_data = json.load(json_file)
                 
                 self.scr_pro = json.dumps(project_data,indent=4)
                 
+                os.remove(self.named_tempfile)
                 return self.scr_pro
             
-
 
     def count_actual_edges(self,tree):
     # Initialize edge count
@@ -2616,30 +2648,47 @@ class scratch_parser:
     '''
     
     def parse_scratch(self,scr_proj,file_name):
+         
+         with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
+            self.named_tempfile_pars = fp.name
+            
+         with open(self.named_tempfile_pars,"w") as tem_fil:
+             tem_fil.write(scr_proj)
+
+       
+         with open(self.named_tempfile_pars,"r") as read_temp:
+            read_data = read_temp.read()
+            
+            if len(read_data) > 0:
+                val = json.loads(read_data)
+                
+
+                all_blocks_value = self.get_all_blocks_vals(val)
+                
+                
+            
+                file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+                next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+            
+                fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+            
+                #os.remove(self.named_tempfile_pars)
+                return fin_val
+            
+            
+        
+    def parse_scratch_modified(self,scr_proj,file_name):
         with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
             self.named_tempfile_pars = fp.name
+            
 
         with open(self.named_tempfile_pars,"w") as temp_file:
             temp_file.write(scr_proj)
 
         with open(self.named_tempfile_pars,"r") as read_temp:
             read_data = read_temp.read()
-            if len(read_data) > 0:
-                val = json.loads(read_data)
-            
-                all_blocks_value = self.get_all_blocks_vals(val)
-            
-            
-                file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
-                next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-            
-                fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
-        
-                return fin_val
-        
-    def parse_scratch_modified(self,scr_proj,file_name):
-        
-        if len(scr_proj) > 0:
+
+        if len(read_data) > 0:
             val = json.loads(scr_proj)
             all_blocks_value = self.get_all_blocks_vals_modified(val)
             
@@ -2650,6 +2699,32 @@ class scratch_parser:
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
         
             return fin_val
+        
+        os.remove(self.named_tempfile_pars)
+
+    def parse_scratch_modified2(self,scr_proj,file_name):
+        with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
+            self.named_tempfile_pars = fp.name
+            self.named_tempfile_pars.write(scr_proj)
+
+       
+
+        with open(self.named_tempfile_pars,"r") as read_temp:
+            read_data = read_temp.read()
+
+        if len(read_data) > 0:
+            val = json.loads(read_data)
+            all_blocks_value = self.get_all_blocks_vals_modified(val)
+            
+            
+            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+            next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
+            
+            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
+        
+            return fin_val
+        
+        os.remove(self.named_tempfile_pars)
     
 
 
@@ -2689,79 +2764,7 @@ edg_c = scratch_parser_inst.get_accurate_edge_count([
       ]
    ])
 print(edg_c)
-act_edg = scratch_parser_inst.count_actual_edges([
-    "quick",
-    [
-        [
-            "event_whenflagclicked",
-            [
-                [
-                    "control_if_else",
-                    [
-                        [
-                            "CONDITION",
-                            [
-                                "sensing_touchingobject",
-                                [
-                                    [
-                                        [
-                                            "TOUCHINGOBJECTMENU",
-                                            [
-                                                "sensing_touchingobjectmenu__mouse_",
-                                                [
-                                                    []
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "SUBSTACK",
-                            [
-                                "sensing_askandwait",
-                                [
-                                    [
-                                        [
-                                            "QUESTION",
-                                            [
-                                                "What's your name?"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            "SUBSTACK2",
-                            [
-                                "looks_thinkforsecs",
-                                [
-                                    [
-                                        [
-                                            "MESSAGE",
-                                            [
-                                                "Hmm..."
-                                            ]
-                                        ],
-                                        [
-                                            "SECS",
-                                            [
-                                                "2"
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]
-])
-print(act_edg)
+
 #val = scratch_parser_inst.check_read("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/complex3.sb3")
 #print(val)
 #val = scratch_parser.get_any_block_by_id({'blocks1': {'M.hxK,hM)Q@bk=85rp0T': {'opcode': 'event_whenbroadcastreceived', 'next': '%bD(N8zD]GQ.,Zl4bRbd', 'parent': None, 'inputs': {}, 'fields': {'BROADCAST_OPTION': ['Game Over', '`?i+5`LP/(CoksWKG3RL']}, 'shadow': False, 'topLevel': True, 'x': -409, 'y': -870}, '%bD(N8zD]GQ.,Zl4bRbd': {'opcode': 'control_forever', 'next': None, 'parent': 'M.hxK,hM)Q@bk=85rp0T', 'inputs': {'SUBSTACK': [2, 'v?J]t+R9sobr`bKO));b']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v?J]t+R9sobr`bKO));b': {'opcode': 'sound_playuntildone', 'next': None, 'parent': '%bD(N8zD]GQ.,Zl4bRbd', 'inputs': {'SOUND_MENU': [1, ',:l6=EGVw#+0nf;%h8Iv']}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',:l6=EGVw#+0nf;%h8Iv': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'v?J]t+R9sobr`bKO));b', 'inputs': {}, 'fields': {'SOUND_MENU': ['emotional-titanic-flute', None]}, 'shadow': True, 'topLevel': False}}, 'blocks2': {'C23D/+bAbUxTrv:1RzxP': {'opcode': 'event_whenflagclicked', 'next': ']c_DN9ktwJPSD+[-_h0o', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 44, 'y': -1466}, ']c_DN9ktwJPSD+[-_h0o': {'opcode': 'looks_switchbackdropto', 'next': 'V37-D2@$bG!8BV13$!Zz', 'parent': 'C23D/+bAbUxTrv:1RzxP', 'inputs': {'BACKDROP': [1, '8U`qk764%G4gH8n9ieIF']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '8U`qk764%G4gH8n9ieIF': {'opcode': 'looks_backdrops', 'next': None, 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {'BACKDROP': ['backdrop1', None]}, 'shadow': True, 'topLevel': False}, 'V37-D2@$bG!8BV13$!Zz': {'opcode': 'looks_show', 'next': '?+UNT~w3BXEz?f#DZy`;', 'parent': ']c_DN9ktwJPSD+[-_h0o', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?+UNT~w3BXEz?f#DZy`;': {'opcode': 'control_forever', 'next': None, 'parent': 'V37-D2@$bG!8BV13$!Zz', 'inputs': {'SUBSTACK': [2, 'yd_p9f#IngzGTV~V3=Hh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'yd_p9f#IngzGTV~V3=Hh': {'opcode': 'motion_pointtowards', 'next': 'UUw%cjUNV?WYn7O{fv~]', 'parent': '?+UNT~w3BXEz?f#DZy`;', 'inputs': {'TOWARDS': [1, 'bK6m@kv)FAnr;l/}HfjN']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'bK6m@kv)FAnr;l/}HfjN': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, 'UUw%cjUNV?WYn7O{fv~]': {'opcode': 'control_if', 'next': ',J%S|S81q]X[zP9^{`])', 'parent': 'yd_p9f#IngzGTV~V3=Hh', 'inputs': {'CONDITION': [2, 'm%4M,~F5ipSR4G0FP/.('], 'SUBSTACK': [2, '1me78w3pJ{!I-zT-]Q-;']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'm%4M,~F5ipSR4G0FP/.(': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'KEY_OPTION': [1, '01)[R?;VDtZ|qsI/CKB@']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '01)[R?;VDtZ|qsI/CKB@': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': 'm%4M,~F5ipSR4G0FP/.(', 'inputs': {}, 'fields': {'KEY_OPTION': ['w', None]}, 'shadow': True, 'topLevel': False}, '1me78w3pJ{!I-zT-]Q-;': {'opcode': 'motion_movesteps', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'STEPS': [1, [4, '5']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ',J%S|S81q]X[zP9^{`])': {'opcode': 'control_if', 'next': None, 'parent': 'UUw%cjUNV?WYn7O{fv~]', 'inputs': {'CONDITION': [2, '!uPYOZkLcwS3Yaq8`Iww'], 'SUBSTACK': [2, 'rpoTX*P$xiR_wApsQK|{']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '!uPYOZkLcwS3Yaq8`Iww': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'iA%MPkQ5+;]8YbY9amIJ']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iA%MPkQ5+;]8YbY9amIJ': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '!uPYOZkLcwS3Yaq8`Iww', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 'rpoTX*P$xiR_wApsQK|{': {'opcode': 'looks_switchbackdropto', 'next': 'ck2)._e?hfzp|$3wa_Wq', 'parent': ',J%S|S81q]X[zP9^{`])', 'inputs': {'BACKDROP': [1, 'GpNUNKj+gW;=uvJqp~Ep']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'GpNUNKj+gW;=uvJqp~Ep': {'opcode': 'looks_backdrops', 'next': None, 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {'BACKDROP': ['Blue Sky 2 ', None]}, 'shadow': True, 'topLevel': False}, 'ck2)._e?hfzp|$3wa_Wq': {'opcode': 'looks_hide', 'next': 'YM7CbUT8Vw?Pb~?^94E7', 'parent': 'rpoTX*P$xiR_wApsQK|{', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'YM7CbUT8Vw?Pb~?^94E7': {'opcode': 'event_broadcast', 'next': ')s5sHEJ?G|eQM0*zKw#M', 'parent': 'ck2)._e?hfzp|$3wa_Wq', 'inputs': {'BROADCAST_INPUT': [1, [11, 'Game Over', '`?i+5`LP/(CoksWKG3RL']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, ')s5sHEJ?G|eQM0*zKw#M': {'opcode': 'control_stop', 'next': None, 'parent': 'YM7CbUT8Vw?Pb~?^94E7', 'inputs': {}, 'fields': {'STOP_OPTION': ['all', None]}, 'shadow': False, 'topLevel': False, 'mutation': {'tagName': 'mutation', 'children': [], 'hasnext': 'false'}}, 'GKIN6^K)vBF@fY1{38m!': {'opcode': 'event_whenflagclicked', 'next': '*xRI^_Oe53h8rVtVTumr', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 47, 'y': -735}, '*xRI^_Oe53h8rVtVTumr': {'opcode': 'data_setvariableto', 'next': 'Hqa}iTkhIAQ+Wb^$YUw:', 'parent': 'GKIN6^K)vBF@fY1{38m!', 'inputs': {'VALUE': [1, [10, '0']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, 'Hqa}iTkhIAQ+Wb^$YUw:': {'opcode': 'control_forever', 'next': None, 'parent': '*xRI^_Oe53h8rVtVTumr', 'inputs': {'SUBSTACK': [2, 'G}j,hNT[cXqLy*K+}t}A']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'G}j,hNT[cXqLy*K+}t}A': {'opcode': 'control_if', 'next': None, 'parent': 'Hqa}iTkhIAQ+Wb^$YUw:', 'inputs': {'CONDITION': [2, '.Mz3D6{aFT=};E?e0?mm'], 'SUBSTACK': [2, 'WULxY9~=$g+V80IE!Tmh']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '.Mz3D6{aFT=};E?e0?mm': {'opcode': 'sensing_keypressed', 'next': None, 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'KEY_OPTION': [1, 'iV*ZiTLD)^q]SR#fv?(p']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'iV*ZiTLD)^q]SR#fv?(p': {'opcode': 'sensing_keyoptions', 'next': None, 'parent': '.Mz3D6{aFT=};E?e0?mm', 'inputs': {}, 'fields': {'KEY_OPTION': ['space', None]}, 'shadow': True, 'topLevel': False}, 'WULxY9~=$g+V80IE!Tmh': {'opcode': 'sound_play', 'next': ';4[b=j~`[{jr6FIyYjk/', 'parent': 'G}j,hNT[cXqLy*K+}t}A', 'inputs': {'SOUND_MENU': [1, 'xDLKKDz!*:h~65oW6nQE']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'xDLKKDz!*:h~65oW6nQE': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {}, 'fields': {'SOUND_MENU': ['rifle-shot-echo', None]}, 'shadow': True, 'topLevel': False}, ';4[b=j~`[{jr6FIyYjk/': {'opcode': 'control_create_clone_of', 'next': '[RIo0bTesL@IFi*[t%#w', 'parent': 'WULxY9~=$g+V80IE!Tmh', 'inputs': {'CLONE_OPTION': [1, 'cQ@q?X+sIed#+Pt+7)73']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'cQ@q?X+sIed#+Pt+7)73': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {}, 'fields': {'CLONE_OPTION': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '[RIo0bTesL@IFi*[t%#w': {'opcode': 'control_wait', 'next': None, 'parent': ';4[b=j~`[{jr6FIyYjk/', 'inputs': {'DURATION': [1, [5, '0.2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}}, 'blocks3': {'*XuesH$(rU;CZ,@yboEv': {'opcode': 'event_whenflagclicked', 'next': '|9K7Y:sgA!%9ip7=AMHO', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 19, 'y': 49}, '|9K7Y:sgA!%9ip7=AMHO': {'opcode': 'looks_hide', 'next': 's(#l*BXY37auR-ua_D)@', 'parent': '*XuesH$(rU;CZ,@yboEv', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1+Iin9A%Ar?bXfp(spxF': {'opcode': 'control_start_as_clone', 'next': '$/1(*,Had=NDQ]:d+`/:', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 22, 'y': 273}, '$/1(*,Had=NDQ]:d+`/:': {'opcode': 'looks_show', 'next': '/NoF~j-iwMIQbiCM!rMN', 'parent': '1+Iin9A%Ar?bXfp(spxF', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/NoF~j-iwMIQbiCM!rMN': {'opcode': 'motion_goto', 'next': '@tg/1x-(z3?td=uh2S3g', 'parent': '$/1(*,Had=NDQ]:d+`/:', 'inputs': {'TO': [1, 'p.?](gie|65$5;t[:GKm']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p.?](gie|65$5;t[:GKm': {'opcode': 'motion_goto_menu', 'next': None, 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {}, 'fields': {'TO': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, '@tg/1x-(z3?td=uh2S3g': {'opcode': 'motion_pointtowards', 'next': '0cW.-LDctKr[C9JSiHgM', 'parent': '/NoF~j-iwMIQbiCM!rMN', 'inputs': {'TOWARDS': [1, 'L15F~L/k1~po}h9UW{2J']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'L15F~L/k1~po}h9UW{2J': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {}, 'fields': {'TOWARDS': ['_mouse_', None]}, 'shadow': True, 'topLevel': False}, '0cW.-LDctKr[C9JSiHgM': {'opcode': 'control_repeat_until', 'next': '/);uyV.(Y.US2rLY$uz4', 'parent': '@tg/1x-(z3?td=uh2S3g', 'inputs': {'CONDITION': [2, '?YsW!rj;UB%Ow3GXAI/Y'], 'SUBSTACK': [2, 'cyXNaFXd$,@E?]@_DhK_']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'wazvHMCR*7Y,YYKHfu/=': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, 'j4gg+qJfw0n$HT@ejg+t']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'j4gg+qJfw0n$HT@ejg+t': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'wazvHMCR*7Y,YYKHfu/=', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['_edge_', None]}, 'shadow': True, 'topLevel': False}, 'cyXNaFXd$,@E?]@_DhK_': {'opcode': 'motion_movesteps', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'STEPS': [1, [4, '20']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/);uyV.(Y.US2rLY$uz4': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, '?YsW!rj;UB%Ow3GXAI/Y': {'opcode': 'operator_or', 'next': None, 'parent': '0cW.-LDctKr[C9JSiHgM', 'inputs': {'OPERAND1': [2, 'wazvHMCR*7Y,YYKHfu/='], 'OPERAND2': [2, 'vi5.T|yaXk%T4p].8k33']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'vi5.T|yaXk%T4p].8k33': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': '?YsW!rj;UB%Ow3GXAI/Y', 'inputs': {'TOUCHINGOBJECTMENU': [1, '=[)vc6yI/p=p!Q@(bM#s']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '=[)vc6yI/p=p!Q@(bM#s': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': 'vi5.T|yaXk%T4p].8k33', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Zombie', None]}, 'shadow': True, 'topLevel': False}, 's(#l*BXY37auR-ua_D)@': {'opcode': 'looks_gotofrontback', 'next': None, 'parent': '|9K7Y:sgA!%9ip7=AMHO', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}}, 'blocks4': {'bqXyGzon`N83+r2c7wmD': {'opcode': 'event_whenflagclicked', 'next': 'fRO|fy72P6nw~K9SjMfU', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 70, 'y': -275}, 'fRO|fy72P6nw~K9SjMfU': {'opcode': 'looks_hide', 'next': 'oR^QMp!Uq#h4!sz;B#~Q', 'parent': 'bqXyGzon`N83+r2c7wmD', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oR^QMp!Uq#h4!sz;B#~Q': {'opcode': 'looks_gotofrontback', 'next': ';)9Xe3uJxp-JLonqEQ2|', 'parent': 'fRO|fy72P6nw~K9SjMfU', 'inputs': {}, 'fields': {'FRONT_BACK': ['back', None]}, 'shadow': False, 'topLevel': False}, ';)9Xe3uJxp-JLonqEQ2|': {'opcode': 'control_forever', 'next': None, 'parent': 'oR^QMp!Uq#h4!sz;B#~Q', 'inputs': {'SUBSTACK': [2, 'rSxz;wVoy!dd}^Kdti.S']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'rSxz;wVoy!dd}^Kdti.S': {'opcode': 'control_wait', 'next': 'oOf=GugPe;FdhylZZBAd', 'parent': ';)9Xe3uJxp-JLonqEQ2|', 'inputs': {'DURATION': [1, [5, '2']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'oOf=GugPe;FdhylZZBAd': {'opcode': 'control_create_clone_of', 'next': None, 'parent': 'rSxz;wVoy!dd}^Kdti.S', 'inputs': {'CLONE_OPTION': [1, 'AFa@0;S(~[No/^63VSb?']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'AFa@0;S(~[No/^63VSb?': {'opcode': 'control_create_clone_of_menu', 'next': None, 'parent': 'oOf=GugPe;FdhylZZBAd', 'inputs': {}, 'fields': {'CLONE_OPTION': ['_myself_', None]}, 'shadow': True, 'topLevel': False}, 'llpHw(s60:eEy!SXEUAx': {'opcode': 'control_start_as_clone', 'next': ',ojgTgdz;YO@s8H?RfvT', 'parent': None, 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': True, 'x': 106, 'y': 330}, ',ojgTgdz;YO@s8H?RfvT': {'opcode': 'looks_show', 'next': 'Rk@T$*H^Yuu0vFpXgajB', 'parent': 'llpHw(s60:eEy!SXEUAx', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Rk@T$*H^Yuu0vFpXgajB': {'opcode': 'motion_gotoxy', 'next': 'QmU3Eldf1Hl{(Uau=OQ,', 'parent': ',ojgTgdz;YO@s8H?RfvT', 'inputs': {'X': [1, [4, '240']], 'Y': [3, '7,-[~JHPw-,HkZcnGpKZ', [4, '-12']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '7,-[~JHPw-,HkZcnGpKZ': {'opcode': 'operator_random', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'FROM': [1, [4, '170']], 'TO': [1, [4, '-170']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'QmU3Eldf1Hl{(Uau=OQ,': {'opcode': 'control_forever', 'next': None, 'parent': 'Rk@T$*H^Yuu0vFpXgajB', 'inputs': {'SUBSTACK': [2, 'v%]~us3a974{TSZ/Cb39']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'v%]~us3a974{TSZ/Cb39': {'opcode': 'motion_pointtowards', 'next': 'h1[6F}6P~.%T-mk`dcVb', 'parent': 'QmU3Eldf1Hl{(Uau=OQ,', 'inputs': {'TOWARDS': [1, '1ApyPf#j3F4z,iy@e`o1']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '1ApyPf#j3F4z,iy@e`o1': {'opcode': 'motion_pointtowards_menu', 'next': None, 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {}, 'fields': {'TOWARDS': ['Survivor', None]}, 'shadow': True, 'topLevel': False}, 'h1[6F}6P~.%T-mk`dcVb': {'opcode': 'motion_movesteps', 'next': 'p:kV()f[,r#*]k:@3pU|', 'parent': 'v%]~us3a974{TSZ/Cb39', 'inputs': {'STEPS': [1, [4, '1']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'p:kV()f[,r#*]k:@3pU|': {'opcode': 'control_if', 'next': None, 'parent': 'h1[6F}6P~.%T-mk`dcVb', 'inputs': {'CONDITION': [2, '%P5`n@dBP!sOtljY1~M1'], 'SUBSTACK': [2, '70U0KKAgTO~a$axeFxVi']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '%P5`n@dBP!sOtljY1~M1': {'opcode': 'sensing_touchingobject', 'next': None, 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'TOUCHINGOBJECTMENU': [1, '/k9;;f}WDSaD$PxGca9Q']}, 'fields': {}, 'shadow': False, 'topLevel': False}, '/k9;;f}WDSaD$PxGca9Q': {'opcode': 'sensing_touchingobjectmenu', 'next': None, 'parent': '%P5`n@dBP!sOtljY1~M1', 'inputs': {}, 'fields': {'TOUCHINGOBJECTMENU': ['Bullet', None]}, 'shadow': True, 'topLevel': False}, '70U0KKAgTO~a$axeFxVi': {'opcode': 'data_changevariableby', 'next': '5IQcd}[th0$)zd-1a8[1', 'parent': 'p:kV()f[,r#*]k:@3pU|', 'inputs': {'VALUE': [1, [4, '1']]}, 'fields': {'VARIABLE': ['Score', '`jEk@4|i[#Fk?(8x)AV.-my variable']}, 'shadow': False, 'topLevel': False}, '5IQcd}[th0$)zd-1a8[1': {'opcode': 'control_wait', 'next': '$1W2j?_Z:vQ}y,#dpV|1', 'parent': '70U0KKAgTO~a$axeFxVi', 'inputs': {'DURATION': [1, [5, '.05']]}, 'fields': {}, 'shadow': False, 'topLevel': False}, '$1W2j?_Z:vQ}y,#dpV|1': {'opcode': 'sound_play', 'next': 'D#2k,Hb,kbsAe~Wx[57m', 'parent': '5IQcd}[th0$)zd-1a8[1', 'inputs': {'SOUND_MENU': [1, 'Su:q4(=e704--)v=Xb-6']}, 'fields': {}, 'shadow': False, 'topLevel': False}, 'Su:q4(=e704--)v=Xb-6': {'opcode': 'sound_sounds_menu', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {'SOUND_MENU': ['Zombie groan', None]}, 'shadow': True, 'topLevel': False}, 'D#2k,Hb,kbsAe~Wx[57m': {'opcode': 'control_delete_this_clone', 'next': None, 'parent': '$1W2j?_Z:vQ}y,#dpV|1', 'inputs': {}, 'fields': {}, 'shadow': False, 'topLevel': False}}},"dXFi$0R|t1}*%]BdX?*O")
