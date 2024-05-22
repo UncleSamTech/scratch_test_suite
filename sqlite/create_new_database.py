@@ -53,7 +53,7 @@ revision_commit_index="""CREATE INDEX "sc_Revisions_Commit_index" ON "Revisions"
 project_project_name_index="""CREATE INDEX "sc_Projects_index" ON "Projects" ("Project_Name"); """
 authors_author_index="""CREATE INDEX "sc_Authors_index" ON "Authors" ("Commit_SHA"); """
 commit_messages_commit_sha_index="""CREATE INDEX "sc_Commit_Messages_index" ON "Commit_Messages" ("Commit_SHA"); """
-commit_parents_commit_sha_index="""CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parents" ("Commit_SHA"); """
+commit_parents_commitsha_index="""CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parents" ("Commit_SHA"); """
 content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "Content_Parents" ("Commit_SHA"); """
 
 

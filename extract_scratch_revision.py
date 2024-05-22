@@ -19,12 +19,12 @@ from sklearn.model_selection import train_test_split
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train2.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
 def get_connection_test():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test2.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -157,7 +157,7 @@ def get_all_projects_in_db():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection_test()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -172,7 +172,7 @@ def get_all_projects_in_db_train():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2_train()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -362,7 +362,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
                     
                     
-                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
+                    stats = sp.parse_scratch(decoded_vals,new_name) 
                     
                     print("tree",stats)
                     
@@ -557,7 +557,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
                     
                     
-                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
+                    stats = sp.parse_scratch(decoded_vals,new_name) 
                     
                     print("tree_test",stats)
                     
@@ -586,7 +586,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2()
+                conn,cur = get_connection_test()
                 val = None
                 
                 if conn != None:
@@ -607,7 +607,7 @@ def split_train_test_projects(all_projects):
         for proj_train_name in train_projects:
             proj_train_name=proj_train_name.strip()
             insert_train_projects =  """INSERT INTO train_projects (project_name,number) VALUES (?,?);"""
-            conn,cur = get_connection2_train()
+            conn,cur = get_connection()
             val_proj_train = None
                 
             if conn != None:
@@ -622,7 +622,7 @@ def split_train_test_projects(all_projects):
         
             proj_test_name=proj_test_name.strip()
             insert_test_projects =  """INSERT INTO test_projects (project_name,number) VALUES (?,?);"""
-            conn,cur = get_connection2()
+            conn,cur = get_connection_test()
             val_proj_test = None
                 
             if conn != None:
@@ -638,7 +638,7 @@ def get_all_train_projects():
     select_projects = """SELECT project_name from train_projects;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2_train()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -653,7 +653,7 @@ def get_all_test_projects():
     select_projects = """SELECT project_name from test_projects;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection_test()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -693,8 +693,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_train.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_train_main.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4_main.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -723,8 +723,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_test.txt", "a")
-                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions4_test_main.txt", "a")
+                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -736,5 +736,5 @@ def main2(project_path: str):
             continue
    
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
