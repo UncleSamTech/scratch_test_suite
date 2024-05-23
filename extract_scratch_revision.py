@@ -166,6 +166,7 @@ def get_all_projects_in_db():
     else:
         print("connection failed")
     conn.commit()
+    conn.close()
     return fin_resp
 
 def get_all_projects_in_db_train():
@@ -181,6 +182,7 @@ def get_all_projects_in_db_train():
     else:
         print("connection failed")
     conn.commit()
+    conn.close()
     return fin_resp
 
 def calculate_sha256(data):
@@ -402,6 +404,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                         print("executed")
                     print("connection failed")
                 conn.commit()
+                #conn.close()
                 
         
 
@@ -598,7 +601,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                         print("executed")
                     print("connection failed")
                 conn.commit()
-                
+                #conn.close()
     
 def split_train_test_projects(all_projects):
     if isinstance(all_projects,list) and len(all_projects) > 0:
@@ -633,6 +636,7 @@ def split_train_test_projects(all_projects):
                     print("executed")
                 print("connection failed")
                 conn.commit()
+                conn.close()
 
 def get_all_train_projects():
     select_projects = """SELECT project_name from train_projects;"""
@@ -662,6 +666,7 @@ def get_all_test_projects():
     else:
         print("connection failed")
     conn.commit()
+    conn.close()
     return fin_resp
 
 def main2(project_path: str):
@@ -672,7 +677,7 @@ def main2(project_path: str):
         else:
             continue
     
-    split_train_test_projects(proj_names)
+    #split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
     
     train_projects = get_all_train_projects()   
