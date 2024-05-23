@@ -28,7 +28,6 @@ def get_connection_test():
     cursor =  conn.cursor()
     return conn,cursor
 
-
 def strip_pattern(input_string):
     pattern = r'.*?\.sb3\b'
     #pattern = r'\S*\.sb3\b'
@@ -392,7 +391,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection2_train()
+                conn,cur = get_connection()
                 val = None
                 
                 if conn != None:
@@ -651,6 +650,7 @@ def get_all_train_projects():
     else:
         print("connection failed")
     conn.commit()
+    conn.close()
     return fin_resp
 
 def get_all_test_projects():
@@ -679,9 +679,10 @@ def main2(project_path: str):
     
     #split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
-    
+    print("projects to skip train ",  projects_to_skip)
     train_projects = get_all_train_projects()   
-    print(train_projects)  
+    print(" training projects ", train_projects)
+     
     for proj_name in train_projects:
         
         if proj_name not in projects_to_skip and proj_name != '' and len(proj_name) > 1:
@@ -711,7 +712,10 @@ def main2(project_path: str):
             continue
 
     projects_to_skip_test = get_all_projects_in_db()
+    print("projects to skip test ", projects_to_skip_test)
     test_projects = get_all_test_projects()
+    print("testing projects ", test_projects)
+
     for proj_name in test_projects:
         
         if proj_name not in projects_to_skip_test and proj_name != '' and len(proj_name) > 1:
