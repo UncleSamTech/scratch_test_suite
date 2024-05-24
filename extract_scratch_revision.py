@@ -165,7 +165,7 @@ def get_all_projects_in_db():
     else:
         print("connection failed")
     conn.commit()
-    conn.close()
+    #conn.close()
     return fin_resp
 
 def get_all_projects_in_db_train():
@@ -181,7 +181,7 @@ def get_all_projects_in_db_train():
     else:
         print("connection failed")
     conn.commit()
-    conn.close()
+    #conn.close()
     return fin_resp
 
 def calculate_sha256(data):
@@ -635,7 +635,7 @@ def split_train_test_projects(all_projects):
                     print("executed")
                 print("connection failed")
                 conn.commit()
-                conn.close()
+                
 
 def get_all_train_projects():
     select_projects = """SELECT project_name from train_projects;"""
@@ -650,7 +650,7 @@ def get_all_train_projects():
     else:
         print("connection failed")
     conn.commit()
-    conn.close()
+    
     return fin_resp
 
 def get_all_test_projects():
@@ -666,7 +666,7 @@ def get_all_test_projects():
     else:
         print("connection failed")
     conn.commit()
-    conn.close()
+    
     return fin_resp
 
 def main2(project_path: str):

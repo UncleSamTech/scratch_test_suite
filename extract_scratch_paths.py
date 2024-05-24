@@ -162,7 +162,7 @@ class Scratch_Path:
         if isinstance(string_val,str) and len(string_val) > 0:
             val2 = string_val.split()
             
-            new_list = ['<S>' if word not in self.valid_opcodes and word not in self.valid_other_field_codes and not word.startswith("BROADCAST_")  else word for word in val2  ]
+            new_list = ['<UserInput>' if word not in self.valid_opcodes and word not in self.valid_other_field_codes and not word.startswith("BROADCAST_")  else word for word in val2  ]
             
             return " ".join(new_list)
         else:
