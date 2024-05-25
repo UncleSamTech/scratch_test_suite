@@ -362,7 +362,9 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
 
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
                     print("decoded values  ", decoded_vals)
-                    
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/deco.txt","a") as dv:
+                        dv.write(f"file name {new_name} decoded {decoded_vals} \n ")
+
                     stats = sp.parse_scratch(decoded_vals,new_name) 
                     
                     print("tree",stats)
