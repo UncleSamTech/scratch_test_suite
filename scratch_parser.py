@@ -1189,7 +1189,7 @@ class scratch_parser:
             return []
         if isinstance(all_val,dict) and bool(all_val):
             for ks,vs in all_val.items():
-                
+                print("value ", vs)
                 if isinstance(vs,list) and len(vs) > 0:
                     if isinstance(self.get_opcode_from_id(blocks_values,ks),str) and self.get_opcode_from_id(blocks_values,ks).startswith("event") or self.get_opcode_from_id(blocks_values,ks).startswith("control"):
                         
@@ -1202,7 +1202,7 @@ class scratch_parser:
                             val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
                             tr.append([self.get_opcode_from_id(blocks_values,ks),val])  
-            print("see tr",tr)                      
+            #print("see tr",tr)                      
             final_tree = [file_name,tr]
             return final_tree
     
