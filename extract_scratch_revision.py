@@ -361,7 +361,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                         continue
 
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
-                    
+                    print("decoded values  ", decoded_vals)
                     
                     stats = sp.parse_scratch(decoded_vals,new_name) 
                     
