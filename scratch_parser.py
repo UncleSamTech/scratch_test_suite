@@ -52,7 +52,7 @@ class scratch_parser:
         loaded_blocks = self.tem_file_spit(json_data)
         if isinstance(loaded_blocks,dict) and bool(loaded_blocks):  
             targests_value = loaded_blocks["targets"] if "targets" in loaded_blocks.keys() else {}
-            print("targets ", targests_value)       
+                  
             return targests_value
     
     def load_json_in_python(self,json_val):
@@ -2720,7 +2720,7 @@ class scratch_parser:
             val = json.loads(read_data)
             all_blocks_value = self.get_all_blocks_vals_modified(val)
             
-            
+            print("all blocks ", all_blocks_value)
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
             
