@@ -708,9 +708,10 @@ class scratch_parser:
        loaded_blocks = self.tem_file_spit(blocks_values)
        for each_value in self.get_all_parent_keys(loaded_blocks):
            all_next_id[each_value] = self.break_down(loaded_blocks,each_value)
-    
-       #return all_next_id
-       return {each_value:self.break_down(loaded_blocks,each_value) for each_value in self.get_all_parent_keys(loaded_blocks)}
+
+        
+       return all_next_id
+       #return {each_value:self.break_down(loaded_blocks,each_value) for each_value in self.get_all_parent_keys(loaded_blocks)}
     
     def get_all_next_id_test_modified(self,blocks_values):
        all_next_id = {}
