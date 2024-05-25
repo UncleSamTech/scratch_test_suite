@@ -1184,7 +1184,7 @@ class scratch_parser:
         
         all_val = self.get_all_next_id_test(loaded_dump)  
         
-        print("all next id ", all_val)
+        #print("all next id ", all_val)
         if all_val == None or all_val == {}:
             return []
         if isinstance(all_val,dict) and bool(all_val):
@@ -2677,7 +2677,7 @@ class scratch_parser:
             
                 file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
                 next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-            
+                print("next tree ", next_val2)
                 fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
             
                 #os.remove(self.named_tempfile_pars)
