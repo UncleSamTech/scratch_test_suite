@@ -594,6 +594,7 @@ class scratch_parser:
         self.all_parents_keys_val = []
         if blocks_values == None or blocks_values == []:
             return []
+        loaded_blocks = self.tem_file_spit(blocks_values)
         if isinstance(blocks_values,list) and len(blocks_values) > 0:
             for v in blocks_values:
                 if isinstance(v,dict) and bool(v):
@@ -676,7 +677,7 @@ class scratch_parser:
             read_val = rf.read()
 
             loaded_val = json.loads(read_val)
-            os.remove(tem_file_name)
+            #os.remove(tem_file_name)
             return loaded_val
 
 
@@ -714,11 +715,12 @@ class scratch_parser:
        if blocks_values == None or blocks_values == []:
             return {}    
 
-       for each_value in self.get_all_parent_keys_modified(blocks_values):
-           all_next_id[each_value] = self.break_down_modified(blocks_values,each_value)
+       loaded_blocks = self.tem_file_spit(blocks_values)
+       for each_value in self.get_all_parent_keys_modified(loaded_blocks):
+           all_next_id[each_value] = self.break_down_modified(loaded_blocks,each_value)
 
        #return all_next_id                                               
-       return {each_value:self.break_down_modified(blocks_values,each_value) for each_value in self.get_all_parent_keys_modified(blocks_values)}
+       return {each_value:self.break_down_modified(loaded_blocks,each_value) for each_value in self.get_all_parent_keys_modified(loaded_blocks)}
 
 
     def get_input_block_by_id_key(self,block_values,bid,key):
