@@ -50,8 +50,10 @@ class scratch_parser:
     
     def get_all_targets(self,json_data):
         loaded_blocks = self.tem_file_spit(json_data)
-        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):         
-            return json_data["targets"] if 'targets' in json_data.keys() else {}
+        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):  
+            targests_value = loaded_blocks["targets"] if "targets" in loaded_blocks.keys() else {}
+            print("targets ", targests_value)       
+            return targests_value
     
     def load_json_in_python(self,json_val):
         return json.loads(json_val)
@@ -1185,17 +1187,17 @@ class scratch_parser:
             for ks,vs in all_val.items():
                 
                 if isinstance(vs,list) and len(vs) > 0:
-                    if isinstance(self.get_opcode_from_id(loaded_dump,ks),str) and self.get_opcode_from_id(loaded_dump,ks).startswith("event") or self.get_opcode_from_id(loaded_dump,ks).startswith("control"):
+                    if isinstance(self.get_opcode_from_id(blocks_values,ks),str) and self.get_opcode_from_id(blocks_values,ks).startswith("event") or self.get_opcode_from_id(blocks_values,ks).startswith("control"):
                         
-                        val =  [[self.get_opcode_from_id(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)] if self.get_complete_fields_inputs(loaded_dump,v2) == '' or self.get_complete_fields_inputs(loaded_dump,v2) == None else [self.get_opcode_from_id(loaded_dump,v2),[self.get_complete_fields_inputs(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)]] for v2 in vs ]
+                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] if self.get_complete_fields_inputs(blocks_values,v2) == '' or self.get_complete_fields_inputs(blocks_values,v2) == None else [self.get_opcode_from_id(blocks_values,v2),[self.get_complete_fields_inputs(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs ]
                         
-                        tr.append([self.get_opcode_from_id(loaded_dump,ks),val] if self.get_complete_fields_inputs(loaded_dump,ks) == "" or self.get_complete_fields_inputs(loaded_dump,ks) == None else [self.get_opcode_from_id(loaded_dump,ks),[self.get_complete_fields_inputs(loaded_dump,ks),val]])
+                        tr.append([self.get_opcode_from_id(blocks_values,ks),val] if self.get_complete_fields_inputs(blocks_values,ks) == "" or self.get_complete_fields_inputs(blocks_values,ks) == None else [self.get_opcode_from_id(blocks_values,ks),[self.get_complete_fields_inputs(blocks_values,ks),val]])
                     else:
-                        if self.get_opcode_from_id2(loaded_dump, ks) == self.get_opcode_from_id(loaded_dump,ks):
-                            blocks = self.get_any_block_by_id(loaded_dump,ks)
-                            val = [[self.iterate_procedure_input(loaded_dump,blocks),[self.get_opcode_from_id(loaded_dump,v2),self.correct_input_block_tree_by_id_disp(loaded_dump,self.read_input_values_by_id(loaded_dump,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                        if self.get_opcode_from_id2(blocks_values, ks) == self.get_opcode_from_id(blocks_values,ks):
+                            blocks = self.get_any_block_by_id(blocks_values,ks)
+                            val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
-                            tr.append([self.get_opcode_from_id(loaded_dump,ks),val])                        
+                            tr.append([self.get_opcode_from_id(blocks_values,ks),val])                        
             final_tree = [file_name,tr]
             return final_tree
     
@@ -2611,7 +2613,7 @@ class scratch_parser:
                 
                 self.scr_pro = json.dumps(project_data,indent=4)
                 
-                os.remove(self.named_tempfile)
+                #os.remove(self.named_tempfile)
                 return self.scr_pro
             
 
