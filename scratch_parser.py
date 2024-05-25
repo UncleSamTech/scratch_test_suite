@@ -51,6 +51,9 @@ class scratch_parser:
     def get_all_targets(self,json_data):
         loaded_blocks = self.tem_file_spit(json_data)
         if isinstance(loaded_blocks,dict) and bool(loaded_blocks):  
+            print("loaded blocks ", loaded_blocks)
+            val = collections.Counter(loaded_blocks["targets"])
+            print("target count ", val)
             targests_value = loaded_blocks["targets"] if "targets" in loaded_blocks.keys() else {}
                   
             return targests_value
@@ -709,7 +712,7 @@ class scratch_parser:
        for each_value in self.get_all_parent_keys(loaded_blocks):
            all_next_id[each_value] = self.break_down(loaded_blocks,each_value)
 
-        
+
        return all_next_id
        #return {each_value:self.break_down(loaded_blocks,each_value) for each_value in self.get_all_parent_keys(loaded_blocks)}
     
@@ -2669,7 +2672,7 @@ class scratch_parser:
                 
 
                 all_blocks_value = self.get_all_blocks_vals(val)
-                print("all blocks ", all_blocks_value)
+                
                 
             
                 file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
