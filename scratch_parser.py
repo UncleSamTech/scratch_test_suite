@@ -51,9 +51,9 @@ class scratch_parser:
     def get_all_targets(self,json_data):
         loaded_blocks = self.tem_file_spit(json_data)
         if isinstance(loaded_blocks,dict) and bool(loaded_blocks):  
-            print("loaded blocks ", loaded_blocks)
+            #print("loaded blocks ", loaded_blocks)
             val = collections.Counter(loaded_blocks["targets"])
-            print("target count ", val)
+            #print("target count ", val)
             targests_value = loaded_blocks["targets"] if "targets" in loaded_blocks.keys() else {}
                   
             return targests_value
