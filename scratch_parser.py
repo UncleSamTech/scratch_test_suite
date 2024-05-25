@@ -1201,7 +1201,8 @@ class scratch_parser:
                             blocks = self.get_any_block_by_id(blocks_values,ks)
                             val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
-                            tr.append([self.get_opcode_from_id(blocks_values,ks),val])                        
+                            tr.append([self.get_opcode_from_id(blocks_values,ks),val])  
+            print("see tr",tr)                      
             final_tree = [file_name,tr]
             return final_tree
     
@@ -2677,7 +2678,7 @@ class scratch_parser:
             
                 file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
                 next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-                print("next tree ", next_val2)
+                #print("next tree ", next_val2)
                 fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
             
                 #os.remove(self.named_tempfile_pars)
