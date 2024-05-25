@@ -2668,7 +2668,7 @@ class scratch_parser:
                 
 
                 all_blocks_value = self.get_all_blocks_vals(val)
-                
+                print("all blocks ", all_blocks_value)
                 
             
                 file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
@@ -2720,7 +2720,7 @@ class scratch_parser:
             val = json.loads(read_data)
             all_blocks_value = self.get_all_blocks_vals_modified(val)
             
-            print("all blocks ", all_blocks_value)
+            
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
             
