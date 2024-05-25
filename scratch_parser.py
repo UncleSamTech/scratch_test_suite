@@ -1182,9 +1182,9 @@ class scratch_parser:
         final_tree = []
         loaded_dump = self.tem_file_spit(blocks_values)
         
-        all_val = self.get_all_next_id_test(loaded_dump)  
+        all_val = self.get_all_next_id_test(blocks_values)  
         
-        #print("all next id ", all_val)
+        print("all next id ", all_val)
         if all_val == None or all_val == {}:
             return []
         if isinstance(all_val,dict) and bool(all_val):
