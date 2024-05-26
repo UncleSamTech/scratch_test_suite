@@ -2693,6 +2693,9 @@ class scratch_parser:
             
         file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
         next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
+        with open("parselogs2.txt","a") as plg:
+                plg.write(f"val {val} all blocks {all_blocks_value} first tree {next_val2} \n ")
+                plg.write(f"\n==============================================================\n")
             
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
         
