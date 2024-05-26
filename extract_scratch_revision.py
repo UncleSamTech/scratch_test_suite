@@ -364,7 +364,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                     
                     
 
-                    stats = sp.parse_scratch(decoded_vals,new_name) 
+                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
                     
                     print("tree",stats)
                     
