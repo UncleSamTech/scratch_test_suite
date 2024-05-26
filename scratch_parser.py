@@ -154,16 +154,16 @@ class scratch_parser:
     
     def get_all_blockkeys_from_block(self,blocks_val):
         loaded_blocks = self.tem_file_spit(blocks_val)
-        all_keys_blocks = [keys for keys in loaded_blocks.keys() if isinstance(loaded_blocks,dict) and keys.startswith('blocks')]
+        all_keys_blocks = [keys for keys in blocks_val.keys() if isinstance(blocks_val,dict) and keys.startswith('blocks')]
         return all_keys_blocks
 
 
     def get_any_block_by_id(self,blocks_values,key):
         loaded_blocks = self.tem_file_spit(blocks_values)
-        val = loaded_blocks.keys()
+        val = blocks_values.keys() if isinstance(blocks_values,dict) and bool(blocks_values) else []
         if key == None or key == '' or blocks_values == None or blocks_values == {}:
             return {}
-        val = [loaded_blocks[keys][key] for keys in self.get_all_blockkeys_from_block(loaded_blocks) if key in loaded_blocks[keys].keys()]
+        val = [blocks_values[keys][key] for keys in self.get_all_blockkeys_from_block(blocks_values) if key in blocks_values[keys].keys()]
         #print("checking ", val[0])
         return val[0] if len(val) > 0 else {}
     
@@ -536,9 +536,9 @@ class scratch_parser:
                         if isinstance(each_val,str):
                             if len(each_val) > 0:
                                 self.child_input_keys.append(each_val)
-                                bloc = self.get_any_block_by_id(loaded_blocks,each_val)
+                                bloc = self.get_any_block_by_id(blocks_values,each_val)
                                 if bloc["inputs"] != None or bloc["inputs"] != {}:
-                                    self.get_children_key_recursively(loaded_blocks,bloc) 
+                                    self.get_children_key_recursively(blocks_values,bloc) 
                                 else:
                                     break                
         return self.child_input_keys
@@ -566,9 +566,9 @@ class scratch_parser:
     def get_next_child_keys(self,blocks_values,inp_block):
         all_next_keys = []
         loaded_blocks = self.tem_file_spit(blocks_values)
-        all_child_keys = self.get_children_key_recursively(loaded_blocks,inp_block)
+        all_child_keys = self.get_children_key_recursively(blocks_values,inp_block)
         for each_key in all_child_keys:
-            block = self.get_any_block_by_id(loaded_blocks,each_key)
+            block = self.get_any_block_by_id(blocks_values,each_key)
             if isinstance(block,dict) and bool(block) and 'next' in block.keys():
                 all_next_keys.append(block['next'])
         return all_next_keys
@@ -587,8 +587,8 @@ class scratch_parser:
         if blocks_values == None or blocks_values == {}:
             return []
         loaded_blocks = self.tem_file_spit(blocks_values)
-        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):
-            for k,v in loaded_blocks.items():
+        if isinstance(blocks_values,dict) and bool(blocks_values):
+            for k,v in blocks_values.items():
                 if isinstance(v,dict) and bool(v):
                     for k2,v2 in v.items():
                         if isinstance(v2,dict) and bool(v2) and 'parent' in v2.keys() and v2['parent'] == None:
@@ -616,12 +616,12 @@ class scratch_parser:
             return False
         loaded_blocks = self.tem_file_spit(blocks_values)
         if isinstance(block_key,dict) and bool(block_key) and 'parent' in block_key.keys():
-            parent_block = self.get_any_block_by_id(loaded_blocks,block_key['parent'])
+            parent_block = self.get_any_block_by_id(blocks_values,block_key['parent'])
             if block_key['parent'] != None and block_key['parent'] == parent_key:
                 return True
             
             else:
-                next_par = self.compare_parent_keys(loaded_blocks,parent_block,parent_key)
+                next_par = self.compare_parent_keys(blocks_values,parent_block,parent_key)
                 return next_par
             
     def compare_parent_keys_modified(self,blocks_values,block_key,parent_key):
@@ -643,11 +643,11 @@ class scratch_parser:
         if blocks_values == None or blocks_values == {} or parent_key == None or parent_key == '':
             return []
         loaded_blocks = self.tem_file_spit(blocks_values)
-        for k,v in loaded_blocks.items():
+        for k,v in blocks_values.items():
             if isinstance(v,dict) and bool(v):
                 for k2,v2 in v.items():
                     if isinstance(v2,dict) and bool(v2):
-                        if parent_key in self.get_all_parent_keys(loaded_blocks) and v2["next"] not in self.get_children_key_recursively(loaded_blocks,self.get_any_block_by_id(loaded_blocks,k2)) and v2["next"] not in self.get_next_child_keys(loaded_blocks,self.get_any_block_by_id(loaded_blocks,k2)) and self.compare_parent_keys(loaded_blocks,self.get_any_block_by_id(loaded_blocks,v2["next"]),parent_key):
+                        if parent_key in self.get_all_parent_keys(blocks_values) and v2["next"] not in self.get_children_key_recursively(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and v2["next"] not in self.get_next_child_keys(blocks_values,self.get_any_block_by_id(blocks_values,k2)) and self.compare_parent_keys(blocks_values,self.get_any_block_by_id(blocks_values,v2["next"]),parent_key):
                             spec.append(v2["next"])
         return spec
     def json_dump_encoder(self,obj):
@@ -682,7 +682,7 @@ class scratch_parser:
             read_val = rf.read()
 
             loaded_val = json.loads(read_val)
-            #os.remove(tem_file_name)
+            os.remove(tem_file_name)
             return loaded_val
 
 
@@ -709,8 +709,8 @@ class scratch_parser:
        if blocks_values == None or blocks_values == {}:
             return {}   
        loaded_blocks = self.tem_file_spit(blocks_values)
-       for each_value in self.get_all_parent_keys(loaded_blocks):
-           all_next_id[each_value] = self.break_down(loaded_blocks,each_value)
+       for each_value in self.get_all_parent_keys(blocks_values):
+           all_next_id[each_value] = self.break_down(blocks_values,each_value)
 
 
        return all_next_id
