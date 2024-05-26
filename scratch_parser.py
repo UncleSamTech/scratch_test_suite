@@ -2661,14 +2661,16 @@ class scratch_parser:
         
             val = json.loads(scr_proj)
                 
-
+            
             all_blocks_value = self.get_all_blocks_vals(val)
                 
                 
             
             file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
             next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-            #print("next tree ", next_val2)
+            with open("parselogs.txt","a") as plg:
+                plg.write(f"val {val} all blocks {all_blocks_value} first tree {next_val2} \n ")
+                
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
             
             #os.remove(self.named_tempfile_pars)
