@@ -120,7 +120,7 @@ class scratch_parser:
         all_blocks = []
         i= 0
         val_data = self.tem_file_spit(blocks_values)
-        targ = self.get_all_targets(val_data)
+        targ = self.get_all_targets(blocks_values)
         
         if isinstance(targ,list) and len(targ) > 0:
             for each_block in targ:
@@ -722,11 +722,11 @@ class scratch_parser:
             return {}    
 
        loaded_blocks = self.tem_file_spit(blocks_values)
-       for each_value in self.get_all_parent_keys_modified(loaded_blocks):
-           all_next_id[each_value] = self.break_down_modified(loaded_blocks,each_value)
+       for each_value in self.get_all_parent_keys_modified(blocks_values):
+           all_next_id[each_value] = self.break_down_modified(blocks_values,each_value)
 
        #return all_next_id                                               
-       return {each_value:self.break_down_modified(loaded_blocks,each_value) for each_value in self.get_all_parent_keys_modified(loaded_blocks)}
+       return {each_value:self.break_down_modified(blocks_values,each_value) for each_value in self.get_all_parent_keys_modified(blocks_values)}
 
 
     def get_input_block_by_id_key(self,block_values,bid,key):
@@ -1211,7 +1211,7 @@ class scratch_parser:
         final_tree = []
         
         loaded_dump = self.tem_file_spit(blocks_values)
-        all_val = self.get_all_next_id_test_modified(loaded_dump)     
+        all_val = self.get_all_next_id_test_modified(blocks_values)     
         
         if all_val == None or all_val == {}:
             return []
@@ -1219,17 +1219,17 @@ class scratch_parser:
             for ks,vs in all_val.items():
                 
                 if isinstance(vs,list) and len(vs) > 0:
-                    if isinstance(self.get_opcode_from_id_modified(loaded_dump,ks),str) and self.get_opcode_from_id_modified(loaded_dump,ks).startswith("event") or self.get_opcode_from_id_modified(loaded_dump,ks).startswith("control"):
+                    if isinstance(self.get_opcode_from_id_modified(blocks_values,ks),str) and self.get_opcode_from_id_modified(blocks_values,ks).startswith("event") or self.get_opcode_from_id_modified(blocks_values,ks).startswith("control"):
                         
-                        val =  [[self.get_opcode_from_id_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)] if self.get_complete_fields_inputs_modified(loaded_dump,v2) == '' or self.get_complete_fields_inputs_modified(loaded_dump,v2) == None else [self.get_opcode_from_id_modified(loaded_dump,v2),[self.get_complete_fields_inputs_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)]] for v2 in vs ]
+                        val =  [[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)] if self.get_complete_fields_inputs_modified(blocks_values,v2) == '' or self.get_complete_fields_inputs_modified(blocks_values,v2) == None else [self.get_opcode_from_id_modified(blocks_values,v2),[self.get_complete_fields_inputs_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs ]
                         
-                        tr.append([self.get_opcode_from_id_modified(loaded_dump,ks),val] if self.get_complete_fields_inputs_modified(loaded_dump,ks) == "" or self.get_complete_fields_inputs_modified(loaded_dump,ks) == None else [self.get_opcode_from_id_modified(loaded_dump,ks),[self.get_complete_fields_inputs_modified(loaded_dump,ks),val]])
+                        tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val] if self.get_complete_fields_inputs_modified(blocks_values,ks) == "" or self.get_complete_fields_inputs_modified(blocks_values,ks) == None else [self.get_opcode_from_id_modified(blocks_values,ks),[self.get_complete_fields_inputs_modified(blocks_values,ks),val]])
                     else:
-                        if self.get_opcode_from_id2_modified(loaded_dump, ks) == self.get_opcode_from_id_modified(loaded_dump,ks):
-                            blocks = self.get_any_block_by_id_modified(loaded_dump,ks)
-                            val = [[self.iterate_procedure_input_modified(loaded_dump,blocks),[self.get_opcode_from_id_modified(loaded_dump,v2),self.correct_input_block_tree_by_id_disp_modified(loaded_dump,self.read_input_values_by_id_modified(loaded_dump,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                        if self.get_opcode_from_id2_modified(blocks_values, ks) == self.get_opcode_from_id_modified(blocks_values,ks):
+                            blocks = self.get_any_block_by_id_modified(blocks_values,ks)
+                            val = [[self.iterate_procedure_input_modified(blocks_values,blocks),[self.get_opcode_from_id_modified(blocks_values,v2),self.correct_input_block_tree_by_id_disp_modified(blocks_values,self.read_input_values_by_id_modified(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                                 
-                            tr.append([self.get_opcode_from_id_modified(loaded_dump,ks),val])                        
+                            tr.append([self.get_opcode_from_id_modified(blocks_values,ks),val])                        
         final_tree = [file_name,tr]
         return final_tree
     
@@ -2211,6 +2211,9 @@ class scratch_parser:
             non_opcode_val = non_opcodes[mc]
             non_opcode_tree[non_opcode_key] = non_opcode_val
         
+        '''
+        
+        
         for mc in opcodes.most_common(5):
             most_common_opcode_key = mc[0]
             most_common_opcode_val = mc[1]
@@ -2221,7 +2224,7 @@ class scratch_parser:
             most_common_non_opcode_val = nmc[1]
             most_common_non_opcode_tree[most_common_non_opcode_key] = most_common_non_opcode_val
         
-
+        '''
         nodes_val = sum(opcode_tree.values()) + sum(non_opcode_tree.values())
         
         #nodes, edges = self.count_nodes_and_edges(scratch_tree)
@@ -2237,7 +2240,7 @@ class scratch_parser:
         flt.remove(fr)
         #print('co',connec)
         #connec.remove(firs)
-        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.get_accurate_edge_count(scratch_tree),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes_modified(blocks_values,scratch_tree,file_name)}
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.get_accurate_edge_count(scratch_tree),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes_modified(blocks_values,scratch_tree,file_name)}
         return self.scratch_stats 
 
     def convert_to_flat_list(self,tree):
@@ -2683,29 +2686,19 @@ class scratch_parser:
             
         
     def parse_scratch_modified(self,scr_proj,file_name):
-        with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
-            self.named_tempfile_pars = fp.name
-            
-
-        with open(self.named_tempfile_pars,"w") as temp_file:
-            temp_file.write(scr_proj)
-
-        with open(self.named_tempfile_pars,"r") as read_temp:
-            read_data = read_temp.read()
-
-        if len(read_data) > 0:
-            val = json.loads(scr_proj)
-            all_blocks_value = self.get_all_blocks_vals_modified(val)
-            
-            
-            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
-            next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
-            
-            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
         
-            return fin_val
+        val = json.loads(scr_proj)
+        all_blocks_value = self.get_all_blocks_vals_modified(val)
+            
+            
+        file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+        next_val2 = self.create_next_values2_disp_modified(all_blocks_value,file_name)
+            
+        fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats_modified(all_blocks_value,file_name,next_val2)}
         
-        os.remove(self.named_tempfile_pars)
+        return fin_val
+        
+        
 
     def parse_scratch_modified2(self,scr_proj,file_name):
         with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:

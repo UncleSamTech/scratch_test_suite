@@ -560,7 +560,7 @@ def get_revisions_and_run_parser_test(cwd, main_branch,project_name, debug=False
                     decoded_vals = sp.decode_sb3_withtem(scratch_bytes_content)
                     
                     
-                    stats = sp.parse_scratch(decoded_vals,new_name) 
+                    stats = sp.parse_scratch_modified(decoded_vals,new_name) 
                     
                     print("tree_test",stats)
                     
