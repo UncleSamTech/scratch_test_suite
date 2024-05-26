@@ -49,12 +49,12 @@ class scratch_parser:
 
     
     def get_all_targets(self,json_data):
-        loaded_blocks = self.tem_file_spit(json_data)
-        if isinstance(loaded_blocks,dict) and bool(loaded_blocks):  
+        #loaded_blocks = self.tem_file_spit(json_data)
+        if isinstance(json_data,dict) and bool(json_data):  
             #print("loaded blocks ", loaded_blocks)
-            val = collections.Counter(loaded_blocks["targets"])
+            
             #print("target count ", val)
-            targests_value = loaded_blocks["targets"] if "targets" in loaded_blocks.keys() else {}
+            targests_value = json_data["targets"] if "targets" in json_data.keys() else {}
                   
             return targests_value
     
@@ -107,8 +107,8 @@ class scratch_parser:
     def get_all_blocks_vals(self,blocks_values):
         all_blocks = {}
         i= 0
-        val_data = self.tem_file_spit(blocks_values)
-        targ = self.get_all_targets(val_data)
+        #val_data = self.tem_file_spit(blocks_values)
+        targ = self.get_all_targets(blocks_values)
         if isinstance(targ,list) and len(targ) > 0:
             for each_block in targ:
                 i+=1
@@ -2618,7 +2618,7 @@ class scratch_parser:
                 
                 self.scr_pro = json.dumps(project_data,indent=4)
                 
-                #os.remove(self.named_tempfile)
+                os.remove(self.named_tempfile)
                 return self.scr_pro
             
 
@@ -2658,31 +2658,21 @@ class scratch_parser:
     
     def parse_scratch(self,scr_proj,file_name):
          
-         with tempfile.NamedTemporaryFile(mode='w+',delete=False) as fp:
-            self.named_tempfile_pars = fp.name
-            
-         with open(self.named_tempfile_pars,"w") as tem_fil:
-             tem_fil.write(scr_proj)
-
-       
-         with open(self.named_tempfile_pars,"r") as read_temp:
-            read_data = read_temp.read()
-            
-            if len(read_data) > 0:
-                val = json.loads(read_data)
+        
+            val = json.loads(scr_proj)
                 
 
-                all_blocks_value = self.get_all_blocks_vals(val)
+            all_blocks_value = self.get_all_blocks_vals(val)
                 
                 
             
-                file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
-                next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
-                #print("next tree ", next_val2)
-                fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
+            file_name = os.path.basename(file_name).split('/')[-1].split('.sb3')[0]
+            next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
+            #print("next tree ", next_val2)
+            fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
             
-                #os.remove(self.named_tempfile_pars)
-                return fin_val
+            #os.remove(self.named_tempfile_pars)
+            return fin_val
             
             
         
