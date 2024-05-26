@@ -2142,6 +2142,7 @@ class scratch_parser:
             non_opcode_val = non_opcodes[mc]
             non_opcode_tree[non_opcode_key] = non_opcode_val
         
+        '''
         for mc in opcodes.most_common(5):
             most_common_opcode_key = mc[0]
             most_common_opcode_val = mc[1]
@@ -2151,7 +2152,7 @@ class scratch_parser:
             most_common_non_opcode_key = nmc[0]
             most_common_non_opcode_val = nmc[1]
             most_common_non_opcode_tree[most_common_non_opcode_key] = most_common_non_opcode_val
-        
+        '''
 
         nodes_val = sum(opcode_tree.values()) + sum(non_opcode_tree.values())
         
@@ -2168,7 +2169,9 @@ class scratch_parser:
         flt.remove(fr)
         #print('co',connec)
         #connec.remove(firs)
-        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.get_accurate_edge_count(scratch_tree),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"most_common_opcodes_statistics":most_common_opcode_tree,"most_common_non_opcodes_statistics":most_common_non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
+        
+        self.scratch_stats = {"number_of_nodes": nodes_val, "number_of_edges" : self.get_accurate_edge_count(scratch_tree),"opcodes_statistics":opcode_tree,"non_opcodes_statistics":non_opcode_tree,"connections":flt,"all_nodes":self.get_all_nodes(blocks_values,scratch_tree,file_name)}
+    
         return self.scratch_stats 
     
     def get_accurate_edge_count(self,parsed_tree):
@@ -2670,7 +2673,8 @@ class scratch_parser:
             next_val2 = self.create_next_values2_disp(all_blocks_value,file_name)
             with open("parselogs.txt","a") as plg:
                 plg.write(f"val {val} all blocks {all_blocks_value} first tree {next_val2} \n ")
-                
+
+
             fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
             
             #os.remove(self.named_tempfile_pars)
