@@ -680,9 +680,9 @@ def main2(project_path: str):
     
     #split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
-    print("projects to skip train ",  projects_to_skip)
+    
     train_projects = get_all_train_projects()   
-    print(" training projects ", train_projects)
+    
      
     for proj_name in train_projects:
         
