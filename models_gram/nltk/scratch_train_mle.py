@@ -125,8 +125,8 @@ class scratch_train_mle:
                 
                 if len(sentence_tokens) > 1:
                     print("first word ", sentence_tokens[1])
-                    context = ' '.join(sentence_tokens[1:])  # Use all words except the first one as context
-                    true_next_word = sentence_tokens[0]
+                    context = ' '.join(sentence_tokens[0:-1])  # Use all words except the first one as context
+                    true_next_word = sentence_tokens[1]
                     #print("true next word ", true_next_word)
             
                     predicted_next_word = self.predict_next_scratch_token(model_name,context)
@@ -198,10 +198,25 @@ class scratch_train_mle:
         F1_4 = [0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736,0.19634627597060736]
         Ngrams4 = [10,11,12,13,14,15]
         
-        plt.plot(Ngrams3, Accuracy3, label = "Accuracy",color="blue",marker="o",linestyle="-")
-        plt.plot(Ngrams3, Precision3, label = "Precision",color="red")
-        plt.plot(Ngrams3, Recall3, label = "Recall",color="yellow")
-        plt.plot(Ngrams3, F1_3, label = "F1",color="green")
+
+        Accuracy_plot2_8 = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407]
+        Recall_plot2_8 = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407]
+        Accuracy_plot9_15 = [0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328]
+        Recall_plot9_15 = [0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328]
+        Precision_plot2_8 = [0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743]
+        Precision_plot9_15 = [0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372]
+        f1_plot2_8 = [0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387]
+        f1_plot9_15 = [0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699]
+        
+        ngram2_8 = list(range(2,9))
+        ngram_9_15 = list(range(9,16))
+
+    
+        
+        plt.plot(ngram2_8, Precision_plot2_8, label = "Precision",color="red")
+        plt.plot(ngram2_8, Recall_plot2_8, label = "Recall",color="yellow")
+        plt.plot(ngram2_8,f1_plot2_8, label = "F1",color="green")
+        plt.plot(ngram2_8, Accuracy_plot2_8, label = "Accuracy")
         
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
@@ -210,7 +225,7 @@ class scratch_train_mle:
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
-        plt.savefig(f'{plot_name}.pdf')
+        plt.savefig(f'{plot_name}2_8.pdf')
         #plt.show()
 
     def paired_t_test(self,nltk_2_10,nltk_11_19):
@@ -248,12 +263,12 @@ tr_scr = scratch_train_mle()
 #print("precision parametric t-test for nltk model",precision)
 #f1 = tr_scr.paired_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
 #print("f1 parametric ttest for nltk model",f1)
-accuracy_wilcoxon = tr_scr.wilcon_t_test([0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407],[0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328])
-print("accuracy wilcoxon result for nltk model ", accuracy_wilcoxon)
-precision_wilcoxon =tr_scr.wilcon_t_test([0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743],[0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372])
-print("precision parametric t-test for nltk model",precision_wilcoxon)
-f1_wilcoxon = tr_scr.wilcon_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
-print("f1 parametric ttest for nltk model",f1_wilcoxon)
+#accuracy_wilcoxon = tr_scr.wilcon_t_test([0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407],[0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328])
+#print("accuracy wilcoxon result for nltk model ", accuracy_wilcoxon)
+#precision_wilcoxon =tr_scr.wilcon_t_test([0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743],[0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372])
+#print("precision parametric t-test for nltk model",precision_wilcoxon)
+#f1_wilcoxon = tr_scr.wilcon_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
+#print("f1 parametric ttest for nltk model",f1_wilcoxon)
 
 
 #accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24589371980676328])
@@ -266,4 +281,4 @@ print("f1 parametric ttest for nltk model",f1_wilcoxon)
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
-#tr_scr.plot_precision_recall_curve("nltk-plot_firstmain_replaced_tokens_upd_debug_mark_line_further")
+tr_scr.plot_precision_recall_curve("nltk-plot_prec_rec_acc")

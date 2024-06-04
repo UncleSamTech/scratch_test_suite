@@ -168,6 +168,19 @@ class kenlm_train:
                    0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815,
                    0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815
                    ]
+        
+        accuracy_plot_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
+        recall_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
+        accuracy_plot_9_15 = [0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        recall_9_15 = [0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
+        precision_2_8 = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364]
+        precision_9_15 = [0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
+        f1_2_8 = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005]
+        f1_9_15 = [0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815]
+        
+        ngrams2_8 = list(range(2,9))
+        ngrams9_15 = list(range(9,16))
+
         Ngrams_all = list(range(2,21))
         #[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
@@ -180,10 +193,10 @@ class kenlm_train:
         #axes.legend(loc ="center right")
 
         
-        plt.plot(Ngrams_all, Precision_all, label = "Precision")
-        plt.plot(Ngrams_all, Recall_all, label = "Recall")
-        plt.plot(Ngrams_all, F1_all, label = "F1")
-        plt.plot(Ngrams_all, Accuracy_all, label = "Accuracy")
+        plt.plot(ngrams9_15, precision_9_15, label = "Precision")
+        plt.plot(ngrams9_15, recall_9_15, label = "Recall")
+        plt.plot(ngrams9_15, f1_9_15, label = "F1")
+        plt.plot(ngrams9_15, accuracy_plot_9_15, label = "Accuracy")
         
         
         plt.xlabel('Ngram-order')
@@ -196,7 +209,7 @@ class kenlm_train:
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
-        plt.savefig(f'{plot_name}.pdf')
+        plt.savefig(f'{plot_name}_kenlm_9_15.pdf')
 
     def paired_t_test(self,nltk_2_10,nltk_11_19):
         if isinstance(nltk_2_10,list) and len(nltk_2_10) > 0 and isinstance(nltk_11_19,list) and len(nltk_11_19) > 0:
@@ -214,7 +227,7 @@ kn = kenlm_train()
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
 #val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
 #print(val)
-#kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order2_20_main")
+kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
 #print("accuracy parametric ttest on kenln",accuracy)
 #precision = kn.paired_t_test([0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364],[0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7418981809590166,0.7419431944934916,0.7419431944934916])
@@ -224,12 +237,12 @@ kn = kenlm_train()
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 
-accuracy_wilconsin = kn.wilcon_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004],[0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609])
-print("accuracy wilconxon test for kenlm ", accuracy_wilconsin)
-precision_wilconsin = kn.wilcon_t_test([0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364],[0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916])
-print("precision wilconxon test for kenlm ", precision_wilconsin)
-f1_wilconxon = kn.wilcon_t_test([0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005],[0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815])
-print("f1 wilconxon test for kenlm ", f1_wilconxon)
+#accuracy_wilconsin = kn.wilcon_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004],[0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609])
+#print("accuracy wilconxon test for kenlm ", accuracy_wilconsin)
+#precision_wilconsin = kn.wilcon_t_test([0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364],[0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916])
+#print("precision wilconxon test for kenlm ", precision_wilconsin)
+#f1_wilconxon = kn.wilcon_t_test([0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005],[0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815])
+#print("f1 wilconxon test for kenlm ", f1_wilconxon)
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 7  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa       
 #cmake -DKENLM_MAX_ORDER=10 ..
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
