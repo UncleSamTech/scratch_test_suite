@@ -217,9 +217,35 @@ class bi_lstm_scratch:
     def predict_next_token_bilstm(self,context,maxseqlen,model_path):
         token_list = None
         
-        with open("tokenized_file.pickle","rb") as tk:
+        if tf.test.gpu_device_name():
+            print(f"Default GPU device : {tf.test.gpu_device_name()}")
+            with open("tokenized_file.pickle","rb") as tk:
+            
+                with tf.device('/GPU:0'):
+                    tokenz = pickle.load(tk)
+                    token_list = tokenz.texts_to_sequences([context])
+            
+                    padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
+                    #print("evaluation shape  ", padded_in_seq.shape)
+                    load_mod = load_model(model_path,compile=False)
+                    predicted = load_mod.predict(padded_in_seq,verbose=1)
+        
+                    pred_token_index = np.argmax(predicted,axis=-1)[0]
+        
+     
+                    #print("index",pred_token_index)
+                    if pred_token_index in tokenz.index_word:
 
-            with tf.device('/GPU:0'):
+                        next_pred_token = tokenz.index_word[pred_token_index]
+            
+                        return next_pred_token
+                    else:
+                        next_pred_token = None
+                        
+                        return next_pred_token
+                    
+        else:
+            with open("tokenized_file.pickle","rb") as tk:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
@@ -230,8 +256,6 @@ class bi_lstm_scratch:
         
                 pred_token_index = np.argmax(predicted,axis=-1)[0]
         
-     
-
                 #print("index",pred_token_index)
                 if pred_token_index in tokenz.index_word:
 
@@ -240,6 +264,7 @@ class bi_lstm_scratch:
                     return next_pred_token
                 else:
                     next_pred_token = None
+
                     return next_pred_token
        
 
