@@ -64,7 +64,7 @@ class bi_lstm_scratch:
         
         max_seq_len = max([len(x) for x in input_seq])
         padded_in_seq = np.array(pad_sequences(input_seq,maxlen=max_seq_len,padding='pre'))
-        print("input shape training  ", padded_in_seq.shape)
+        #print("input shape training  ", padded_in_seq.shape)
         return padded_in_seq,max_seq_len
 
     def prep_seq_labels(self,padded_seq,total_words):
@@ -144,7 +144,7 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        #history,model = self.train_stand_alone(total_words,max_len,xs,ys)
+        history,model = self.train_stand_alone(total_words,max_len,xs,ys)
         val = self.evaluate_bilstm(testfile,max_len,model_path)
         #self.plot_graph(history,"accuracy")
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
@@ -241,7 +241,7 @@ class bi_lstm_scratch:
                         return next_pred_token
                     else:
                         next_pred_token = None
-                        
+
                         return next_pred_token
                     
         else:
