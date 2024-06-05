@@ -11,6 +11,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
+from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 
@@ -27,7 +28,7 @@ class bi_lstm_scratch:
         self.model = keras.Sequential()
 
     
-    def tokenize_data_inp_seq(self,file_name):
+    def tokenize_data_inp_seq(self,file_name,result_path):
         
         with open(file_name,"r",encoding="utf-8") as rf:
             lines = rf.readlines()
@@ -36,7 +37,7 @@ class bi_lstm_scratch:
             self.tokenizer = Tokenizer(oov_token='<oov>')
             self.tokenizer.fit_on_texts(lines)
 
-            with open("tokenized_file.pickle","wb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","wb") as tk:
                 pickle.dump(self.tokenizer,tk,protocol=pickle.HIGHEST_PROTOCOL)
 
             self.total_words = len(self.tokenizer.word_index) + 1
@@ -72,25 +73,29 @@ class bi_lstm_scratch:
         ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs,ys,labels
     
-    def train_stand_alone(self,total_words,max_seq,xs,ys):
+    def train_stand_alone(self,total_words,max_seq,xs,ys,result_path):
         print(tf.__version__)
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
             with tf.device('/GPU:0'):
                 model = Sequential()
-                model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
+                model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
                 model.add(Bidirectional(LSTM(150)))
                 model.add(Dense(total_words,activation='softmax'))
                 adam = Adam(learning_rate=0.01)
                 model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
-                history = model.fit(xs,ys,epochs=100,verbose=1)
+                history = model.fit(xs,ys,epochs=50,verbose=1)
+
+                with open(f"{result_path}historyrec_50embedtime1.pickle","wb") as hs:
+                    pickle.dump(history,hs)
+
                 print(model.summary())
         
-                file_name = "bilstm_scratch_model.keras"
+                file_name = f"{result_path}bilstm_scratch_model_50embedtime1.keras"
                 if os.path.exists(file_name):
                     os.remove(file_name)
 
-                with open("seqlen.txt","a") as se:
+                with open(f"{result_path}seqlen_50embedtime1.txt","a") as se:
                     se.write(f"sequence length {max_seq}")
                 
 
@@ -101,19 +106,23 @@ class bi_lstm_scratch:
 
             
             model = Sequential()
-            model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
+            model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
             model.add(Bidirectional(LSTM(150)))
             model.add(Dense(total_words,activation='softmax'))
             adam = Adam(learning_rate=0.01)
             model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
-            history = model.fit(xs,ys,epochs=100,verbose=1)
+            history = model.fit(xs,ys,epochs=50,verbose=1)
+            
+            with open(f"{result_path}historyrec_50embedtime1.pickle","wb") as hs:
+                    pickle.dump(history,hs)
+
             print(model.summary())
         
-            file_name = "bilstm_scratch_model.keras"
+            file_name = f"{result_path}bilstm_scratch_model_50embedtime1.keras"
             if os.path.exists(file_name):
                 os.remove(file_name)
 
-            with open("seqlen.txt","a") as se:
+            with open(f"{result_path}seqlen_50embedtime1.txt","a") as se:
                 se.write(f"sequence length {max_seq}")
 
             model.save(file_name)
@@ -121,9 +130,12 @@ class bi_lstm_scratch:
 
             return history,model
 
-    def plot_graph(self,history,string_va):
+    def plot_graph(self,string_va,result_path):
+
+        with open(f"{result_path}historyrec_50embedtime1.pickle","rb") as rh:
+            val = pickle.load(rh)
         
-        plt.plot(history.history[string_va])
+            plt.plot(val.history[string_va])
         
         '''
         loss = [1.0493,0.9448,0.9294,0.9223,0.9198,0.9192,0.9217,0.9140,0.9241,0.9218,0.9215,0.9208,
@@ -136,23 +148,27 @@ class bi_lstm_scratch:
         plt.xlabel("Epochs")
         plt.ylabel(string_va)
         #plt.show()
-        plt.savefig(f"{string_va}bilstm_quick.pdf")
+        plt.savefig(f"{result_path}{string_va}bilstm_50embedtime1_quick.pdf")
 
         
 
-    def consolidate_data(self,filepath,testfile,model_path):
+    def consolidate_data(self,filepath,testfile,model_path,result_path):
         
-        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath)
+        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys)
-        val = self.evaluate_bilstm(testfile,max_len,model_path)
-        #self.plot_graph(history,"accuracy")
+        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+
+        
+        #val = self.evaluate_bilstm(testfile,max_len,model_path)
+        print(history)
+        self.plot_graph("accuracy",result_path)
+        #self.plot_graph("loss")
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
-        #print(history)
+        
         #print(model)
-        return val
+        #return val
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
@@ -172,7 +188,7 @@ class bi_lstm_scratch:
             seed_text += " " + output_word
         print(seed_text)
 
-    def evaluate_bilstm(self,test_data,maxlen,model_path):
+    def evaluate_bilstm(self,test_data,maxlen,model_path,result_path):
         y_true = []
         i=0
         y_pred = []
@@ -191,7 +207,7 @@ class bi_lstm_scratch:
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
-                predicted_next_word = self.predict_next_token_bilstm(context,maxlen,model_path)
+                predicted_next_word = self.predict_next_token_bilstm(context,maxlen,model_path,result_path)
                 
                 
                 i+=1
@@ -211,18 +227,18 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open("bilstmmetrics.txt","a") as blm:
+        with open(f"{result_path}bilstmmetrics_50embedtime1.txt","a") as blm:
             blm.write(f"accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
         
         return accuracy,precision,recall,f1score
 
     
-    def predict_next_token_bilstm(self,context,maxseqlen,model_path):
+    def predict_next_token_bilstm(self,context,maxseqlen,model_path,result_path):
         token_list = None
         
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with open("tokenized_file.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             
                 with tf.device('/GPU:0'):
                     tokenz = pickle.load(tk)
@@ -230,7 +246,7 @@ class bi_lstm_scratch:
             
                     padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
                     #print("evaluation shape  ", padded_in_seq.shape)
-                    load_mod = load_model(model_path,compile=False)
+                    load_mod = load_model(f"{result_path}{model_path}",compile=False)
                     predicted = load_mod.predict(padded_in_seq,verbose=1)
         
                     pred_token_index = np.argmax(predicted,axis=-1)[0]
@@ -248,13 +264,13 @@ class bi_lstm_scratch:
                         return next_pred_token
                     
         else:
-            with open("tokenized_file.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
                 padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
                 #print("evaluation shape  ", padded_in_seq.shape)
-                load_mod = load_model(model_path,compile=False)
+                load_mod = load_model(f"{result_path}{model_path}",compile=False)
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
         
                 pred_token_index = np.argmax(predicted,axis=-1)[0]
@@ -278,9 +294,9 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/bilstm_scratch_model.keras")
+cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/")
 
-#cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/bilstm_scratch_model.keras")
+#cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
