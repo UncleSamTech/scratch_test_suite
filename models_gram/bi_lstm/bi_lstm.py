@@ -92,6 +92,7 @@ class bi_lstm_scratch:
 
                 with open("seqlen.txt","a") as se:
                     se.write(f"sequence length {max_seq}")
+                
 
                 model.save(file_name)
                 #print("model weight",model.get_weights())
@@ -135,7 +136,7 @@ class bi_lstm_scratch:
         plt.xlabel("Epochs")
         plt.ylabel(string_va)
         #plt.show()
-        plt.savefig(f"{string_va}_quick.pdf")
+        plt.savefig(f"{string_va}bilstm_quick.pdf")
 
         
 
@@ -210,7 +211,9 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        print(f"accuracy {accuracy} precision {precision} recall {recall} f1score {f1score}")
+        with open("bilstmmetrics.txt","a") as blm:
+            blm.write(f"accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
+        
         return accuracy,precision,recall,f1score
 
     
@@ -276,6 +279,7 @@ class bi_lstm_scratch:
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/bilstm_scratch_model.keras")
+
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/bilstm_scratch_model.keras")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt")
