@@ -134,7 +134,7 @@ class bi_lstm_scratch:
 
     def plot_graph(self,string_va,result_path):
 
-        with open(f"{result_path}historyrec_50embedtime1.pickle","rb") as rh:
+        with open(f"{result_path}historyrec_50embedtime2.pickle","rb") as rh:
             val = pickle.load(rh)
         
             plt.plot(val.history[string_va])
@@ -150,7 +150,7 @@ class bi_lstm_scratch:
         plt.xlabel("Epochs")
         plt.ylabel(string_va)
         #plt.show()
-        plt.savefig(f"{result_path}{string_va}bilstm_50embedtime1_quick.pdf")
+        plt.savefig(f"{result_path}{string_va}bilstm_50embedtime2_quick.pdf")
 
         
 
@@ -194,14 +194,14 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        #history_again = self.train_model_again(model_path,result_path,xs,ys)
+        history_again = self.train_model_again(model_path,result_path,xs,ys)
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
         #val = self.evaluate_bilstm(testfile,max_len,model_path)
-        #print(history)
-        #self.plot_graph("accuracy",result_path)
-        self.plot_graph("loss",result_path)
+        print(history_again)
+        self.plot_graph("accuracy",result_path)
+        #self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
         
