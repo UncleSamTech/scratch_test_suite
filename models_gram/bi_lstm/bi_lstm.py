@@ -37,7 +37,7 @@ class bi_lstm_scratch:
             self.tokenizer = Tokenizer(oov_token='<oov>')
             self.tokenizer.fit_on_texts(lines)
 
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","wb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime2.pickle","wb") as tk:
                 pickle.dump(self.tokenizer,tk,protocol=pickle.HIGHEST_PROTOCOL)
 
             self.total_words = len(self.tokenizer.word_index) + 1
@@ -157,13 +157,13 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
         #val = self.evaluate_bilstm(testfile,max_len,model_path)
-        print(history)
-        self.plot_graph("accuracy",result_path)
-        #self.plot_graph("loss")
+        #print(history)
+        #self.plot_graph("accuracy",result_path)
+        self.plot_graph("loss")
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
         
