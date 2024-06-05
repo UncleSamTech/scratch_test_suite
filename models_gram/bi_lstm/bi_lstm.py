@@ -11,6 +11,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
+from tensorflow.keras.callbacks import ReduceLROnPlateau
+from tensorflow.keras.callbacks import EarlyStopping
 from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
@@ -37,7 +39,7 @@ class bi_lstm_scratch:
             self.tokenizer = Tokenizer(oov_token='<oov>')
             self.tokenizer.fit_on_texts(lines)
 
-            with open(f"{result_path}tokenized_file_50embedtime2.pickle","wb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","wb") as tk:
                 pickle.dump(self.tokenizer,tk,protocol=pickle.HIGHEST_PROTOCOL)
 
             self.total_words = len(self.tokenizer.word_index) + 1
@@ -82,7 +84,7 @@ class bi_lstm_scratch:
                 model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
                 model.add(Bidirectional(LSTM(150)))
                 model.add(Dense(total_words,activation='softmax'))
-                adam = Adam(learning_rate=0.01)
+                adam = Adam(learning_rate=0.001)
                 model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
                 history = model.fit(xs,ys,epochs=50,verbose=1)
 
@@ -96,7 +98,7 @@ class bi_lstm_scratch:
                     os.remove(file_name)
 
                 with open(f"{result_path}seqlen_50embedtime1.txt","a") as se:
-                    se.write(f"sequence length {max_seq}")
+                    se.write(f"sequence length {max_seq} \n")
                 
 
                 model.save(file_name)
@@ -109,7 +111,7 @@ class bi_lstm_scratch:
             model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
             model.add(Bidirectional(LSTM(150)))
             model.add(Dense(total_words,activation='softmax'))
-            adam = Adam(learning_rate=0.01)
+            adam = Adam(learning_rate=0.001)
             model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
             history = model.fit(xs,ys,epochs=50,verbose=1)
             
@@ -123,7 +125,7 @@ class bi_lstm_scratch:
                 os.remove(file_name)
 
             with open(f"{result_path}seqlen_50embedtime1.txt","a") as se:
-                se.write(f"sequence length {max_seq}")
+                se.write(f"sequence length {max_seq} \n")
 
             model.save(file_name)
             #print("model weight",model.get_weights())
@@ -152,18 +154,54 @@ class bi_lstm_scratch:
 
         
 
+    def train_model_again(self,model_name,result_path,xs,ys):
+        model_name_comp = f"{result_path}{model_name}"
+        if tf.test.gpu_device_name():
+            print(f"Default GPU device : {tf.test.gpu_device_name()}")
+            with tf.device('/GPU:0'):
+                loaded_model = load_model(model_name_comp,compile=True)
+                # Reduce learning rate when a metric has stopped improving
+                lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+                early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
+                history = loaded_model.fit(xs,ys,epochs=50,verbose=1,callbacks=[lr_scheduler,early_stopping])
+
+                file_name = f"{result_path}bilstm_scratch_model_50embedtime2.keras"
+                if os.path.exists(file_name):
+                    os.remove(file_name)
+
+                loaded_model.save(file_name)
+
+                with open(f"{result_path}historyrec_50embedtime2.pickle","wb") as hs:
+                    pickle.dump(history,hs)
+        else:
+            print("Please install GPU version of TF")
+            loaded_model = load_model(model_name_comp,compile=True)
+
+            history = loaded_model.fit(xs,ys,epochs=50,verbose=1)
+
+            file_name = f"{result_path}bilstm_scratch_model_50embedtime2.keras"
+            if os.path.exists(file_name):
+                os.remove(file_name)
+
+            loaded_model.save(file_name)
+
+            with open(f"{result_path}historyrec_50embedtime2.pickle","wb") as hs:
+                pickle.dump(history,hs)
+
     def consolidate_data(self,filepath,testfile,model_path,result_path):
         
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        #history_again = self.train_model_again(model_path,result_path,xs,ys)
+        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
         #val = self.evaluate_bilstm(testfile,max_len,model_path)
-        #print(history)
-        #self.plot_graph("accuracy",result_path)
-        self.plot_graph("loss",result_path)
+        print(history)
+        self.plot_graph("accuracy",result_path)
+        #self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
         
@@ -294,7 +332,7 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/")
+cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
