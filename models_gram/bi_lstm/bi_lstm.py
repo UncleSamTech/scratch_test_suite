@@ -278,7 +278,7 @@ class bi_lstm_scratch:
         
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with open(f"{result_path}tokenized_file_100embedtime1.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             
                 with tf.device('/GPU:0'):
                     tokenz = pickle.load(tk)
@@ -304,7 +304,7 @@ class bi_lstm_scratch:
                         return next_pred_token
                     
         else:
-            with open(f"{result_path}tokenized_file_100embedtime1.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
