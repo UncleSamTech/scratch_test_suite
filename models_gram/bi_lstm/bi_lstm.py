@@ -198,15 +198,15 @@ class bi_lstm_scratch:
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
-        #val = self.evaluate_bilstm(testfile,max_len,model_path)
+        val = self.evaluate_bilstm(testfile,max_len,model_path,result_path)
         #print(history_again)
         #self.plot_graph("accuracy",result_path)
-        self.plot_graph("loss",result_path)
+        #self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
         
         #print(model)
-        #return val
+        return val
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
@@ -332,7 +332,7 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
+cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
