@@ -267,7 +267,7 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_50embedtime2.txt","a") as blm:
+        with open(f"{result_path}bilstmmetrics_100embedtime1.txt","a") as blm:
             blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
         
         return accuracy,precision,recall,f1score
@@ -278,7 +278,7 @@ class bi_lstm_scratch:
         
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_100embedtime1.pickle","rb") as tk:
             
                 with tf.device('/GPU:0'):
                     tokenz = pickle.load(tk)
@@ -304,7 +304,7 @@ class bi_lstm_scratch:
                         return next_pred_token
                     
         else:
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            with open(f"{result_path}tokenized_file_100embedtime1.pickle","rb") as tk:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
@@ -334,7 +334,7 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
+cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
