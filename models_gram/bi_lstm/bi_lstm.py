@@ -250,6 +250,7 @@ class bi_lstm_scratch:
                 
                 i+=1
                 if i%500 == 0:
+                    print("good progress")
                     print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
             
                 y_true.append(true_next_word)
