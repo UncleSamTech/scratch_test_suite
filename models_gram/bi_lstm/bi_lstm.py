@@ -226,6 +226,7 @@ class bi_lstm_scratch:
             seed_text += " " + output_word
         print(seed_text)
 
+
     def evaluate_bilstm(self,test_data,maxlen,model_path,result_path):
         y_true = []
         i=0
@@ -266,8 +267,8 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_50embedtime1.txt","a") as blm:
-            blm.write(f"accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
+        with open(f"{result_path}bilstmmetrics_50embedtime2.txt","a") as blm:
+            blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
         
         return accuracy,precision,recall,f1score
 
@@ -333,7 +334,7 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
+cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
