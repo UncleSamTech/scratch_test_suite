@@ -282,7 +282,7 @@ class bi_lstm_scratch:
                     tokenz = pickle.load(tk)
                     token_list = tokenz.texts_to_sequences([context])
             
-                    padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
+                    padded_in_seq = np.array(pad_sequences(token_list,maxlen=44,padding='pre',truncating='pre'))
                     #print("evaluation shape  ", padded_in_seq.shape)
                     load_mod = load_model(f"{result_path}{model_path}",compile=False)
                     predicted = load_mod.predict(padded_in_seq,verbose=1)
