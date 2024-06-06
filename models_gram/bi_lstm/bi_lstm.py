@@ -195,13 +195,13 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         # history_again = self.train_model_again(model_path,result_path,xs,ys)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
         #val = self.evaluate_bilstm(testfile,max_len,model_path)
-        print(history)
-        self.plot_graph("accuracy",result_path)
-        #self.plot_graph("loss",result_path)
+        #print(history)
+        #self.plot_graph("accuracy",result_path)
+        self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
         
