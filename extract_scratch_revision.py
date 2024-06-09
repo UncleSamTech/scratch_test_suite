@@ -683,6 +683,7 @@ def main2(project_path: str):
     
     train_projects = get_all_train_projects()   
     
+    '''
      
     for proj_name in train_projects:
         
@@ -711,6 +712,9 @@ def main2(project_path: str):
         else:
             print(f"skipped {proj_name}")
             continue
+
+'''
+
 
     projects_to_skip_test = get_all_projects_in_db()
     print("projects to skip test ", projects_to_skip_test)
