@@ -81,23 +81,23 @@ class bi_lstm_scratch:
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
             with tf.device('/GPU:0'):
                 model = Sequential()
-                model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
-                model.add(Bidirectional(LSTM(150)))
+                model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
+                model.add(Bidirectional(LSTM(100)))
                 model.add(Dense(total_words,activation='softmax'))
-                adam = Adam(learning_rate=0.001)
+                adam = Adam(learning_rate=0.01)
                 model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
                 history = model.fit(xs,ys,epochs=50,verbose=1)
 
-                with open(f"{result_path}historyrec_100embedtime1.pickle","wb") as hs:
+                with open(f"{result_path}historyrec_150embedtime1.pickle","wb") as hs:
                     pickle.dump(history,hs)
 
                 print(model.summary())
         
-                file_name = f"{result_path}bilstm_scratch_model_100embedtime1.keras"
+                file_name = f"{result_path}bilstm_scratch_model_150embedtime1.keras"
                 if os.path.exists(file_name):
                     os.remove(file_name)
 
-                with open(f"{result_path}seqlen_100embedtime1.txt","a") as se:
+                with open(f"{result_path}seqlen_150embedtime1.txt","a") as se:
                     se.write(f"sequence length {max_seq} \n")
                 
 
@@ -108,23 +108,23 @@ class bi_lstm_scratch:
 
             
             model = Sequential()
-            model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
-            model.add(Bidirectional(LSTM(150)))
+            model.add(Embedding(total_words,50,input_shape=(max_seq-1,)))
+            model.add(Bidirectional(LSTM(100)))
             model.add(Dense(total_words,activation='softmax'))
-            adam = Adam(learning_rate=0.001)
+            adam = Adam(learning_rate=0.01)
             model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
             history = model.fit(xs,ys,epochs=50,verbose=1)
             
-            with open(f"{result_path}historyrec_100embedtime1.pickle","wb") as hs:
+            with open(f"{result_path}historyrec_50embedtime1.pickle","wb") as hs:
                     pickle.dump(history,hs)
 
             print(model.summary())
         
-            file_name = f"{result_path}bilstm_scratch_model_100embedtime1.keras"
+            file_name = f"{result_path}bilstm_scratch_model_50embedtime1.keras"
             if os.path.exists(file_name):
                 os.remove(file_name)
 
-            with open(f"{result_path}seqlen_100embedtime1.txt","a") as se:
+            with open(f"{result_path}seqlen_50embedtime1.txt","a") as se:
                 se.write(f"sequence length {max_seq} \n")
 
             model.save(file_name)
@@ -134,7 +134,7 @@ class bi_lstm_scratch:
 
     def plot_graph(self,string_va,result_path):
 
-        with open(f"{result_path}historyrec_100embedtime2.pickle","rb") as rh:
+        with open(f"{result_path}historyrec_50embedtime2.pickle","rb") as rh:
             val = pickle.load(rh)
         
             plt.plot(val.history[string_va])
@@ -199,7 +199,7 @@ class bi_lstm_scratch:
 
         
         val = self.evaluate_bilstm(testfile,max_len,model_path,result_path)
-        #print(history_again)
+        #print(history)
         #self.plot_graph("accuracy",result_path)
         #self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
@@ -308,7 +308,7 @@ class bi_lstm_scratch:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
-                padded_in_seq = np.array(pad_sequences(token_list,maxlen=44,padding='pre',truncating='pre'))
+                padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre',truncating='pre'))
                 #print("evaluation shape  ", padded_in_seq.shape)
                 load_mod = load_model(f"{result_path}{model_path}",compile=False)
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
@@ -334,9 +334,9 @@ class bi_lstm_scratch:
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
-cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
+#cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
-#cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
+cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
