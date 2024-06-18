@@ -17,8 +17,10 @@ import pandas as pd
 
 # step 3: create/connect to database
 #connection = sqlite3.connect("scratch_revisions_database.db")
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db")
-connection_test = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db")
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db")
+
+#connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db")
+#connection_test = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db")
 # step 4: load data file to sqlite
 #df.to_sql("Projects", connection, if_exists='replace', index=False)
 #df3.to_sql("Authors", connection, if_exists='replace', index=False)
@@ -32,9 +34,9 @@ revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_
 revision_obj.execute(revision_table)
 
 #create the revision table on the test db to be used later
-revision_obj_test = connection_test.cursor()
-revision_table_test = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
-revision_obj_test.execute(revision_table_test)
+#revision_obj_test = connection_test.cursor()
+#revision_table_test = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
+#revision_obj_test.execute(revision_table_test)
 
 
 #create the hash table to be used later
@@ -43,9 +45,9 @@ hash_table = """CREATE TABLE Contents (Hash,Content); """
 hash_obj.execute(hash_table)
 
 #create the hash table on the test db to be used later
-hash_obj_test = connection_test.cursor()
-hash_table_test = """CREATE TABLE Contents (Hash,Content); """
-hash_obj_test.execute(hash_table_test)
+#hash_obj_test = connection_test.cursor()
+#hash_table_test = """CREATE TABLE Contents (Hash,Content); """
+#hash_obj_test.execute(hash_table_test)
 
 revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
 revision_project_index="""CREATE INDEX "sc_Revisions_Projects_index" ON "Revisions" ("Project_Name"); """
@@ -59,15 +61,15 @@ content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "
 
 
 #create the test_project
-test_proj_obj = connection_test.cursor()
-test_proj = """ CREATE TABLE test_projects(project_name,number); """
-test_proj_obj.execute(test_proj)
+#test_proj_obj = connection_test.cursor()
+#test_proj = """ CREATE TABLE test_projects(project_name,number); """
+#test_proj_obj.execute(test_proj)
 
 
 #create the train_project
-train_proj_obj = connection.cursor()
-train_proj = """ CREATE TABLE train_projects(project_name,number); """
-train_proj_obj.execute(train_proj)
+#train_proj_obj = connection.cursor()
+#train_proj = """ CREATE TABLE train_projects(project_name,number); """
+#train_proj_obj.execute(train_proj)
 
 
 
@@ -75,5 +77,5 @@ train_proj_obj.execute(train_proj)
 connection.commit()
 connection.close()
 
-connection_test.commit()
-connection_test.close()
+#connection_test.commit()
+#connection_test.close()

@@ -288,7 +288,9 @@ class bi_lstm_scratch:
                     #print("evaluation shape  ", padded_in_seq.shape)
                     load_mod = load_model(f"{result_path}{model_path}",compile=False)
                     predicted = load_mod.predict(padded_in_seq,verbose=1)
-        
+                    num_classes = np.array(predicted).size
+                    print("number of classes",num_classes)
+
                     pred_token_index = np.argmax(predicted,axis=-1)[0]
         
      
@@ -312,19 +314,14 @@ class bi_lstm_scratch:
                 #print("evaluation shape  ", padded_in_seq.shape)
                 load_mod = load_model(f"{result_path}{model_path}",compile=False)
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
-        
+                num_classes = np.array(predicted).size
+                print("number of classes",num_classes)
                 pred_token_index = np.argmax(predicted,axis=-1)[0]
-        
+                print("class with maximum probability", pred_token_index)
                 #print("index",pred_token_index)
-                if pred_token_index in tokenz.index_word:
 
-                    next_pred_token = tokenz.index_word[pred_token_index]
-            
-                    return next_pred_token
-                else:
-                    next_pred_token = None
-
-                    return next_pred_token
+                next_pred_token = tokenz.index_word[pred_token_index] if pred_token_index in tokenz.index_word else None
+                return next_pred_token
        
 
     def load_trained_model(self,model_name) :
