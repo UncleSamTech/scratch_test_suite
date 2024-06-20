@@ -12,4 +12,4 @@ def insert_into_commit_messages(file_path):
     df.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 
 
-insert_into_commit_messages("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages_unique.csv")
+insert_into_commit_messages("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages_unique_cleaned.csv")
