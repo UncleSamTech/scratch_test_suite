@@ -17,4 +17,5 @@ while read p; do
         echo $p,$k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/projectsnames_commitsha_authors.csv
         echo $p,$k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/projectsnames_commitsha_commitmessages.csv
         echo $k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages.csv
+done < $INPUT2
 done < $INPUT
