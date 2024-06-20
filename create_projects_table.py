@@ -27,7 +27,7 @@ def insert_into_projects_table(project_commit_branch_path):
     df.to_sql("Projects", connection, if_exists='replace', index=False)
 
 #create_projects("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-create_projects("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#create_projects("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects
 #insert_into_projects_table("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_projects_names_commit_branch.csv")
-#insert_into_projects_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects/all_projects_names_commit_branch.csv")
+insert_into_projects_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects//media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects/all_projects_names_commit_branch_cleaned.csv")
