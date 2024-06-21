@@ -19,8 +19,10 @@ def get_connection():
 def insert_into_commit_messages(file_path):
     commit_sha = None
     commit_message = None
+    all_commits = get_all_commit_sha()
     with open(file_path,"r",encoding="utf",errors="ignore") as cm:
         lines  = cm.readlines()
+        
         for line in lines:
             complete_content = line.split(",")
             
@@ -35,9 +37,12 @@ def insert_into_commit_messages(file_path):
             
             conn,cur = get_connection()
             val = None
-                
+            
             if conn != None:
-                cur.execute(insert_commit_message,(commit_sha,commit_message))               
+                if commit_sha not in all_commits:
+                    cur.execute(insert_commit_message,(commit_sha,commit_message))   
+                else:
+                    continue            
             else:
                 if val != None:
                     print("executed")
@@ -45,7 +50,21 @@ def insert_into_commit_messages(file_path):
             conn.commit()
 
         
-    
+def get_all_commit_sha():
+    select_projects = """SELECT commit_sha from commit_message;"""
+    val = []
+    fin_resp = []
+    conn,curr = get_connection()
+    if conn != None:
+         curr.execute(select_projects)  
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+                     
+    else:
+        print("connection failed")
+    conn.commit()
+    #conn.close()
+    return fin_resp 
 
 
 insert_into_commit_messages("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages_unique_cleaned.csv")
