@@ -1,5 +1,5 @@
 import sqlite3
-import pandas as pd
+#import pandas as pd
 
 # step 1: load data file
 #df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/projects.csv')
@@ -29,9 +29,13 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
 
 #create the revision table to be used later
-revision_obj = connection.cursor()
-revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
-revision_obj.execute(revision_table)
+#revision_obj = connection.cursor()
+#revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
+#revision_obj.execute(revision_table)
+
+commit_mess_obj =  connection.cursor()
+commit_message_table = """CREATE TABLE Commit_Message(Commit_Message,Commit_Sha);"""
+commit_mess_obj.execute(commit_message_table)
 
 #create the revision table on the test db to be used later
 #revision_obj_test = connection_test.cursor()
@@ -40,15 +44,16 @@ revision_obj.execute(revision_table)
 
 
 #create the hash table to be used later
-hash_obj = connection.cursor()
-hash_table = """CREATE TABLE Contents (Hash,Content); """
-hash_obj.execute(hash_table)
+#hash_obj = connection.cursor()
+#hash_table = """CREATE TABLE Contents (Hash,Content); """
+#hash_obj.execute(hash_table)
 
 #create the hash table on the test db to be used later
 #hash_obj_test = connection_test.cursor()
 #hash_table_test = """CREATE TABLE Contents (Hash,Content); """
 #hash_obj_test.execute(hash_table_test)
 
+'''
 revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
 revision_project_index="""CREATE INDEX "sc_Revisions_Projects_index" ON "Revisions" ("Project_Name"); """
 revision_commit_index="""CREATE INDEX "sc_Revisions_Commit_index" ON "Revisions" ("Commit_SHA"); """
@@ -58,6 +63,7 @@ commit_messages_commit_sha_index="""CREATE INDEX "sc_Commit_Messages_index" ON "
 commit_parents_commitsha_index="""CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parents" ("Commit_SHA"); """
 content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "Content_Parents" ("Commit_SHA"); """
 
+'''
 
 
 #create the test_project
