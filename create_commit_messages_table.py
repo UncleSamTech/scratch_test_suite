@@ -3,7 +3,7 @@ import pandas as pd
 import sqlite3
 
 def insert_into_commit_messages(file_path):
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(file_path,lineterminator='\n')
 
     df = df.columns.str.strip()
 
