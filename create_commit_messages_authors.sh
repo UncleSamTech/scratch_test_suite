@@ -14,8 +14,9 @@ while read p; do
         author=`git show -s --format="%an_COMMA_%ae_COMMA_%cn_COMMA_%ce" $k`
         commit_message=`git show -s --format=%B $k`
         #echo $p,$k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auto_commit_data/author_2.csv
-        echo $p,$k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/projectsnames_commitsha_authors.csv
-        echo $p,$k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/projectsnames_commitsha_commitmessages.csv
-        echo $k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages.csv
+        echo $k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/commitsha_authors.csv
+        #echo $p,$k,$author >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/projectsnames_commitsha_authors.csv
+        #echo $p,$k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/projectsnames_commitsha_commitmessages.csv
+        #echo $k,$commit_message >> /media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages.csv
 done < $INPUT2
 done < $INPUT
