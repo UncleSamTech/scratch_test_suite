@@ -18,7 +18,7 @@ import sqlite3
 # step 3: create/connect to database
 #connection = sqlite3.connect("scratch_revisions_database.db")
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db")
-
+#connection = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
 #connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db")
 #connection_test = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db")
 # step 4: load data file to sqlite
@@ -33,9 +33,9 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
 #revision_obj.execute(revision_table)
 
-commit_mess_obj =  connection.cursor()
-commit_message_table = """CREATE TABLE Commit_Message(Commit_Message,Commit_Sha);"""
-commit_mess_obj.execute(commit_message_table)
+authors_obj =  connection.cursor()
+authors_table = """CREATE TABLE Authors(commit_sha,author_name,author_email,committer_name,committer_email);"""
+authors_obj.execute(authors_table)
 
 #create the revision table on the test db to be used later
 #revision_obj_test = connection_test.cursor()
