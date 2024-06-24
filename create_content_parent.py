@@ -93,7 +93,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             #proc3 = subprocess.run(["sed 's/\d0/¬/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             proc3 = correct_code_replace(proc2.stdout)
-            proc4 = subprocess.run(['xargs -0 echo'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            proc4 = subprocess.run(['xargs -0 echo'], input=proc3, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
 
