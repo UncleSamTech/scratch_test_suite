@@ -107,6 +107,13 @@ class bidirectional_context:
                     attention_masks.append(torch.tensor(attention_mask))
                     labels.append(torch.tensor(label))
                 
+                elif len(input_id) == 1:
+                     label[0] = tokenizer_tok.mask_token_id
+                     input_id[0] = tokenizer_tok.mask_token_id
+                     input_ids.append(torch.tensor(input_id))
+                     attention_masks.append(torch.tensor(attention_mask))
+                     labels.append(torch.tensor(label))
+                
 
             input_ids = pad_sequence(input_ids,batch_first=True,padding_value=tokenizer_tok.pad_token_id)
             attention_masks = pad_sequence(attention_masks,batch_first=True,padding_value=0)
@@ -117,7 +124,7 @@ class bidirectional_context:
         
 
         training_args = TrainingArguments(
-            output_dir='/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/output_dir',
+            output_dir='/Users/samueliwuchukwu/documents/output_dir',
             overwrite_output_dir=True,
             num_train_epochs=3,
             per_device_train_batch_size=8,
@@ -135,8 +142,8 @@ class bidirectional_context:
         
         trainer.train()
 
-        model.save_pretrained("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/saved_model")
-        tokenizer_tok.save_pretrained("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/saved_model")
+        model.save_pretrained("/Users/samueliwuchukwu/documents/saved_model")
+        tokenizer_tok.save_pretrained("/Users/samueliwuchukwu/documents/saved_model")
         
     def predict_top5(self,model_path,test_data):
          
@@ -168,6 +175,11 @@ class bidirectional_context:
 
                     input_ids.append(torch.tensor(input_id))
                     attention_masks.append(torch.tensor(attention_mask))
+                
+                elif len(input_id) == 1:
+                     input_id[0] = tokenizer.mask_token_id
+                     input_ids.append(torch.tensor(input_id))
+                     attention_masks.append(torch.tensor(attention_mask))
             
         
             input_ids = pad_sequence(input_ids,batch_first=True,padding_value=tokenizer.pad_token_id)
@@ -215,6 +227,6 @@ class bidirectional_context:
          return mrr
 
 bid = bidirectional_context()
-#bid.tokenize_dataset("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/result_path/")
-#bid.training_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/result_path/")
-bid.predict_top5("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/ranked_bidirectional_context/saved_model","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_test_data_10.txt")
+#bid.tokenize_dataset("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/Users/samueliwuchukwu/documents/result_path")
+#bid.training_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/Users/samueliwuchukwu/documents/result_path")
+bid.predict_top5("/Users/samueliwuchukwu/documents/saved_model","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/scratch_test_data_10.txt")
