@@ -66,7 +66,7 @@ class bi_lstm_scratch:
         
         
         max_seq_len = max([len(x) for x in input_seq])
-        padded_in_seq = np.array(pad_sequences(input_seq,maxlen=max_seq_len,padding='pre'))
+        padded_in_seq = np.array(pad_sequences(input_seq,maxlen=128,padding='pre'))
         #print("input shape training  ", padded_in_seq.shape)
         return padded_in_seq,max_seq_len
 
@@ -198,7 +198,7 @@ class bi_lstm_scratch:
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
-        val = self.evaluate_bilstm(testfile,max_len,model_path,result_path)
+        val = self.evaluate_bilstm(testfile,128,model_path,result_path)
         #print(history)
         #self.plot_graph("accuracy",result_path)
         #self.plot_graph("loss",result_path)
