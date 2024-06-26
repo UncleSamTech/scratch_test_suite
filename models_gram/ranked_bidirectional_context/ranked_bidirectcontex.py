@@ -3,6 +3,7 @@ from transformers import BertTokenizer
 from datasets import load_dataset
 import torch
 import pickle
+import math
 from transformers import BertTokenizer,BertForSequenceClassification
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
@@ -35,7 +36,7 @@ class bidirectional_context:
             def tokenize_function(val):
                 val = linesval
                 max_len_ov = max([len(each_line) for each_line in val])
-                batch_sample = int(max_len_ov/2)
+                batch_sample = round(max_len_ov/2)
                 sample_data = {'text':[line.strip() for line in val]}
                 
                 
@@ -81,12 +82,12 @@ class bidirectional_context:
             attention_masks = []
             labels = []
             total_length = len(dictionary_data)
-            batch_length = int(total_length / 2)
+            batch_length = round(total_length / 2)
             print(batch_length)
 
             # Example usage with a tokenizer
             #tokenizer_see = BertTokenizer.from_pretrained('bert-base-uncased')
-            sample_data = [{"input_ids":tokenizer_tok.encode(each_data,add_special_token=True),'attention_mask': [1]*len(tokenizer_tok.encode(each_data, add_special_tokens=True))} for each_data in dictionary_data[0:batch_length]]
+            sample_data = [{"input_ids":tokenizer_tok.encode(each_data),'attention_mask': [1]*len(tokenizer_tok.encode(each_data))} for each_data in dictionary_data[0:batch_length]]
             
             # Create a DataLoader with a batch size of 2
             #data_loader = DataLoader(sample_data, batch_size=batch_length, collate_fn=lambda x: custom_data_collator(x, tokenizer))
@@ -158,60 +159,66 @@ class bidirectional_context:
                #mask all tokens at index 1 provided the sentence length is more that 1
                #define a custom data collator for this
 
-         def custom_data_collator(self,dictionary_data):
+         def custom_data_collator(dictionary_data):
             dictionary_data = lines
             input_ids = []
             attention_masks = []
             total_length = len(dictionary_data)
+            print("length of test data",total_length)
             batch_length = int(total_length / 2)
-            sample_data = [{"input_ids":tokenizer.encode(each_data,add_special_token=True),'attention_mask': [1]*len(tokenizer.encode(each_data, add_special_tokens=True))} for each_data in dictionary_data[0:batch_length]]
+            print("batch length of test data", batch_length)
+            #provide a sample data to the tokenizer for encoding, i utilized a batch of the test data for this
+            #calculate the lenght of the entire test data set and divided by 2 and convert this to integer
+            sample_data = [{"input_ids":tokenizer.encode(each_data),'attention_masks': [1]*len(tokenizer.encode(each_data))} for each_data in dictionary_data]
             
             for each_data in sample_data:
                 input_id = each_data['input_ids']
-                attention_mask = each_data['attention_mask']
+                #print("tokenized input", input_id)
+                attention_mask = each_data['attention_masks']
 
                 if len(input_id) > 1:  
                     input_id[1] = tokenizer.mask_token_id
-
+                    #print("masked input at index1",input_id[1])
                     input_ids.append(torch.tensor(input_id))
+
                     attention_masks.append(torch.tensor(attention_mask))
                 
-                elif len(input_id) == 1:
-                     input_id[0] = tokenizer.mask_token_id
-                     input_ids.append(torch.tensor(input_id))
-                     attention_masks.append(torch.tensor(attention_mask))
+                
             
         
             input_ids = pad_sequence(input_ids,batch_first=True,padding_value=tokenizer.pad_token_id)
+            print("padded inputs ",input_ids)
             attention_masks = pad_sequence(attention_masks,batch_first=True,padding_value=0)
         
             return {"input_ids":input_ids,"attention_mask":attention_masks}
 
-         test_data_sent = [{'input_ids': tokenizer.encode(sentence, add_special_tokens=True),
-                  'attention_mask': [1]*len(tokenizer.encode(sentence, add_special_tokens=True))} 
-                 for sentence in lines]
          
-         test_batch = custom_data_collator(test_data_sent,tokenizer)
+         
+         test_batch = custom_data_collator(lines)
 
          #predict top five tokens
 
          with torch.no_grad():
-              outputs = model(input_ids=test_batch["input_ids"],attention_mask=test_batch["attention_mask"])
+              outputs = model(input_ids=test_batch["input_ids"],attention_mask=test_batch["attention_mask"]) 
+              #if len(test_batch["input_ids"]) >= 1 else 0    
               predictions = outputs.logits
+              
         
-            # Get the top 5 predictions for the masked token at index 1 for each sentence
-         top_k = 5
-         masked_index = 1
-         predicted_tokens = []
+              # Get the top 5 predictions for the masked token at index 1 for each sentence
+              top_k = 5
+              masked_index =  1 
+              #masked_index = torch.where(test_batch["input_ids"] == tokenizer.mask_token_id)[1] if len(test_batch["input_ids"]) >= 1 else 0
+              predicted_tokens = []
 
-         for i in range(predictions.shape[0]):
-            softmax_scores = torch.softmax(predictions[i, masked_index], dim=-1)
-            top_k_indices = torch.topk(softmax_scores, top_k).indices
-            #top_k_tokens = [tokenizer.convert_ids_to_tokens(idx.item()) for idx in top_k_indices]
-            predicted_tokens.append(top_k_indices)
+              for i in range(predictions.shape[0]):
+                softmax_scores = torch.softmax(predictions[i, masked_index], dim=-1)
+                top_k_indices = torch.topk(softmax_scores, top_k).indices
+                top_k_tokens = [tokenizer.convert_ids_to_tokens(idx.item()) for idx in top_k_indices]
+                print("top k tokens", top_k_tokens)
+                predicted_tokens.append(top_k_indices)
         
-         #print(predicted_tokens)
-         return predicted_tokens
+              #print(predicted_tokens)
+              return predicted_tokens
     
     def reciprocal_rank(self,ground_truth, prediction):
         for rank, token in enumerate(prediction, start=1):

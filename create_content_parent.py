@@ -10,6 +10,12 @@ import os
 #conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db')
 conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db')
 
+def get_connection():
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
+    #conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
+    cursor =  conn.cursor()
+    return conn,cursor
+
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
         return False
@@ -200,6 +206,63 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
         return 1
                 
+def insert_into_content_parent_table(file_path):
+    lines = None
+    project_name= None
+    file_name = None
+    commit_sha = None
+    content_sha = None
+
+    with open(file_path,"r",encoding="utf-8") as cpd:
+        lines = cpd.readlines()
+
+        for each_line in lines:
+            content = each_line.split("_COMMA_")
+            if len(content) == 4:
+                project_name = content[0]
+                file_name = content[1]
+                commit_sha = content[2] if is_sha1(content[2]) else "None"
+                content_sha = content[3] if is_sha1(content[3]) else "None"
+
+            
+            elif len(content) == 3:
+                project_name = content[0]
+                file_name = content[1]
+                commit_sha = content[2] if is_sha1(content[2]) else "None"
+                content_sha = "None"
+            
+            elif len(content) == 2:
+                project_name = content[0]
+                file_name = content[1]
+                commit_sha = "None"
+                content_sha = "None"
+
+            elif len(content) == 1:
+                project_name = content[0]
+                file_name = "None"
+                commit_sha = "None"
+                content_sha = "None"
+            
+            else:
+                project_name = "None"
+                file_name = "None"
+                commit_sha = "None"
+                content_sha = "None"
+            
+            insert_into_content_parent = """INSERT INTO Content_Parents (Project_Name,File,Commit_SHA,Content_Parent_SHA) VALUES(?,?,?,?);"""
+
+            conn,cur = get_connection()
+            val = None
+            
+            if conn != None:
+                cur.execute(insert_into_content_parent,(project_name,file_name,commit_sha,content_sha))               
+            else:
+                if val != None:
+                    print("executed")
+                print("connection failed")
+            conn.commit()
+
+
 
 def main2(project_path: str):
     proj_names = []

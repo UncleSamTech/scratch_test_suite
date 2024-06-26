@@ -1,12 +1,12 @@
 import sqlite3
-#import pandas as pd
+import pandas as pd
 
 # step 1: load data file
 #df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/projects.csv')
 #df3 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/authors_hashed2.csv')
 #df4 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/commit_messages_unique2.csv')
 #df5 = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/content_parents/content_parents_unique1.csv')
-
+#df_proj_load = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/projectsnames_commitsha_authors_unique.csv')
 
 # step 2: clean data
 #df.columns = df.columns.str.strip()
@@ -27,15 +27,16 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 #df4.to_sql("Commit_Messages", connection, if_exists='replace', index=False)
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
+#df_proj_load("Authors_Project",connection,if_exists='replace',index=False)
 
 #create the revision table to be used later
 #revision_obj = connection.cursor()
 #revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
 #revision_obj.execute(revision_table)
 
-authors_obj =  connection.cursor()
-authors_table = """CREATE TABLE Authors(commit_sha,author_name,author_email,committer_name,committer_email);"""
-authors_obj.execute(authors_table)
+content_parent_obj =  connection.cursor()
+content_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
+content_parent_obj.execute(content_parent_table)
 
 #create the revision table on the test db to be used later
 #revision_obj_test = connection_test.cursor()
