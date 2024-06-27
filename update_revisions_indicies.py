@@ -6,12 +6,12 @@ conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratc
 c = conn.cursor()
 
 # Convert the "date_column" to datetime
-c.execute("ALTER TABLE Revisions ADD COLUMN Commit_DateTime DATETIME;")
+#c.execute("ALTER TABLE Revisions ADD COLUMN Commit_DateTime DATETIME;")
 
 # Commit the changes
 conn.commit()
 
-c.execute("UPDATE Revisions SET Commit_DateTime = DATETIME(Commit_Date);")
+#c.execute("UPDATE Revisions SET Commit_DateTime = DATETIME(Commit_Date);")
 
 conn.commit()
 
