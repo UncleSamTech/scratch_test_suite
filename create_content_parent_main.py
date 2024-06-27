@@ -10,12 +10,6 @@ import os
 #conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db')
 conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db')
 
-def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
-    #conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
-    cursor =  conn.cursor()
-    return conn,cursor
-
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
         return False
@@ -84,6 +78,10 @@ def get_valid_parents_recursive(c, parents_of_c, commits_which_modified_file_f, 
             get_valid_parents_recursive(parent, parents_of_c, commits_which_modified_file_f, visited_parents)
 
 
+def get_connection_val():
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
+    cursor =  conn.cursor()
+    return conn,cursor
 
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
