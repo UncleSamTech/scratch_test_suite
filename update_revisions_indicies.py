@@ -25,19 +25,6 @@ conn.commit()
 c.execute('''CREATE INDEX "ix_Revisions_Commit_index" ON "Revisions" ("Commit_SHA");''')
 conn.commit()
 
-c.execute('''CREATE INDEX "ix_Projects_index" ON "Projects" ("Project_Name");''')
-conn.commit()
-
-c.execute('''CREATE INDEX "ix_Authors_index" ON "Authors" ("Commit_SHA");''')
-conn.commit()
-
-c.execute('''CREATE INDEX "ix_Commit_Messages_index" ON "Commit_Messages" ("Commit_SHA");''')
-conn.commit()
-
-# c.execute('''CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parents" ("Commit_SHA");''')
-# conn.commit()
-
-c.execute('''CREATE INDEX "ix_Content_Parents_index" ON "Content_Parents" ("Commit_SHA");''')
 conn.commit()
 # Close the database connection
 conn.close()
