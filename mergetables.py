@@ -16,9 +16,9 @@ cursor_new.execute("""CREATE TABLE IF NOT EXISTS Commit_Messages (
    "Commit_Message" TEXT);""")
 
 #copy data from first table
-cursor1.execute("Select * from Commit_Message;")
+cursor1.execute("Select * from Commit_Messages;")
 rows1 = cursor1.fetchall()
-cursor_new.executemany("INSERT into Commit_Message (Commit_SHA,Commit_Message) VALUES (?,?)",rows1)
+cursor_new.executemany("INSERT into Commit_Messages (Commit_SHA,Commit_Message) VALUES (?,?)",rows1)
 
 #copy data from second database
 #cursor2.execute("Select * from Contents;")
