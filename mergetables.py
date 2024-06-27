@@ -11,15 +11,17 @@ connection_new = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_fi
 cursor_new =  connection_new.cursor()
 
 #create a new table in the database
-cursor_new.execute("""CREATE TABLE IF NOT EXISTS Projects (
-  "Project_Name" TEXT,
-   "Default_Branch" TEXT,
-  "Total_Commits" INTEGER);""")
+cursor_new.execute("""CREATE TABLE IF NOT EXISTS Authors (
+  "Commit_SHA" TEXT,
+   "Author_Name" TEXT,
+  "Author_Email" TEXT,
+   "Committer_Name" TEXT,
+    "Committer_Email" TEXT);""")
 
 #copy data from first table
-cursor1.execute("Select * from Projects;")
+cursor1.execute("Select * from Authors;")
 rows1 = cursor1.fetchall()
-cursor_new.executemany("INSERT into Projects (Project_Name,Default_Branch,Total_Commits) VALUES (?,?,?)",rows1)
+cursor_new.executemany("INSERT into Authors (Commit_SHA,Author_Name,Author_Email,Committer_Name,Committer_Email) VALUES (?,?,?,?,?)",rows1)
 
 #copy data from second database
 #cursor2.execute("Select * from Contents;")
