@@ -1,6 +1,5 @@
 import sys
 import json
-from pydriller.git import Git
 from datetime import datetime
 import subprocess
 from pathlib import Path
@@ -8,7 +7,7 @@ import sqlite3
 import os
 
 #conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db')
-conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db')
+#conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db')
 
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
@@ -262,6 +261,7 @@ def insert_into_content_parent_table(file_path):
 
         for each_line in lines:
             content = each_line.split("_COMMA_")
+            print("each line",content)
             if len(content) == 4:
                 project_name = content[0]
                 file_name = content[1]
@@ -310,5 +310,5 @@ def insert_into_content_parent_table(file_path):
 insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt")
 
 
-        
+
     
