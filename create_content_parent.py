@@ -206,6 +206,54 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
         return 1
                 
+
+
+def main2(project_path: str):
+    proj_names = []
+    for i in os.listdir(project_path):
+        if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
+            print(project_path)
+            proj_names.append(i)
+        else:
+            continue
+   
+    for proj_name in proj_names:
+        if proj_name != '' and len(proj_name) > 1:
+            repo = f'{project_path}/{proj_name}'
+            main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
+            main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
+            
+            if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
+                try:
+                    print(repo)
+                    print(proj_name)
+                    print(main_branch)
+                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
+                    if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
+                        print('no revision found')
+                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
+                        continue
+                    else:
+                        get_revisions_and_run_parser(repo, proj_name, main_branch)
+
+                    
+                except Exception as e:
+                    
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/exceptions3.txt", "a")
+                    f.write("{}\n".format(e))
+                    f.close()
+                    #logging.error(f'skipped {project_name}  to {logging.ERROR}')
+                #connection.commit()
+                #connection.close()
+                
+                #connection.close()
+            else:
+                print("skipped")
+                continue
+        else:
+            print("skipped")
+            continue
+
 def insert_into_content_parent_table(file_path):
     lines = None
     project_name= None
@@ -263,53 +311,6 @@ def insert_into_content_parent_table(file_path):
             conn.commit()
 
 
-
-def main2(project_path: str):
-    proj_names = []
-    for i in os.listdir(project_path):
-        if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
-            print(project_path)
-            proj_names.append(i)
-        else:
-            continue
-   
-    for proj_name in proj_names:
-        if proj_name != '' and len(proj_name) > 1:
-            repo = f'{project_path}/{proj_name}'
-            main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
-            main_branch = main_branch.stdout.decode("utf-8").strip('/n')[0:]
-            
-            if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
-                try:
-                    print(repo)
-                    print(proj_name)
-                    print(main_branch)
-                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
-                    if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
-                        print('no revision found')
-                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
-                        continue
-                    else:
-                        get_revisions_and_run_parser(repo, proj_name, main_branch)
-
-                    
-                except Exception as e:
-                    
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/exceptions3.txt", "a")
-                    f.write("{}\n".format(e))
-                    f.close()
-                    #logging.error(f'skipped {project_name}  to {logging.ERROR}')
-                #connection.commit()
-                #connection.close()
-                
-                #connection.close()
-            else:
-                print("skipped")
-                continue
-        else:
-            print("skipped")
-            continue
-    
 
 #main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt")
