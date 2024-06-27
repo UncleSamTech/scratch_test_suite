@@ -30,10 +30,10 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df_proj_load("Authors_Project",connection,if_exists='replace',index=False)
 
 
+content_parent_object =  connection.cursor()
+cont_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
+content_parent_object.execute(cont_parent_table)
 
-content_parent_obj =  connection.cursor()
-content_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
-content_parent_obj.execute(content_parent_table)
 
 
 '''
