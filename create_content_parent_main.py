@@ -263,26 +263,26 @@ def insert_into_content_parent_table(file_path):
             content = each_line.split("_COMMA_")
             print("each line",content)
             if len(content) == 4:
-                project_name = content[0]
-                file_name = content[1]
-                commit_sha = content[2] if is_sha1(content[2]) else "None"
-                content_sha = content[3] if is_sha1(content[3]) else "None"
+                project_name = content[0].strip()
+                file_name = content[1].strip()
+                commit_sha = content[2].strip() if is_sha1(content[2]) else "None"
+                content_sha = content[3].strip() if is_sha1(content[3]) else "None"
 
             
             elif len(content) == 3:
-                project_name = content[0]
-                file_name = content[1]
-                commit_sha = content[2] if is_sha1(content[2]) else "None"
+                project_name = content[0].strip()
+                file_name = content[1].strip()
+                commit_sha = content[2].strip() if is_sha1(content[2]) else "None"
                 content_sha = "None"
             
             elif len(content) == 2:
-                project_name = content[0]
-                file_name = content[1]
+                project_name = content[0].strip()
+                file_name = content[1].strip()
                 commit_sha = "None"
                 content_sha = "None"
 
             elif len(content) == 1:
-                project_name = content[0]
+                project_name = content[0].strip()
                 file_name = "None"
                 commit_sha = "None"
                 content_sha = "None"
