@@ -206,8 +206,6 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
         return 1
                 
-
-
 def main2(project_path: str):
     proj_names = []
     for i in os.listdir(project_path):
@@ -309,8 +307,6 @@ def insert_into_content_parent_table(file_path):
                     print("executed")
                 print("connection failed")
             conn.commit()
-
-
 
 #main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt")
