@@ -14,7 +14,7 @@ cursor_new =  connection_new.cursor()
 cursor_new.execute("""CREATE TABLE IF NOT EXISTS Content_Parents (
   "Project_Name" TEXT,
     "File" TEXT,
-    "Commit_SHA" TEXT
+    "Commit_SHA" TEXT,
    "Content_Parent_SHA" TEXT);""")
 
 #copy data from first table
