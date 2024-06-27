@@ -56,7 +56,7 @@ num_edges_100_500 = cursor.fetchall()
 
 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_btw_100_500.csv","a") as ed100500:
     for each_edge in num_edges_100_500:
-        ed150.write(f"{each_edge}\n")
+        ed100500.write(f"{each_edge}\n")
 
 print("Number of edges between 100 and 500: ", num_edges_100_500)
 
@@ -74,7 +74,7 @@ num_edges_0 = cursor.fetchall()
 
 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_btw_0.csv","a") as ned0:
     for each_edge in num_edges_0:
-        nd0.write(f"{each_edge}\n")
+        ned0.write(f"{each_edge}\n")
 
 print("Number of edges = 0: ", num_edges_0)
 
