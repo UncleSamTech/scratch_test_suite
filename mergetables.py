@@ -18,12 +18,12 @@ cursor_new.execute("""CREATE TABLE IF NOT EXISTS Contents (
 #copy data from first table
 cursor1.execute("Select * from Contents;")
 rows1 = cursor1.fetchall()
-cursor_new.executemany("INSERT into Contents (Hash,Contents) VALUES (?,?)",rows1)
+cursor_new.executemany("INSERT into Contents (Hash,Content) VALUES (?,?)",rows1)
 
 #copy data from second database
 cursor2.execute("Select * from Contents;")
 rows2 = cursor2.fetchall()
-cursor_new.executemany("INSERT into Contents (Hash,Contents) VALUES (?,?)",rows2)
+cursor_new.executemany("INSERT into Contents (Hash,Content) VALUES (?,?)",rows2)
 
 print("done")
 #commit the changes
