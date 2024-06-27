@@ -1,5 +1,5 @@
 import sqlite3
-import pandas as pd
+#import pandas as pd
 
 # step 1: load data file
 #df = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/author_commit/auth_commit_summary/summary/projects.csv')
