@@ -25,6 +25,7 @@ cursor2.execute("Select * from Contents;")
 rows2 = cursor2.fetchall()
 cursor_new.executemany("INSERT into Contents (Hash,Contents) VALUES (?,?)",rows2)
 
+print("done")
 #commit the changes
 connection_new.commit()
 conn_train.close()
