@@ -311,7 +311,6 @@ def main2(project_path: str):
             continue
     
 
-#main2("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/repos")
 #main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt")
 
