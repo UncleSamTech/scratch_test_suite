@@ -11,25 +11,19 @@ connection_new = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_fi
 cursor_new =  connection_new.cursor()
 
 #create a new table in the database
-cursor_new.execute("""CREATE TABLE IF NOT EXISTS Revisions (
-  "Project_Name" TEXT,
-  "File" TEXT,
-  "Revision" TEXT,
-  "Commit_SHA" TEXT,
-  "Commit_Date" TEXT,
+cursor_new.execute("""CREATE TABLE IF NOT EXISTS Contents (
   "Hash" TEXT,
-  "Nodes" INTEGER,
-  "Edges" INTEGER);""")
+  "Content" TEXT);""")
 
 #copy data from first table
-cursor1.execute("Select * from revisions;")
+cursor1.execute("Select * from Contents;")
 rows1 = cursor1.fetchall()
-cursor_new.executemany("INSERT into Revisions (Project_Name,File,Revision,Commit_SHA,Commit_Date,Hash,Nodes,Edges) VALUES (?,?,?,?,?,?,?,?)",rows1)
+cursor_new.executemany("INSERT into Contents (Hash,Contents) VALUES (?,?)",rows1)
 
 #copy data from second database
-cursor2.execute("Select * from revisions;")
+cursor2.execute("Select * from Contents;")
 rows2 = cursor2.fetchall()
-cursor_new.executemany("INSERT into Revisions (Project_Name,File,Revision,Commit_SHA,Commit_Date,Hash,Nodes,Edges) VALUES (?,?,?,?,?,?,?,?)",rows2)
+cursor_new.executemany("INSERT into Contents (Hash,Contents) VALUES (?,?)",rows2)
 
 #commit the changes
 connection_new.commit()
