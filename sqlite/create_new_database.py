@@ -29,30 +29,12 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
 #df_proj_load("Authors_Project",connection,if_exists='replace',index=False)
 
-#create the revision table to be used later
-#revision_obj = connection.cursor()
-#revision_table = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
-#revision_obj.execute(revision_table)
+
 
 content_parent_obj =  connection.cursor()
 content_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
 content_parent_obj.execute(content_parent_table)
 
-#create the revision table on the test db to be used later
-#revision_obj_test = connection_test.cursor()
-#revision_table_test = """CREATE TABLE Revisions (Project_Name,File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges); """
-#revision_obj_test.execute(revision_table_test)
-
-
-#create the hash table to be used later
-#hash_obj = connection.cursor()
-#hash_table = """CREATE TABLE Contents (Hash,Content); """
-#hash_obj.execute(hash_table)
-
-#create the hash table on the test db to be used later
-#hash_obj_test = connection_test.cursor()
-#hash_table_test = """CREATE TABLE Contents (Hash,Content); """
-#hash_obj_test.execute(hash_table_test)
 
 '''
 revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
@@ -67,22 +49,9 @@ content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "
 '''
 
 
-#create the test_project
-#test_proj_obj = connection_test.cursor()
-#test_proj = """ CREATE TABLE test_projects(project_name,number); """
-#test_proj_obj.execute(test_proj)
-
-
-#create the train_project
-#train_proj_obj = connection.cursor()
-#train_proj = """ CREATE TABLE train_projects(project_name,number); """
-#train_proj_obj.execute(train_proj)
-
 
 
 # step 5: close 
 connection.commit()
 connection.close()
 
-#connection_test.commit()
-#connection_test.close()
