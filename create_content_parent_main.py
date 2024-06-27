@@ -295,7 +295,7 @@ def insert_into_content_parent_table(file_path):
             
             insert_into_content_parent = """INSERT INTO Content_Parents (Project_Name,File,Commit_SHA,Content_Parent_SHA) VALUES(?,?,?,?);"""
 
-            conn,cur = get_connection()
+            conn,cur = get_connection_val()
             val = None
             
             if conn != None:
