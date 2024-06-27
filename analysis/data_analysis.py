@@ -19,10 +19,10 @@ nodes_edges = cursor.fetchall()
 df = pd.DataFrame(nodes_edges, columns=['Nodes', 'Edges'])
 nodes = df['Nodes'].values
 edges = df['Edges'].values
-print(df["Nodes"].describe())
-print(df["Edges"].describe())
+#print(df["Nodes"].describe())
+#print(df["Edges"].describe())
 
-
+"""
 cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 1 and nodes <= 50;''')
 num_nodes_1_50 = cursor.fetchall()
 
@@ -81,9 +81,28 @@ print("Number of edges = 0: ", num_edges_0)
 cursor.execute('''SELECT COUNT(edges) FROM revisions WHERE edges >= 500;''')
 num_edges_gt_500 = cursor.fetchall()
 
-with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_btw_0.csv","a") as edgt500:
+with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_gt_0.csv","a") as edgt500:
     for each_edge in num_edges_gt_500:
         edgt500.write(f"{each_edge}\n")
 
 print("Number of edges >= 500: ", num_edges_gt_500)
+"""
 
+
+plt.hist(nodes, color='lightblue', ec='black', bins=20)
+plt.yscale('log')
+plt.ticklabel_format(axis='x', style='plain')
+plt.xlabel('Number of Nodes Per Revision of a Scratch3 File')
+plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
+plt.title('Histogram of Number of Nodes Per Revision of a Scratch3 File')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file.pdf')
+plt.close()
+
+plt.hist(edges, color='lightblue', ec='black', bins=20)
+plt.yscale('log')
+plt.ticklabel_format(axis='x', style='plain')
+plt.xlabel('Number of Connections Per Revision of a Scratch3 File')
+plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
+plt.title('Histogram of Number of Connections Per Revision of a Scratch3 File')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file.pdf')
+plt.close()
