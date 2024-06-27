@@ -11,14 +11,14 @@ connection_new = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_fi
 cursor_new =  connection_new.cursor()
 
 #create a new table in the database
-cursor_new.execute("""CREATE TABLE IF NOT EXISTS Commit_Message (
+cursor_new.execute("""CREATE TABLE IF NOT EXISTS Commit_Parents (
   "Commit_SHA" TEXT,
-   "Commit_Message" TEXT);""")
+   "Parent_SHA" TEXT);""")
 
 #copy data from first table
-cursor1.execute("Select * from Commit_Message;")
+cursor1.execute("Select * from Commit_Parents;")
 rows1 = cursor1.fetchall()
-cursor_new.executemany("INSERT into Commit_Message (Commit_SHA,Commit_Message) VALUES (?,?)",rows1)
+cursor_new.executemany("INSERT into Commit_Parents (Commit_SHA,Parent_SHA) VALUES (?,?)",rows1)
 
 #copy data from second database
 #cursor2.execute("Select * from Contents;")
