@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 import sqlite3
 
-conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db')
+conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
 
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
@@ -19,7 +19,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -217,7 +217,7 @@ def main2(project_path: str):
                     
                 except Exception as e:
                     
-                    f = open("//media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/plot_results/differences_nodes_edges_exceptions3.txt", "a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_exceptions3.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
