@@ -192,7 +192,7 @@ Commits per project distribution
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
-#df['Commits'] = df['Commits'].astype(int)
+df['Commits'] = df['Commits'].astype(str)
 commits = df['Commits'].values
 print("Commits per projects", df["Commits"].describe())
 
