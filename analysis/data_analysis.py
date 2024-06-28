@@ -5,6 +5,7 @@ import sqlite3
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db")
 cursor = connection.cursor()
 
+"""
 '''
 
 Distribution of nodes and edges
@@ -159,6 +160,8 @@ plt.title('Histogram of Number of Scratch3 Files Per Project (Without Revisions)
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/scratch3_files_per_project.pdf')
 plt.close()
 
+"""
+
 
 '''
 
@@ -174,20 +177,22 @@ df['Commits'] = df['Commits'].astype(int)
 commits = df['Commits'].values
 print("Commits per projects", df["Commits"].describe())
 
-cursor.execute('''SELECT COUNT(total_commits) FROM projects WHERE total_commits <= 20;''')
-commits_20 = cursor.fetchall()
-print("Projects with <=20 commits: ", commits_20)
+#cursor.execute('''SELECT COUNT(total_commits) FROM projects WHERE total_commits <= 20;''')
+#commits_20 = cursor.fetchall()
+#print("Projects with <=20 commits: ", commits_20)
 
-plt.hist(commits, color='lightgreen', ec='black', bins=20)
+plt.hist(commits, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Commits Per Project')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits_per_project.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project.pdf')
 plt.close()
 
 
+
+"""
 '''
 
 Author who contributed to the Scratch3 files distribution per project
@@ -236,5 +241,7 @@ author_1 = cursor.fetchall()
 print("Scratch3 Projects with one authors: ", len(author_1))
 
 cursor.close()
+"""
+
 connection.commit()
 connection.close()
