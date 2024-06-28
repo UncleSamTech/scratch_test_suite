@@ -80,8 +80,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            proc3 = subprocess.run(["sed 's/\d0/-/g'"], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-            proc4 = subprocess.run(['xargs -0 echo'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            proc3 = correct_code_replace(proc2.stdout)
+            proc4 = subprocess.run(['xargs -0 echo'], input=proc3, stdout=subprocess.PIPE, cwd=cwd, shell=True)
             filename_shas = proc4.stdout.decode().strip().split('\n')
             filename_shas = [x for x in filename_shas if x != '']
 
@@ -182,6 +182,37 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
         return 1
                 
+def is_valid_encoding(byte_string,encoding='utf-8'):
+    try:
+        decoded_string = byte_string.decode(encoding)
+        print(type(decoded_string))
+        return True
+    except UnicodeDecodeError:
+        print(type(decoded_string))
+        return False
+
+
+def correct_code_replace(byte_val):
+    if (is_valid_encoding(byte_val)):
+        #decode the byte
+        
+        
+        decoded_byte = byte_val.decode('utf-8')
+        
+        
+        #replace values
+        replace_val = decoded_byte.replace('\xc2','¬') if '\xc2' in decoded_byte else decoded_byte
+        replace_val = replace_val.replace('\x00','¬') if '\x00' in replace_val else replace_val
+        
+        
+        #replace_val = decoded_byte.replace('\xc2','#').replace('\x00','#') if '\xc2' in decoded_byte or '\x00' in decoded_byte else decoded_byte
+        
+        #encode it back
+        encoded_byte = replace_val.encode('utf-8')
+        
+        #print(f"original {byte_val} after decode {decoded_byte} after replacement {replace_val} final value {encoded_byte}")
+      
+        return encoded_byte
 
 
 def main2(project_path: str):
