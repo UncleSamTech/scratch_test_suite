@@ -9,7 +9,7 @@ from io import BytesIO
 import zipfile
 import io
 import zlib
-import ijson
+#import ijson
 
 class scratch_parser:
 
@@ -2606,6 +2606,12 @@ class scratch_parser:
 
     def correct_parse(self,parsed_file):
         parsed_value = self.sb3class.unpack_sb3(parsed_file)
+        val = json.loads(parsed_value)
+        with open("dumped_json.txt","a") as dp:
+            dp.write(f"{val}\n")
+
+        """
+
         if len(parsed_value) > 0:
             self.blocs_json = json.loads(parsed_value)
         #block values
@@ -2620,7 +2626,7 @@ class scratch_parser:
         fin_val = {"parsed_tree":next_val2,"stats":self.generate_summary_stats(all_blocks_value,file_name,next_val2)}
         an_dump = json.dumps(fin_val,indent=4)
         return an_dump
-    
+    """
     def decode_scratch_bytes(self, raw_bytes):   
         
         try:
@@ -2904,3 +2910,4 @@ con_test = scratch_parser_inst.flatten_inner_nested_lists(scratch_parser_inst.co
 #print(scratch_parser_inst.read_files("files/Chicken Clicker remix-4.sb3"))
 
     
+print(scratch_parser_inst.correct_parse("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/test.sb3"))

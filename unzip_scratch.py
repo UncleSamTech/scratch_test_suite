@@ -12,6 +12,7 @@ class unzip_scratch:
         json_file = "project.json" if sprite else "project.json"
         with zipfile.ZipFile(sb3_file) as sb3zip:
             names = sb3zip.namelist()
+            print("names",names)
             
             if json_file in names:
                 
