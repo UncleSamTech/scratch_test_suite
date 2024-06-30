@@ -5,7 +5,6 @@ import sqlite3
 connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db")
 cursor = connection.cursor()
 
-"""
 '''
 
 Distribution of nodes and edges
@@ -24,6 +23,7 @@ print(df["Nodes"].describe())
 print(df["Edges"].describe())
 
 
+"""
 cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 1 and nodes <= 50;''')
 num_nodes_1_50 = cursor.fetchall()
     
@@ -169,7 +169,7 @@ Commits per project distribution
 
 '''
 
-
+"""
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
@@ -189,6 +189,7 @@ plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project.pdf')
 plt.close()
+"""
 
 
 
