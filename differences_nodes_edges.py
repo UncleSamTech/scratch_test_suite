@@ -72,10 +72,8 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
     filenames = proc4.stdout.decode().strip().split('\n')
 
-    if filenames is None or filenames  == [''] or len(filenames) == 0 or filenames == []:
-        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
-        return -1
-    else:
+  
+    if len(filenames) > 1:
         # for all pd files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
@@ -175,7 +173,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new.csv", "a") as outfile:
                     outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
 
                     
@@ -234,16 +232,7 @@ def main2(project_path: str):
             
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
-                    print(repo)
-                    print(proj_name)
-                    print(main_branch)
-                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
-                    if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
-                        print('no revision found')
-                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
-                        continue
-                    else:
-                        get_revisions_and_run_parser(repo, proj_name, main_branch)
+                    get_revisions_and_run_parser(repo, proj_name, main_branch)
 
                     
                 except Exception as e:
