@@ -11,7 +11,7 @@ Distribution of nodes and edges
 
 '''
 
-cursor.execute('''SELECT Nodes, Edges FROM Revisions;''')
+cursor.execute('''SELECT Nodes, Edges FROM Revisions where nodes > 0;''')
 nodes_edges = cursor.fetchall()
 
 # Create a DataFrame
@@ -26,6 +26,24 @@ cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;''')
 num_nodes_gt_500 = cursor.fetchall()
 
 print("Number of nodes >= 500: ", num_nodes_gt_500)
+
+plt.hist(nodes, color='lightblue', ec='black', bins=20)
+plt.yscale('log')
+plt.ticklabel_format(axis='x', style='plain')
+plt.xlabel('Number of Nodes Per Revision of a Scratch3 File')
+plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
+plt.title('Histogram of Number of Nodes Per Revision of a Scratch3 File')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file_non0.pdf')
+plt.close()
+
+plt.hist(edges, color='lightblue', ec='black', bins=20)
+plt.yscale('log')
+plt.ticklabel_format(axis='x', style='plain')
+plt.xlabel('Number of Connections Per Revision of a Scratch3 File')
+plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
+plt.title('Histogram of Number of Connections Per Revision of a Scratch3 File')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_non0.pdf')
+plt.close()
 
 
 """
