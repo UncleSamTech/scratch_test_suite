@@ -1,9 +1,13 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_value.csv")
+df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_value_copy.csv")
 df["Diff_Nodes"] = df["Diff_Nodes"].astype(int)
 df["Diff_Edges"] = df["Diff_Edges"].astype(int)
+
+df.replace([float('inf'), -float('inf')], pd.NA, inplace=True)
+df = df.dropna()
+
 nodes = df['Diff_Nodes'].values
 edges = df['Diff_Edges'].values
 
