@@ -22,6 +22,11 @@ edges = df['Edges'].values
 print(df["Nodes"].describe())
 print(df["Edges"].describe())
 
+cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;''')
+num_nodes_gt_500 = cursor.fetchall()
+
+print("Number of nodes >= 500: ", num_nodes_gt_500)
+
 
 """
 cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 1 and nodes <= 50;''')
@@ -64,9 +69,13 @@ print("Number of edges = 0: ", num_edges_0)
 cursor.execute('''SELECT COUNT(edges) FROM revisions WHERE edges >= 500;''')
 num_edges_gt_500 = cursor.fetchall()
 
+cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;''')
+num_nodes_gt_500 = cursor.fetchall()
 
+print("Number of nodes >= 500: ", num_nodes_gt_500)
 
 print("Number of edges >= 500: ", num_edges_gt_500)
+
 
 plt.hist(nodes, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
