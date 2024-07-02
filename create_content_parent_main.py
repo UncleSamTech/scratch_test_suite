@@ -192,13 +192,13 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
             
 
                 if len(parents_of_c) == 0:
-                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt", "a") as outfile:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new.txt", "a") as outfile:
                         outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
                 else:
                     # we have a set of valid parents for c Get the node and edge count at each of these parents
                     for parent in parents_of_c:
 
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt", "a") as outfile:
+                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new.txt", "a") as outfile:
                             outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, parent))
 
         return 1
@@ -220,17 +220,7 @@ def main2(project_path: str):
             
             if len(main_branch) > 1 or main_branch != '' or main_branch != None and repo != '' or repo != None and len(repo) > 0 and len(main_branch) > 0:
                 try:
-                    print(repo)
-                    print(proj_name)
-                    print(main_branch)
-                    #v = get_revisions_and_run_parser(repo, proj_name, main_branch)
-                    if get_revisions_and_run_parser(repo, proj_name, main_branch) == -1:
-                        print('no revision found')
-                        #logging.error(f'no sb3 file found in {project_name} due to {logging.ERROR}')
-                        continue
-                    else:
-                        get_revisions_and_run_parser(repo, proj_name, main_branch)
-
+                    get_revisions_and_run_parser(repo, proj_name, main_branch)
                     
                 except Exception as e:
                     
