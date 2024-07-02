@@ -29,14 +29,14 @@ plt.title('Histogram of Difference in Nodes Per Revision of a Scratch3 File')
 #plt.show()
 plt.savefig("diff_nodes_per_revision.pdf")
 
-plt.hist(edges, color='lightgreen', ec='black', bins=20)
+plt.hist(edges, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Difference in Connections Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions (Log Scale)')
 plt.title('Histogram of Difference in Connections Per Revision of a Scratch3 File')
 #plt.show()
-plt.savefig("diff_edges_per_revision.pdf")
+#plt.savefig("diff_edges_per_revision.pdf")
 
 # median value
 print(df["Diff_Nodes"].sort_values().median())
