@@ -8,15 +8,15 @@ import sqlite3
 import subprocess
 
 
-conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
-#conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test2.db",isolation_level=None)
+#conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
+conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test2.db",isolation_level=None)
 list_of_implementation_keywords = [
     "implement", "implementation", "feature", "new feature", "add feature", 
-    "add functionality", "enhance feature", "extend feature", "introduce feature",
+    "add functionality", "extend feature", "introduce feature",
     "feature addition", "feature enhancement", "feature extension", "feature implementation",
     "feature update", "feature change", "feature improvement", "feature modification",
-    "feature development", "feature refactor", "feature revision", "feature iteration",
-    "feature iteration", "feature upgrade", "feature evolution", "feature innovation",
+    "feature development", "feature revision", "feature iteration",
+    "feature iteration", "feature evolution", "feature innovation",
     "feature enhancement","add", "add file","add project", "Add Scratch3","Add Scratch3","Add"
 ]
 
@@ -26,7 +26,7 @@ list_of_vcs_keywords=[
     "amend", "checkout", "reset", "stage", "unstage", "status", "clean", "clone", "fork", "archive", "export", 
     "import", "save", "recover", "restore", "backup", "stash", "pop", "apply", "init", "set", "integrate",
     "branch", "feature", "hotfix", "develop", "master", "main", "stable", "integration", "checkout", "switch",
-    "track", "untrack", "staging", "prod", "env", "pr", "merge request", "cherry-pick", "refactor", "rename",
+    "track", "untrack", "staging", "prod", "env", "pr", "merge request", "cherry-pick", "rename",
     "delete", "create", "split", "combine", "pull request", "deploy", "prepare", "migrate", "transition", "promote",
     "demote", "protect", "review", "approve", "reject", "feature toggle",
     "merge branch", "branch update", "branch sync", "version bump", "release branch", "merge conflict",
@@ -37,12 +37,12 @@ list_of_vcs_keywords=[
 
 list_of_maintenance_keywords=[
     "maintenance", "cleanup", "refactor", "tidy", "housekeeping", "reorganize", "restructure", "format", "lint",
-    "comment", "documentation", "docs", "update dependencies", "dependency update", "deps", "upgrade", "downgrade",
+    "comment", "docs", "update dependencies", "dependency update", "deps", "upgrade", "downgrade",
     "remove", "delete", "deprecate", "obsolete", "cleanup unused", "unused", "rebuild", "configure", "settings",
     "optimize", "improve", "enhance", "speed up", "performance", "perf", "efficient", "reduce", "minimize",
     "maximize", "lightweight", "fast", "speed", "compress", "cache", "tune", "boost", "fine-tune", "profile",
     "debug", "fix", "bug", "issue", "error", "fault", "defect", "glitch", "correct", "resolve", "patch", "handle",
-    "address", "troubleshoot", "repair", "solve", "diagnose", "root cause", "log", "trace", "monitor", "alert",
+    "address", "troubleshoot", "repair", "solve", "diagnose", "root cause", "trace", "monitor", "alert",
     "exception", "catch", "handle exception", "fail", "crash", "recover",
     "bug fix", "error fix", "fix issue", "fix bug", "performance improvement", "optimize performance", "code cleanup",
     "refactor code", "cleanup code", "debug issue", "debug error", "fix crash", "resolve issue", "enhance performance",
@@ -57,7 +57,7 @@ list_of_license_keywords=["legal", "license", "licensing", "copyright", "tradema
     "update license", "update copyright", "add license", "add copyright", "remove license", "remove copyright",
     "change license", "change copyright"]
 
-list_of_non_functional_code_keywords=["format", "formatting", "indent", "indentation", "style", "styling", "refactor", "reorganize", "restructure",
+list_of_non_functional_code_keywords=["format", "formatting", "indent", "indentation", "style", "styling", "reorganize", "restructure",
     "cleanup", "tidy", "whitespace", "comment", "comments", "annotation", "reorder", "rearrange", "rename",
     "variable rename", "method rename", "class rename", "function rename", "code style", "pep8", "pep257",
     "eslint", "prettier", "checkstyle", "code cleanup", "remove unused", "unused code", "dead code", "simplify",
@@ -70,7 +70,7 @@ list_of_non_functional_code_keywords=["format", "formatting", "indent", "indenta
 list_of_keywords_on_meta_data=["datafile", "dataset", "csv", "json", "xml", "yaml", "yml", "config", "configuration", "settings", "properties",
     "env", "environment file", "script", "shell script", "bash", "batch", "Makefile", "CMake", "build script", 
     "build file", "Dockerfile", "docker-compose", "requirements", "dependency", "dependencies", "lock file", 
-    "manifest", "metadata", "log", "logfile", "readme", "changelog", "license", "notebook", "jupyter", "md", 
+    "manifest", "metadata", "logfile", "readme", "license", "notebook", "jupyter", "md", 
     "markdown", "rst", "text", "txt", "doc", "docx", "pdf", "image", "jpg", "jpeg", "png", "gif", "svg", "icon", 
     "favicon", "font", "ttf", "otf", "woff", "woff2", "eot", "vector", "diagram", "graph", "chart", "spreadsheet", 
     "xls", "xlsx", "ppt", "pptx", "presentation", "slide", "slides", "archive", "zip", "tar", "gzip", "backup", 
@@ -105,10 +105,11 @@ def generate_csv(distribution_count_dictionary):
 
             values_generated.extend([(change_value,change_type)] * count)
 
-        with open("changes_type_file.csv","w",newline="") as csvfile:
+        with open("scratch_changes_type_file.csv","w",newline="") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(["Change Type","ID"])
             writer.writerows(values_generated)
+
 
 
             
@@ -190,54 +191,61 @@ def check_if_commit_has_parent(c):
     return True if len(par_comm) > 0 or par_comm or "None" not in par_comm else False
 
 
-def decide_implementations(commit_message,c):
+def decide_implementations(commit_message):
     commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
     
     print(commit_message)
     val = [1 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0  if each_word.lower() in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
     return val[0] if len(val) > 0 else -1
 
-def decide_maintenance(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+
+
+def decide_maintenance(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message)
     val = [2 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_maintenance and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
     print(val)
     return val[0] if len(val) > 0 else -1
 
-def decide_vcs(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+def decide_vcs(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message_check)
     val  = [6 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_vcs and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
     print(val)
     return val[0] if len(val) > 0 else -1
 
-def decide_mod_mgt(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+def decide_mod_mgt(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message_check)
     val = [3 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_modulemgt and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
     print(val)
     return val[0] if len(val) > 0 else -1
 
-def decide_license(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+def decide_license(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message_check)
     val = [4 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_license and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
     print(val)
     return val[0] if len(val) > 0 else -1
 
-def decide_non_functional(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+def decide_non_functional(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message_check)
     val = [5 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_nfunctional and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_license]
     print(val)
     return val[0] if len(val) > 0 else -1
 
-def decide_meta_program(commit_message,c):
-    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+def decide_meta_program(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
     print(commit_message_check)
     val = [7 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_metadata and each_word.lower() not in lower_implementation and each_word.lower() not in lower_nfunctional and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_license]
     print(val)
     return val[0] if len(val) > 0 else -1
+
+def decide_renames(commit_message):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else []
+    file_ren = [10 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() == "renames" or each_word.lower() == "rename"]
+    return file_ren[0] if len(file_ren) > 0 else -1
 
 
 
@@ -258,31 +266,111 @@ def get_content_parent_sha(c):
     all_parents_of_c = set([x[0] for x in all_parents_of_c])
     return all_parents_of_c
 
-val = {"Implementation":15,"Maintenance":4,"SCS Management":1}
-#generate_csv(val)
-#generate_csv({"Implementation":7,"SCS Management":4,"Module Management":4,"Maintenance":5,"Non-functional code":4,"Legal":6})
+def decide_which_word_combined(commit_message,dictionary_word):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    word_list = []
+    if isinstance(commit_message_check,list) and len(commit_message_check) > 0:
+        for each_word in commit_message_check:
+            if each_word.lower() in lower_implementation or each_word.lower() in lower_metadata or each_word.lower()  in lower_license or each_word.lower() in lower_maintenance or each_word.lower() in lower_modulemgt or each_word.lower() in lower_vcs or each_word.lower() in lower_nfunctional:
+                word_list.extend(use_a_word_determine_where_it_falls(dictionary_word,each_word))
+        
+        #remove duplicates
+        if len(word_list) > 0:
+            unique_id = set(word_list)
+
+            #convert to list
+            fin_list = list(unique_id)
+            return fin_list
+        else:
+            return []
+    else:
+        return []
+        
+
+def use_a_word_determine_where_it_falls(dictionary_word,word):
+    word_id_list = []
+    if isinstance(dictionary_word,dict):
+        for key,values in dictionary_word.items():
+            if isinstance(word,str) and word.lower() in values:
+                word_id_list.append(key)
+        return word_id_list
+
+def consolidate_algorithm(commit,all_project_path,project_name,dictionary_word):
+    change_type_description="Unknown Change"
+    commit_message = retreive_commit_message(all_project_path,commit,project_name)
+    decid_word = decide_which_word_combined(commit_message,dictionary_word)
+    if not isinstance(commit_message,str) or not(commit_message):
+        return change_type_description
   
-#plot_changes_type("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/changes_type_file.csv")
 
-#decide_implementations("","e80ee0487731d88ef8008e902983b5ac611fe43a")
+    #check for exclusive values
+    if decide_renames(commit_message) != -1 and check_if_commit_has_parent(commit):
+        change_type_description = "Maintenance"
+        return change_type_description
+    
+    if decide_implementations(commit_message) != -1:
+        change_type_description = "Implementation"
+        return change_type_description
+    if decide_maintenance(commit_message) != -1:
+        change_type_description = "Maintenance"
+        return change_type_description
+    if decide_meta_program(commit_message) != -1:
+        change_type_description = "Meta-Program"
+        return change_type_description
+    if decide_license(commit_message) != -1:
+        change_type_description = "Legal"
+        return change_type_description
+    if decide_mod_mgt(commit_message) != -1:
+        change_type_description = "Module Management"
+        return change_type_description
+    if decide_non_functional(commit_message) != -1:
+        change_type_description = "Non-functional code"
+        return change_type_description
+    if decide_vcs(commit_message) != -1:
+        change_type_description = "SCS Management"
+        return change_type_description
+    if len(decid_word) > 0:
+        if 4 in decid_word:
+            change_type_description = "Legal"
+        elif 6 in decid_word:
+            change_type_description = "SCS Management"
+        elif 3 in decid_word:
+            change_type_description = "Module Management"
+        elif 2 in decid_word and check_if_commit_has_parent(commit):
+            change_type_description = "Maintenance"
+        elif 1 in decid_word and not check_if_commit_has_parent(commit):
+            change_type_description = "Implementation"
+        elif 5 in decid_word:
+            change_type_description = "Non-functional code"
+        elif 7 in decid_word:
+            change_type_description = "Meta-Program"
+        return change_type_description
+    return change_type_description
+    
+def construct_dictionary(words):
+    dict_store = {}
+    for each_word in words:
+        if each_word not in dict_store:
+            dict_store[each_word] = 0
+        dict_store[each_word] += 1
+    return dict_store
 
-#commit_message = retreive_commit_message("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos","d3c66988e5d92a298b9949c02cf8e926040e4222","chickenclicker")
-decide_implementations_val = decide_implementations("Add Scratch","d3c66988e5d92a298b9949c02cf8e926040e4222")
-print(decide_implementations_val)
-decide_main = decide_maintenance("refactor code","36dh73")
-print(decide_main)
-decide_vcs_val = decide_vcs("squash","84hjd93")
-print(decide_vcs_val)
-decide_module_mgt_val = decide_mod_mgt("module layout","5490d0g")
-print(decide_module_mgt_val)
-dec_lic = decide_license("confidential privacy","e83000f")
-print(dec_lic)
-dec_nfunct = decide_non_functional("improve readability","938cj4dj")
-print(dec_nfunct)
-dec_met = decide_meta_program("diagram graph","9030fi")
-print(dec_met)
+def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
+    chosen_revision_type = "Unknown Change"
+    all_chosen_type  = []
+    with open(shuffled_data_path,"r",encoding="utf-8") as shufd:
+        lines = shufd.readlines()
+        for each_record in lines:
+            content_data = each_record.split(",")
+            if len(content_data) == 2:
+                project_name = content_data[0]
+                commit_sha= content_data[1]
+                chosen_revision_type = consolidate_algorithm(commit_sha,all_project_path,project_name,dictionary_word)
+                all_chosen_type.append(chosen_revision_type)
 
-all_parents = get_parents_from_database("709f35a384f7d19bde618e81a91bf57f2372b677")
-print(all_parents)
-ch = check_if_commit_has_parent('d811ed65d08fef2a3381e32f1e65589efa7b78ab')
-print(ch)
+        dict_word = construct_dictionary(all_chosen_type)
+
+        generate_csv(dict_word)
+                  
+
+
