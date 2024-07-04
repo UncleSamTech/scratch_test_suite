@@ -282,3 +282,4 @@ dec_met = decide_meta_program("diagram graph","9030fi")
 print(dec_met)
 
 all_parents = get_parents_from_database("709f35a384f7d19bde618e81a91bf57f2372b677")
+print(all_parents)
