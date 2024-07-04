@@ -8,8 +8,8 @@ import sqlite3
 import subprocess
 
 
-#conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
-conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test2.db",isolation_level=None)
+conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
+#conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_test2.db",isolation_level=None)
 list_of_implementation_keywords = [
     "implement", "implementation", "feature", "new feature", "add feature", 
     "add functionality", "enhance feature", "extend feature", "introduce feature",
@@ -27,7 +27,7 @@ list_of_vcs_keywords=[
     "import", "save", "recover", "restore", "backup", "stash", "pop", "apply", "init", "set", "integrate",
     "branch", "feature", "hotfix", "develop", "master", "main", "stable", "integration", "checkout", "switch",
     "track", "untrack", "staging", "prod", "env", "pr", "merge request", "cherry-pick", "refactor", "rename",
-    "delete", "create", "split", "combine", "move", "deploy", "prepare", "migrate", "transition", "promote",
+    "delete", "create", "split", "combine", "pull request", "deploy", "prepare", "migrate", "transition", "promote",
     "demote", "protect", "review", "approve", "reject", "feature toggle",
     "merge branch", "branch update", "branch sync", "version bump", "release branch", "merge conflict",
     "rebase branch", "branch checkout", "branch delete", "branch create", "branch rename", "branch switch",
@@ -80,7 +80,9 @@ list_of_keywords_on_meta_data=["datafile", "dataset", "csv", "json", "xml", "yam
 
 
 list_of_module_mgt_keywords=["relocate", "group", "submodule", "subdirectory", "subfolder", "flatten", "hierarchy", "filepath", "filename",
-    "file layout", "directory layout", "folder layout", "module layout", "file system", "file organization"]
+    "filelayout", "directory layout", "folder layout", "module layout", "filesystem", "file organization"]
+
+
     
 lower_implementation = list(map(str.lower,list_of_implementation_keywords))
 lower_maintenance = list(map(str.lower,list_of_maintenance_keywords))
@@ -89,6 +91,9 @@ lower_nfunctional = list(map(str.lower,list_of_non_functional_code_keywords))
 lower_modulemgt = list(map(str.lower,list_of_module_mgt_keywords))
 lower_license = list(map(str.lower,list_of_license_keywords))
 lower_vcs = list(map(str.lower,list_of_vcs_keywords))
+
+dict_keywords  = {1:lower_implementation,2:lower_maintenance,3:lower_modulemgt,4:lower_license,5:lower_nfunctional,6:lower_vcs,7:lower_metadata}
+
 
 def generate_csv(distribution_count_dictionary):
     change_type = None
@@ -189,13 +194,52 @@ def decide_implementations(commit_message,c):
     commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
     
     print(commit_message)
-    val = ["Implememtation" for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0  if each_word.lower() in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
-    return val[0] if len(val) > 0 else "None"
+    val = [1 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0  if each_word.lower() in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
+    return val[0] if len(val) > 0 else -1
 
 def decide_maintenance(commit_message,c):
     commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
-    val = ["Maintenance" for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 and each_word.lower() in lower_maintenance and each_word.lower() not in  lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
-    return val[0] if len(val) > 0 else "None"
+    print(commit_message)
+    val = [2 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_maintenance and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_vcs and each_word.lower() not in lower_nfunctional]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+def decide_vcs(commit_message,c):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    print(commit_message_check)
+    val  = [6 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_vcs and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_modulemgt and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+def decide_mod_mgt(commit_message,c):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    print(commit_message_check)
+    val = [3 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_modulemgt and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_license  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+def decide_license(commit_message,c):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    print(commit_message_check)
+    val = [4 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_license and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_nfunctional]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+def decide_non_functional(commit_message,c):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    print(commit_message_check)
+    val = [5 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_nfunctional and each_word.lower() not in lower_implementation and each_word.lower() not in lower_metadata and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_license]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+def decide_meta_program(commit_message,c):
+    commit_message_check = commit_message.split() if isinstance(commit_message,str) and len(commit_message) > 0 else ""
+    print(commit_message_check)
+    val = [7 for each_word in commit_message_check if isinstance(commit_message_check,list) and len(commit_message_check) > 0 if each_word.lower() in lower_metadata and each_word.lower() not in lower_implementation and each_word.lower() not in lower_nfunctional and each_word.lower() not in lower_modulemgt  and each_word.lower() not in lower_vcs and each_word.lower() not in lower_maintenance and each_word.lower() not in lower_license]
+    print(val)
+    return val[0] if len(val) > 0 else -1
+
+
 
 def retreive_commit_message(all_project_path,commit_sha,proj_name):
     repo = f'{all_project_path}/{proj_name}' 
@@ -206,7 +250,13 @@ def retreive_commit_message(all_project_path,commit_sha,proj_name):
     return commit_message       
 
     
-
+def get_content_parent_sha(c):
+    cursor = conn.cursor()
+    cursor.execute("SELECT Parent_SHA FROM Commit_Parents WHERE Commit_SHA = (?)", (c,))
+    all_parents_of_c = cursor.fetchall()
+    cursor.close()
+    all_parents_of_c = set([x[0] for x in all_parents_of_c])
+    return all_parents_of_c
 
 val = {"Implementation":15,"Maintenance":4,"SCS Management":1}
 #generate_csv(val)
@@ -216,8 +266,20 @@ val = {"Implementation":15,"Maintenance":4,"SCS Management":1}
 
 #decide_implementations("","e80ee0487731d88ef8008e902983b5ac611fe43a")
 
-commit_message = retreive_commit_message("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos","d3c66988e5d92a298b9949c02cf8e926040e4222","chickenclicker")
-decide_implementations_val = decide_implementations(commit_message,"d3c66988e5d92a298b9949c02cf8e926040e4222")
+#commit_message = retreive_commit_message("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos","d3c66988e5d92a298b9949c02cf8e926040e4222","chickenclicker")
+decide_implementations_val = decide_implementations("Add Scratch","d3c66988e5d92a298b9949c02cf8e926040e4222")
 print(decide_implementations_val)
 decide_main = decide_maintenance("refactor code","36dh73")
 print(decide_main)
+decide_vcs_val = decide_vcs("squash","84hjd93")
+print(decide_vcs_val)
+decide_module_mgt_val = decide_mod_mgt("module layout","5490d0g")
+print(decide_module_mgt_val)
+dec_lic = decide_license("confidential privacy","e83000f")
+print(dec_lic)
+dec_nfunct = decide_non_functional("improve readability","938cj4dj")
+print(dec_nfunct)
+dec_met = decide_meta_program("diagram graph","9030fi")
+print(dec_met)
+
+all_parents = get_parents_from_database("709f35a384f7d19bde618e81a91bf57f2372b677")
