@@ -186,6 +186,7 @@ def get_parents_from_database(c):
 
 def check_if_commit_has_parent(c):
     par_comm = get_parents_from_database(c)
+    print(type(par_comm))
     return True if len(par_comm) > 0 or par_comm or "None" not in par_comm else False
 
 
