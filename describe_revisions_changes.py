@@ -373,4 +373,4 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
         generate_csv(dict_word)
                   
 
-
+proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
