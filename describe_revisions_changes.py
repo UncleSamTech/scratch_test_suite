@@ -284,5 +284,5 @@ print(dec_met)
 
 all_parents = get_parents_from_database("709f35a384f7d19bde618e81a91bf57f2372b677")
 print(all_parents)
-ch = check_if_commit_has_parent({'d811ed65d08fef2a3381e32f1e65589efa7b78ab'})
+ch = check_if_commit_has_parent('d811ed65d08fef2a3381e32f1e65589efa7b78ab')
 print(ch)
