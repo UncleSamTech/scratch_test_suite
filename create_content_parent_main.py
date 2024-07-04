@@ -296,8 +296,8 @@ def insert_into_content_parent_table(file_path):
                 print("connection failed")
             conn.commit()
 
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-#insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1.txt")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new_unique.txt")
 
 
 
