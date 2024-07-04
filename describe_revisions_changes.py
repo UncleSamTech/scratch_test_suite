@@ -116,23 +116,22 @@ def generate_csv(distribution_count_dictionary):
 
 def classify_changes_type(change_type_description):
     if isinstance(change_type_description,str):
-        match change_type_description:
-            case "Implementation":
-                return 1
-            case "Maintenance":
-                return 2
-            case "Module Management":
-                return 3
-            case "Legal":
-                return 4
-            case "Non-functional code":
-                return 5
-            case "SCS Management":
-                return 6
-            case "Meta-Program":
-                return 7
-            case _:
-                return -1
+        if change_type_description == "Implementation":
+            return 1
+        elif change_type_description == "Maintenance":
+            return 2
+        elif change_type_description == "Module Management":
+            return 3
+        elif change_type_description ==  "Legal":
+            return 4
+        elif change_type_description ==  "Non-functional code":
+            return 5
+        elif change_type_description == "SCS Management":
+            return 6
+        elif change_type_description ==  "Meta-Program":
+            return 7
+        else:
+            return -1
             
 def plot_changes_type(file_path):
     # Group by 'Change Type' and count the occurrences
