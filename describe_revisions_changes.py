@@ -251,10 +251,28 @@ def decide_renames(commit_message):
 
 def retreive_commit_message(all_project_path,commit_sha,proj_name):
     repo = f'{all_project_path}/{proj_name}' 
-    commit_message = subprocess.run(['git show --quiet --format=%B {}'.format(commit_sha.strip())], stdout=subprocess.PIPE, cwd=repo, text=True)
-    commit_message = commit_message.stdout.strip()
-    print(type(commit_message))
-    return commit_message       
+    commands = ['git', 'show', '--quiet', '--format=%B', commit_sha.strip()]
+
+    # Check if the repository path exists
+    if not os.path.isdir(repo):
+        print(f"Error: Repository path {repo} does not exist.")
+        return None
+    
+    try:
+        result = subprocess.run(commands, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=repo, text=True)
+        
+        if result.returncode != 0:
+            print(f"Error: {result.stderr}")
+            return None
+        commit_message = result.stdout.strip()
+        return commit_message
+    except Exception as e:
+        print(f"Exception occurred: {e}")
+        return None
+    #commit_message = subprocess.run(['git show --quiet --format=%B {}'.format(commit_sha.strip())], stdout=subprocess.PIPE, stderr=subprocess.PIPE,cwd=repo, text=True)
+    #commit_message = commit_message.stdout.strip()
+    #print(type(commit_message))
+    #return commit_message       
 
     
 def get_content_parent_sha(c):
