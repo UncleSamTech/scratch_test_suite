@@ -251,8 +251,8 @@ def decide_renames(commit_message):
 
 def retreive_commit_message(all_project_path,commit_sha,proj_name):
     repo = f'{all_project_path}/{proj_name}' 
-    commands = ['git', 'show', '--quiet', '--format=%B', commit_sha]
-    commit_message = subprocess.run(commands, stdout=subprocess.PIPE, cwd=repo, text=True)
+    commands = 
+    commit_message = subprocess.run(['git show --quiet --format=%B {} '.format(commit_sha)], stdout=subprocess.PIPE, cwd=repo, text=True)
     commit_message = commit_message.stdout.strip()
     print(type(commit_message))
     return commit_message       
