@@ -150,7 +150,7 @@ def plot_changes_type(file_path):
     plt.xlabel('Change Type')
     plt.ylabel('Count')
     plt.tight_layout()
-    plt.savefig("barplot_scratch3changes2.pdf")
+    plt.savefig("barplot_scratch3changes2_all.pdf")
     #plt.show()
 
     '''
@@ -162,7 +162,7 @@ def plot_changes_type(file_path):
     plt.xlabel('Change Type')
     plt.ylabel('Count')
     plt.tight_layout()
-    plt.savefig("boxplot_scratch3changes2.pdf")
+    plt.savefig("boxplot_scratch3changes2_all.pdf")
     '''
 
     # Count Plot
@@ -173,7 +173,7 @@ def plot_changes_type(file_path):
     plt.xlabel('Change Type')
     plt.ylabel('Count')
     plt.tight_layout()
-    plt.savefig("countplot_scratch3changes2_.pdf")
+    plt.savefig("countplot_scratch3changes2_all.pdf")
 
 
 def get_parents_from_database(c):
@@ -390,5 +390,5 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
         generate_csv(dict_word)
                   
 
-proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
-#plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
+#proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
+plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
