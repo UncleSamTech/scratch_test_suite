@@ -415,7 +415,7 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
                 chosen_revision_type = consolidate_algorithm(commit_sha,all_project_path,project_name,dictionary_word)
                 all_chosen_type.append(chosen_revision_type)
                 with open("commit_revision_type_id.csv","a") as cri:
-                    cri.write(f"{commit_sha},{chosen_revision_type},{classify_changes_type(chosen_revision_type)}\n")
+                    cri.write(f"{commit_sha.strip()},{chosen_revision_type.strip()},{classify_changes_type(chosen_revision_type.strip())}\n")
 
         
 
