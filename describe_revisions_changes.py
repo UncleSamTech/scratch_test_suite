@@ -439,7 +439,7 @@ def filter_out_non_revision_commits(file_path):
                 commit_sha = content[3].strip()
                 
                 #check if the file size increased
-                result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
                 output = result.stdout.strip()
                 print(output)
                 size = int(output) if result.returncode == 0  and len(output) > 0 else None
