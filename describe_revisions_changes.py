@@ -441,8 +441,9 @@ def filter_out_non_revision_commits(file_path):
                 #check if the file size increased
                 result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
                 output = result.stdout.strip()
+                print(output)
                 size = int(output) if result.returncode == 0  and len(output) > 0 else None
-                print(f"{file_name} {size}")
+                print(f"{size}")
                 #check if file has history
                 if size is None:
                     continue
@@ -450,7 +451,7 @@ def filter_out_non_revision_commits(file_path):
                     has_revision = True
                     break
                 previous_size = size
-                print(previous_size)
+                
             if has_revision and file_has_history(file_name):
                 with open("filtered_files.csv","a") as ffcsv:
                     ffcsv.write(f"{each_line} \n")
