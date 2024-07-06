@@ -456,9 +456,9 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                     has_revision = True
                     
                 
-            if has_revision and file_has_history(file_name):
-                with open("filtered_files.csv","a") as ffcsv:
-                    ffcsv.write(f"{each_line} \n")
+                if has_revision and file_has_history(file_name):
+                    with open("filtered_files.csv","a") as ffcsv:
+                        ffcsv.write(f"{each_line} \n")
 
 
 
