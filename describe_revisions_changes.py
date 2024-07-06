@@ -403,7 +403,7 @@ def construct_dictionary_hash(words_hash_types):
 
 def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
     chosen_revision_type = "Unknown Change"
-    hash_hash_type = {}
+    
     all_chosen_type  = []
     with open(shuffled_data_path,"r",encoding="utf-8") as shufd:
         lines = shufd.readlines()
@@ -414,14 +414,10 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
                 commit_sha= content_data[1]
                 chosen_revision_type = consolidate_algorithm(commit_sha,all_project_path,project_name,dictionary_word)
                 all_chosen_type.append(chosen_revision_type)
-                hash_hash_type[commit_sha] = chosen_revision_type
+                with open("commit_revision_type_id.csv","a") as cri:
+                    cri.write(f"{commit_sha},{chosen_revision_type},{classify_changes_type(chosen_revision_type)}\n")
 
-        hash_type_const = construct_dictionary_hash(hash_hash_type)
-        #dict_word = construct_dictionary(all_chosen_type)
-
-        #generate_csv(dict_word)
-        generate_cvs_hash_values(hash_type_const)
-                  
+        
 
 proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
