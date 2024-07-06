@@ -110,6 +110,23 @@ def generate_csv(distribution_count_dictionary):
             writer.writerow(["Change Type","ID"])
             writer.writerows(values_generated)
 
+def generate_cvs_hash_values(distribution_hash_type):
+    change_type = None
+    commit_sha = None
+    values_generated = []
+    if isinstance(distribution_hash_type,dict) and bool(distribution_hash_type):
+        for commit_sha,values in distribution_hash_type.items():
+            if isinstance(values,dict) and bool(values):
+                for rev_type,count in values.items():
+                    change_type = classify_changes_type(rev_type)
+                    values_generated.extend([commit_sha,rev_type,change_type] * count)
+
+        with open("scratch_commit_sha_changes_type.csv","w",newline="") as csvcom:
+            writer = csv.writer(csvcom)
+            writer.writerow(["Commit_Sha","Change Type","ID"])
+            writer.writerows(values_generated)
+
+
 
 
             
@@ -372,8 +389,21 @@ def construct_dictionary(words):
         dict_store[each_word] += 1
     return dict_store
 
+
+def construct_dictionary_hash(words_hash_types):
+    dict_store_hash = {}
+    final_store = {}
+    if isinstance(words_hash_types,dict):
+        for each_hash_type,revis_type in words_hash_types.items():
+            if revis_type not in dict_store_hash:
+                dict_store_hash[revis_type] = 0
+            dict_store_hash[revis_type] += 1
+            final_store[each_hash_type] = dict_store_hash
+        return final_store 
+
 def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
     chosen_revision_type = "Unknown Change"
+    hash_hash_type = {}
     all_chosen_type  = []
     with open(shuffled_data_path,"r",encoding="utf-8") as shufd:
         lines = shufd.readlines()
@@ -384,11 +414,14 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
                 commit_sha= content_data[1]
                 chosen_revision_type = consolidate_algorithm(commit_sha,all_project_path,project_name,dictionary_word)
                 all_chosen_type.append(chosen_revision_type)
+                hash_hash_type[commit_sha] = chosen_revision_type
 
-        dict_word = construct_dictionary(all_chosen_type)
+        hash_type_const = construct_dictionary_hash(hash_hash_type)
+        #dict_word = construct_dictionary(all_chosen_type)
 
-        generate_csv(dict_word)
+        #generate_csv(dict_word)
+        generate_cvs_hash_values(hash_type_const)
                   
 
-#proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
-plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
+proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
+#plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
