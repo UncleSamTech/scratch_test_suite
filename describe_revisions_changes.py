@@ -417,7 +417,45 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
                 with open("commit_revision_type_id.csv","a") as cri:
                     cri.write(f"{commit_sha.strip()},{chosen_revision_type.strip()},{classify_changes_type(chosen_revision_type.strip())}\n")
 
-        
 
-proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
+def file_has_history(file_path):
+    #check if a file has history on GitHub
+    result = subprocess.run(['git', 'log', '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+
+    return result.returncode == 0 and bool(result.stdout.strip())
+
+def filter_out_non_revision_commits(file_path):
+    previous_size = None
+    has_revision = False
+    with open(file_path,"r",encoding="utf-8") as fp:
+        files = fp.readlines()
+
+        for each_line in files:
+            content = each_line.split(",")
+            if len(content) == 8:
+                file_name = content[1].strip()
+                commit_sha = content[3].strip()
+
+                #check if the file size increased
+                result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+            
+                size = int(result.stdout.strip()) if result.returncode != 0 else None
+                
+                #check if file has history
+                if size is None:
+                    continue
+                if previous_size is not None and size > previous_size:
+                    has_revision = True
+                    break
+                previous_size = size
+
+            if has_revision and file_has_history(file_name):
+                with open("filtered_files.csv","a") as ffcsv:
+                    ffcsv.write(f"{each_line} \n")
+
+
+
+
+filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_revisions_shuffled.csv")
+#proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
