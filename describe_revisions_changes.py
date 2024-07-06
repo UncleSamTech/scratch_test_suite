@@ -452,10 +452,9 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 #check if file has history
                 if size is None:
                     continue
-                if previous_size is not None and size > previous_size:
+                else: 
                     has_revision = True
-                    break
-                previous_size = size
+                    
                 
             if has_revision and file_has_history(file_name):
                 with open("filtered_files.csv","a") as ffcsv:
