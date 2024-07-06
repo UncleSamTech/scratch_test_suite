@@ -433,6 +433,7 @@ def filter_out_non_revision_commits(file_path):
         for each_line in files:
             
             content = each_line.split(",")
+            print(len(content))
             if len(content) == 8:
                 file_name = content[1].strip()
                 commit_sha = content[3].strip()
