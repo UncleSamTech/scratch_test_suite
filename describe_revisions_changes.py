@@ -424,7 +424,8 @@ def file_has_history(file_path):
 
     return result.returncode == 0 and bool(result.stdout.strip())
 
-def filter_out_non_revision_commits(file_path):
+def filter_out_non_revision_commits(all_project_path,file_path):
+    
     previous_size = None
     has_revision = False
     with open(file_path,"r",encoding="utf-8") as fp:
@@ -433,14 +434,17 @@ def filter_out_non_revision_commits(file_path):
         for each_line in files:
             each_line = each_line.strip()
             content = each_line.split(",")
+
             
             if len(content) == 9:
+                proj_name = content[0].strip()
+                repo = f'{all_project_path}/{proj_name}'
                 file_name = content[1].strip()
                 print(file_name)
                 commit_sha = content[3].strip()
                 print(commit_sha)
                 #check if the file size increased
-                result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
                 output = result.stdout.strip()
                 print(output)
                 size = int(output) if result.returncode == 0  and len(output) > 0 else None
@@ -460,6 +464,6 @@ def filter_out_non_revision_commits(file_path):
 
 
 
-filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_revisions_shuffled.csv")
+filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_revisions_shuffled.csv")
 #proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
