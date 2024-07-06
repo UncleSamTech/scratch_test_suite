@@ -431,7 +431,7 @@ def filter_out_non_revision_commits(file_path):
         files = fp.readlines()
 
         for each_line in files:
-            
+            each_line = each_line.strip()
             content = each_line.split(",")
             print(len(content))
             if len(content) == 8:
