@@ -119,7 +119,7 @@ def generate_cvs_hash_values(distribution_hash_type):
             if isinstance(values,dict) and bool(values):
                 for rev_type,count in values.items():
                     change_type = classify_changes_type(rev_type)
-                    values_generated.extend([commit_sha,rev_type,change_type] * count)
+                    values_generated.extend([(commit_sha,rev_type,change_type)] * count)
 
         with open("scratch_commit_sha_changes_type.csv","w",newline="") as csvcom:
             writer = csv.writer(csvcom)
