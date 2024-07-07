@@ -418,9 +418,9 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
                     cri.write(f"{commit_sha.strip()},{chosen_revision_type.strip()},{classify_changes_type(chosen_revision_type.strip())}\n")
 
 
-def file_has_history(file_path):
+def file_has_history(file_path,repo):
     #check if a file has history on GitHub
-    result = subprocess.run(['git', 'log', '--', f'{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    result = subprocess.run(['git', 'log', '--', f'{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
     print(result)
     return result.returncode == 0 and bool(result.stdout.strip())
 
@@ -455,7 +455,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                     has_revision = True
                     
                 
-                if has_revision and file_has_history(file_name):
+                if has_revision and file_has_history(file_name,repo):
                     with open("filtered_files.csv","a") as ffcsv:
                         ffcsv.write(f"{each_line}\n")
 
