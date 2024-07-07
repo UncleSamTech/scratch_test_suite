@@ -448,14 +448,10 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 
                 #check if file has history
                 if size is None:
-                    print(f"this file {file_name} has a size of  {size} from commit {commit_sha}")
-                    with open("zero_files.csv","a") as zf:
-                        zf.write(f"{each_line}\n")
                     continue
                 else: 
                     has_revision = True
-                    
-                
+                         
                 if has_revision and file_has_history(file_name,repo):
                     with open("filtered_files_2.csv","a") as ffcsv:
                         ffcsv.write(f"{each_line}\n")
