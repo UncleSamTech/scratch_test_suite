@@ -439,17 +439,16 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 proj_name = content[0].strip()
                 repo = f'{all_project_path}/{proj_name}'
                 file_name = content[1].strip()
-                print(file_name)
                 commit_sha = content[3].strip()
-                print(commit_sha)
                 #check if the file size increased
                 result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
                 output = result.stdout.strip()
-                print(output)
+                
                 size = int(output) if len(output) > 0 and int(output) > 0  else None
                 
                 #check if file has history
                 if size is None:
+                    print(f"this file {file_name} has a size of  {size} from commit {commit_sha}")
                     with open("zero_files.csv","a") as zf:
                         zf.write(f"{each_line}\n")
                     continue
