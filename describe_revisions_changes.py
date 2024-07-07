@@ -421,7 +421,7 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
 def file_has_history(file_path,repo):
     #check if a file has history on GitHub
     result = subprocess.run(['git', 'log', '--', f'{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
-    print(result)
+    
     return result.returncode == 0 and bool(result.stdout.strip())
 
 def filter_out_non_revision_commits(all_project_path,file_path):
@@ -444,7 +444,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
                 output = result.stdout.strip()
                 
-                size = int(output) if len(output) > 0 and int(output) > 0  else None
+                size = int(output) if len(output) > 0 and int(output) != 0  else None
                 
                 #check if file has history
                 if size is None:
