@@ -420,7 +420,7 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
 
 def file_has_history(file_path):
     #check if a file has history on GitHub
-    result = subprocess.run(['git', 'log', '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    result = subprocess.run(['git', 'log', '--', f'{file_path}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(result)
     return result.returncode == 0 and bool(result.stdout.strip())
 
