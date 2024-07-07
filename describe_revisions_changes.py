@@ -421,12 +421,11 @@ def integrate_all(all_project_path,dictionary_word,shuffled_data_path):
 def file_has_history(file_path):
     #check if a file has history on GitHub
     result = subprocess.run(['git', 'log', '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-
+    print(result)
     return result.returncode == 0 and bool(result.stdout.strip())
 
 def filter_out_non_revision_commits(all_project_path,file_path):
     
-    previous_size = None
     has_revision = False
     with open(file_path,"r",encoding="utf-8") as fp:
         files = fp.readlines()
@@ -448,7 +447,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 output = result.stdout.strip()
                 print(output)
                 size = int(output) if result.returncode == 0  and len(output) > 0 else None
-                print(f"{size}")
+                
                 #check if file has history
                 if size is None:
                     continue
@@ -458,7 +457,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 
                 if has_revision and file_has_history(file_name):
                     with open("filtered_files.csv","a") as ffcsv:
-                        ffcsv.write(f"{each_line} \n")
+                        ffcsv.write(f"{each_line}\n")
 
 
 
