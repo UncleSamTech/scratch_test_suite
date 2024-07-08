@@ -424,6 +424,23 @@ def file_has_history(file_path,repo):
     
     return result.returncode == 0 and bool(result.stdout.strip())
 
+def file_has_history2(file_path,repo):
+    try:
+        result = subprocess.run(['git', 'log', '--follow', '--pretty=format:%H', '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
+        commits = result.stdout.decode('utf-8').splitlines()
+        if len(commits.strip()) < 2:
+            return False
+
+        for i in range(len(commits.strip()) - 1):
+            diff_result = subprocess.run(['git', 'diff', '--shortstat', commits[i].strip(), commits[i + 1].strip(), '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
+            if diff_result.stdout.strip():
+                return True
+        return False
+    except subprocess.CalledProcessError:
+        return False
+
+
+
 def filter_out_non_revision_commits(all_project_path,file_path):
     
     has_revision = False
@@ -452,8 +469,8 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                 else: 
                     has_revision = True
                          
-                if has_revision and file_has_history(file_name,repo):
-                    with open("filtered_files_2.csv","a") as ffcsv:
+                if has_revision and file_has_history2(file_name,repo):
+                    with open("filtered_files_2_another.csv","a") as ffcsv:
                         ffcsv.write(f"{each_line}\n")
 
 
