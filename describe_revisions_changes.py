@@ -428,10 +428,10 @@ def file_has_history2(file_path,repo):
     try:
         result = subprocess.run(['git', 'log', '--follow', '--pretty=format:%H', '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
         commits = result.stdout.decode('utf-8').splitlines()
-        if len(commits.strip()) < 2:
+        if len(commits) < 2:
             return False
 
-        for i in range(len(commits.strip()) - 1):
+        for i in range(len(commits) - 1):
             diff_result = subprocess.run(['git', 'diff', '--shortstat', commits[i].strip(), commits[i + 1].strip(), '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
             if diff_result.stdout.strip():
                 return True
