@@ -488,7 +488,7 @@ def right_check(all_proj,file_path):
                 if proj_name in proj_names:
                     repo = f'{all_proj}/{proj_name}'
                     file_name = content[1].strip()
-                #commit_sha = content[3].strip()
+                    #commit_sha = content[3].strip()
 
                     all_commits = get_commits(file_name,repo)
                     if len(all_commits) > 1:
@@ -501,7 +501,7 @@ def right_check(all_proj,file_path):
                     
                                 prev_size = size
                         print(commits_that_changed_file)
-                        #checkout_original_branch(repo)
+                        checkout_original_branch(repo)
                     
                         if len(commits_that_changed_file) > 1:
                             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
