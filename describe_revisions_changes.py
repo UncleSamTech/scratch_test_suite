@@ -502,7 +502,10 @@ def right_check(all_proj,file_path):
                                 size = get_file_size(file_name,each_commit,repo)
                                 print(f"{file_name} {size} {each_commit}")
                                 if size != prev_size:
-                                    commits_that_changed_file.append(each_commit)
+                                    if each_commit not in commits_that_changed_file:
+                                        commits_that_changed_file.append(each_commit)
+                                    else:
+                                        continue
                     
                                 prev_size = size
                         print(commits_that_changed_file)
