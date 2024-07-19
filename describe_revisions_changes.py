@@ -493,8 +493,9 @@ def right_check(all_proj,file_path):
                     all_commits = get_commits(file_name,repo)
                     if len(all_commits) > 1:
                         for each_commit in all_commits:
-                            print(each_commit)
+                            #print(each_commit)
                             code = checkout_commit(each_commit,file_name,repo)
+                            print(code)
                             if code == 0:
                                 size = get_file_size(file_name)
                                 if size != prev_size:
