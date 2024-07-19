@@ -480,7 +480,7 @@ def right_check(all_proj,file_path):
                 file_name = content[1].strip()
                 #commit_sha = content[3].strip()
 
-                all_commits = get_commits(file_name)
+                all_commits = get_commits(file_name,repo)
                 if len(all_commits) > 1:
                     for each_commit in all_commits:
                         code = checkout_commit(each_commit,file_name,repo)
