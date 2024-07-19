@@ -486,11 +486,11 @@ def right_check(all_proj,file_path):
             content = each_line.split(",")
 
             
-            if len(content) == 4:
-                proj_name = content[0].strip()
+            if len(content) == 3:
+                proj_name = content[1].strip()
                 if proj_name in proj_names:
                     repo = f'{all_proj}/{proj_name}'
-                    file_name = content[1].strip()
+                    file_name = content[0].strip()
                     #commit_sha = content[3].strip()
 
                     all_commits = get_commits(file_name,repo)
@@ -523,7 +523,7 @@ def right_check(all_proj,file_path):
                         if len(commits_that_changed_file) > 1:
                             if each_line not in written_lines:
                                 written_lines.add(each_line)
-                                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
+                                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/distinct_files_that_has_changes.csv","a") as ffcsv:
                                     ffcsv.write(f"{each_line}\n")
                             else:
                                 continue
@@ -569,6 +569,6 @@ def filter_out_non_revision_commits(all_project_path,file_path):
 
 
 #filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
-right_check("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
+right_check("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/shuffled_distinct_file_project_commit.csv")
 #proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
