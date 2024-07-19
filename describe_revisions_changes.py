@@ -451,8 +451,8 @@ def filter_out_non_revision_commits(all_project_path,file_path):
             each_line = each_line.strip()
             content = each_line.split(",")
 
-            
-            if len(content) == 9:
+            print(len(content))
+            if len(content) == 4 or len(content) == 5:
                 proj_name = content[0].strip()
                 repo = f'{all_project_path}/{proj_name}'
                 file_name = content[1].strip()
@@ -476,6 +476,6 @@ def filter_out_non_revision_commits(all_project_path,file_path):
 
 
 
-filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_revisions_shuffled.csv")
+filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
 #proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
