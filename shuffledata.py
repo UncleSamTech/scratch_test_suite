@@ -10,7 +10,7 @@ def load_files(path):
     random.shuffle(files)
         
        
-    with open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/final_shuffled_sample_version2.csv","w") as sgf:
+    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/final_shuffled_sample_version2.csv","w") as sgf:
         writer = csv.writer(sgf)
         writer.writerows(files)
 
