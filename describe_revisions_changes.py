@@ -491,7 +491,7 @@ def right_check(all_proj,file_path):
                 if proj_name in proj_names:
                     repo = f'{all_proj}/{proj_name}'
                     file_name = content[0].strip()
-                    #commit_sha = content[3].strip()
+                    #commit_sha = content[2].strip()
 
                     all_commits = get_commits(file_name,repo)
                     if len(all_commits) > 1:
