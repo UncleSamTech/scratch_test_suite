@@ -467,6 +467,7 @@ def checkout_original_branch(repo):
 
 def right_check(all_proj,file_path):
     proj_names = []
+    written_lines = set()
     for i in os.listdir(all_proj):
         if len(i) > 1 and os.path.isdir(f'{all_proj}/{i}'):
             i = i.strip() if isinstance(i,str) else i
@@ -494,13 +495,21 @@ def right_check(all_proj,file_path):
 
                     all_commits = get_commits(file_name,repo)
                     if len(all_commits) > 1:
+
+                        #checks each commit associated with a file
                         for each_commit in all_commits:
-                            #print(each_commit)
+                            
+                            #checkout the commit to see if it's directly affecting the file
                             code = checkout_commit(each_commit,file_name,repo)
                             
+                            #check for successful return code
                             if code == 0:
+
+                                #check the file size to see the current file size
                                 size = get_file_size(file_name,each_commit,repo)
                                 print(f"{file_name} {size} {each_commit}")
+
+                                #check if there was a direct byte increase on the filesize and then that's a commit that directly changed the content of the file
                                 if size != prev_size:
                                     if each_commit not in commits_that_changed_file:
                                         commits_that_changed_file.append(each_commit)
@@ -508,12 +517,16 @@ def right_check(all_proj,file_path):
                                         continue
                     
                                 prev_size = size
-                        print(commits_that_changed_file)
+                        #checkout of main branch
                         checkout_original_branch(repo)
                     
                         if len(commits_that_changed_file) > 1:
-                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
-                                ffcsv.write(f"{each_line}\n")
+                            if each_line not in written_lines:
+                                written_lines.add(each_line)
+                                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
+                                    ffcsv.write(f"{each_line}\n")
+                            else:
+                                continue
                         else:
                             continue
 
