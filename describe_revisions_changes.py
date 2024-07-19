@@ -464,6 +464,15 @@ def checkout_original_branch(repo):
     subprocess.run(['git', 'checkout', main_branch.strip()], stderr=subprocess.DEVNULL,check=True,cwd=repo)
 
 def right_check(all_proj,file_path):
+    proj_names = []
+    for i in os.listdir(all_proj):
+        if len(i) > 1 and os.path.isdir(f'{all_proj}/{i}'):
+            i = i.strip() if isinstance(i,str) else i
+            proj_names.append(i)
+        else:
+            continue
+    
+
     prev_size = 0
     commits_that_changed_file = []
     with open(file_path,"r",encoding="utf-8") as fp:
@@ -476,29 +485,32 @@ def right_check(all_proj,file_path):
             
             if len(content) == 4:
                 proj_name = content[0].strip()
-                repo = f'{all_proj}/{proj_name}'
-                file_name = content[1].strip()
+                if proj_name in proj_names:
+                    repo = f'{all_proj}/{proj_name}'
+                    file_name = content[1].strip()
                 #commit_sha = content[3].strip()
 
-                all_commits = get_commits(file_name,repo)
-                if len(all_commits) > 1:
-                    for each_commit in all_commits:
-                        code = checkout_commit(each_commit,file_name,repo)
-                        if code == 0:
-                            size = get_file_size(file_name)
-                            if size != prev_size:
-                                commits_that_changed_file.append(each_commit)
+                    all_commits = get_commits(file_name,repo)
+                    if len(all_commits) > 1:
+                        for each_commit in all_commits:
+                            code = checkout_commit(each_commit,file_name,repo)
+                            if code == 0:
+                                size = get_file_size(file_name)
+                                if size != prev_size:
+                                    commits_that_changed_file.append(each_commit)
                     
-                            prev_size = size
-                    checkout_original_branch(repo)
+                                prev_size = size
+                        print(commits_that_changed_file)
+                        #checkout_original_branch(repo)
+                    
+                        if len(commits_that_changed_file) > 1:
+                            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
+                                ffcsv.write(f"{each_line}\n")
+                        else:
+                            continue
 
-                if len(commits_that_changed_file) > 1:
-                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
-                        ffcsv.write(f"{each_line}\n")
                 else:
                     continue
-
-                
 
 def filter_out_non_revision_commits(all_project_path,file_path):
     
@@ -536,6 +548,6 @@ def filter_out_non_revision_commits(all_project_path,file_path):
 
 
 #filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
-right_check("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
+right_check("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
 #proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
