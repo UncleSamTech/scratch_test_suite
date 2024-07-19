@@ -10,7 +10,7 @@ def load_files(path):
     random.shuffle(files)
         
        
-    with open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/main_project_name_filename_revision_commit_sha_shuffled.csv","w") as sgf:
+    with open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/final_shuffled_sample.csv","w") as sgf:
         writer = csv.writer(sgf)
         writer.writerows(files)
 
@@ -31,5 +31,5 @@ def filter_commit_projectname_file(filepath):
                     rec.write(f"{proj_name},{file_name},{revision},{commit}")
                     rec.write(f"\n")
 
-load_files("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.txt")
+load_files("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/filtered_files_2_another_final.csv")
 #filter_commit_projectname_file("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/revisions_record.csv")

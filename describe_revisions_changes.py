@@ -431,15 +431,73 @@ def file_has_history2(file_path,repo):
         if len(commits) < 2:
             return False
 
-        for i in range(len(commits) - 1):
-            diff_result = subprocess.run(['git', 'diff', '--shortstat', commits[i].strip(), commits[i + 1].strip(), '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
-            if diff_result.stdout.strip():
-                return True
-        return False
+        if len(commits) > 1:
+            for i in range(len(commits) - 1):
+                diff_result = subprocess.run(['git', 'diff', '--shortstat', commits[i].strip(), commits[i + 1].strip(), '--', file_path],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
+                if diff_result.stdout.strip():
+                    return True
+            return False
     except subprocess.CalledProcessError:
         return False
 
+def get_commits(filepath,repo):
+    result = subprocess.run(['git', 'log', '--follow', '--pretty=format:%H', '--', filepath],stdout=subprocess.PIPE,stderr=subprocess.PIPE,check=True,cwd=repo)
+    commits = result.stdout.decode('utf-8').splitlines()
+    return commits
 
+def get_file_size(file):
+    if os.path.exists(file):
+        return os.path.getsize(file)
+    return 0
+
+def checkout_commit(commit,file,repo):
+    try:
+        result = subprocess.run(['git', 'checkout', commit, '--', file], stderr=subprocess.DEVNULL,check=True,cwd=repo)
+        return result.returncode
+    except subprocess.CalledProcessError as e:
+        # Return the returncode on error
+        return e.returncode
+
+def checkout_original_branch(repo):
+    main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
+    main_branch = main_branch.stdout.decode("utf-8") .strip('/n')[0:]
+    subprocess.run(['git', 'checkout', main_branch], stderr=subprocess.DEVNULL,check=True,cwd=repo)
+
+def right_check(all_proj,file_path):
+    prev_size = 0
+    commits_that_changed_file = []
+    with open(file_path,"r",encoding="utf-8") as fp:
+        files = fp.readlines()
+
+        for each_line in files:
+            each_line = each_line.strip()
+            content = each_line.split(",")
+
+            
+            if len(content) == 4:
+                proj_name = content[0].strip()
+                repo = f'{all_proj}/{proj_name}'
+                file_name = content[1].strip()
+                #commit_sha = content[3].strip()
+
+                all_commits = get_commits(file_name)
+                for each_commit in all_commits:
+                    code = checkout_commit(each_commit,file_name,repo)
+                    if code == 0:
+                        size = get_file_size(file_name)
+                        if size != prev_size:
+                            commits_that_changed_file.append(each_commit)
+                    
+                        prev_size = size
+                checkout_original_branch(repo)
+
+                if len(commits_that_changed_file) > 1:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/files_that_has_changes.csv","a") as ffcsv:
+                        ffcsv.write(f"{each_line}\n")
+                else:
+                    continue
+
+                
 
 def filter_out_non_revision_commits(all_project_path,file_path):
     
@@ -451,8 +509,8 @@ def filter_out_non_revision_commits(all_project_path,file_path):
             each_line = each_line.strip()
             content = each_line.split(",")
 
-            print(len(content))
-            if len(content) == 4 or len(content) == 5:
+            
+            if len(content) == 4:
                 proj_name = content[0].strip()
                 repo = f'{all_project_path}/{proj_name}'
                 file_name = content[1].strip()
@@ -476,6 +534,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
 
 
 
-filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
+#filter_out_non_revision_commits("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
+right_check("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_record_proj_name_file_revision_commit.csv")
 #proc = integrate_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted",dict_keywords,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/main_project_name_sha_shuffled.csv")
 #plot_changes_type("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/scratch_changes_type_file.csv")
