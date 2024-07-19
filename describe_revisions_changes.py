@@ -470,7 +470,7 @@ def filter_out_non_revision_commits(all_project_path,file_path):
                     has_revision = True
                          
                 if has_revision and file_has_history2(file_name,repo):
-                    with open("filtered_files_2_another.csv","a") as ffcsv:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/model_deployment/filtered_files_2_another.csv","a") as ffcsv:
                         ffcsv.write(f"{each_line}\n")
 
 
