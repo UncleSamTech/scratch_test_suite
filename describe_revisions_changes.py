@@ -498,7 +498,7 @@ def right_check(all_proj,file_path):
                             
                             if code == 0:
                                 size = get_file_size(file_name)
-                                print(f"{file_name} {size}")
+                                print(f"{file_name} {size} {each_commit}")
                                 if size != prev_size:
                                     commits_that_changed_file.append(each_commit)
                     
