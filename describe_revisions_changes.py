@@ -461,7 +461,7 @@ def checkout_commit(commit,file,repo):
 def checkout_original_branch(repo):
     main_branch = subprocess.run(['git rev-parse --abbrev-ref HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=True)
     main_branch = main_branch.stdout.decode("utf-8") .strip('/n')[0:]
-    subprocess.run(['git', 'checkout', main_branch], stderr=subprocess.DEVNULL,check=True,cwd=repo)
+    subprocess.run(['git', 'checkout', main_branch.strip()], stderr=subprocess.DEVNULL,check=True,cwd=repo)
 
 def right_check(all_proj,file_path):
     prev_size = 0
