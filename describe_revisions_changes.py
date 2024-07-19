@@ -445,10 +445,12 @@ def get_commits(filepath,repo):
     commits = result.stdout.decode('utf-8').splitlines()
     return commits
 
-def get_file_size(file):
-    if os.path.exists(file):
-        return os.path.getsize(file)
-    return 0
+def get_file_size(file_name,commit_sha,repo):
+    result = subprocess.run(['git', 'cat-file', '-s', f'{commit_sha}:{file_name}'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=repo)
+    output = result.stdout.strip()
+                
+    size = int(output) if len(output) > 0 and int(output) != 0  else 0
+    return size
 
 def checkout_commit(commit,file,repo):
     try:
@@ -497,7 +499,7 @@ def right_check(all_proj,file_path):
                             code = checkout_commit(each_commit,file_name,repo)
                             
                             if code == 0:
-                                size = get_file_size(file_name)
+                                size = get_file_size(file_name,each_commit,repo)
                                 print(f"{file_name} {size} {each_commit}")
                                 if size != prev_size:
                                     commits_that_changed_file.append(each_commit)
