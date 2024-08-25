@@ -1,0 +1,7 @@
+Node_Type,Count
+<node_variable> * <node_value>,6
+<value> - <node_variable>,2
+<node_value> / <node_variable>,2
+turn left <node_value>  degrees,2
+clear graphic effects,2
+point towards <node_value>,2

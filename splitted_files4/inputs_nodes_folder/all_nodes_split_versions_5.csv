@@ -1,0 +1,21 @@
+Node_Type,Count
+for each <node_variable> in <node_value>,10
+<node_value> contains <node_value>,4
+join <node_values> <node_values>,2
+when i receive <node_values>,2
+set <node_variable>to <node_value>,2
+reset timer,3
+<node_variable>  >  value,2
+join <node_value> <value>,7
+go to x:<value>y:<value>,2
+change <node_value> by <value>,2
+length of <node_variable>,7
+join <node_variable> <node_value>,9
+<node_value> - <node_value>,3
+<node_value> contains <node_value> ?,2
+pen extension api call <erase all>,9
+if <condition_node> then block,4
+stop <node_value>,24
+pen extension api call <stamp>,17
+<node_variable> =  <value>,4
+pen extension api <erase all>,9

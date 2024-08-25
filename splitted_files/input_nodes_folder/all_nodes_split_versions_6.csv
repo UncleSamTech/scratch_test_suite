@@ -1,0 +1,21 @@
+Node_Type,Count
+pen extension api <erase all>,9
+pen extension api <stamp>,8
+when i receive <node_changes>,2
+pen extension api call,7
+forever block,35
+<node_value> or <node_value>,10
+pick random <value> to <value>,3
+broadcast <node_valaue>,2
+when i receive <node_change>,2
+next costume,57
+<node_value> = <node_variable>,14
+join <node_variable><value>,2
+join <node_variable> <value>,3
+<node_variable> = <node_value>,3
+if <node_variable> = <value>,4
+ask <value> and wait,15
+pen extension api <eraseall>,2
+not <node_variable>,2
+broadcast <node_values>,5
+join <value> <node_value>,3

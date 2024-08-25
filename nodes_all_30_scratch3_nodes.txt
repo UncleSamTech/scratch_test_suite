@@ -1,0 +1,4987 @@
+﻿S/N
+	Commit
+	File
+	File History Link
+	Comment
+	1
+	33b28e21f27b7c7c2d2a231638b94aa8c500bcda
+	dnnc.sb3
+	https://github.com/search?q=33b28e21f27b7c7c2d2a231638b94aa8c500bcda&type=commits
+	
+
+
+
+Version 1 (https://github.com/nullified33/stuff/blob/fd4a3b986d144f6c6c25d311fe0611bab1d0d258/Rock%20Paper%20Scissors.sb3)
+
+
+ What changed ?
+* Added eight new sprites
+* First sprite (Rock) contains three scripts with the following changes
+   * Script1 contain nodes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as 
+      * when this sprite clicked (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * if <condition> then block (1)
+      * hide (1)
+      * not <node_variable> = <value> (1)
+* Second sprite (Paper) contains three script
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+      *    * Script2 contains nodes such as
+      * when I receive <node_value>
+      * if <condition> then block (1)
+      * hide (1)
+      * not <node_variable> = <value>
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+* Third sprite (Scissors) contains three scripts
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+   * Script2 contains nodes such as 
+      * when I receive <node_value> (1)
+      * if <condition> then block (1)
+      * hide (1)
+      * not <node_variable> = <value>
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+* Fourth sprite contains 12 scripts
+   * Script1 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * Item <value> of <node_list> (6)
+   * Script2 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <node_value> of <node_list> (6)
+      * <node_value> * <value> (6)
+      * <node_value> + <value> (6)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value>
+      * custom function call (2)
+      * set <node_variable> to <value> (3)
+      * broadcast <node_value> (1)
+      * wait <value> seconds (1)
+      * if <condition> then block else block (1)
+      * <node_variable> = <value> (1)
+
+
+   * Script5 is a custom script and contains nodes such as
+      * define <nodes_value> (1)
+         * Created by <value> (1)
+         * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * show (1)
+      * set size to <node_value> % (1)
+      * go to <node_value> layer (1)
+      * go to x:  <node_value> y:  <node_value> (2)
+      * if <condition> then block (2)
+      * <node_value> = <value> (1)
+      * delete this clone (1)
+      * for each <node_value> in <node_value> (1)
+      * switch costume to <node_value> (2)
+      * join <node_value> <node_value> (2)
+      * create clone of <node_value>
+      * change x by <node_value>
+      * change y by <value> (1)
+
+
+   * Script6 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <node_value>  of <node_list> (8)
+      * <node_variable> * <value> (8)
+      * <node_value> + <value> (8)
+   * Script7 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom function call (1)
+      * item <value> of <node_list> (8)
+
+
+   * Script8 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y:<value> (1)
+      * switch costume to <node_value> (1)
+      * set size to <value> % (1)
+   * Script9 is a custom function which contains nodes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variables> to <value> (2)
+      * show (1)
+      * set size to <node_value> % (1)
+      * go to <node_value> layer (1)
+      * go to x:  <node_value> y: <node_value> (2)
+      * if <condition> then (1)
+      * <node_value> = <value> (1)
+      * delete this clone (1)
+      * for each <node_value> in <node_value> (2)
+      * length of <node_list> (1)
+      * length of <node_value> (1)
+      * switch costume to <node_value> (3)
+      * join <node_value> <node_value> (1)
+      * item <node_variable> of <node_list> (3)
+      * create clone of <node_value>
+      * change x by <node_value> (1)
+      * change y by <node_value> (1)
+      * letter <node_variable> of <node_value> (2)
+
+
+   * Script10 contains nodes such as
+      * when I receive <node_value>
+      * custom script call (1)
+      * item <value> of <node_value> (6)
+   * Script 11 contains nodes such as
+      * when I receive <node_value>
+      * custom script call (1)
+      * item <node_variable> of <node_list> (6)
+      * <node_variable> * <value> (6)
+      * <node_value> + <value> (6) 
+   * Script12 contains nodes such as 
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * switch costume to <node_value> (1)
+      * set size to <value> % (1)
+   * Script13 is a custom function which contains nodes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_value> to <value> (2)
+      * show (1)
+      * set size to <node_value>  % (1)
+      * go to <node> layer (1)
+      * go to x: <node_value> y: <node_value> (2)
+      * if <condition> then block (1)
+      * delete this clone (1)
+      * for each <node_value> in <node_value> (2)
+      * length of <node_value> (1)
+      * switch costume to <node_value> (3)
+      * create clone of <node_value> (1)
+      * change x by <node_value> (1)
+      * change y by <node_value> (1)
+      * <value> - <node_value> (1)
+      * item of <node_list> (3)
+      * letter <node_value> of <nod_value> (1)
+      * <value> + <value> (1)
+
+
+
+
+* Fifth sprite contains seven scripts
+   * Script1 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variable (1)
+   * Script2 is a custom script and contains nodes such as
+      * define <node_values> (1)
+      * set <node_variable> to <node_value> (3)
+      * set <node_variable> to <value> (3)
+      * repeat until <condition> (2)
+      * letter of <node_value> (2)
+      * <node_value> = <node_value> (1)
+      * <node_value> = <value> (1)
+      * change <node_variable> by <value> (2)
+      * item <node_variable> of <node_list> (2)
+      * broadcast <node_value> (1)
+   * Script3 is a custom script which contains nodes such as
+      * define <node_values> (1)
+      * add <node_value> to <node_list> (1)
+      * join <node_value> <node_value> (3)
+   * Script4 contains nodes such as
+      * when I receive <node_values>
+      * custom script call (1)
+      * node_variable (2)
+   * Script5 is a custom script and contains nodes such as
+      * define <node_values> (1)
+      * set <node_variable> to <value> (2)
+      * repeat until <condition> (1)
+      * letter <value> of <node_value> (1)
+      * <node_value>=<node_value> (1)
+      * item <node_variable> of <node_list>
+   * Script6 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (2)
+   * Script7 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+      * go to x: <value> y: <value>
+* Sixth sprite contains a single script with nodes such as
+   * when flag clicked (1)
+   * set <node_variable> to <value> (4)
+   * delete all of <nodes_value> (1)
+   * if <condition> then block (4)
+   * not <node_value> (4)
+   * <node_value>=<value> (5)
+   * <node_value> of <node_value> (5)
+   * <node_value> and <node_value> (1)
+   * add <value> to <node_list> (4)
+   * delete all of <node_list> (2)
+
+
+* Seventh sprite contains 17 scripts
+   * Script1 is a custom script that contains the following node changes:
+      * define <node_values> (1)
+      * set <node_variable> to <node_value> (7)
+      * for each <node_value> in <node_value> (1)
+      * if <condition> then block (4)
+      * not <node_value> (1)
+      * letter <node_variable> of <node_value> (5)
+      * <node_value> > <node_value> (1)
+      * <node_value> * <value>
+      * <node_value> = <value> (4)
+      * wait until <node_variable> (1) 
+      * broadcast <node_value>
+
+
+   * Script2 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * if <condition> then block else block (1)
+      * set volume to <value> % (2)
+      * set <node_value> effect to <node_value> (1)
+      * play sound <node_value> until done (1)
+      * set <node_variable> to <value>
+      * <node_variable> = <value>
+   * Script3 contains the following nodes
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_varible (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * <node_variable> = <value> (1)
+      * set <node_value> effect to <value>
+   * Script4 is a custom script which contains the following nodes
+      * define <node_values> (1)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <value> (3)
+      * if <condition> then (1)
+      * repeat until <condition> (1)
+      * <node_variable>=<node_variable> (2)
+      * pick random <node_value> to <node_value> (2)
+
+
+   * Script5 contains the following nodes
+      * when I receive <node_value> (1)
+      * custom script call (1)
+         * node_variable (2)
+   * Script6 is a custom script that contains the following nodes
+      * define <node_values> (1)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <node_value> (1)
+      * for each <node_variable> in <node_value> (1)
+      * if <condition> then block (1)
+      * length of <node_value>
+      * not <node_value> (1)
+      * <node_value> contains <node_value> (1)
+      * letter <node_variable> of <node_value> (2)
+      * join <node_values> <node_values> (1)
+   * Script7 contains the following nodes
+      * when I receive <node_value>
+      * custom script call (1)
+   * Script8 contains the following nodes
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script9 contains the following nodes
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script10 is a custom script that contains the following nodes
+      * define <node_values> (1)
+      * custom script call (1)
+   * Script11 contains the following nodes
+      * define <node_values> (1)
+      * custom script call (1)
+   * Script12 contains the following nodes
+      * when I receive <node_values> (1)
+      * set <node_variable> to <value> (2)
+   * Script13 contains the following nodes
+      * when I receive <node_variable>
+      * set <node_value> to <value> (1)
+   * Script14 contains the following nodes
+      * when I receive <node_value>
+      * custom script call (2)
+      * set <node_variable> to <value> (1)
+      * set <node_variable>to <node_value> (1)
+      * if <condition> then block (1)
+      * reset timer (1)
+      * repeat until <condition> (1)
+      * <node_variable>  >  value (1)
+      * <node_variable> = <value>
+   * Script15 contains the following nodes
+      * when I receive <node_value> (1)
+      * custom script call (2)
+      * if <condition> then block else block (1)
+      * not <node_value> (1)
+      * <node_value> > <value>
+      * set <node_variable> to <node_value> (3)
+      * join <node_value> <node_value> (2)
+      * join <node_value> <value> (2)
+      * <node_value> - <value>(1)
+   * Script16 contains the following nodes
+      * when flag clicked (1)
+      * hide (1)
+      * go to x:<value>y:<value> (1)
+   * Script17 is a custom script and contains the following nodes
+      * define <node_values> (1)
+      * set <node_value> to <value> (4)
+      * set <node_variable> to <node_value> (2)
+      * repeat until <condition> (1)
+      * change <node_value> by <value> (1)
+      * length of <node_variable> (1)
+      * <node_value> = <node_value> (1)
+      * join <node_variable> <node_value> (1)
+      * <node_value> - <node_value> (1)
+      * letter <node_variable> of <node_value> (1)
+   * Script18 contains the following nodes
+      * when I receive <node_value>
+      * custom script call (1)
+      * node_variables (3)
+   * Script19 is a custom script that contains nodes such as 
+      * define <node_values> (1)
+      * set <node_variable> to <value> (4)
+      * set <node_variable> to <node_value> (2)
+      * for each <node_variable> in <node_value> (1)
+      * if <condition> then block else block (1)
+      * repeat until <condition> (1)
+      * change <node_variable> by <value> (1)
+      * letter <node_variable> of <node_value> (5)
+      * join <node_variable> <node_value> (2)
+      * length of <node_value>
+      * <node_value> contains <node_value> ? (1)
+      * <node_value> = <node_value> (1)
+
+
+   * Script 20 contains the following node changes 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+         * node_variables (3)
+
+
+
+
+
+
+What changed?
+* A complete re-direction of program or game intent from a “rock paper scissors game” to a “tic tac toe game”
+* 40 sprites added making it a total of 48 sprites
+* First sprite contains three scripts
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api call <erase all> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * if <condition_node> then block (2)
+      * <node_value> = <value> (2)
+      * switch costume to <node_value> (2)
+      * hide (2)
+      * broadcast <node_value> (2)
+      * stop <node_value> (2)
+      * set <node_value> to <value> (2)
+      * pen extension api call <stamp> (2)
+
+
+* Second Sprite contains three scripts
+   * Script1 contains the following nodes
+      * when I receive <node_value> (1)
+      * show
+   * Script2 contains the following nodes
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * pen extension api call <erase all> (1)
+   * Script3 contains the following nodes
+      * when this sprite clicked (1)
+      * if <condition> then block (2)
+      * <node_variable> =  <value> (2)
+      * switch costume to <node_value> (2)
+      * pen extension api call <stamp> (2)
+      * set <node_variable> to <value> (2)
+      * hide (2)
+      * stop <node_value> (2)
+      * broadcast <node_value> (2)
+* Third sprite contains three script
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api call <erase all> (1)
+   * Script2 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * if <condition> then block (2)
+      * <node_variable> = <value> (2)
+      * switch costume to <node_value> (2)
+      * set <node_variable> to <value> (2)
+      * hide (2)
+      * pen extension api call <stamp> (2)
+      * broadcast <node_value> (2)
+* Fourth sprite contains three script
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * if <condition> then block (2)
+      * <node_variable> = <value> (2)
+      * set <node_variable> to <value> (2)
+      * hide (2)
+      * switch costume to <node_value> (2)
+      * pen extension api <stamp> (2)
+      * stop <node_value> (2)
+      * broadcast <node_value> (2)
+* Fifth sprite contains three script 
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * if <condition> then block (2)
+      * <node_variable> = <value> (2)
+      * set <node_variable> to <value> (2)
+      * hide (2)
+      * switch costume to <node_value> (2)
+      * pen extension api <stamp> (2)
+      * stop <node_value> (2)
+      * broadcast <node_value> (2)
+* Sixth sprite contains three scripts
+   * Script1 contains the following nodes changes
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script2 contains the following nodes changes
+      * when I receive <node_changes> (1)
+      * show (1)
+   * Script3 contains the following nodes changes
+      * when this sprite clicked (1)
+      * if <condition> then block (2)
+      * <node_variable> = <value> (2)
+      * pen extension api call <stamp> (2)
+      * set <node_variable> to <value> (2)
+      * broadcast <node_value> (2)
+      * hide (2)
+      * stop <node_value> (2)
+      * * Seventh sprite contains three script
+   * Script1 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api call <erase all> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * if <condition> then block (2)]
+      * <node_value> = <value> (2)
+      * switch costume to <node_value>
+      * pen extension api call <stamp> (2)
+      * set <node_variable> to <value> (2)
+      * broadcast <node_value> (2)
+      * hide (2)
+      * stop <node_value> (2)
+
+
+* Eight sprite contains three script
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked <1> 
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api call (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * <node_variable> = <value> (2)
+      * if <condition> then block (2)
+      * switch costume to <node_value> (2)
+      * hide (2)
+      * pen extension api call (2)
+      * set <node_variable> to <value> (2)
+      * broadcast <node_value> (2)
+      * stop <node_value> (2) 
+* Ninth sprite contains three script
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked <1> 
+      * broadcast <node_value> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api call (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * <node_variable> = <value> (2)
+      * if <condition> then block (2)
+      * switch costume to <node_value> (2)
+      * hide (2)
+      * pen extension api call (2)
+      * set <node_variable> to <value> (2)
+      * broadcast <node_value> (2)
+      * stop <node_value> (2) 
+* Tenth sprite contains seven script
+   * Script1 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script2 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * hide (1)
+      * set <node_variable> to <value> (1)
+      * switch costume to <node_value> (4)
+      * forever block (1)
+      * if <condition> then block (4) = > nested
+      * <node_variable> = <value> (5)
+      * not <node_value> (2)
+      * <node_value> or <node_value> (1)
+      *    * Script4 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      *    * Script5 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+   * Script6 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * if <condition> then block (1)
+      * switch costume to <node_value> (1)
+      * set <node_variable> to <value> (1)
+      * <node_variable> = <value> (1)
+   * Script7 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * if <condition> then (1)
+      * switch costume to <node_value> (1)
+      * set <node_variable> to <value> (1)
+      * <node_variable> = <value> (1)
+* Eleventh sprite contains three script
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+      * wait <value> seconds (1)
+      * stop <node_value> (1)
+
+
+   * Script3 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+      * wait <value> seconds (1)
+      * stop <node_value> (1)
+* Twelfth sprite contains three script
+   * Script1 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes changes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Thirteenth sprite contains three script
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+
+
+* Fourteenth sprite contains 3 scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when this sprite clicked (1)
+      * if <condition> then block else block (1)
+      * broadcast <node_value> (1)
+      * pick random <value> to <value> (1)
+      * <node_value> = <value> (1)
+* Fifteenth sprite contains three script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Sixteenth sprite contains three script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1) 
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1) 
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+* Seventh sprite contains four script
+   * Script1 contains the following nodes
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains the following nodes
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains the following nodes
+      * when this sprite clicked (1)
+      * broadcast <node_valaue> (1)
+   * Script4 contains the following nodes
+      * when I receive <node_value> (1)
+      * hide (1)
+* Eighteenth sprite contains five scripts
+   * Script1 contains the following nodes changes
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains the following nodes changes 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script3 contains the following nodes changes
+      * when I receive <node_value> (1)
+      *  show (1)
+   * Script4 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script5 contains the following nodes changes 
+      * when I receive <node_value> (1)
+      * hide (1)
+* Nineteenth sprite contains 5 scripts
+   * Script1 contains the following nodes changes
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains the following nodes changes
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script4 contains the following nodes changes 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script5 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twentieth sprite contains 5 scripts
+   * Script1 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script2 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script3 contains the following nodes changes
+      * when flag clicked (1)
+      * hide (1)
+   * Script4 contains the following nodes changes
+      * when I receive <node_change> (1)
+      * show (1)
+   * Script5 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twenty first sprite contains 5 script
+   * Script1 contains nodes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script2 contains nodes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script5 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twenty second sprite contains two scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twenty third sprite contains three scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twenty fourth sprite contains two scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Twenty fifth sprite contains four script
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+   * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * length of <node_variable> (1)
+      * <node_value> = <node_variable> (1)
+      * set <node_variable> to <node_value> (1)
+      * join <node_variable><value> (1)
+      * broadcast <node_value> (1)
+* Twenty sixth sprite contains four script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * length of <node_variable> (1)
+      * <node_value> = <node_variable> (1)
+      * set <node_variable> to <node_value> (1)
+      * join <node_variable> <value> (1)
+      * broadcast <node_value>
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+* Twenty seventh sprite contains four script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * length of <node_variable> (1)
+      * <node_value> = <node_variable> (1)
+      * set <node_variable> to <node_value> (1)
+      * join <node_variable> <value>
+      * broadcast <node_value> (1)
+
+
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (2)
+      * wait <value> seconds (1) 
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+* Twenty eight sprite contains four script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * length of <node_variable> (1)
+      * <node_value> = <node_variable> (1)
+      * set <node_variable> to <node_value>
+      * join <node_variable> <node_value> (1)
+      * broadcast <node_value> (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+* Twenty ninth sprite contains three script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * if <condition> then block (1)
+      * <node_variable> = <node_value> (1)
+      * wait <value> seconds (1)
+      * broadcast <node_value> (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+      * wait <value> seconds (2)
+      * if <condition> then block (2)
+      * <node_variable> = <value> (2)
+      * switch costume to <node_value> (3)
+      * hide (1)
+      * broadcast <node_value> (1)
+      *    * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value>  (3)
+      * wait <value> seconds (2)
+      * show (1)
+      * hide (1)
+      * if <node_variable> = <value> (2)
+      * broadcast <node_value> (1)
+
+
+* Thirtieth sprite contains six script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1) 
+   * Script3 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script4 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script5 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+
+
+   * Script6 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+
+
+* Thirty first sprite contains five script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1) 
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script5 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Thirty second sprite contains four script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * ask <value> and wait (2)
+      * set <node_variable> to <node_value> (2)
+
+
+* Thirty third sprite contains five script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+      * if <condition> then block (1)
+      * <node_value> = <value> (1)
+      * set <node_variable> to <value> (1)
+   * Script5 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+      * if <condition> then block (1)
+      * set <node_variable> to <value> (1)
+      * <node_variable> = <value> (1)
+* Thirty fourth sprite contains four script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Thirty fifth sprite contains two script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+* Thirty sixth sprite contains three scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Thirty seventh sprite contains four  scripts
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * wait <value> seconds (1)
+      * go to <node_value> layer (1)
+      * show (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Thirty eight sprite contains three script
+   * Script1 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script2 contains nodes changes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Thirty ninth sprite contains six script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+   * Script5 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script6 contains nodes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Fortieth sprite contains four script
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * delete all of <node_list> (1) 
+      * show (1)
+      * pen extension api <eraseall> (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * delete all of <node_list> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script3 contains nodes such as
+      * when this sprite clicked (1)
+      * add <value> to <node_list> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block else block (1)
+      * hide (2)
+      * pen extension api <stamp> (1)
+      * add <value> to <node_list> (1)
+
+
+* Forty first sprite contains four script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * delete all of <node_list> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * add <value> to <node_list> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block else block (1)
+      * not <node_variable> (1)
+      * <node_value> = <value> (1)
+      * hide (2)
+      * add <value> to <node_list> (1)
+      * pen extension api <stamp> (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * delete all of <node_list> (1)
+      * show (1)
+      * pen extension api <erase all> (1)
+* Forty second sprite contains four script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * delete all of <node_list> (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+      * pen extension api <erase all> (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * delete all of <node_list> (1)
+      * show (1)
+      * pen extension api <erase all> (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block else block (1)
+      * not <node_value> (1)
+      * hide (2)
+      * <node_value> = <value> (1)
+      * add <value> to <node_list> (1)
+   * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * add <value> to <node_list> (1)
+      * next costume (2)
+      * wait <value> seconds (1)
+      * broadcast <node_value> (2)
+      * set <node_variable> to <value> (2)
+
+
+* Forty third sprite contains seven scripts
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * hide (1)
+      * go to x: <value> y: <value>
+   * Script2 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variable (1)
+   * Script3 contains nodes changes such as 
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <node_value> (3)
+      * set <node_variable> to <value> (3)
+      * repeat until <condition> (2)
+      * letter <value> of <node_value> (1)
+      * letter <node_variable> of <node_value> (1)
+      * item <node_variable> of <node_list> (2)
+      * <node_value> = <node_value> (1)
+      * <node_value> = <value> (1)
+      * change <node_variable> by <value> (2)
+      * broadcast <node_values> (1)
+
+
+   * Script4 contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * add <node_value> to <node_list> (1)
+      * join <node_value> <node_value> (1)
+      * join <node_value> <value> (1)
+      * join <value> <node_value> (1)
+   * Script5 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (2)
+   * Script6 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (2)
+   * Script7 contains nodes changes such as 
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * repeat until <condition> (1)
+      * letter <value> of <node_value> (1)
+      * <node_value> = <node_value> (1)
+      * change <node_variable> by <value> (1)
+      * item <node_variable> of <node_list> (1)
+      * replace item <node_variable> of <node_list> with <node_value> (1)
+      * join <node_value> <value> (1)
+      * join <value> <node_value> (1)
+      * join <node_value> <node_value> (1)
+      * * Forty fourth sprite contains a single script
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * set <node_variable> to <value> (4)
+      * delete all of <node_list> (1)
+      * if <condition> then block (4)
+      * not <node_value> (4)
+      * <node_value> of <node_value> (5)
+      * <node_value> = <value> (5)
+      * <node_value> and <node_value> (1)
+      * add <value> to <node_list> (4)
+* Forty fifth sprite contains seventeen script
+   * Script1 contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <node_value>
+      * Description <node_value>
+      * set <node_variable> to <value> (7)
+      * for each <node_variable> in <node_value> (1)
+      * length of <node_value>
+      * if <condition> then block (4)
+      * not <node_value> (1)
+      * letter <node_variable> of <node_value> (5)
+      * <node_value> > <value> (1)
+      * <node_value> = <value> (4)
+      * <node_value> * <value> (1)
+      * wait until <node_value> (1)
+      * broadcast <node_value> (1)
+
+
+   * Script2 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block else block (1)
+      * <node_variable> = <value> (1)
+      * set volume to <value> % (2) 
+      * set <node_value> effect to <node_variable> (1)
+      * play sound <node_value> until done (1)
+      * set <node_value> to <value>
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variable (1)
+      * if <condition> then block (1)
+      * set <node_value> effect to <value>
+      * not <node_value> (1)
+      * <node_variable> = <value> (1)
+
+
+   * Script4 is a custom script and  contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <node_value> (2)
+      * pick random <node_value> to <node_value> (2)
+      * <node_variable> = <node_variable> (2)
+      * if <condition> then block (1)
+      * repeat until <condition> (1)
+      * not <node_value> (1)
+      * <node_variable> = <node_variable> (2)
+      * repeat until <condition> (1)
+      *    * Script5 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (2)
+   * Script6 is a custom script which  contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <node_value> (1)
+      * for each <node_variable> in <node_value> (1)
+      * length of <node_value> (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * <node_value> contains <node_value> (1)
+      * join <node_variable> <node_value> (1)
+      * letter <node_variable> of <node_value> (2)
+   * Script7 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (2)
+   * Script8 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script9 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script10 contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value>
+      * custom script call (1)
+   * Script11 contains nodes such as 
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value>
+      * custom script call (1)
+      *    * Script12 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (2)
+      * set <node_variable> to <value> (1)
+      * set <node_variable> to <node_value> (1)
+      * if <condition> then block (1)
+      * not <node_value> (1)
+      * <node_variable> > <value> (1)
+      * <node_variable> = <value> (1)
+      * reset timer (1)
+      * repeat until <condition> (1)
+      *    * Script13 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * set <node_variable> to <value> (2)
+   * Script14 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * set <node_variable> to <value> (1)
+   * Script15 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (2)
+      * if <condition> then block else block (1)
+      * not <node_value> (1)
+      * <node_value> > <value> (1)
+      * set <node_variable> to <node_value> (3)
+      * join <node_value> <node_value> (2)
+      * join <node_value> <value> (1)
+      * join <node_variable> <value> (1)
+   * Script16 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (3)
+   * Script17 is a custom script which contains nodes changes such as
+      * define <node_values> (1)
+      * Created by <value>
+      * Description <value>
+      * set <node_variable> to <value> (4)
+      * set <node_variable> to <node_value> (2)
+      * repeat until <condition> (1)
+      * length of <node_variable> (1)
+      * <node_variable> = <node_value> (1)
+      * <node_value> - <node_value> (1)
+      * letter <node_variable> of <node_value> (1)
+      * join <node_variable> <node_value> (1)
+      * change <node_variable> by <value> (1)
+   * Script18 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * node_variables (3)
+   * Script19 is a custom script that contains nodes such as 
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (4)
+      * set <node_variable> to <node_value> (2)
+      * for each <node_variable> in <node_value> (1)
+      * if <condition> then block else block (1)
+      * length of <node_value> (1)
+      * letter <node_variable> of <node_value> (5)
+      * <node_value> contains <node_value> (1)
+      * change <node_variable> by <value> (1)
+      * <node_value> = <node_value> (1)
+      * join <node_variable> <node_value> (2)
+* Forty sixth sprite contains 12 scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (2)
+      * set <node_variable> to <value> (3)
+      * broadcast <node_value> (1)
+      * wait <value> seconds (1)
+      * if <condition> then block else block (1)
+      * <node_variable> = <value> (1)
+   * Script3 contains nodes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * show (1)
+      * set size to <node_value> % (1)
+      * go to x: <node_value> y: <node_value> (2)
+      * if <condition> then (2)
+      * delete this clone (1)
+      * for each <node_variable> in <node_value> (1)
+      * switch costume to <node_value> (2)
+      * create clone of <node_value> (1)
+      * change x by <node_value> (1)
+      * change y by <node_value> (1)
+      * join <node_value> <node_value> (2)
+      * length of <node_value> (1)
+      * letter <node_variable> of <node_value> (4)
+      * <node_value> = <node_value> (1)
+   * Script4 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <node_variable> of <node_list> (8)
+      * <node_variable> * <value> (8)
+      * <node_value> + <value> (8)
+
+
+   * Script5 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <value> of <node_list> (8)
+   * Script6 contains nodes such as
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * show (1)
+      * set size to <node_value> % (1)
+      * go to <node_value> layer (1)
+      * go to x: <node_value> y: <node_value> (2)
+      * if <condition> then (1)
+      * delete this clone (1)
+      * for each <node_variable> in <node_list> (1)
+      * for each <node_variable> in <node_value>  (1)
+      * length of <node_value> (1)
+      * letter <node_variable> of <node_value> (2)
+      * join <node_value> <node_value> (1)
+      * item <node_variable> of <node_list> (2)
+      * item <node_value> of <node_list> (1)
+      * <node_variable> + <value> (1)
+      * switch costume to <node_value> (3)
+      * create clone of <node_value> (1)
+      * change x by <node_value> (1)
+      * change y by <node_value> (1)
+      *    * Script7 contains nodes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <value> of <node_list> (6)
+   * Script8 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <node_value> of <node_list> (6)
+      * <node_value> + <node_value> (6)
+      * <node_value> * <node_value> (6)
+   * Script9 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * set size to <value> %(1)
+   * Script10 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <value> of <node_list> (6)
+   * Script11 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * item <node_value> of <node_list> (6)
+      * <node_variable> * <value> (6)
+      * <node_value> + <value> (6)
+   * Script12 contains nodes such as 
+      * define <node_values> (1)
+      * Created by <value> (1)
+      * Description <value> (1)
+      * set <node_variable> to <value> (2)
+      * show (1)
+      * set size to <node_value> % (1)
+      * go to <node_value> layer (1)
+      * go to x: <node_value> y: <node_value> (2)
+      * if <condition> then block (1)
+      * delete this clone (1)
+      * for each <node_variable> in <node_value> (2)
+      * length of <node_list> (1)
+      * length of <node_list> (node_value)
+      * item <node_variable> of <node_list> (2)
+      * item <node_value> of <node_list> (1)
+      * item # of <node_value> (1)
+      * <node_value> + <value> (1)
+      * create clone of <node_value> (1)
+      * change x by <node_value> (1)
+      * change y by <node_value> (1)
+      * <value> - <node_value> (1)
+* Forty seventh sprite contains four scripts
+   * Script1 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * show (1)
+   * Script2 contains nodes changes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * show (1)
+   * Script4 contains nodes changes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Forty eight sprite contains three scripts and 5 disjoint nodes
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * wait <value> seconds (1)
+      * if <condition> then block (3)
+      * <node_value> or <node_value> (4)
+      * <node_variable> = <value> (9)
+      * <node_value> = <node_value> (1)
+      * switch costume to <node_value> (3)
+      * show (3)
+      * item # of <value> in <node_list> (1)
+      * forever block (1)
+
+
+
+
+
+
+Why the change ?   
+* Each sprite added introduced an object to the program with its function and attributes
+
+
+
+
+
+
+
+
+What do they mean ?
+* Users add sprite to demonstrate addition of new objects                        
+
+
+
+
+
+
+Screenshots
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+	2
+	
+
+
+
+0a81670157be0dc4879253a177a2c192072a7690
+	ex04/src/ex04.sb3
+	https://github.com/EdinCehajic/Day02/commit/0a81670157be0dc4879253a177a2c192072a7690
+
+
+
+
+
+
+https://github.com/EdinCehajic/Day02/commit/d45c11e4bb6beba17039303f23b8ec71f9e8ab4d
+
+
+https://github.com/EdinCehajic/Day02/commit/d45c11e4bb6beba17039303f23b8ec71f9e8ab4d
+
+
+
+
+https://github.com/EdinCehajic/Day02/commits
+	What changed ?
+* A new sprite with no script
+
+
+
+
+Why the change?
+* Starting a new program by creating an object (i.e sprite)
+
+
+What do they mean?
+* Users start off projects by creating sprites
+
+
+
+
+Screenshots
+
+
+
+
+
+
+Version 2
+(https://github.com/EdinCehajic/Day02/blob/b4ff95ef96ff5253408ec0c2d4e0b30a4fbef192/ex02/src/ex02.sb3)
+
+
+What changed?
+* A New script was added with the following changes 
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * say <value> for <value> seconds (1)
+      * ask <value> and wait (1)
+      * say <node_value> (1)
+
+
+Why the change?
+* Addition of scripts introduces functionality to Scratch object
+
+
+What do they mean?
+* Users add scripts to introduce a new functionality to sprites
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+
+
+Version3 (https://github.com/EdinCehajic/Day02/blob/791269509164fb3a518ca9627eb30ec81b748862/ex03/src/ex03.sb3)
+
+
+What changed?
+
+
+* 2 new script was added
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * switch backdrop to <node_value> (1)
+      * wait <value> seconds (1)
+   * Script2 contains nodes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * start sound <node_value> (2)
+      * wait <value> seconds (1)
+      * if <condition> then (1)
+      * touching <node> (1)
+* Old script was removed
+Why the change?
+* Scripts2 are added to introduce a new functionality to a program
+* Nodes are removed to remove some functionalities
+
+
+What do they mean?
+* Users add scripts to introduce a new functionality in sprite
+* Users remove nodes to change the intent of a sprite
+
+
+
+
+Screenshots
+
+
+
+
+
+
+
+
+Version 4 (https://github.com/EdinCehajic/Day02/blob/d45c11e4bb6beba17039303f23b8ec71f9e8ab4d/ex03/src/ex03.sb3)
+
+
+What changed ?
+* A script was removed from the sprite and added to the backdrop
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * switch backdrop to <node_value> (1)
+      * wait <value> seconds (1)
+
+
+Why the change?
+* The movement of script to backdrop could be to add more controls to backdrops
+
+
+What do they mean?
+* Users add scripts to backdrops
+
+
+
+
+Screenshots
+
+
+
+
+
+
+Version 5 (https://github.com/EdinCehajic/Day02/blob/0a81670157be0dc4879253a177a2c192072a7690/ex04/src/ex04.sb3)
+
+
+
+
+What changed ?
+* Nodes replaced
+   * Script2 contains nodes changes such as
+      * switch backdrop to <node_value> (1)
+      * wait <value> seconds (1)
+   * Script1 contains nodes changes such as
+      * set <node_variable> to <value> (1)
+      * start sound <node_value> (2)
+      * wait <value> seconds (1)
+      * if <condition> then block (1)
+
+
+* Sprite assets was changed
+
+
+Why the change ?
+* Change the direction of the program
+* Change of sprite assets could be an ongoing UI/UX operation
+
+
+What do they mean?
+* Users change nodes to change direction of a program
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+Version 6 (https://github.com/EdinCehajic/Day02/blob/89f932fb0e91717afe9737671387179a8dbf3057/ex05/src/ex05.sb3)
+
+
+What changed ?
+* Scripts removed from the backdrop
+   * Script2 contains nodes such as
+      * set rotation style <node_value> (1)
+      * next costume (2)
+      * if on edge, bounce (1)
+      * move <value> steps (1)
+
+
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+* Nodes replaced in the existing script
+
+
+Why did it change?
+* The removal of scripts from the backdrop was to remove a functionality 
+
+
+What do they mean?
+* Users remove scripts from programs to remove functionality
+
+
+
+
+Screenshots
+
+
+
+
+
+
+
+
+Version 7 (https://github.com/EdinCehajic/Day02/blob/819b16c0acd9f171b1788b780ca1f9beb43bc7fa/ex05/src/ex05.sb3)
+
+
+What changed ?
+* Addition of nodes
+   * Script1 contains nodes changes such as 
+      * next costume (1)
+      * move <value> steps (1)
+
+
+
+
+Why the change?
+* Nodes added are utilized for repeating a process (code clone)
+
+
+What do they mean?
+* Users add nodes to repeat a process
+
+
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+
+
+	3
+	9b4c15c844e84208e3630936af6052d8d855dfb0
+	projects/week10/1_Snake_Player_Movement.sb3
+	https://github.com/aaronlws95/scratch-tutorial-2020/commits/9b4c15c844e84208e3630936af6052d8d855dfb0/projects/week10/1_Snake_Player_Movement.sb3
+	What changed ?
+* Addition of a new sprite
+* 5 new scripts added to the sprite
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * set <node_variable> to <value> (10)
+   * Script2 contains nodes changes such as
+      * define <values> (1)
+      * go to x: <node_value> y: <node_value> (1)
+      * <node_variable> + <node_value> (2)
+      * <node_value> * <node_value> (2)
+      * set <node_variable> to <node_value> (2)
+   * Script3 contains nodes changes such as
+      * when <node_value> key pressed (1)
+      * set <node_variable> to <variable> (1)
+      * set <node_variable> to <value> (1)
+      * custom script call (3)
+      * round <node_value> (2)
+      * <node_variable> / <value> (2)
+      * <node_variable> = <value> (1)
+      * repeat until <condition> (1)
+      * node_variable (3)
+   * Script4 contains nodes changes such as
+      * define <values> (1)
+      * if <condition> then block (1)
+      * if <condition> then block else block (3)
+      * key <node_value> pressed (4)
+      * set <node_variable> to <variable> (4)
+   * Script5 contains nodes changes such as
+      * define <node_values> (1)
+      * if <condition> then block else block (3)
+      * if <condition> then block (1)
+      * <node_value> = <node_variable> (5)
+      * custom script call (4)
+      * <node_value> - <value> (2)
+      * <node_value> + <value> (2)
+
+
+
+
+Why the change?
+* New sprites are added to introduce an object with its functionality and attributes
+* A new script is added to demonstrate a functionality
+
+
+What do they mean?
+* Users add sprites at the start of a program
+* Users add scripts to demonstrate functionality
+
+
+Screenshots
+
+
+
+
+
+
+Version 2(https://github.com/aaronlws95/scratch-tutorial-2020/blob/9b4c15c844e84208e3630936af6052d8d855dfb0/projects/week10/2_Snake_Food_Spawn.sb3)
+
+
+What changed ?
+* A new sprite was introduced with three scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * define <values> (1)
+      * go to x: <node_value> y: <node_value> (1)
+      * set <node_variable> to <node_value> (2) 
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+      * pick random <value> to <node_value> (2)
+      * <node_variable> - <value> (2)
+      * show (1)
+
+
+* 2 scripts were added in the existing sprite
+   * Script1 contains the following nodes changes
+      * define <values> (1)
+      * if <condition> then block else block (3)
+      * <node_value> = <node_variable> (4)
+      * <node_value> + <value> (2)
+      * <node_value> - <value> (2)
+      * if <condition> then block (1)
+      * custom script call (4)
+   * Script2 contains the following nodes changes 
+      * define <values> (1)
+      * if <condition> then block else block (1)
+      * set <node_variable> to <value> (2)
+      * <node_value> < <value> (2)
+      * <node_value> > <node_variable> (2)
+      * <node_variable> - <value> (2)
+      * <node_value> or <node_value> (2)
+      * * Nodes were added in the third script of the first sprite
+   * Script3 contains the following node changes
+      * set <node_variable> to <value> (1)
+      * broadcast <node_value> (2)
+      * custom script call (1)
+      * if <condition> then block (2)
+      * <node_variable> = <node_variable> (2)
+      * <node_value> and <node_value> (1)
+      * node_variable (3)
+      * <node_variable> = <value>
+
+
+Why the change?
+* A new sprite was added to hold a new object with certain behaviors (variables) and be able to take certain actions (scripts)
+* Scripts were introduced to bring in certain functionalities in the program
+* Nodes were added to bring in specific behavior to a Scratch program
+
+
+What do they mean?
+* Users add sprites to introduce a new object with the intent of localizing specific behaviors and actions within the sprite
+* Users add scripts to introduce specific functionalities in a Scratch program
+
+
+Screenshots
+
+
+
+
+
+
+Version 3 (https://github.com/aaronlws95/scratch-tutorial-2020/blob/9b4c15c844e84208e3630936af6052d8d855dfb0/projects/week10/3_Snake_Tail.sb3)
+
+
+
+
+What changed ?
+* A new sprite added with 4 new scripts added
+   * Script1 contains nodes changes such as
+      * define <values> (1)
+      * go to x: <node_value> y: <node_value> (1)
+      * replace item <node_variable> of <node_list> with <node_value> (2)
+      * <node_variable> + <node_value> (2)
+      * <node_value> * <node_variable> (2)
+   * Script2 contains nodes changes such as 
+      * define <values> (1)
+      * pen extension api call <erase all> (1)
+      * pen extension api call <stamp> (1)
+      * set <node_variable> to <node_list> (1)
+      * repeat <node_value> (1)
+      * if <node_variable> then block else block (1)
+      * custom script call (2)
+      * node_variable (2)
+      * item <node_value> of <node_list> (2)
+      * <node_variable> - <value> (2)
+      * show (1)
+      * hide (1)
+      * change <node_variable> by <value> (1)
+      * <node_variable> = <value> (1)
+   * Script3 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   *  Script4 contains nodes changes such as
+      * when flag clicked (1)
+      * hide (1)
+* New nodes added in the third script of the first sprite
+   * Script3 contains nodes changes such as
+      * delete all of <node_list> (2)
+      * set <node_variable> to <node_variable> (2)
+      * change <node_variab le> by <value> (1)
+      * custom script call (1)
+
+
+Why the change ?
+* New sprite was added to demonstrate an object of a Snake called Tail
+* New scripts added to demonstrate a new functionality
+* New nodes were added in the 
+
+
+What do they mean?
+* Users add sprites to demonstrate new objects, its attributes  and actions it can take
+* Users add scripts to introduce a new functionality in the program
+
+
+Screenshots
+
+
+
+
+Version 4 (https://github.com/aaronlws95/scratch-tutorial-2020/blob/9b4c15c844e84208e3630936af6052d8d855dfb0/projects/week10/4_Snake_Lose_Check.sb3)
+
+
+What changed ?
+* Nodes added in the third script of the first sprite
+   * Script3 contains nodes changes such as 
+      * if <condition> then block else block (1)
+      * broadcast <node_value> (1)
+* 2 new scripts was added in the first sprite
+   * Script1 contains the following node changes 
+      * define <values> (1)
+      * set <node_value> to <value> (1)
+   * Script2 contains the following nodes changes
+      * when I receive <node_value> (1)
+      * custom script (1)
+* Nodes were added in the seventh script of the first sprite
+   * Script7 contains nodes such as
+      * not <node_value> (4)
+      * <node_variable> = <node_variable> (4)
+      * <node_value> and <node_value> (4)
+
+
+
+
+Why the change ?
+* Nodes are added in a script to demonstrate a new action
+* Scripts are added to demonstrate a new functionality
+
+
+What do they mean ?
+* Users add nodes to a sprite to demonstrate a new object, its behavior and actions it can take
+* Users add scripts to demonstrate a new action of a sprite object
+
+
+Screenshots
+
+
+
+
+
+
+Version 5 (https://github.com/aaronlws95/scratch-tutorial-2020/blob/9b4c15c844e84208e3630936af6052d8d855dfb0/projects/week10/5_Snake_User_Interface.sb3)
+
+
+
+
+What changed ?
+* 4 sprites were added
+* 2 new nodes were added in the first script in the first sprite
+   * Script1 contains nodes changes such as 
+      * pen extension api call <erase all> (1)
+      * hide (1)
+* 2 scripts were added in the first sprite
+   * Script1 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * custom script call (1)
+   * Script2 contains nodes changes such as         
+      * define <values> (1)
+      * show (1)
+      * hide variable <variable_name> (3)
+      * delete all of <node_list> (2)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <variable> (3)
+      * custom script call (5)
+      * round <node_value> (2)
+      * <node_variable> / <value> (2)
+      * <node_variable> = <value> (2)
+      * repeat until <condition> (1)
+      * if <condition> then block (1)
+      * if <condition> then block else block (1)
+      * broadcast <node_values> (3)
+      * <node_variable> = <node_variable> (2)
+      * <node_variable> and <node_variable> (1)
+      * <node_value> and <node_value> (1)
+* 7 new nodes added in the sixth script of the first sprite]
+   * Script6 contains nodes such as 
+      * show variable <node_variable> (3)
+      * set <node_variable> to <node_variable> (1)
+      * set <node_variable> to <node_value> (1)
+      * ask <value> and wait (1)
+      * <node_variable> < <node_variable> (1)
+      * if <condition> then block (1)
+* One node added in the seventh script of the first sprite
+   * Script7 contains nodes such as 
+      * start sound <node_value> (1)
+* 2 scripts added in the fourth sprite
+   * Script1 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+      * hide (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * show (1)
+* 3 scripts added in the fifth sprite
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * hide (1)
+* 3 scripts added in the third sixth sprite
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * hide (1)
+   * Script2 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * show (1)
+   * Script3 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * hide (1)
+* Four scripts added in the seventh sprite
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * set <node_variable> to <value> (2)
+      * repeat until <condition> (1)
+      * set volume to <node_variable> % (1)
+      * play sound <node_value> until done (1)
+   * Script2 contains nodes changes such as
+      * when this sprite clicked (1)
+      * if <condition> then block else block (1)
+      * <node_variable> = <value> (2)
+      * switch costume to <node_value> (2)
+      * set <node_variable> to <value> (2)
+      * repeat until <condition> (1)
+      * set volume to <node_variable> % (1)
+      * set volume to <value> % (1)
+      * play sound <node_value> until done (1)
+   * Script3 contains nodes changes such as 
+      * when I receive <node_value> (1)
+      * hide (1)
+   * Script4 contains nodes changes such as
+      * when I receive <node_value> (1)
+      * show (1)
+
+
+Why the change?
+* New sprites added demonstrate the addition of a new object or a new class for textual codes to hold a new functionality 
+* New scripts added demonstrate the addition of a new functionality
+* New nodes added demonstrate a new action 
+
+
+What do they mean
+* Users add sprites to show a new object, it’s properties and functionalities in Scratch program
+* Users add new scripts to demonstrate adding a new functionality
+
+
+Screenshots
+
+
+
+
+	4
+	af8c5dc3ff7bd68e1be0d18352e79bba93df7750
+	pset0/src0/meow0.sb3
+	https://github.com/GaureshKapoor/CS50-PSETs/commit/af8c5dc3ff7bd68e1be0d18352e79bba93df7750#diff-5aa3e2e229bdc6b77438e9c297b6a0809b0c61b4a4cd0781f49bda2aeabd5492
+	What changed?
+* A new sprite added
+* A new script added
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * start sound <node_value> (1)
+
+
+Why the change ?
+* A new sprite is added to introduce a new object in a scratch3 program
+* A new script is added to introduce a new functionality to a program
+
+
+What do they mean?
+* Users begin new scratch programs by adding objects (sprites)
+* Users add scripts to introduce a new functionality to a program
+
+
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/GaureshKapoor/CS50-PSETs/blob/af8c5dc3ff7bd68e1be0d18352e79bba93df7750/pset0/src0/meow1.sb3)
+
+
+What changed ?
+* A Node was removed
+   * Script1 contains removed nodes below
+      * start sound <node_value> (1)
+* Three new nodes added
+   * Script1 contains nodes changes such as 
+      * repeat <value> (1)
+      * play sound <node_value> until done (1)
+      * wait <value> seconds (1)
+
+
+
+
+Why the change?
+* Addition of nodes demonstrate addition of actions
+* Removal of nodes demonstrate removal of actions
+
+
+What do they mean?
+* Users add nodes to scripts introduce a new action to a sprite 
+* Users remove a node from a script to remove an action from a script
+
+
+
+
+Screenshots
+
+
+
+
+	
+
+	6fc03d2402694e6bcf2bdee48d0832b2e7961a17
+	simpletree.sb3
+	https://github.com/arpruss/rjmscratch/blob/6fc03d2402694e6bcf2bdee48d0832b2e7961a17/simpletree.sb3
+	Couldn't load file
+	5
+	7bf88657344e23dcea8a0d52764938b7abc10693
+	scratch3-hacks/test/scratch3-hacks-test.sb3
+	https://github.com/eqot/scratch3-hacks.old/commit/7bf88657344e23dcea8a0d52764938b7abc10693
+	What changed ?
+* New sprite added
+* New script added without an event parent node
+   * Script1 contains nodes such as        
+      * repeat <value> (1)
+      * move <value> steps (1)
+
+
+Why the change?
+* New sprite demonstrates adding a new object in a program
+* New script without a root event node suggest a pet project
+
+
+What do they mean?
+* Users add sprites to introduce new objects
+* Users add scripts to introduce new functionalities
+
+
+Screenshots
+
+
+
+
+
+
+
+
+	6
+	dba4cde586cdd436830829002e35efea3bd42579
+	Pseudo Code with Scratch/Exercise7.sb3
+	https://github.com/b2jena/full_stack_development_stackroute/blob/dba4cde586cdd436830829002e35efea3bd42579/Pseudo%20Code%20with%20Scratch/Exercise7.sb3
+	What changed?
+* A new sprite added
+* A new script added
+   * Script contains the following nodes changes 
+      * when flag clicked (1)
+      * ask <value> and wait (1)
+      * set <node_variable> to <node_value> (1)
+      * if <condition> then block (8)
+      * <node_variable> = <value> (7)
+      * <node_variable> < <value> (1)
+      * <node_variable> > <value> (1)
+      * say <value> (1)
+      * say <value> for <value> seconds (8)
+
+
+Why the change ?
+
+
+* Sprites are added to create objects with attributes and functionalities 
+* Scripts are added to hold functions
+
+
+What do they mean?
+* Users add sprites to demonstrate adding new objects 
+* Users add scripts to demonstrate adding new functions
+
+
+Screenshots
+
+
+
+
+
+
+
+
+	6
+	3acb3e9b0407a1bb9908fcaf60ebb8e2864c2be3
+	The Wizard of Scratch.sb3
+	https://github.com/Debasmita64/Scratch-Project-3/commit/3acb3e9b0407a1bb9908fcaf60ebb8e2864c2be3#diff-7b057c5af0334481127ae14b70682e93b3566f9918e71d325cd6553ed4fd62e6
+	What changed ?
+* Four new sprite added
+* Backdrops added
+* No script in any of the sprite
+
+
+Why the change?
+* Addition of sprite demonstrate adding an object with attributes and functionalities
+* Adding new backdrops demonstrate an ongoing UI/UX activity
+
+
+What do they mean?
+* Users add sprites to introduce new objects
+* Users add backdrops as a UI/UX design
+
+
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/Debasmita64/Scratch-Project-3/commit/43cbc0b58dee52d0108c947ead27688e408a0261)
+
+
+What changed 
+* File was deleted
+
+
+Why the change?
+* File could no longer be in use
+
+
+What do they mean?
+* Users add revisions to delete Scratch files 
+
+
+Screenshots
+
+
+
+
+	7
+	828536cc28eb6f589170a5dd2cfc8887cf788a73
+	src/year-4/rocket-trips/resources/Rocket Trips.sb3
+	https://github.com/4lefts/primary-programming/blob/828536cc28eb6f589170a5dd2cfc8887cf788a73/src/year-4/rocket-trips/resources/Rocket%20Trips.sb3
+	What changed ?
+* Six sprites added
+* First sprite contains two scripts and a label
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * repeat <value> (1)
+      * move <value> steps (1)
+      * turn right <value> degrees (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+      * label (1)
+* Second sprite contains two script and four labels
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+      * label (1)
+   * Script2 contains nodes changes such as
+      * when this sprite clicked (1)
+      * repeat <value> (1)
+      * label (3)
+* Third sprite contains two scripts and a label
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value>
+      * label (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * repeat <value> (2)
+      * move <value> steps (1)
+      * turn right <value> degrees (1)
+* Fourth sprite contains two scripts and a label
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * repeat <value> (4)
+      * move <value> steps (4)
+      * turn right <value> degrees (2)
+      * label (1)
+* Fifth sprite contains two scripts and a label
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+      * label (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * repeat <value> (2)
+      * move <value> steps (1)
+      * turn right <value> degrees (1)
+* Sixth sprite contains two scripts and a label
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * repeat <value> (6)
+      * move <value> steps (4)
+      * turn right <value> degrees (2)
+      * turn left <value> degrees (2)
+
+
+Why the change?
+* Each sprite was used to represent a unique object, In this case a different kind of rocket with its attributes and functionality
+* Each script demonstrates a function in the program
+
+
+What do they mean?
+* Users add sprites to represent a unique object
+* Users add scripts to add a new functionality
+
+
+Screenshots
+
+
+
+
+Version 2(https://github.com/4lefts/primary-programming/commit/1a8b46049ec1cced6a48c61d04614d8c1d25079b#diff-f7a6e6a53a033c1e1deaf245c9e14088b4e2f078356e07d258e525233442357c)
+
+
+Filerenames no changes
+
+
+
+
+
+
+
+
+	8
+	ffc45d14743cffac81e302e53a8fd3df2b3c1f36
+	uebungsanleitungen/programmieren/python/von-scratch-zu-python/source/Von Scratch zu Python.sb3
+	https://github.com/coderdojo-linz/preview-coderdojo-linz.github.io/commit/ffc45d14743cffac81e302e53a8fd3df2b3c1f36#diff-03b3fd03a960e1e37f4cb2f6f0cbd1454890828ac4888714aad7401684035911
+	What changed ?
+* A new sprite was added
+* Two scripts added in the first sprite
+   * Script1 contains nodes such as
+      * define <values> (1)
+      * repeat <node_value> (1)
+      * move <node_value> steps (1)
+      * turn right <node_value> degrees (1)
+      * <value> / <node_value>  degrees (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+      * pen extension api call <erase all> (1)
+      * pen extension api call <pen down> (1)
+      * pen extension api call <set pen size to <value>> (1)
+      * repeat <node_variable> (1)
+      * pen extension api call <set pen <node_value>to <node_value>> (1)
+      * pick random <value> to <value> (1)
+      * custom script call (1)
+      * node_variable (1)
+      * turn right <node_value> degrees (1)
+      * <value>  / <node_variable> (1)
+
+
+
+
+Why the change?
+* Sprites are added to introduce a new object with attributes and functionalities
+* Scripts are introduced to add functionalities to sprites
+
+
+What do they mean?
+* Users add sprites to their programs to demonstrate how objects are added to source codes with functionalities and attributes
+* Users introduce scripts to their programs to add a new functionality to their program
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/coderdojo-linz/preview-coderdojo-linz.github.io/blob/098935643406e89de66c9ad231b8a8d844d4f886/uebungsanleitungen/programmieren/python/von-scratch-zu-python/Von%20Scratch%20zu%20Python.sb3)
+
+
+What changed ?
+
+
+No visible change as code was moved to a different folder
+
+
+
+
+
+
+
+
+
+
+	9
+	dba4cde586cdd436830829002e35efea3bd42579
+	pseudocode_exercise/exercise2.sb3
+	https://github.com/b2jena/full_stack_development_stackroute/commits/dba4cde586cdd436830829002e35efea3bd42579/Pseudo%20Code%20with%20Scratch/exercise2.sb3
+	What changed ?
+* A new sprite was added
+* A new script was added 
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * ask <value> and wait (1)
+      * set <node_variable> to <value> (1)
+      * set <node_variable> to <node_value> (1)
+      * repeat <value> (1)
+      * say <node_value> for <value> seconds (1)
+      * <node_value> * <node_variable> (1)
+      * <node_variable> + <value> (1)
+      * stop <node_variable> (1) 
+Why the change ?
+* A new sprite is added to introduce a new object to a Scratch program 
+* A new script is added to introduce a new functionality to a program
+
+
+What do they mean?
+* Users add a sprite to introduce a new object to a program
+* Users add a new script to a program to introduce a new functionality
+
+
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+	10
+	908f0252c2d7c6392b906a92d5e1b523575320e2
+	Scratch/Hummer-Bot4.0_MagicBlock/Demo/Function program/Infrared obstacle avoidance.sb3
+	https://github.com/emakefun/hummer-bot/commits/908f0252c2d7c6392b906a92d5e1b523575320e2/Scratch/Hummer-Bot4.0_MagicBlock/Demo/Function%20program/Infrared%20obstacle%20avoidance.sb3
+	What changed ?
+* A new sprite was added 
+
+
+Why the change?
+* A new sprite was included in the program
+
+
+What do they mean?
+* Users add sprites to include objects in a program
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/emakefun/hummer-bot/commit/ac3cf29cdd2f5573a95f4817cf11cb16f30d9f2f#diff-ee1f63a9076541ab42492773a0642bacd5293e48cc827488c0714fc353d85224)
+
+
+What changed ?
+  No visible changed
+	11
+	be1c7b8e4b679ea6a342b6e59cc9be4511ef0897
+	Scratch/ScratchInvaders - Week 1.sb3
+	https://github.com/DotNetCoderDk/CodingPirates/commit/be1c7b8e4b679ea6a342b6e59cc9be4511ef0897
+	What changed ?
+* Four new sprites added in the program
+* 5 new scripts in the first sprite
+   * Script1 contains nodes such as
+      * when <node_value> key pressed (1)
+      * if <condition> then block (1)
+      * <node_variable> < <value> (1)
+      * change <node_variable> by <value> (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+   * Script2 contains nodes such as
+      * when <node_value> key pressed (1)
+      * if <condition> then block (1)
+      * <node_variable> < <value> (1)
+      * change <node_variable> by <value> (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+      *    * Script3 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * next costume (1) 
+   * Script4 contains nodes such as
+      * when flag clicked (1)
+      * set <node_variable> to <value> (2)
+      * go to x: <node_variable> y: <node_variable> (1)
+   * Script5 contains nodes such as
+      * when flag clicked (1)
+      * set <node_variable> to <node_value> (2)
+      * create clone of <node_value> (1)
+
+
+- 1 new scripts in third sprite
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+      * forever block (1)
+      * next costume (1)
+
+
+
+
+Why the change ?
+* A new sprite is added to a program 
+* Scripts added to introduce functionality in a program
+
+
+What do they mean?
+* Users add new sprites to introduce objects to a program 
+* Users add scripts to a program to introduce new functionality
+
+
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/DotNetCoderDk/CodingPirates/blob/2ea3baf6441bac43599535822e71a9f062deb208/Scratch/ScratchInvaders.sb3)
+
+
+
+
+What changed ?
+* A new script added in the backdrop
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * set <node_variable> to <value> (3)
+      * repeat <node_variable> (1)
+      * create clone of <node_value> (1)
+      * forever block (1)
+      * play sound <node_value> until done (1)
+* Two new scripts added in the second sprite
+   * Script1 contains nodes such as
+      * when I start as a clone (1)
+      * switch costume to <node_value> (3)
+      * set <node_variable> to <value> (1)
+      * set <node_variable> to <node_value> (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+      * show (1)
+      * change <node_variable> by <value> (2)
+      * forever block (1)
+      * if <condition> then block (3)
+      * touching <node_value> ? (1)
+      * wait <value> seconds (1)
+      * <node_variable> = <value> (1)
+      * start sound <node_value>  (1)
+      * delete this clone (1)
+      * <node_value> of <node_variable> (1)
+      * <node_value> > <value> (1)
+      * move <node_variable> steps (1)
+      * change <node_variable> by <node_variable> (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * hide variable <node_variable> (2)
+      * hide (1)
+      * set <node_variable> to <value> (2)
+      * forever block (1)
+      * if <condition> then block (1)
+      * touching <node_value> ? (1)
+      * switch costume to <node_value> (1)
+      * change <node_variable> by <value> (1)
+* Two new scripts added in the third sprite
+   * Script1 contains nodes changes such as
+      * when I start as a clone (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+      * show (1)
+      * repeat until <node_value> (1)
+      * <node_value> or <node_value> (1)
+      * touching <node_value> ? (2)
+      * move <value> steps (1)
+      * hide (1)
+      * delete this clone (1)
+   * Script2 contains nodes changes such as
+      * when <node_value> key pressed (1)
+      * set <node_variable> to <node_variable> (2)
+      * create clone of <node_value> (1) 
+* A new script added in the fourth sprite
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+      * go to x: <value> y: <value> (1)
+      * forever block (1)
+      * if <condition> then block (1)
+      * show (1)
+      * wait <value> seconds (1)
+      * set <node_variable> to <value> (1)
+      * hide (1)
+      * <node_variable> < <value> (1)
+Why the change ?
+* Nodes are added to the scripts to introduce an action to a script
+
+
+What do they mean
+* Users add nodes to scripts in  a sprite to introduce an action
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+Version 3 (https://github.com/DotNetCoderDk/CodingPirates/blob/be1c7b8e4b679ea6a342b6e59cc9be4511ef0897/Scratch/ScratchInvaders%20-%20Week%201.sb3)
+
+
+What changed ?
+* 2 Scripts removed from the second sprite
+   * Script1 contains nodes such as 
+      * when I start as a clone (1)
+      * switch costume to <node_value> (3)
+      * set <node_variable> to <value> (1)
+      * set <node_variable> to <node_value> (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+      * show (1)
+      * change <node_variable> by <value> (2)
+      * forever block (1)
+      * if <condition> then block (3)
+      * touching <node_value> ? (1)
+      * wait <value> seconds (1)
+      * <node_variable> = <value> (1)
+      * start sound <node_value>  (1)
+      * delete this clone (1)
+      * <node_value> of <node_variable> (1)
+      * <node_value> > <value> (1)
+      * move <node_variable> steps (1)
+      * change <node_variable> by <node_variable> (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * hide variable <node_variable> (2)
+      * hide (1)
+      * set <node_variable> to <value> (2)
+      * forever block (1)
+      * if <condition> then block (1)
+      * touching <node_value> ? (1)
+      * switch costume to <node_value> (1)
+      * change <node_variable> by <value> (1)
+
+
+* 2  scripts removed from the third sprite
+   * Script1 contains nodes changes such as
+      * when I start as a clone (1)
+      * go to x: <node_variable> y: <node_variable> (1)
+      * show (1)
+      * repeat until <node_value> (1)
+      * <node_value> or <node_value> (1)
+      * touching <node_value> ? (2)
+      * move <value> steps (1)
+      * hide (1)
+      * delete this clone (1)
+   * Script2 contains nodes changes such as
+      * when <node_value> key pressed (1)
+      * set <node_variable> to <node_variable> (2)
+      * create clone of <node_value> (1) 
+* 1 script removed from the fourth sprite
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+      * go to x: <value> y: <value> (1)
+      * forever block (1)
+      * if <condition> then block (1)
+      * show (1)
+      * wait <value> seconds (1)
+      * set <node_variable> to <value> (1)
+      * hide (1)
+      * <node_variable> < <value> (1)
+* One  script added in the backdrop
+   * Script2 contains nodes changes such as
+      * set <node_variable> to <value> (1)
+      * repeat <node_variable> (1)
+      * create clone of <node_value> (1)
+* Some nodes removed in the existing script of the backdrop
+   * Script1 contains nodes removed such as 
+      * set <node_variable> to <value> (1)
+      * forever block (1)
+      * play sound <node_value> until done (1)
+
+
+Why the change ?
+* Scripts were removed to remove specific functionality from a Scratch program
+
+
+What do they mean?
+* Users remove scripts to discard certain functionalities in a program
+
+
+
+
+Screenshots
+
+
+
+
+
+
+	12
+	b1dee63509eedf3f7716e5eea94b6693a21f23cb
+	python_assig/SimpleMath.sb3
+	
+
+	Diff too large
+	13
+	dba4cde586cdd436830829002e35efea3bd42579
+	pseudocode_exercise/Exercise9.sb3
+	https://github.com/b2jena/full_stack_development_stackroute/commit/dba4cde586cdd436830829002e35efea3bd42579#diff-813f625b214c8e3d01437c33a462915d42755de988490ee4a3c011a018c4dcda
+	What changed ?
+* New sprite added
+* A single script added in the sprite
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * ask <value> and wait (7)
+      * set <node_variable> to <node_value> (2)
+      * set <node_variable> to <value> (1)
+      * change <node_variable> by <node_value> (3)
+      * say <node_variable> (1)
+      * say <value> for <value> seconds (2)
+      * say <value> (2)
+      * stop <node_variable> (1)
+
+
+Why the change ?
+* Sprites are introduced in projects to create an object
+* Scripts are introduced in sprites to create new functionality
+
+
+What do they mean?
+* Users add scripts in revisions to introduce a new functionality
+* Users add sprites in revisions to introduce a new object
+
+
+
+
+Screenshots
+
+
+
+
+	14
+	6fda7ff5e88415c03d28da8b13a9f6b345438e6c
+	fiche09/enigme-09-ex2.sb3
+	https://github.com/exo7math/scratch3-exo7/commit/6fda7ff5e88415c03d28da8b13a9f6b345438e6c
+	Couldn't view file
+	15
+	e00af1db281b47994721eab14da9e4c85bc86b67
+	no_buddy/The Fast And The Curious- Story2.sb3
+	https://github.com/coderunners2019/coderunners2019.github.io/commit/e00af1db281b47994721eab14da9e4c85bc86b67
+	Version 1 (https://github.com/coderunners2019/coderunners2019.github.io/blob/e00af1db281b47994721eab14da9e4c85bc86b67/no_buddy/The%20Fast%20And%20The%20Curious-%20Story2.sb3)
+
+
+
+
+What changed ?
+* 6 new sprites was added
+* 8 scripts added in the first sprite
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * set size to <value> % (1)
+      * go to x: <value> y: <value> (1)
+      * switch costume to <node_value> (2)
+      * show (1)
+      * say <value> for <value> seconds (3)
+      * wait <value> seconds (2)
+      * broadcast <node_value> (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (2)
+      * broadcast <node_value> (2)
+      * wait <value> seconds (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (2)
+      * broadcast <node_value> (1)
+   * Script4 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+      * switch costume to <node_value> (1)
+      * wait <value> seconds (1)
+      * switch backdrop to <node_value> (1)
+   * Script5 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+   * Script6 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * show (1)
+      * go to x: <value> y: <value> (1)
+      * switch costume to <node_value> (1)
+      * set size to <value> % (1)
+      * say <value> for <value> seconds (2)
+      * broadcast <node_value> (1)
+   *    * Script7 contains nodes such as
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * broadcast <node_value> (1)
+   * Script8 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+* 3 scripts added in the second sprite
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * show (1)
+      * say <value> for <value> seconds (2)
+      * switch backdrop to <node_value> (1)
+   * Script3 contains nodes such as 
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+* 3 scripts added in the third sprite
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+      * show (1)
+      * say <value> for <value> seconds (2)
+      * broadcast <node_value> (1)
+   * Script3 contains nodes such as 
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+      * hide (1)
+* 5 Scripts added in the fourth sprite
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+      * go to x: <value> y: <value> (1)
+      * say <value> for <value> seconds (1)
+      * broadcast <node_value> (1) 
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * switch backdrop to <node_value> (1)
+   * Script4 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+      * glide <value> secs to x: <value> y: <value> (2)
+      * if <condition> then block (1)
+      * touching <node_value> (1)
+      * say <value> (1)
+      * switch costume to <node_value> (1)
+   * Scritp5 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+* 3 scripts added in the fifth sprite
+   * Script1 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * show (1)
+      * go to x: <value> y: <value> (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+   * Script2 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+   * Script3 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+* 3 scripts added in the sixth sprite
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+      * go to x: <value> y: <value> (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+      * say <value> for <value> seconds (1)
+      * broadcast <node_value> (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * glide <value> secs to x: <value> y: <value> (1)
+      * hide <1>
+      * switch backdrop to <node_value> (1)
+   * Script3 contains nodes such as
+      * when backdrop switches to <node_value> (1)
+      * hide (1)
+
+
+Why the change ?
+
+
+* Sprites are added to introduce a new object with its attributes and functionalities
+* Scripts are added to introduce new functionalities to a program        
+
+
+What do they mean?
+* Users add sprites to add a new object in Scratch program
+* Users add scripts to introduce new functionality to a program        
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+	16
+	4d90af0359362ae68d01c1e1f6408b0dd7cf46ec
+	test-projects/Untitled-3.sb3
+	https://github.com/UChicagoCANONLab/automated-assessment/commit/4d90af0359362ae68d01c1e1f6408b0dd7cf46ec#diff-355af9e00965526aefca3bce96b43932f0b1e162532e8e25f084e7aca937581b
+	
+
+What changed ?
+
+
+* A new sprite added
+
+
+
+
+Why the change ?
+* Sprites are added to represent objects in Scratch with attributes and functionalities
+
+
+What do they mean?
+* Users add sprites to introduce objects to Scratch
+
+
+Screenshots
+
+
+
+
+
+
+
+
+Version 2 (https://github.com/UChicagoCANONLab/automated-assessment/blob/f40c9c45c48d78c5ab4a4fa67c0b1c6e4209e727/test-projects/Untitled-3.sb3)
+
+
+Second version was a reupload of the file with no visible change
+	17
+	7f93d7325ed21ba904222a3abfc1379a7fb60a11
+	My Stories (1).sb3
+	https://github.com/depie99/Wifi-Password-recovery/commits
+	Version 1 (https://github.com/depie99/Wifi-Password-recovery/blob/7f93d7325ed21ba904222a3abfc1379a7fb60a11/My%20Stories%20(1).sb3)
+
+
+What changed?
+* 6 sprites added in program
+* First sprite contains two scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * start sound <node_value> (2)
+      * wait <value> seconds (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * say <value> for <value> seconds (9)
+      * wait <value> seconds (6)
+      * next costume (3)
+      * wait <value> seconds (6)
+* Second sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (7)
+      * say <value> for <value> seconds (4)
+      * wait <value> seconds (5)
+      * think <value> for <value> seconds (1)
+* Third sprite contains a single script
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (8)
+      * think <value> for <value> seconds (2)
+      * wait <value> seconds (9)
+* Fourth sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (8)
+      * think <value> for <value> seconds
+* Fifth sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (11)
+      * think <value> for <value> seconds (3)
+      * wait <value> seconds (1)
+* Sixth sprite contains a single script                
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (9)
+      * next costume (4)
+
+
+Why the change?
+* Sprites are added to introduce objects
+* Scripts are added to introduce functions
+
+
+What do they mean ?
+* Users add sprites to introduce objects
+* Users add scripts to introduce functions
+
+
+
+
+Screenshots
+
+
+
+
+Version 2 (https://github.com/depie99/Wifi-Password-recovery/commit/7c5c6beefb57fb1951f317cc60b01858f169b9e1)
+
+
+The next commit shows deletion of the file with the following changes 
+
+
+* 6 sprites removed in program
+* First sprite contains two scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * start sound <node_value> (2)
+      * wait <value> seconds (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * say <value> for <value> seconds (9)
+      * wait <value> seconds (6)
+      * next costume (3)
+      * wait <value> seconds (6)
+* Second sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * next costume (7)
+      * say <value> for <value> seconds (4)
+      * wait <value> seconds (5)
+      * think <value> for <value> seconds (1)
+* Third sprite contains a single script
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (8)
+      * think <value> for <value> seconds (2)
+      * wait <value> seconds (9)
+* Fourth sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (8)
+      * think <value> for <value> seconds
+* Fifth sprite contains a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (11)
+      * think <value> for <value> seconds (3)
+      * wait <value> seconds (1)
+* Sixth sprite contains a single script                
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * say <value> for <value> seconds (9)
+      * next costume (4)
+
+
+
+
+
+
+
+
+	18
+	b858a441dc63f4182ef9629cdfa2d780f700bb01
+	W1_Team Dominoes_Video Game.sb3
+	https://github.com/coderunners2019/coderunners2019.github.io/commit/b858a441dc63f4182ef9629cdfa2d780f700bb01#diff-364049587a734aac67faae836aa24eae4c2013670735ed5333bcb10c870a9f55
+	What changed ?
+* 18 sprites added
+* First sprite contains three script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes such as
+      *  when flag clicked (1)
+      * forever block (1)
+      * change y by <value> (2)
+* Second sprite contains four script
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+      *    * Script4 contains nodes such as
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * show (1)
+* Third sprite contains five scripts
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+
+
+   * Script2 contains nodes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script3 contains nodes such as
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script5 contains nodes such as
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * * Fourth sprite contains two script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * forever (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * show (1)
+      * wait <value> seconds (1)
+* Fifth sprite contains 13 scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script6 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      *    * Script7 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script8 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      *    * Script9 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script10 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      *    * Script11 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      *    * Script12 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      *    * Script13 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+      * * Sixth sprite contains 7 scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script6 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script7 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Seventh sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (1)
+      * wait <value> seconds (1)
+* Eight sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+
+
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Ninth sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * hide (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Tenth sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * hide (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+
+
+* Eleventh sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_value> effect by <value> (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * hide (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * * Twelfth sprite contains four script
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+
+
+
+
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * * Thirteenth sprite contains three scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script2 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Fourteenth sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script3 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script4 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script5 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Fifteenth sprite contains four scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+* Sixteenth sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script5 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+* Seventh sprite contains five scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * repeat <value> (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+   * Script5 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+* Eighteenth sprite contains four scripts
+   * Script1 contains nodes changes such as 
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * wait <value> seconds (2)
+      * go to <node_value> (1)
+   * Script3 contains nodes changes such as 
+      * when this sprite clicked (1)
+      * change <node_variable> by <value> (1)
+      * play sound <node_value> until done (1)
+      * hide (1)
+      * wait <value> seconds (1)
+      * show (1)
+   * Script4 contains nodes changes such as 
+      * when flag clicked (1)
+      * forever block (1)
+      * change y by <value> (2)
+      * wait <value> seconds (1)
+
+
+
+
+Why the change ?
+* Scripts are added to introduce functions
+* Sprites are added to introduce objects
+
+
+What do they mean?
+
+
+* Users add sprites to add new object with attributes (variables) and functions (scripts)
+* Users add scripts to introduce new functionality        
+
+
+Screenshots
+
+
+	19
+	5f913e82d645c3aa353235839d5dff3b7fe731a9
+	amir/amirreza2.sb3
+	https://github.com/amirrezacar/pingpong/commits/5f913e82d645c3aa353235839d5dff3b7fe731a9/amir/paykan.sb3
+	Version 1 (https://github.com/amirrezacar/pingpong/blob/9bdb53a58f276e063a6cd4aa4a3f79acdec8d4fa/amir/paykan.sb3)
+
+
+What changed ?
+* 8 sprites added
+* First sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * show (1)
+* Second sprite contains a single script
+   * Script1 contains nodes such as 
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * show (1)
+      * start sound <node_value> (1)
+      * forever block (1)
+      * repeat <value> (1)
+      * if <condition> then block (12)
+      * key <node_value> pressed ? (6)
+      * change x by <value> (2)
+      * change y by <value> (8)
+      * play sound <node_value> until done (1)
+* Third sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+* Fourth sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+* Fifth sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+* Sixth sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+* Seventh sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+* Eight sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * go to <node_value> layer (1)
+      * show (1)
+
+
+Why the change?
+* Sprite are added to add an object to a Scratch program
+* Scripts are added to introduce a new function to a Scratch program        
+
+
+What do they mean?
+* Users add scripts to introduce functions to programs
+* Users add sprites to introduce objects to a program
+
+
+Screenshots
+
+
+
+
+Version 2(https://github.com/amirrezacar/pingpong/blob/5d93023b09d37e82c2aa4eac6eb1503c3ebc45d4/amir/paykan.sb3)
+
+
+What changed ?
+* repeat <value> node removed from script in second sprite
+   * repeat <value> (1)
+* Nodes added and rearranged in script of second sprite
+   * if <condition> then block (1)
+   * start sound <node_value> (5)
+   * stop all sounds (5)
+   *    * 
+
+Why the change ?
+* Nodes are introduced  to add an action from a script in Scratch program        
+* Nodes are replaced to remove an action from scripts in Scratch program        
+
+
+What do they mean?
+* Users add nodes to introduce specific action in the script of a Scratch visual code
+* Users remove does to disable actions in Scratch visual codes
+
+
+Screenshots
+
+
+
+
+
+
+Version 3 (https://github.com/amirrezacar/pingpong/blob/2ffa24004cc6b9b39aa5f0e4971b24bc29976d72/amir/paykan2.sb3)
+
+
+What changed ?
+* Nodes replaced in the script of the Second sprite
+   * Script1 contains nodes such as 
+      * start sound <node_value> (1)
+      * key <node_value> pressed ? (1)
+      *         
+
+
+
+
+Why the change ?
+* Nodes are replaced to introduce or refactor the script of Sprites
+
+
+What do they mean?
+* Users replace nodes in scripts to refactor or remove actions in Scripts
+
+
+
+
+Screenshots
+
+
+
+
+Version 4 (https://github.com/amirrezacar/pingpong/blob/5f913e82d645c3aa353235839d5dff3b7fe731a9/amir/paykan.sb3)
+
+
+
+
+What changed?
+* Sprite assets change of the third to eight sprite
+* Nodes replaced in the script of the second sprite
+   * Script1 contains nodes such as
+      * stop all sounds (1)
+      * if <condition> then block (1)
+* Node values change in the go to x: <value> y: <value> node script in the third to eight sprite
+* 3 new sprites added
+* The ninth sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * go to x: <value> y: <value> (1)
+
+
+* The tenth sprite contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * go to x: <value> y: <value> (1)
+      * change <node_value> effect by <value> (1)
+* The eleventh sprite contains a single script
+   * Script1 contains nodes such as
+      * Script1 contains nodes such as
+         * when flag clicked (1)
+         * go to x: <value>  y: <value> (1)
+         * forever block (1)
+         * change <node_value> effect by <value> (1)
+
+
+Why the change?
+* Nodes are added in scripts to introduce an action 
+* Nodes are replaced in scripts as a refactoring process 
+* Sprites are added to introduce a new object in Sprite programs
+* Scripts are introduced in sprites to add a new functionality to a program
+
+
+What do they mean?
+* Users add sprites to  introduce a new object in Scratch program
+* Users add nodes to introduce a new action in Scratch files
+* Users replace nodes as a refactoring process
+
+
+Screenshots
+
+
+
+
+	20
+	342fa4fd53974535a11ebb9f11ac291be0604d2f
+	es-ES/solutions/rock-band-finished.sb3
+	https://github.com/raspberrypilearning/rock-band/commit/342fa4fd53974535a11ebb9f11ac291be0604d2f#diff-f52a0b9f786d7bd29ce4dc59f9ed19b70666f541d9217a1cd60d3a932838b01b
+	What changed ?
+* Added three new sprites
+* Two scripts added in the first sprite
+   * Script1 contains nodes such as
+      * when <node_value> key pressed (1)
+      * switch costume to <node_value> (2)
+      * music extension api <play drum <node_value> for <value> beats> (1)
+
+
+   * Script2 contains nodes such as
+      * when this sprite clicked (1)
+      * switch costume to <node_value> (2)
+      * music extension api <play drum <node_value> for <value> beats>
+* A single script in the second sprite
+   * Script1 contains nodes such as 
+      * when this sprite clicked (1)
+      * switch costume to <node_value> (2)
+      * play sound <node_value> until done (1)
+* A single script in the third sprite
+   * Script1 contains nodes 
+      * when this sprite clicked (1)
+      * switch costume to <node_value> (2)
+      * play sound <node_value> until done (1)
+
+
+Why the change ?
+* Sprites are added to introduce new objects to a program
+* Scripts are added to introduce new functions to a project
+
+
+What do they mean?
+* Users add sprites to introduce objects to a Scratch program
+* Users add scripts to introduce a new functionality to a sprite
+
+
+Screenshots
+
+
+
+
+Version 2 (https://github.com/raspberrypilearning/rock-band/blob/e8eaedb4647f7134547aca7c4535fe6f12de1e81/cy-GB/solutions/rock-band-finished.sb3)
+
+
+
+
+
+
+
+
+	21
+	f69dcfcc64b216a6ea2d42c2e93441a1b3b2a1a6
+	act1-grading-scripts/oddDirection.sb3
+	
+
+	Version 1 (https://github.com/UChicagoCANONLab/automated-assessment/commit/056381350d08769d3d3b75103048d533d8cb4247#diff-572cab67e8c88720ee7806e53a54da9b8ca188d671faf03ef481ebaeef3ac710)
+
+
+
+
+What changed ?
+* 4 sprites added
+* Sprite1 contains three scripts including a custom script and five disjoint nodes
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+      * wait <value> seconds (3)
+      * move <value> steps (3)
+      * turn right <value> degrees (2)
+      * turn left <value> degrees (1)
+      * custom script call (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * if <condition> then block (1)
+      * touching <node_value> ? (1)
+      * stop <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * repeat <value> (1)
+      * hide (1)
+      * show (1)
+      * wait <value> seconds (2)
+      * go to x: <value> y: <value> (1)
+      * point in direction <value> (1)
+      *    * Script3 contains nodes such as 
+      * define <values> (1)
+      * broadcast <node_value> (1)
+* Sprite2 contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+      * point in direction <value> (2)
+      * go to x: <value> y: <value> (2)
+      * repeat <value> (2)
+      * pen extension api call <stamp> (4)
+      * change y by <value> (1)
+      * change x by <value> (1)
+      * hide (1)
+* Sprite 3 contains two script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block (1)
+      * touching <node_value> ? (1)
+      * say <value> for <value> seconds (1)
+      * hide (1)
+* Sprite4 contains 2 scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * if <condition> then block (1)
+      * touching <node_value> (1)
+      * say <value> for <value> seconds (1)
+      * hide (1)
+
+
+Why the change ? 
+* sprites are added to introduce a new object to a program
+* Scripts are added to introduce a new function to a program
+* disjoint nodes are introduced to show active development process
+
+
+What do they mean?
+* Users add scripts to introduce a new functionality in a sprite
+* Users utilize custom functions to create reusable functions
+* Users add disjoint nodes to show active development
+* Users add sprites to introduce a new object to a program
+
+
+Screenshots
+
+
+
+
+Version 2 (https://github.com/UChicagoCANONLab/automated-assessment/blob/f69dcfcc64b216a6ea2d42c2e93441a1b3b2a1a6/act1-grading-scripts/oddDirection.sb3)
+
+
+What changed ?
+* Node values change in script 1 from point in direction 90 to point in direction 45
+
+
+
+
+Why the change?
+* Node value change demonstrate odd movement
+
+
+What do they mean?
+* Users change values in  nodes to introduce an odd movement
+
+
+Screenshots 
+
+
+
+
+
+
+
+
+Version 3
+(https://github.com/UChicagoCANONLab/automated-assessment/blob/056381350d08769d3d3b75103048d533d8cb4247/act1-grading-scripts/ladybugComplete.sb3)
+
+
+What changed ?
+* Nodes added in the first script of the first sprite
+   * Script1 contains nodes such as
+      * wait <value> seconds (7)
+      * show (1)
+      * turn left <value> degrees (5)
+      * turn right <value> degrees (2)
+      * move <value> steps (8)
+      * custom script call (2)
+* Three disjoint nodes removed
+   * move <value> steps (1)
+   * turn right <value> degrees (1)
+   * turn left <value> degrees (1)
+* Two new disjoint nodes added
+   * wait <value> seconds (2)
+
+
+Why the change?
+* Nodes are added to introduce new actions to a script
+* Disjoint nodes are removed as a cleanup/ refactoring process
+* Disjoint nodes are added because there’s an ongoing active development
+
+
+What do they mean?
+* Users add nodes to introduce a new functionality to a program
+* Users add disjoint nodes to show active development process
+* Users remove disjoint nodes as a cleanup process
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+	22
+	31caea318d6231a29abf08dbdd9b693e7c7550ad
+	KatSplat.sb3
+	https://github.com/BrianL1/KatSplat/commit/31caea318d6231a29abf08dbdd9b693e7c7550ad#diff-10d0c5829cf35c0943cc10924a59449df14e763efe83ff49ae6fe004ab15f95b
+	Couldn’t view file
+	23
+	d2a1fbd897882a9d8310b7fd2a106042b84de42e
+	computer_sciences/programming_languages/scratch/season01/lesson04/lesson04_ex04_keyhole_imaging.sb3
+	
+
+	Version (https://github.com/batermj/kids_coding_campaign/blob/d2a1fbd897882a9d8310b7fd2a106042b84de42e/training/season01/lesson04/lesson04_ex03_Transformers.sb3)
+
+
+What changed ?
+* A sprite added
+* A script added
+   * Script1 contains nodes such as 
+      * set rotation style <node_value> (1)
+
+
+Why the change ?
+* Sprites are utilized to store objects
+* Scripts are utilized to create functionalities
+
+
+What do they mean?
+* Users add sprites to represent objects
+* Users add scripts to represent functions
+
+
+Screenshots
+
+
+
+
+
+
+
+
+Version 2 (https://github.com/batermj/kids_coding_campaign/commit/cb4ebc6e1c544c55ce36e800eb8ceba6191452ff#diff-7286ecde6106e8ab9b426cfc5c9497f0225db6426734d6ba76002bceacbc82af)
+
+
+Filerenames without changes
+
+
+
+
+
+
+Version 3 (https://github.com/batermj/kids_coding_campaign/commit/692fc85617e6fb4243a140a1a65bc4dcc329eb30#diff-cfba0400ef982f61d9b35bcdeb7c31f83ca5ba8eead212d2e3f8d53e56f95954)
+
+
+Filerenames without changes
+
+
+
+
+
+
+Version 4 (https://github.com/batermj/kids_coding_campaign/blob/2de17f4338fe5a0589bf8d0b06d880c05479c8fe/training/season01/lesson04/lesson04_ex02_a_chameleon.sb3)
+
+
+What changed ?
+* No visible change, seems file was reuploaded
+
+
+Why the change?
+* Could be refactoring
+
+
+What do they mean?
+* Users refactor scratch code base by reuploading files
+
+
+Screenshots’
+
+
+
+
+
+
+Version 5 (https://github.com/batermj/kids_coding_campaign/blob/795d5c2d74389eb87ab5e921f92ad72f56dff429/training/season01/lesson04/lesson04_ex04_keyhole_imaging.sb3)
+
+
+What changed ?
+* No visible change 
+
+
+Screenshots
+
+
+
+
+
+
+Version 6(https://github.com/batermj/kids_coding_campaign/commit/bf5ee2bec7c2c356da7c0dc92beb387c1842c3af#diff-1c3799cefd334e02df49448e093a29fc1e6b80063f6b0f75929ed0d0d23b72f9)
+
+
+What changed ?
+
+
+File renames without changes
+
+
+
+
+
+
+Version 7 (https://github.com/batermj/kids_coding_campaign/commit/1891259804b6b0f62a2c5b78ea5b97781cf976e9#diff-42bba78bde81bf20f9dc5450eeaf60aac222c495377542fe229b5c6daa12ef1d)
+
+
+What changed?
+
+
+File rename without changes
+
+
+
+
+
+
+Version 8 (https://github.com/batermj/kids_coding_campaign/commit/89b3f46c4029325da168084a47f98faaa6564e4e#diff-7286ecde6106e8ab9b426cfc5c9497f0225db6426734d6ba76002bceacbc82af)
+
+
+What changed?
+
+
+File renames without changes
+
+
+
+
+
+
+Version 9 (https://github.com/batermj/kids_coding_campaign/commit/1d3816f08603ace67972f910b92880d8e85a608c#diff-79de2665cfb128948a84b9284dbd732125d41b85900187cb3a09d3daa5a364f7)
+
+
+What changed?
+
+
+File renames without changes
+
+
+
+
+
+
+Version 10 (https://github.com/batermj/kids_coding_campaign/commit/4bd16487bd9aa6e5045acf764c1f7c919988f6ea#diff-7286ecde6106e8ab9b426cfc5c9497f0225db6426734d6ba76002bceacbc82af)
+
+
+What changed ?
+
+
+File renames without changes
+
+
+
+
+
+
+Version 11 (https://github.com/batermj/kids_coding_campaign/commit/0eb433f67e304fc99c49101ff2a995760088d14c#diff-8394817c54d2fcd6702df81e775531f7ce388e9977116579ce97ee663acfd7ca)
+
+
+What changed ?
+
+
+File renames without changes
+
+
+
+
+
+
+Version 12 (https://github.com/batermj/kids_coding_campaign/commit/e80ee0487731d88ef8008e902983b5ac611fe43a#diff-1c3799cefd334e02df49448e093a29fc1e6b80063f6b0f75929ed0d0d23b72f9)
+
+
+What changed ?
+
+
+File renames without changes
+
+
+
+
+
+
+	24
+	88644df99d5f5807fcedd11f1f0196059b44c118
+	code/Loopz.sb3
+	https://github.com/372groupproject/milestones-team13-cnguyen32-zwiegand/commit/88644df99d5f5807fcedd11f1f0196059b44c118#diff-3f303c4203e4466b7c57d4e2ca8d6970bd67525c8a5d7900d8292981f1435f12
+	What changed?
+* A sprite added
+* A script added
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * set <node_variable> to <value> (2)
+      * set <node_variable> to <node_value> (1)
+      * forever block (1)
+      * repeat until <node_value> (1)
+      * wait <value> seconds (2)
+      * say <node_variable> (1)
+      * <node_variable> = <value> (1)
+      * <node_variable> + <value> (1)
+
+
+
+
+Why the change ?
+* Sprites are added to introduce a new object to a Scratch program
+* Scripts are added to introduce a new function to a sprite                
+What do they mean?
+* Users add sprites to introduce a new object with attributes and functionalities
+* Users add scripts to introduce a new functionality in Scratch program
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/372groupproject/milestones-team13-cnguyen32-zwiegand/blob/fadc0aa419ed04f071289e13284144d3339c9f9c/code/Text%20to%20Speech.sb3)
+
+
+What changed ?
+* Program intent was changed
+* Some nodes were replaced, new nodes added and some deleted
+   * Script1 contains nodes such as
+      * say <value> for <value> seconds (1)
+      * Text to Speech extension api call <set voice to <node_value>> (1)
+      * Text to Speech extension api call <set language to <node_value>> (1)
+      * Text to Speech extension api call <speak <value>> (1)
+      * Text to Speech extension api call <speak <node_value>> (1)
+      * ask <value> and wait (1)
+      * forever block (1)
+
+
+Why the change ?
+* Users add nodes to introduce new action
+* Program intent changed from saying out number count from 0 - 9 to saying out whatever text the user types
+* Nodes replaced, added or deleted were done to change the program intent
+
+
+What do they mean?
+* Users add nodes to introduce a new action to a program
+* Users replace,add or delete a node to change the program intent
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+ 
+	25
+	ac3cf29cdd2f5573a95f4817cf11cb16f30d9f2f
+	Scratch/Hummer-Bot4.0_MagicBlock/Demo/Hardware test program/RGBTest.sb3
+	https://github.com/emakefun/hummer-bot/commits/ac3cf29cdd2f5573a95f4817cf11cb16f30d9f2f/Scratch/Hummer-Bot4.0_MagicBlock/Demo/Hardware%20test%20program/RGBTest.sb3
+
+
+
+
+
+
+
+
+
+
+
+
+	Version 1 (https://github.com/emakefun/hummer-bot/blob/908f0252c2d7c6392b906a92d5e1b523575320e2/Scratch/Hummer-Bot4.0_MagicBlock/Demo/Hardware%20test%20program/RGBTest.sb3)
+
+
+What changed ?
+
+
+* A new sprites added
+
+
+
+
+Why the change
+* Sprites are added to introduce a new object with attributes and functions
+
+
+
+
+What do they mean ?
+* Users add sprites to introduce a new object
+
+
+Screenshots
+
+
+  
+
+
+
+Version 2 (https://github.com/emakefun/hummer-bot/blob/ac3cf29cdd2f5573a95f4817cf11cb16f30d9f2f/Scratch/Hummer-Bot4.0_MagicBlock/Demo/Hardware%20test%20program/RGBTest.sb3)
+
+
+What changed ?
+* No specific visible change
+
+
+What do they mean?
+* The revisions files suggest that perhaps users do not add scripts when writing test programs
+
+
+Screenshots
+
+
+
+
+
+
+
+
+	26
+	f40c9c45c48d78c5ab4a4fa67c0b1c6e4209e727
+	test-projects/Unicorn Maker.sb3
+	https://github.com/UChicagoCANONLab/automated-assessment/commits/f40c9c45c48d78c5ab4a4fa67c0b1c6e4209e727/test-projects/Unicorn%20Maker.sb3
+	Version 1 (https://github.com/UChicagoCANONLab/automated-assessment/blob/006e85d05398858e85d1e019b04a76a9760aa3ed/test-projects/Unicorn%20Maker.sb3)
+
+
+What changed ?
+* 12 new sprites added
+* Backdrops added with two scripts
+   * Script1 contains nodes changes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * play sound <node_value> until done (1)
+   * Script2 contains nodes changes such as
+      * when <node_value> key pressed (1)
+      * next backdrop (1)
+* Sprite1 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Sprite2 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+
+
+* Sprite3 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Sprite4 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+* Sprite5 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+
+
+* Sprite6 has a single script
+   * Script1 contains nodes such as
+      * when this sprite clicked (1)
+      * broadcast <node_value> (1)
+
+
+* Sprite7 has three scripts
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * pick random <value> to <value> (1)
+   * Script3 contains nodes such as
+      * when I receive  <node_value> (1)
+      * next costume (1)
+* Sprite8 has three scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+      * go <node_value> <value> layers (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+* Sprite9 has three scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+      * go <node_value> <value> layers (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * pick random <value> to <value> (1)
+* Sprite10 has three scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+      * go <node_value>  layer (1)
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * pick random <value> to <value> (1)
+* Sprite11 has three scripts
+   * Script1 contains nodes such as
+      * when I receive <node_value> (1)
+      * next costume (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * switch costume to <node_value> (1)
+      * go to x: <value> y: <value> (1)
+
+
+   * Script3 contains nodes such as
+      * when I receive <node_value> (1)
+      * switch costume to <node_value> (1)
+      * pick random <value> to <value> (1)
+* Sprite12 has a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * show (1)
+      * go to <node_value> layer (1)
+      * set <node_value> effect to <value> (1)
+      * go to x: <value> y: <value> (1)
+
+
+
+
+Why the change?
+* Sprites are added to introduce a new object in a Scratch program
+* Scripts are added to introduce a new functionality in sprites
+* Scripts are added to backdrops to control response on backdrop click
+
+
+What do they mean?
+* Users add sprites to introduce a new object in Scratch program
+* Users add scripts to introduce a new functionality in sprites
+* Users add scripts to backdrops to localize control and reaction on backdrops
+
+
+Screenshots
+
+
+
+
+Version 2 (https://github.com/UChicagoCANONLab/automated-assessment/blob/25dadeca21717a86e4e3b357984f2b3eb90cebd1/test-projects/Unicorn%20Maker.sb3)
+
+
+What changed ?
+* Sprite assets were switched to a different costume for sprites 7 to 11
+
+
+Why the change?
+* Sprite assets costume are changed or switched as a UI improvement
+
+
+What do they mean?
+* Users change sprite assets to improve the UI of the app
+
+
+Screenshots
+
+
+
+
+Version 3 (https://github.com/UChicagoCANONLab/automated-assessment/blob/f40c9c45c48d78c5ab4a4fa67c0b1c6e4209e727/test-projects/Unicorn%20Maker.sb3)
+
+
+What changed ?
+* Sprite assets change on sprite 7 -10 to a different costume
+
+
+Why the change?
+* Sprite assets change could be to improve UI/UX or as a refactoring process
+
+
+What do they mean
+* Users change sprite assets as a UI/UX change or refactoring process
+
+
+
+
+Screenshots 
+
+
+
+
+
+
+
+
+	27
+	89b3f46c4029325da168084a47f98faaa6564e4e
+	computer_sciences/programming_languages/scratch/season01/lesson02/batima_scratch_ex004_2020feb13.sb3
+	https://github.com/batermj/kids_coding_campaign/commits/e27319990502b732492be9dafbf646f9761e2483/training/season01/lesson03/(SDS)%20New%20year...%20new%20plans...%20(2016%20edition).sb3?browsing_rename_history=true&new_path=training/scratch/temp/lesson02/batima_scratch_ex002_2020feb12.sb3&original_branch=89b3f46c4029325da168084a47f98faaa6564e4e
+	Version 1 (https://github.com/batermj/kids_coding_campaign/blob/d81ff14be4366e66b26fe98e44ff6bbbf5a3c5da/training/season01/lesson03/(SDS)%20New%20year...%20new%20plans...%20(2016%20edition).sb3)
+
+
+
+
+What changed ?
+* 2 new sprites added
+* 2 Scripts added in Sprite1
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * play sound <node_value> until done (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+      * hide (1)
+      * point in direction <value> (2)
+      * switch backdrop to <node_value> (6)
+      * repeat <value> (4)
+      * turn right <value> degrees (8)
+      * turn left <value> degrees (8)
+      * wait <value> seconds (17)
+      * broadcast <node_value> (1)
+* 2 scripts added in sprite2
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+      * start sound <node_value> (1)
+      * switch costume to <node_value> (12)
+      * stop <node_value> (1)
+      * play sound <node_value> until done (12)        
+
+
+Why the change ?
+* Sprites are added to introduce a new object with attributes and its functionalities
+* Scripts are added to introduce new functionalities to sprites
+
+
+What do they mean?
+* Users add sprites to introduce a new object in Scratch program
+* Users add scripts to introduce a new functionality in Sprites
+
+
+Screenshots
+
+
+
+
+Version 2 (https://github.com/batermj/kids_coding_campaign/blob/e27319990502b732492be9dafbf646f9761e2483/training/season01/lesson02/batima_scratch_ex002_2020feb12.sb3)
+
+
+What changed ?
+* File renamed to 
+training/scratch/temp/lesson02/batima_scratch_ex002_2020feb12.sb3
+* The first and second sprite assets from previous history was changed
+* 2 Scripts removed in Sprite1
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * play sound <node_value> until done (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * show (1)
+      * hide (1)
+      * point in direction <value> (2)
+      * switch backdrop to <node_value> (6)
+      * repeat <value> (4)
+      * turn right <value> degrees (8)
+      * turn left <value> degrees (8)
+      * wait <value> seconds (17)
+      * broadcast <node_value> (1)
+* 2 scripts removed in sprite2
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * hide (1)
+   * Script2 contains nodes such as
+      * when I receive <node_value> (1)
+      * show (1)
+      * start sound <node_value> (1)
+      * switch costume to <node_value> (12)
+      * stop <node_value> (1)
+      * play sound <node_value> until done (12)
+* 5 New sprites added
+* Program intent changed
+* Sprite1 contains a single script
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * move <value> steps (1)
+* Sprite2 contains no script
+* Sprite3 contains no script
+* Sprite4 contains no script
+* Sprite5 contains no script
+* Sprite6 contains no script
+* Sprite7 contains no script
+
+
+Why the change?
+* Addition of sprite could suggest introducing a new object with attributes and functionalities
+* Removal of scripts could suggest a change of program intent or removing functionality from a program
+* Addition of scripts could suggest introducing a  new functionality to a program
+* Change of sprite assets could suggest a UI/UX improvement in the program
+* File rename could be to change to a different scratch program
+
+
+What do they mean ?
+* Users change sprite assets as an ongoing revamp, UI/UX improvement or refactoring process
+* Users remove scripts to change program intents or point the program to a new direction
+* Users add new sprites to introduce a new object to a program
+* Users add scripts to introduce a new functionality to a program        
+* Users rename files to change the program intent
+
+
+Screenshots 
+
+
+
+
+Version 3 (https://github.com/batermj/kids_coding_campaign/commit/89b3f46c4029325da168084a47f98faaa6564e4e#diff-2d1b514575532b259a5abde0b0ea52be7e8bc739da3188e6dff8e24a13a2523f)
+
+
+What changed ?
+* File renames without changes
+
+
+
+
+
+
+Version 4 (https://github.com/batermj/kids_coding_campaign/commit/bf5ee2bec7c2c356da7c0dc92beb387c1842c3af#diff-cbaf14df92b806fdd95ac474e21df4d5f76033f1ff3293b77aa491a779449f3f)
+
+
+What changed?
+* File renames without changes
+
+
+
+
+
+
+Version 5 (https://github.com/batermj/kids_coding_campaign/commit/4bd16487bd9aa6e5045acf764c1f7c919988f6ea#diff-2d1b514575532b259a5abde0b0ea52be7e8bc739da3188e6dff8e24a13a2523f)
+
+
+What changed?
+* File renames without changes
+
+
+
+
+
+
+Version 6 (https://github.com/batermj/kids_coding_campaign/commit/e80ee0487731d88ef8008e902983b5ac611fe43a#diff-cbaf14df92b806fdd95ac474e21df4d5f76033f1ff3293b77aa491a779449f3f)
+
+
+What changed ?
+* File renames without changes
+
+
+
+
+
+
+Version 7 (https://github.com/batermj/kids_coding_campaign/commit/89b3f46c4029325da168084a47f98faaa6564e4e#diff-2d1b514575532b259a5abde0b0ea52be7e8bc739da3188e6dff8e24a13a2523f)
+
+
+What changed ?
+* File renames without changes
+
+
+
+
+
+
+
+
+
+
+	28
+	890b4620f925ea6e23073b1ce0ba37094c1e210f
+	src/templates/Simulation/Template_Simulationsmodus.sb3
+	https://github.com/apfeuti/openeducationday2020/commits/890b4620f925ea6e23073b1ce0ba37094c1e210f/src/L%C3%B6sungen(Lego-Boost)/L%C3%B6sung_A3.sb3
+	Version 1 (https://github.com/apfeuti/openeducationday2020/blob/890b4620f925ea6e23073b1ce0ba37094c1e210f/src/L%C3%B6sungen(Lego-Boost)/L%C3%B6sung_A3.sb3)
+
+
+What changed ? 
+* A sprite added
+* Custom blocks created in the left pane palette area
+   * Script1 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set motor <node_value> speed to <custom script call> %> (1)
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (1)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script2 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set light color to <value>> (2)
+      * wait <value> seconds (2)
+   * Script3 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set motor <node_value> speed to <custom script call> %>  (1)
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (1)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script4 contains nodes such as
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (2)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script5 contains nodes such as
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (2)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+
+
+
+
+* Leggo boost extension included
+
+
+Why the change?
+* Addition of sprite introduces a new object with attributes and functionalities
+* Addition of custom functions could be used to define special functionalities for reuse
+* Inclusion of leggo extension could suggest utilizing external API
+
+
+What do they mean ?
+* Users add sprites to introduce new objects in a program
+* Users add custom blocks in the left pane palettes area to define special functions that would be reused
+* Users use external extension such as Leggo boost as a way of consuming external API
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/apfeuti/openeducationday2020/blob/f6574bfa4bd27bb994958c57db3d593530cf5240/src/templates/Simulation/Template_Simulationsmodus.sb3)
+
+
+What changed ?
+
+
+* 7 scripts introduced in sprite
+* Custom blocks removed from the sprite
+   * Script1 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set motor <node_value> speed to <custom script call> %> (1)
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (1)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script2 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set light color to <value>> (2)
+      * wait <value> seconds (2)
+   * Script3 contains nodes such as
+      * define <values> (1)
+      * BOOST extension api call <set motor <node_value> speed to <custom script call> %>  (1)
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (1)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script4 contains nodes such as
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (2)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+   * Script5 contains nodes such as
+      * BOOST extension api call <set motor <node_value> direction <node_value> > (2)
+      * BOOST extension api call <turn motor <node_value> for <node_valuel>> rotations (1)
+      * <node_value> / <value> (1)
+*    * Script1 contains nodes such as
+      * when flag clicked (1)
+      * point in direction <value> (1)
+      * go to x: <value> y: <value> (1)
+      * set rotation style <node_value> (1)
+      * set size to <value> (1)
+      * pen extension api call <erase all> (1)
+      * pen extension api call <pen down> (1)
+   * Script2 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * if <condition> then block (1) 
+      * touching <node_value> ? (1)
+      * play sound <node_value> until done (1)
+      * say <value> for <value> seconds (1)
+      * stop <node_value> (1)
+      * wait <value> seconds (1)
+   * Script3 contains nodes such as
+      * define <values> (1)
+      * set <node_variable> to <node_value> (2)
+      * set <node_variable> to <node_variable> (1)
+      * <value> - <node_value> (1)
+      * <value> * <node_variable> (1)
+      * <node_value> / <node_value> (1)
+      * glide <node_value> secs to x: <node_value> y: <node_value> (1)
+      * <node_value> + <node_value> (2)
+      * <node_value> of <node_variable> (2)
+      * <node_variable> * <node_value> (2)
+   * Script4 contains nodes such as
+      * define <values> (1)
+      * set <node_variable> to <node_value> (2)
+      * set <node_variable> to <node_variable> (1)
+      * <value> - <node_variable> (1)
+      * <node_value> * <value> (1)
+      * glide <node_value> secs to x: <node_value> y: <node_value> (1)
+      * <value> * <node_variable> (1)
+      * <node_value> + <node_value> (2)
+      * <node_value> of <node_variable> (2)
+      * <node_variable> * <node_value> (2)
+      * <value> * <node_variable> (1)
+      * <node_value> / <node_variable> (1)
+   * Script5 contains nodes such as
+      * define <values> (1)
+      * turn left <node_value>  degrees (1)
+   * Script6 contains nodes such as
+      * define <values> (1)
+      * turn right <node_value> degrees (1)
+   * Script7 contains nodes such as
+      * define <values> (1)
+      * set <node_value> effect to <value> (1)
+      * wait <value> seconds (2)
+      * clear graphic effects (1)
+* Two extensions added namely Pen and Text to speech
+* One extension named Leggo Boost removed
+
+
+Why the change ?
+* Scripts are added to introduce new functions in program
+* External extensions were added to use a custom feature built by the different creator
+* An external extension was removed to demonstrate decommissioning an external API
+
+
+What do they mean?
+* Users add scripts to introduce new functionality in a program
+* Users add external extension to introduce the use of an external api in a program
+* Users remove external extension to demonstrate decommissioning an API
+
+
+Screenshots
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	29
+	6d22d7b99c56f5f349ee5ae26d26d672ec6e9969
+	test/multiscript.sb3
+	https://github.com/devsnek/scratchc/commit/6d22d7b99c56f5f349ee5ae26d26d672ec6e9969#diff-a6c292db6f5b862d7bb1f8c4d39b89b5b127fd7a1c36ade541c887e9f5ccb9b0
+	Couldn’t view file
+
+
+
+
+	30
+	cb4ebc6e1c544c55ce36e800eb8ceba6191452ff
+	computer_sciences/programming_languages/scratch/season01/lesson03/lesson03_ex03_a_bouncing_ball.sb3
+	https://github.com/batermj/kids_coding_campaign/commits/1d3816f08603ace67972f910b92880d8e85a608c/training/season01/lesson03/lesson03_ex03_a_bouncing_ball.sb3?browsing_rename_history=true&new_path=training/scratch/temp/lesson03/lesson03_ex03_a_bouncing_ball.sb3&original_branch=cb4ebc6e1c544c55ce36e800eb8ceba6191452ff
+	Version 1 (https://github.com/batermj/kids_coding_campaign/blob/8224e665be3ba6e430ea95a2617b2e7c2efef53c/training/season01/lesson03/lesson03_ex03_a_bouncing_ball.sb3)
+
+
+What changed ?
+* A sprite added 
+* A script added 
+   * Script1 contains nodes such as
+      * when flag clicked (1)
+      * forever block (1)
+      * move <value> steps (1)
+      * if <condition> then block else block (1)
+      * touching <node_value> ? (1)
+      * if on edge, bounce (1)
+      * turn right <value> degrees (1)
+      * turn left <value> degrees (1)
+      * point towards <node_value> (1)
+
+
+Why the change?
+* Scripts introduce new functionalities
+* Sprites introduce new objects
+
+
+What do they mean?
+* Users add scripts to introduce new functionality to a sprite
+* Users add new sprites to introduce a new object with attributes and functionality
+
+
+Screenshots
+
+
+
+
+
+
+Version 2 (https://github.com/batermj/kids_coding_campaign/commit/1d3816f08603ace67972f910b92880d8e85a608c#diff-efab2a5a27b1ff55fe6f2f633c7ce5377719a5308affaeaede250e0756a722cd)
+
+
+What changed ?
+* File renames without changes
+
+
+Screenshots
+
+
+
+
+Version3 (https://github.com/batermj/kids_coding_campaign/commit/cb4ebc6e1c544c55ce36e800eb8ceba6191452ff#diff-c0c4ba1155c2d7781584689c3f73a1d4bb316f66364a544f94ead40a03cbb70d)
+
+
+What changed ?
+
+
+File renames without changes

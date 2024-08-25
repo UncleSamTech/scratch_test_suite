@@ -1,0 +1,21 @@
+Node_Type,Count
+set <node_variable> to <node_variable>,11
+change <node_variab le> by <value>,2
+custom script,2
+hide variable <variable_name>,6
+<node_variable> and <node_variable>,2
+show variable <node_variable>,6
+<node_variable> < <node_variable>,2
+set volume to <node_variable> %,3
+repeat <value>,48
+<node_variable> < <value>,6
+say <value>,5
+turn right <value> degrees,30
+point in direction <value>,15
+label,9
+turn left <value> degrees,27
+move <node_value> steps,2
+turn right <node_value> degrees,4
+<value> / <node_value>  degrees,2
+pen extension api call <pen down>,3
+pen extension api call <set pen size to <value>>,2

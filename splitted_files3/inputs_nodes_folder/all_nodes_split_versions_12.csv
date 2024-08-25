@@ -1,0 +1,14 @@
+Node_Type,Count
+<node_value> / <value>,9
+boost extension api call <set light color to <value>>,6
+set size to <value>,2
+<value> * <node_variable>,4
+<node_value> / <node_value>,2
+glide <node_value> secs to x:  <node_value> y: <node_value>,2
+<node_variable> * <node_value>,6
+<value> - <node_variable>,2
+glide <node_value> secs to x: <node_value> y: <node_value>,2
+<node_value> / <node_variable>,2
+turn left <node_value>  degrees,2
+clear graphic effects,2
+point towards <node_value>,2

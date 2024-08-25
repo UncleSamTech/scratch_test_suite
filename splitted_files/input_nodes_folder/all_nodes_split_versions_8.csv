@@ -1,0 +1,21 @@
+Node_Type,Count
+touching <node>,2
+set rotation style <node_value>,2
+"if on edge, bounce",2
+move <value> steps,17
+define <values>,11
+<node_variable> + <node_value>,6
+when <node_value> key pressed,6
+set <node_variable> to <variable>,9
+round <node_value>,6
+<node_variable> / <value>,6
+key <node_value> pressed,8
+<node_value> - <value>,6
+pick random <value> to <node_value>,4
+<node_variable> - <value>,8
+<node_value> < <value>,4
+<node_value> > <node_variable>,4
+<node_value> * <node_variable>,4
+set <node_variable> to <node_list>,2
+repeat <node_value>,3
+if <node_variable> then block else block,2

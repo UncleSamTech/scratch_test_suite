@@ -1,0 +1,21 @@
+Node_Type,Count
+change <node_variable> by <value>,42
+add <node_value> to <node_list>,3
+letter <value> of <node_value>,4
+<node_value>=<node_value>,2
+node_variables,24
+delete all of <nodes_value>,2
+not <node_value>,48
+<node_value>=<value>,10
+<node_value> of <node_value>,25
+<node_value> and <node_value>,19
+add <value> to <node_list>,19
+delete all of <node_list>,17
+<node_value> > <node_value>,4
+wait until <node_variable>,2
+set volume to <value> %,9
+set <node_value> effect to <node_value>,5
+play sound <node_value> until done,66
+node_varible,2
+<node_variable>=<node_variable>,4
+pick random <node_value> to <node_value>,6

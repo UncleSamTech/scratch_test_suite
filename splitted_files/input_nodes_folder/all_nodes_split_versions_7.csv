@@ -1,0 +1,21 @@
+Node_Type,Count
+replace item <node_variable> of <node_list> with <node_value>,4
+<node_value> > <value>,5
+wait until <node_val>,2
+set <node_value> effect to <node_variable>,2
+<node_variable> = <node_variable>,14
+<node_variable> > <value>,3
+<node_value> -  <node_value>,2
+set size to <node_value>,2
+for each <node_variable> in <node_list>,2
+<node_variable> + <value>,3
+<node_value> + <node_value>,12
+<node_value> * <node_value>,14
+if <node_value> then,2
+item # of <node_value>,2
+if  <condition> then block,6
+item # of <value> in <node_list>,2
+say <value> for <value> seconds,129
+say <node_value>,2
+switch backdrop to <node_value>,8
+start sound <node_value>,15

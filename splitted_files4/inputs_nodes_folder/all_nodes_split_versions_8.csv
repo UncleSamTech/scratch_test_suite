@@ -1,0 +1,21 @@
+Node_Type,Count
+<node_variable> + <node_value>,6
+when <node_value> key pressed,8
+set <node_variable> to <variable>,9
+round <node_value>,6
+<node_variable> / <value>,6
+key <node_value> pressed,8
+<node_value> - <value>,6
+pick random <value> to <node_value>,4
+<node_variable> - <value>,8
+<node_value> < <value>,4
+<node_value> > <node_variable>,4
+<node_value> * <node_variable>,5
+set <node_variable> to <node_list>,2
+repeat <node_value>,3
+if <node_variable> then block else block,2
+set <node_variable> to <node_variable>,11
+change <node_variab le> by <value>,2
+custom script,2
+hide variable <variable_name>,6
+<node_variable> and <node_variable>,2

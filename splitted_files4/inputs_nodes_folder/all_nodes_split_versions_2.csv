@@ -1,0 +1,21 @@
+Node_Type,Count
+description <value>,13
+set size to <node_value> %,6
+go to <node_value> layer,13
+go to x:  <node_value> y:  <node_value>,4
+<node_value> = <value>,26
+delete this clone,11
+for each <node_value> in <node_value>,7
+switch costume to <node_value>,127
+join <node_value> <node_value>,17
+change y by <value>,46
+item <node_value>  of <node_list>,16
+<node_variable> * <value>,36
+go to x: <value> y:<value>,2
+set size to <value> %,5
+define <node_values>,27
+set <node_variables> to <value>,4
+go to x:  <node_value> y: <node_value>,4
+if <condition> then,8
+length of <node_list>,3
+length of <node_value>,7

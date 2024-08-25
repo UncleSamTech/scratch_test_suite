@@ -1,0 +1,368 @@
+Node Type,Count
+script2 contains nodes such as - when this sprite clicked,6
+broadcast <node_value>,64
+set <node_variabl e> to <value>,106
+script3 contains nodes such as - when i receive <node_value>,18
+if <condition> then block,73
+hide,116
+not <node_variabl e> = <value>,1
+second sprite (paper) contains three script - script1 contains nodes such as - when this sprite clicked,1
+- script2 contains nodes such as - when i receive <node_value> - if <condition> then block,1
+not <node_variabl e> = <value> - script3 contains nodes such as - when flag clicked,2
+show,62
+third sprite (scissors) contains three scripts - script1 contains nodes such as - when this sprite clicked,1
+script2 contains nodes such as - when i receive <node_value>,18
+fourth sprite contains 12 scripts - script1 contains nodes such as - when i receive <node_value>,1
+custom script call,61
+item <value> of <node_list>,34
+item <node_value> of <node_list>,30
+<node_value> * <value>,7
+<node_value> + <value>,39
+script4 contains nodes such as - when i receive <node_value> - custom function call,2
+wait <value> seconds,28
+if <condition> then block else block,24
+<node_variabl e> = <value> operator node,1
+script5 is a custom script and contains nodes such as - define <nodes_value >,1
+create d by <value >,1
+descri ption <value >,1
+set size to <node_value> %,4
+go to <node_value> layer,5
+go to x <node_value> y <node_value>,4
+<node_value> = <value> operator,2
+delete this clone,6
+for each <node_value> in <node_value>,6
+switch costume to <node_value>,69
+join <node_value> <node_value>,15
+create clone of <node_value> - change x by <node_value> - change y by <value>,1
+script6 contains nodes such as - when i receive <node_value>,2
+<node_variabl e> * <value>,28
+script7 contains nodes such as - when i receive <node_value>,1
+custom function call,1
+script8 contains nodes such as - when flag clicked,1
+go to x: <value> y:<value>,1
+set size to <value> %,2
+script9 is a custom function which contains nodes such as - define <node_values >,1
+created by <value>,13
+description <value>,11
+set <node_variabl es> to <value>,2
+if <condition> then,7
+length of <node_list>,2
+length of <node_value>,6
+item <node_variabl e> of <node_list>,24
+create clone of <node_value> - change x by <node_value>,1
+change y by <node_value>,5
+letter <node_variabl e> of <node_value>,35
+script10 contains nodes such as - when i receive <node_value> - custom script call,1
+item <value> of <node_value>,6
+script 11 contains nodes such as - when i receive <node_value> - custom script call,1
+script12 contains nodes such as - when flag clicked,1
+go to x: <value> y: <value>,5
+script13 is a custom function which contains nodes such as - define <node_values >,1
+set <node_value> to <value>,9
+set size to <node> %,1
+go to <node> layer,1
+go to x: <node_value> y: <node_value>,11
+create clone of <node_value>,4
+change x by <node_value>,4
+<value> - <node_value>,2
+item of <node_list>,3
+letter <node_value> of <nod_value>,1
+<value> + <value>,1
+fifth sprite contains seven scripts - script1 contains nodes such as - when i receive <node_value>,1
+node_variable,13
+script2 is a custom script and contains nodes such as - define <node_values >,1
+set <node_variabl e> to <node_value>,40
+repeat until <condition>,18
+letter of <node_value>,2
+<node_value> = <node_value>,8
+<node_value> = <value>,19
+change <node_variabl e> by <value>,9
+script3 is a custom script which contains nodes such as - define <node_values >,1
+add <node_value> to <node_list>,2
+script4 contains nodes such as - when i receive <node_values > - custom script call,1
+script5 is a custom script and contains nodes such as - define <node_values >,1
+letter <value> of <node_value>,3
+<node_value> =<node_value >,1
+item <node_variabl e> of <node_list> - script6 contains nodes such as - when i receive <node_value>,1
+node_variable s,19
+script7 contains nodes such as - when flag clicked,1
+go to x: <value> y: <value> - sixth sprite contains a single script with nodes such as - when flag clicked,1
+set <node_variable> to <value>,4
+delete all of <nodes_value>,1
+not <node_value>,23
+<node_value>=<valu e>,5
+<node_value> of <node_value>,10
+<node_value> and <node_value>,8
+add <value> to <node_list>,14
+delete all of <node_list>,11
+seventh sprite contains 17 scripts - script1 is a custom script that contains the following node changes: - define <node_values >,1
+<node_value> > <node_value>,1
+<node_value> * <value> - <node_value> = <value>,4
+wait until <node_variabl e>,1
+broadcast <node_value> - script2 contains the following nodes changes - when i receive <node_value>,1
+set volume to <value> %,5
+set <node_value> effect to <node_value>,1
+play sound <node_value> until done,5
+set <node_variabl e> to <value> - <node_variabl e> = <value> - script3 contains the following nodes - when i receive <node_value>,1
+node_varible,1
+<node_variabl e> = <value>,51
+set <node_value> effect to <value> - script4 is a custom script which contains the following nodes - define <node_values >,1
+<node_variabl e>=<node_var iable>,2
+pick random <node_value> to <node_value>,4
+script5 contains the following nodes - when i receive <node_value>,1
+node_v ariable,2
+script6 is a custom script that contains the following nodes - define <node_values >,1
+for each <node_variabl e> in <node_value>,9
+length of <node_value> - not <node_value>,1
+<node_value> contains <node_value>,3
+join <node_values > <node_values >,1
+script7 contains the following nodes - when i receive <node_value> - custom script call,1
+script8 contains the following nodes - when i receive <node_value>,1
+script9 contains the following nodes - when i receive <node_value>,1
+script10 is a custom script that contains the following nodes - define <node_values >,1
+script11 contains the following nodes - define <node_values >,1
+script12 contains the following nodes - when i receive <node_values >,1
+script13 contains the following nodes - when i receive <node_variabl e> - set <node_value> to <value>,1
+script14 contains the following nodes - when i receive <node_value> - custom script call,2
+set <node_variabl e>to <node_value>,1
+reset timer,2
+<node_variabl e> > value,1
+<node_variabl e> = <value> - script15 contains the following nodes - when i receive <node_value>,1
+<node_value> > <value> - set <node_variabl e> to <node_value>,3
+join <node_value> <value>,5
+<node_value> - <value>(1) - script16 contains the following nodes - when flag clicked,1
+go to x:<value>y:<v alue>,1
+script17 is a custom script and contains the following nodes - define <node_values >,1
+change <node_value> by <value>,1
+length of <node_variabl e>,6
+join <node_variabl e> <node_value>,7
+<node_value> - <node_value>,2
+script18 contains the following nodes - when i receive <node_value> - custom script call,1
+script19 is a custom script that contains nodes such as - define <node_values >,2
+length of <node_value> - <node_value> contains <node_value> ?,1
+script 20 contains the following node changes - when i receive <node_value>,1
+node_v ariable s,3
+"eight sprite contains no script why the change? - the sprites added are objects used to hold different functionalities (i.e. scripts) and attributes (variables) in the program - sprite1,2,3 - when i receive <node_value> is utilized for control flow structure to take an action or call a script - when flag clicked is mostly utilized to start up the program by showing the sprite - when this sprite clicked node is an event listener for the sprite click - the show and hide node utilized in script1 and script3 of the first sprite controls the appearance and disappearance of the sprite. - broadcast <node_value> is utilized for sending out information to other functions or scripts similar to a publish subscribe pattern where the broadcast <node_value> handles publishing and when i receive <node_value> handles subscribing - if <condition> node are utilized for decision making as it’s used with the not <node_value> to check if a condition is met before hiding a sprite - set <node_variable> to <value> are utilized for assigning values to variables - - sprite4 - custom blocks are created to handle specific task and can only be used within a script - wait <value> seconds is utilized to introduce delay to the program - wait <node_varible> seconds does same as above but with a variable - if <condition> then block block is utilized as a decision block that takes specific action in the case of the second script, sets a value of true to a variable and assigns a different value to the variable if the condition fails - <node_value> = <node_value> is utilized to compare two values similar to conditional statements in textual program - <node_variable> = <node_value> does same as above only this time with a variable - set size to <node_value> % is utilized as styling node for increasing the size of the sprite to the node_value - go to <node_value> layer is also a ui improvement process similar to z-index in web development - go to x <node_value> y <node_value> is utilized to control the movement of the sprite in the canvas - delete this clone is utilized to remove an entity - for each <node_variable> in <node_value> is utilized to iterate through the list - switch costume is used to change the appearance of the sprite - create clone of myself is used to create another copy of the object similar to object cloning or forking a project repository - change y by <node_value> is utilized for changing the position of the sprite similar to manipulating coordinates - join <node_value> <node_value> is utilized for concatenating two node values - letter <node_value> of <node_value> is used to index a portion of a string from another - length of <nodes_value> is utilized to get the size of string value - change x by <node_value> is similar to change y by <node_value> used for coordinate manipulation on the y-axis - <node_value> * <value> is used multiply two numerical values for multiplication operations - <node_value> + <node_value> is utilized as an addition operator - item <value> of <node_list> is utilized to access a value from a list - sprite5 - custom blocks are utilized for modularization and code reuse - change <node_value> by <value> is utilized to alter the values of a node either decrement or increment - custom block calls are ways the custom blocks are used by calling them in a script - add <node_value> to <node_list> is utilized for adding values to a list - replace <node_value> of <node_list> with <node_value> is used to replace a value at a specific position in a list similar to update a list - sprite6 - delete all of <node_list> is utilized to clear all the values in a node list - <node_value> and <node_value> is used in an if <condition> then block as a conditional and operator to check for two conditions - <node_value> of <node_value> is utilized to access an object property such accessing the x and y position of a sprite - - sprite7 - set <node_value> to <empty_node> is utilized to reset a node value - set volume to <value> % is utilized to control the audio - set <node_value> effect to <node_value> is utilized to control the sound pitch - <node_value> - <node_value> is subtraction operator - reset timer is utilized to start the time at a 00:00:00 time - <node_value> > <value> is utilized for comparing two node values - pick random <node_value> to <node_value> is utilized for random number generation - <node_value> contains <node_value> is utilized to check if a node value is part of a different node value - play sound <node_value> until done just like the name plays a specific sound based on the chosen node value - sprite8 what do they mean? - users add sprites to introduce objects in scratch programs - users utilize nodes such as broadcast <node_value> and when i receive <node_value> to introduce program control flow and could be likened to a publish/subscribe messaging pattern - users utilize event nodes such as when flag clicked to start a scratch program - users utilize nodes such as when this sprite is clicked as an event listener similar to textual codes - users utilizes show and hide node to control the appearance and disappearance of sprites - users utilize the if <condition> then node along side with the not <node_value> conditional operator to introduce conditional statements and for decision in scratch programs - users add nodes such as the set <node_value> to <value> when the intent is to assign values to variables - users create custom blocks in their program to handle specific functionality, introduce modularity and enable code reuse. - users introduce delays in program execution in visual codes by adding the wait <value> seconds node - users utilize the if <condition> then else block as a decision block that executes a program when a condition is met and a different program when it’s not met as well. - users compare two values in scratch using the <node_values> = <node_values> operator mostly used as a conditional node of the if <conditional_node> then block - users utilize nodes such as set size to <node_value> % and go to <node_value> layer for styling and ui improvement - users control movement of sprite and change the coordinates of the sprites utilizing nodes such as go to x <node_value> y<node_value>, change y by <value> and change x by <node_value>. - users utilize nodes such as delete this clone to trash an object - users utilize for each <node_value> in <node_value> to iterate through a list - users change appearance of a sprite or introduce different flavors of a sprite using the switch costume to <node_value> - users implement object cloning or repository forking using the create clone node - users concatenate strings or other node values using the join <node_value> <node_value> - users introduce slicing operation in string or string indexing by add the letter <node_value> of <node_value> - users obtain the length of a variable by adding the length <node_value> - users add nodes such as <node_value> * <node_value>, <node_value> + <node_value>, <node_value> - <node_value> and <node_value> / <node_value> to perform arithmetic operations - users access values in a list by adding the item <value> of <node_list> node - users utilize the change <node_value> by <value> to increment the property of a node - users add items to a list when they add nodes such as ; add <node_value> to <node_list> - users change elements of a node list by adding the replace <node_value> of <node_list> with <node_value> - users delete all elements of a node list by introducing the delete all of <node_list> - users utilize the <node_value> and <node_value> as a condition node inside control nodes such if then <condition_node> block and not <conditon_node> to check for two conditions before executing a program - users access object properties of a sprite such as ascertaining its x and y position of a sprite by introducing the <node_value> of <node_value> - users reset the property of a node value to empty utilizing the set <node_value> to <empty string> - users introduce sound and sound controls with nodes such as play sound <node_value> until done, set volume to <value> % and set <node_value> effect to <node_value> screenshots version 2( https://github.com/nullified33/stuff/ blob/33b28e21f27b7c7c2d2a231638 b94aa8c500bcda/dnnc.sb3 ) what changed? - a complete re-direction of program or game intent from a “ rock paper scissors game ” to a “ tic tac toe game ” - 40 sprites added making it a total of 48 sprites - first sprite contains three scripts - script1 contains nodes changes such as - when i receive <node_value>",1
+script2 contains nodes changes such as - when flag clicked,8
+pen extension api call <erase all>,5
+script3 contains nodes changes such as - when this sprite clicked,8
+if <condition_no de> then block,2
+stop <node_value>,18
+pen extension api call <stamp>,9
+second sprite contains three scripts - script1 contains the following nodes - when i receive <node_value>,1
+show - script2 contains the following nodes - when flag clicked,1
+script3 contains the following nodes - when this sprite clicked,2
+third sprite contains three script - script1 contains nodes changes such as - when flag clicked,1
+script2 contains nodes changes such as - when i receive <node_value>,6
+fourth sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+pen extension api <erase all>,8
+pen extension api <stamp>,6
+fifth sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+sixth sprite contains three scripts - script1 contains the following nodes changes - when flag clicked,1
+script2 contains the following nodes changes - when i receive <node_chang es>,1
+script3 contains the following nodes changes - when this sprite clicked,2
+- seventh sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+switch costume to <node_value> - pen extension api call <stamp>,2
+eight sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+script2 contains nodes changes such as - when flag clicked <1> - broadcast <node_value>,2
+pen extension api call,6
+ninth sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+tenth sprite contains seven script - script1 contains nodes changes such as - when this sprite clicked,1
+script3 contains nodes changes such as - when flag clicked,1
+forever block,5
+<node_value> or <node_value>,7
+- script4 contains nodes changes such as - when i receive <node_value>,1
+- script5 contains nodes changes such as - when i receive <node_value>,2
+script6 contains nodes changes such as - when i receive <node_value>,3
+script7 contains nodes changes such as - when i receive <node_value>,2
+eleventh sprite contains three script - script1 contains nodes changes such as - when flag clicked,1
+script3 contains nodes changes such as - when i receive <node_value>,7
+twelfth sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+thirteenth sprite contains three script - script1 contains nodes such as - when i receive <node_value>,1
+script3 contains nodes such as - when flag clicked,4
+fourteenth sprite contains 3 scripts - script1 contains nodes such as - when i receive <node_value>,1
+script2 contains nodes such as - when flag clicked,6
+script3 contains nodes such as - when this sprite clicked,3
+pick random <value> to <value>,1
+fifteenth sprite contains three script - script1 contains nodes such as - when flag clicked,1
+sixteenth sprite contains three script - script1 contains nodes such as - when flag clicked,1
+seventh sprite contains four script - script1 contains the following nodes - when flag clicked,1
+script2 contains the following nodes - when i receive <node_value>,1
+broadcast <node_valaue >,1
+script4 contains the following nodes - when i receive <node_value>,1
+eighteenth sprite contains five scripts - script1 contains the following nodes changes - when flag clicked,1
+script2 contains the following nodes changes - when i receive <node_value>,4
+script3 contains the following nodes changes - when i receive <node_value>,1
+script4 contains the following nodes changes - when i receive <node_value>,2
+script5 contains the following nodes changes - when i receive <node_value>,3
+nineteenth sprite contains 5 scripts - script1 contains the following nodes changes - when flag clicked,1
+twentieth sprite contains 5 scripts - script1 contains the following nodes changes - when i receive <node_value>,1
+script3 contains the following nodes changes - when flag clicked,1
+script4 contains the following nodes changes - when i receive <node_chang e>,1
+twenty first sprite contains 5 script - script1 contains nodes such as - when i receive <node_value>,1
+script4 contains nodes such as - when i receive <node_value>,10
+script5 contains nodes such as - when i receive <node_value>,4
+twenty second sprite contains two scripts - script1 contains nodes such as - when flag clicked,1
+twenty third sprite contains three scripts - script1 contains nodes such as - when flag clicked,1
+twenty fourth sprite contains two scripts - script1 contains nodes such as - when flag clicked,1
+twenty fifth sprite contains four script - script1 contains nodes such as - when i receive <node_value>,1
+next costume,24
+script4 contains nodes such as - when this sprite clicked,5
+<node_value> = <node_variabl e>,13
+join <node_variabl e><value>,1
+twenty sixth sprite contains four script - script1 contains nodes such as - when this sprite clicked,1
+join <node_variabl e> <value>,2
+broadcast <node_value> - script2 contains nodes such as - when flag clicked,1
+twenty seventh sprite contains four script - script1 contains nodes such as - when this sprite clicked,1
+join <node_variabl e> <value> - broadcast <node_value>,1
+twenty eight sprite contains four script - script1 contains nodes such as - when this sprite clicked,1
+set <node_variabl e> to <node_value> - join <node_variabl e> <node_value>,1
+twenty ninth sprite contains three script - script1 contains nodes such as - when this sprite clicked,1
+<node_variabl e> = <node_value>,2
+- script3 contains nodes such as - when i receive <node_value>,1
+if <node_variabl e> = <value>,2
+thirtieth sprite contains six script - script1 contains nodes such as - when flag clicked,1
+script4 contains nodes changes such as - when i receive <node_value>,2
+script5 contains nodes changes such as - when this sprite clicked,1
+thirty first sprite contains five script - script1 contains nodes such as - when flag clicked,1
+thirty second sprite contains four script - script1 contains nodes such as - when flag clicked,1
+ask <value> and wait,5
+thirty third sprite contains five script - script1 contains nodes such as - when flag clicked,1
+script5 contains nodes such as - when this sprite clicked,1
+thirty fourth sprite contains four script - script1 contains nodes such as - when flag clicked,1
+thirty fifth sprite contains two script - script1 contains nodes such as - when flag clicked,1
+thirty sixth sprite contains three scripts - script1 contains nodes such as - when i receive <node_value>,1
+thirty seventh sprite contains four scripts - script1 contains nodes such as - when flag clicked,1
+thirty eight sprite contains three script - script1 contains nodes changes such as - when i receive <node_value>,1
+thirty ninth sprite contains six script - script1 contains nodes such as - when flag clicked,1
+fortieth sprite contains four script - script1 contains nodes such as - when i receive <node_value>,1
+pen extension api <eraseall>,1
+forty first sprite contains four script - script1 contains nodes such as - when flag clicked,1
+not <node_variabl e>,1
+forty second sprite contains four script - script1 contains nodes such as - when flag clicked,1
+forty third sprite contains seven scripts - script1 contains nodes changes such as - when flag clicked,1
+go to x: <value> y: <value> - script2 contains nodes changes such as - when i receive <node_value>,1
+script3 contains nodes changes such as - define <node_values >,1
+broadcast <node_values >,4
+script4 contains nodes changes such as - define <node_values >,1
+join <value> <node_value>,2
+script5 contains nodes changes such as - when i receive <node_value>,1
+script7 contains nodes changes such as - define <node_values >,1
+replace item <node_variabl e> of <node_list> with <node_value>,3
+- forty fourth sprite contains a single script - script1 contains nodes changes such as - when flag clicked,1
+forty fifth sprite contains seventeen script - script1 contains nodes changes such as - define <node_values >,1
+created by <node_value> - description <node_value> - set <node_variabl e> to <value>,7
+length of <node_value> - if <condition> then block,4
+<node_value> > <value>,2
+wait until <node_val>,1
+set <node_value> effect to <node_variabl e>,1
+set <node_value> to <value> - script3 contains nodes such as - when i receive <node_value>,1
+set <node_value> effect to <value> - not <node_value>,1
+script4 is a custom script and contains nodes changes such as - define <node_values >,1
+<node_variabl e> = <node_variabl e>,12
+script6 is a custom script which contains nodes changes such as - define <node_values >,1
+script8 contains nodes changes such as - when i receive <node_value>,1
+script9 contains nodes such as - when i receive <node_value>,1
+script10 contains nodes changes such as - define <node_values >,1
+description <value> - custom script call,2
+script11 contains nodes such as - define <node_values >,1
+- script12 contains nodes changes such as - when i receive <node_value>,1
+<node_variabl e> > <value>,2
+- script13 contains nodes changes such as - when i receive <node_value>,1
+script14 contains nodes changes such as - when i receive <node_value>,1
+script15 contains nodes changes such as - when i receive <node_value>,1
+script16 contains nodes changes such as - when i receive <node_value>,1
+script17 is a custom script which contains nodes changes such as - define <node_values >,1
+created by <value> - description <value> - set <node_variabl e> to <value>,4
+script18 contains nodes such as - when i receive <node_value>,1
+forty sixth sprite contains 12 scripts - script1 contains nodes such as - when i receive <node_value>,1
+script3 contains nodes such as - define <node_values >,1
+set size to <node_value>,1
+script6 contains nodes such as - define <node_values >,1
+for each <node_variabl e> in <node_list>,1
+<node_variabl e> + <value>,1
+- script7 contains nodes such as - when i receive <node_value>,1
+script8 contains nodes such as - when i receive <node_value>,1
+<node_value> + <node_value>,6
+<node_value> * <node_value>,8
+script9 contains nodes such as - when flag clicked,1
+set size to <value> %(1) - script10 contains nodes such as - when i receive <node_value>,1
+script11 contains nodes such as - when i receive <node_value>,1
+script12 contains nodes such as - define <node_values >,1
+if <node_value> then,1
+length of <node_list> (node_value) - item <node_variabl e> of <node_list>,2
+item # of <node_value>,1
+forty seventh sprite contains four scripts - script1 contains nodes changes such as - when i receive <node_value>,1
+script4 contains nodes changes such as - when this sprite clicked,1
+forty eight sprite contains three scripts and 5 disjoint nodes - script1 contains nodes changes such as - when flag clicked,1
+item # of <value> in <node_list>,1
+each sprite added introduced an object to the program with its function and attributes what do they mean ? - users add sprite to demonstrate addition of new objects screenshots 2 0a81670157be0dc487 9253a177a2c192072a 7690 ex04/src/ex04.sb3 https://github. com/edinceh ajic/day02/co mmit/0a8167 0157be0dc48 what changed ? - a new sprite with no script why the change? 79253a177a 2c192072a76 90 https://github. com/edinceh ajic/day02/co mmit/d45c11 e4bb6beba1 7039303f23b 8ec71f9e8ab 4d https://github. com/edinceh ajic/day02/co mmit/d45c11 e4bb6beba1 7039303f23b 8ec71f9e8ab 4d https://githu b.com/edin cehajic/day 02/commits - starting a new program by creating an object (i.e sprite) what do they mean? - users start off projects by creating sprites screenshots version 2 ( https://github.com/edincehajic/day 02/blob/b4ff95ef96ff5253408ec0c2d 4e0b30a4fbef192/ex02/src/ex02.sb3 ) what changed? - a new script was added with the following changes - script1 contains nodes such as - when flag clicked,1
+say <value> for <value> seconds,9
+say <node_value>,1
+addition of scripts introduces functionality to scratch object what do they mean? - users add scripts to introduce a new functionality to sprites screenshots version3 (https://github.com/edincehajic/day 02/blob/791269509164fb3a518ca96 27eb30ec81b748862/ex03/src/ex03. sb3) what changed? - 2 new script was added - script1 contains nodes such as - when flag clicked,1
+switch backdrop to <node_value>,2
+start sound <node_value>,5
+touching <node>,1
+old script was removed why the change? - scripts2 are added to introduce a new functionality to a program - nodes are removed to remove some functionalities what do they mean? - users add scripts to introduce a new functionality in sprite - users remove nodes to change the intent of a sprite screenshots version 4 ( https://github.com/edincehajic/day 02/blob/d45c11e4bb6beba17039303 f23b8ec71f9e8ab4d/ex03/src/ex03.s b3 ) what changed ? - a script was removed from the sprite and added to the backdrop - script1 contains nodes such as - when flag clicked,1
+the movement of script to backdrop could be to add more controls to backdrops what do they mean? - users add scripts to backdrops screenshots version 5 ( https://github.com/edincehajic/day 02/blob/0a81670157be0dc4879253a 177a2c192072a7690/ex04/src/ex04. sb3 ) what changed ? - nodes replaced - script2 contains nodes changes such as - switch backdrop to <node_value>,1
+script1 contains nodes changes such as - set <node_variabl e> to <value>,1
+sprite assets was changed why the change ? - change the direction of the program - change of sprite assets could be an ongoing ui/ux operation what do they mean? - users change nodes to change direction of a program screenshots version 6 ( https://github.com/edincehajic/day 02/blob/89f932fb0e91717afe973767 1387179a8dbf3057/ex05/src/ex05.s b3 ) what changed ? - scripts removed from the backdrop - script2 contains nodes such as - set rotation style <node_value>,1
+"if on edge, bounce",1
+move <value> steps,3
+script1 contains nodes such as - when flag clicked,1
+forever,1
+nodes replaced in the existing script why did it change? - the removal of scripts from the backdrop was to remove a functionality what do they mean? - users remove scripts from programs to remove functionality screenshots version 7 ( https://github.com/edincehajic/day 02/blob/819b16c0acd9f171b1788b7 80ca1f9beb43bc7fa/ex05/src/ex05.s b3 ) what changed ? - addition of nodes - script1 contains nodes changes such as - next costume,1
+nodes added are utilized for repeating a process (code clone) what do they mean? - users add nodes to repeat a process screenshots 3 9b4c15c844e84208e36 30936af6052d8d855df b0 projects/week10/1 _snake_player_m ovement.sb3 https://github. com/aaronlw s95/scratch-t utorial-2020/c ommits/9b4c 15c844e8420 8e3630936af 6052d8d855 dfb0/projects/ week10/1_sn ake_player_ movement.sb 3 what changed ? - addition of a new sprite - 5 new scripts added to the sprite - script1 contains nodes changes such as - when flag clicked,1
+script2 contains nodes changes such as - define <values>,3
+<node_variabl e> + <node_value>,4
+script3 contains nodes changes such as - when <node_value> key pressed,1
+set <node_variabl e> to <variable>,8
+round <node_value>,4
+<node_variabl e> / <value>,4
+script4 contains nodes changes such as - define <values>,1
+key <node_value> pressed,4
+script5 contains nodes changes such as - define <node_values >,1
+<node_value> - <value>,4
+new sprites are added to introduce an object with its functionality and attributes - a new script is added to demonstrate a functionality what do they mean? - users add sprites at the start of a program - users add scripts to demonstrate functionality screenshots version 2( https://github.com/aaronlws95/scra tch-tutorial-2020/blob/9b4c15c844e8 4208e3630936af6052d8d855dfb0/pr ojects/week10/2_snake_food_spa wn.sb3 ) what changed ? - a new sprite was introduced with three scripts - script1 contains nodes such as - when flag clicked,1
+script2 contains nodes such as - define <values>,1
+pick random <value> to <node_value>,2
+<node_variabl e> - <value>,6
+2 scripts were added in the existing sprite - script1 contains the following nodes changes - define <values>,1
+script2 contains the following nodes changes - define <values>,1
+<node_value> < <value>,2
+<node_value> > <node_variabl e>,2
+- nodes were added in the third script of the first sprite - script3 contains the following node changes - set <node_variabl e> to <value>,1
+<node_variabl e> = <value> why the change? - a new sprite was added to hold a new object with certain behaviors (variables) and be able to take certain actions (scripts) - scripts were introduced to bring in certain functionalities in the program - nodes were added to bring in specific behavior to a scratch program what do they mean? - users add sprites to introduce a new object with the intent of localizing specific behaviors and actions within the sprite - users add scripts to introduce specific functionalities in a scratch program screenshots version 3 ( https://github.com/aaronlws95/scrat ch-tutorial-2020/blob/9b4c15c844e8 4208e3630936af6052d8d855dfb0/pr ojects/week10/3_snake_tail.sb3 ) what changed ? - a new sprite added with 4 new scripts added - script1 contains nodes changes such as - define <values>,1
+<node_value> * <node_variabl e>,2
+set <node_variabl e> to <node_list>,1
+repeat <node_value>,1
+if <node_variabl e> then block else block,1
+script4 contains nodes changes such as - when flag clicked,1
+new nodes added in the third script of the first sprite - script3 contains nodes changes such as - delete all of <node_list>,2
+set <node_variabl e> to <node_variabl e>,3
+change <node_variab le> by <value>,1
+"new sprite was added to demonstrate an object of a snake called tail - new scripts added to demonstrate a new functionality - new nodes were added in the what do they mean? - users add sprites to demonstrate new objects, its attributes and actions it can take - users add scripts to introduce a new functionality in the program screenshots version 4 ( https://github.com/aaronlws95/scrat ch-tutorial-2020/blob/9b4c15c844e8 4208e3630936af6052d8d855dfb0/pr ojects/week10/4_snake_lose_chec k.sb3 ) what changed ? - nodes added in the third script of the first sprite - script3 contains nodes changes such as - if <condition> then block else block",1
+2 new scripts was added in the first sprite - script1 contains the following node changes - define <values>,1
+custom script,1
+nodes were added in the seventh script of the first sprite - script7 contains nodes such as - not <node_value>,4
+"nodes are added in a script to demonstrate a new action - scripts are added to demonstrate a new functionality what do they mean ? - users add nodes to a sprite to demonstrate a new object, its behavior and actions it can take - users add scripts to demonstrate a new action of a sprite object screenshots version 5 ( https://github.com/aaronlws95/scrat ch-tutorial-2020/blob/9b4c15c844e8 4208e3630936af6052d8d855dfb0/pr ojects/week10/5_snake_user_interf ace.sb3 ) what changed ? - 4 sprites were added - 2 new nodes were added in the first script in the first sprite - script1 contains nodes changes such as - pen extension api call <erase all>",1
+2 scripts were added in the first sprite - script1 contains nodes changes such as - when i receive <node_value>,1
+hide variable <variable_nam e>,3
+<node_variabl e> and <node_variabl e>,1
+7 new nodes added in the sixth script of the first sprite] - script6 contains nodes such as - show variable <node_variabl e>,3
+<node_variabl e> < <node_variabl e>,1
+one node added in the seventh script of the first sprite - script7 contains nodes such as - start sound <node_value>,1
+2 scripts added in the fourth sprite - script1 contains nodes changes such as - when this sprite clicked,1
+3 scripts added in the fifth sprite - script1 contains nodes such as - when i receive <node_value>,1
+3 scripts added in the third sixth sprite - script1 contains nodes changes such as - when flag clicked,1
+four scripts added in the seventh sprite - script1 contains nodes changes such as - when flag clicked,1
+set volume to <node_variabl e> %,2
+script2 contains nodes changes such as - when this sprite clicked,1
+"new sprites added demonstrate the addition of a new object or a new class for textual codes to hold a new functionality - new scripts added demonstrate the addition of a new functionality - new nodes added demonstrate a new action what do they mean - users add sprites to show a new object, it’s properties and functionalities in scratch program - users add new scripts to demonstrate adding a new functionality screenshots 4 af8c5dc3ff7bd68e1be0 d18352e79bba93df775 0 pset0/src0/meow0 .sb3 https://github. com/gauresh kapoor/cs50 -psets/com mit/af8c5dc3f f7bd68e1be0 what changed? - a new sprite added - a new script added - script1 contains nodes such as - when flag d18352e79b ba93df7750# diff-5aa3e2e 229bdc6b774 38e9c297b6a 0809b0c61b4 a4cd0781f49 bda2aeabd5 492 clicked",1
+a new sprite is added to introduce a new object in a scratch3 program - a new script is added to introduce a new functionality to a program what do they mean? - users begin new scratch programs by adding objects (sprites) - users add scripts to introduce a new functionality to a program screenshots version 2 ( https://github.com/gaureshkapoor/ cs50-psets/blob/af8c5dc3ff7bd68e 1be0d18352e79bba93df7750/pset0/ src0/meow1.sb3 ) what changed ? - a node was removed - script1 contains removed nodes below - start sound <node_value>,1
+three new nodes added - script1 contains nodes changes such as - repeat <value> block,1
+addition of nodes demonstrate addition of actions - removal of nodes demonstrate removal of actions what do they mean? - users add nodes to scripts introduce a new action to a sprite - users remove a node from a script to remove an action from a script screenshots 6fc03d2402694e6bcf2b dee48d0832b2e7961a 17 simpletree.sb3 https://github. com/arpruss/ rjmscratch/bl ob/6fc03d240 2694e6bcf2b dee48d0832 b2e7961a17/ simpletree.sb 3 couldn't load file 5 7bf88657344e23dcea8 a0d52764938b7abc10 693 scratch3-hacks/te st/scratch3-hacks- test.sb3 https://github. com/eqot/scr atch3-hacks. old/commit/7 bf88657344e 23dcea8a0d5 2764938b7a bc10693 what changed ? - new sprite added - new script added without an event parent node - script1 contains nodes such as - repeat <value>,1
+new sprite demonstrates adding a new object in a program - new script without a root event node suggest a pet project what do they mean? - users add sprites to introduce new objects - users add scripts to introduce new functionalities screenshots 6 dba4cde586cdd436830 829002e35efea3bd425 79 pseudo code with scratch/exercise7 .sb3 https://github. com/b2jena/f ull_stack_dev elopment_sta ckroute/blob/ dba4cde586c dd43683082 9002e35efea 3bd42579/ps eudo%20cod e%20with%2 0scratch/exe rcise7.sb3 what changed? - a new sprite added - a new script added - script contains the following nodes changes - when flag clicked,1
+<node_variabl e> < <value>,1
+say <value>,1
+"sprites are added to create objects with attributes and functionalities - scripts are added to hold functions what do they mean? - users add sprites to demonstrate adding new objects - users add scripts to demonstrate adding new functions screenshots 6 3acb3e9b0407a1bb99 08fcaf60ebb8e2864c2b e3 the wizard of scratch.sb3 https://github. com/debasm ita64/scratch -project-3/co mmit/3acb3e 9b0407a1bb 9908fcaf60eb b8e2864c2be 3#diff-7b057c 5af03344811 27ae14b706 82e93b3566f 9918e71d32 5cd6553ed4f d62e6 what changed ? - four new sprite added - backdrops added - no script in any of the sprite why the change? - addition of sprite demonstrate adding an object with attributes and functionalities - adding new backdrops demonstrate an ongoing ui/ux activity what do they mean? - users add sprites to introduce new objects - users add backdrops as a ui/ux design screenshots version 2 (https://github.com/debasmita64/scr atch-project-3/commit/43cbc0b58de e52d0108c947ead27688e408a0261) what changed - file was deleted why the change? - file could no longer be in use what do they mean? - users add revisions to delete scratch files screenshots 7 828536cc28eb6f58917 0a5dd2cfc8887cf788a7 3 src/year-4/rocket-t rips/resources/ro cket trips.sb3 https://github. com/4lefts/pri mary-progra mming/blob/8 28536cc28eb 6f589170a5d d2cfc8887cf7 88a73/src/ye ar-4/rocket-tri ps/resources/ rocket%20tr ips.sb3 what changed ? - six sprites added - first sprite contains two scripts and a label - second sprite contains two script and four labels - third sprite contains two scripts and a label - fourth sprite contains two scripts and a label - fifth sprite contains two scripts and a label - sixth sprite contains two scripts and a label why the change? - each sprite was used to represent a unique object, in this case a different kind of rocket with its attributes and functionality - each script demonstrates a function in the program what do they mean? - users add sprites to represent a unique object - users add scripts to add a new functionality screenshots version 2( https://github.com/4lefts/primary-pr ogramming/commit/1a8b46049ec1cc ed6a48c61d04614d8c1d25079b#diff -f7a6e6a53a033c1e1deaf245c9e140 88b4e2f078356e07d258e525233442 357c ) filerenames no changes 8 ffc45d14743cffac81e30 2e53a8fd3df2b3c1f36 uebungsanleitung en/programmieren /python/von-scratc h-zu-python/sourc e/von scratch zu python.sb3 https://github. com/coderdoj o-linz/previe w-coderdojo-l inz.github.io/ commit/ffc45 d14743cffac8 1e302e53a8f d3df2b3c1f36 #diff-03b3fd0 3a960e1e37f 4cb2f6f0cbd1 454890828ac 4888714aad 7401684035 911 what changed ? - a new sprite was added - two scripts added in the first sprite why the change? - sprites are added to introduce a new object with attributes and functionalities - scripts are introduced to add functionalities to sprites what do they mean? - users add sprites to their programs to demonstrate how objects are added to source codes with functionalities and attributes - users introduce scripts to their programs to add a new functionality to their program screenshots version 2 ( https://github.com/coderdojo-linz/pr eview-coderdojo-linz.github.io/blob/0 98935643406e89de66c9ad231b8a8 d844d4f886/uebungsanleitungen/pro grammieren/python/von-scratch-zu-p ython/von%20scratch%20zu%20pyt hon.sb3 ) what changed ? no visible change as code was moved to a different folder 9 dba4cde586cdd436830 829002e35efea3bd425 79 pseudocode_exer cise/exercise2.sb3 https://github. com/b2jena/f ull_stack_dev elopment_sta ckroute/com mits/dba4cde 586cdd43683 0829002e35 efea3bd4257 9/pseudo%2 0code%20wi th%20scratc h/exercise2.s b3 what changed ? - a new scratch was added - a new script was added why the change ? - a new sprite is added to introduce a new object to a scratch program - a new script is added to introduce a new functionality to a program what do they mean? - users add a sprite to introduce a new object to a program - users add a new script to a program to introduce a new functionality screenshots 10 908f0252c2d7c6392b9 06a92d5e1b52357532 0e2 scratch/hummer- bot4.0_magicbloc k/demo/function program/infrared obstacle avoidance.sb3 https://github. com/emakefu n/hummer-bo t/commits/90 8f0252c2d7c 6392b906a9 2d5e1b5235 75320e2/scr atch/hummer -bot4.0_magi cblock/demo /function%2 0program/infr ared%20obst acle%20avoi dance.sb3 what changed ? - a new sprite was added why the change? - a new sprite was included in the program what do they mean? - users add sprites to include objects in a program screenshots version 2 ( https://github.com/emakefun/humm er-bot/commit/ac3cf29cdd2f5573a95 f4817cf11cb16f30d9f2f#diff-ee1f63a 9076541ab42492773a0642bacd529 3e48cc827488c0714fc353d85224 ) what changed ? no visible changed 11 be1c7b8e4b679ea6a3 42b6e59cc9be4511ef0 897 scratch/scratchin vaders - week 1.sb3 https://github. com/dotnetc oderdk/codi ngpirates/co mmit/be1c7b 8e4b679ea6 a342b6e59cc 9be4511ef08 97 what changed ? - four new sprites added in the program - 5 new scripts in the first sprite - 2 new scripts added in the second sprite - 3 new scripts in third sprite - 1 new script added in the forth sprite why the change ? - a new sprite is added to a program - scripts added to introduce functionality in a program what do they mean? - users add new sprites to introduce objects to a program - users add scripts to a program to introduce new functionality screenshots version 2 ( https://github.com/dotnetcoderdk/ codingpirates/blob/2ea3baf6441bac 43599535822e71a9f062deb208/scr atch/scratchinvaders.sb3 ) what changed ? - nodes added to the second script in the second sprite - nodes added in the first script in the second sprite - nodes added in the script of the fourth sprite why the change ? - nodes are added to the scripts to introduce an action to a script what do they mean - users add nodes to scripts in a sprite to introduce an action screenshots version 3 ( https://github.com/dotnetcoderdk/ codingpirates/blob/be1c7b8e4b679 ea6a342b6e59cc9be4511ef0897/scr atch/scratchinvaders%20-%20week %201.sb3 ) what changed ? - 2 scripts removed from the second sprite - 2 scripts removed from the third sprite - 1 script removed from the fourth sprite why the change ? - scripts were removed to remove specific functionality from a scratch program what do they mean? - users remove scripts to discard certain functionalities in a program screenshots 12 b1dee63509eedf3f771 6e5eea94b6693a21f23 python_assig/sim plemath.sb3 diff too large cb 13 dba4cde586cdd436830 829002e35efea3bd425 79 pseudocode_exer cise/exercise9.sb 3 https://github. com/b2jena/f ull_stack_dev elopment_sta ckroute/com mit/dba4cde5 86cdd436830 829002e35ef ea3bd42579 #diff-813f625 b214c8e3d01 437c33a4629 15d42755de 988490ee4a 3c011a018c4 dcda what changed ? - new sprite added - a single script added in the sprite why the change ? - sprites are introduced in projects to create an object - scripts are introduced in sprites to create new functionality what do they mean? - users add scripts in revisions to introduce a new functionality - users add sprites in revisions to introduce a new object screenshots 14 6fda7ff5e88415c03d28 da8b13a9f6b345438e6 c fiche09/enigme-09 -ex2.sb3 https://github. com/exo7mat h/scratch3-ex o7/commit/6f da7ff5e8841 5c03d28da8b 13a9f6b3454 38e6c couldn't view file 15 e00af1db281b4799472 1eab14da9e4c85bc86b 67 no_buddy/the fast and the curious- story2.sb3 https://github. com/coderun ners2019/cod erunners201 9.github.io/co mmit/e00af1d b281b47994 721eab14da 9e4c85bc86b 67 what changed ? - 5 new sprites was added - 6 scripts added in the first sprite - 6 scripts added in the second sprite - 4 script added in the third sprite - 4 scripts added in the fourth sprite - 2 scripts added in the fifth sprite why the change ? - sprites are added to introduce a new object with its attributes and functionalities - scripts are added to introduce new functionalities to a program what do they mean? - users add sprites to add a new object in scratch program - users add scripts to introduce new functionality to a program screenshots 16 4d90af0359362ae68d0 1c1e1f6408b0dd7cf46e c test-projects/untitl ed-3.sb3 https://github. com/uchicag ocanonlab /automated-a ssessment/c ommit/4d90af 0359362ae6 8d01c1e1f64 08b0dd7cf46 ec#diff-355af 9e00965526 aefca3bce96 b43932f0b1e 162532e8e2 5f084e7aca9 37581b what changed ? - a new sprite added why the change ? - sprites are added to represent objects in scratch with attributes and functionalities what do they mean? - users add sprites to introduce objects to scratch screenshots version 2 ( https://github.com/uchicagocano nlab/automated-assessment/blob/f4 0c9c45c48d78c5ab4a4fa67c0b1c6e 4209e727/test-projects/untitled-3.sb 3 ) second version was a reupload of the file with no visible change 17 7f93d7325ed21ba9042 22a3abfc1379a7fb60a 11 my stories",1

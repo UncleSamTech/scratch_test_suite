@@ -245,7 +245,7 @@ class scratch_train_mle:
                 acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk_first(test_data,f'{model_name}_{each_gram}.pkl',each_gram)
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_first.txt","a") as precs:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_current.txt","a") as precs:
                     precs.write(f"{each_gram} order accuracy {acc} precision {precision} recall {rec} f1score {f1_score}")
                     precs.write("\n")
             except:

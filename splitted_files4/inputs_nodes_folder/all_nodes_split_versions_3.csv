@@ -1,0 +1,21 @@
+Node_Type,Count
+item <node_variable> of <node_list>,29
+change x by <node_value>,6
+change y by <node_value>,6
+letter <node_variable> of <node_value>,37
+item <value> of <node_value>,12
+go to x: <value> y: <value>,41
+set <node_value> to <value>,12
+set size to <node_value>  %,2
+go to <node> layer,2
+go to x: <node_value> y: <node_value>,13
+create clone of <node_value>,10
+<value> - <node_value>,4
+item of <node_list>,6
+letter <node_value> of <nod_value>,2
+<value> + <value>,2
+node_variable,17
+set <node_variable> to <node_value>,58
+repeat until <condition>,20
+letter of <node_value>,4
+<node_value> = <node_value>,9

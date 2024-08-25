@@ -1,0 +1,263 @@
+Node_Type,Count
+when flag clicked,209
+show,157
+when this sprite clicked,100
+broadcast <node_value>,98
+set <node_variable> to <value>,190
+when i receive <node_value>,172
+if <condition> then block,162
+hide,188
+not <node_variable> = <value>,2
+custom script call,92
+item <value> of <node_list>,199
+item <node_value> of <node_list>,45
+<node_value> * <value>,15
+<node_value> + <value>,53
+custom function call,5
+wait <value> seconds,248
+if <condition> then block else block,65
+<node_variable> = <value>,82
+define <nodes_value>,2
+created by <value>,15
+description <value>,13
+set size to <node_value> %,7
+go to <node_value> layer,19
+go to x:  <node_value> y:  <node_value>,4
+<node_value> = <value>,44
+delete this clone,11
+for each <node_value> in <node_value>,7
+switch costume to <node_value>,173
+join <node_value> <node_value>,25
+change y by <value>,53
+item <node_value>  of <node_list>,16
+<node_variable> * <value>,37
+go to x: <value> y:<value>,2
+set size to <value> %,26
+define <node_values>,27
+set <node_variables> to <value>,4
+go to x:  <node_value> y: <node_value>,4
+if <condition> then,8
+length of <node_list>,3
+length of <node_value>,8
+item <node_variable> of <node_list>,29
+change x by <node_value>,6
+change y by <node_value>,6
+letter <node_variable> of <node_value>,37
+item <value> of <node_value>,12
+go to x: <value> y: <value>,76
+set <node_value> to <value>,12
+set size to <node_value>  %,2
+go to <node> layer,2
+go to x: <node_value> y: <node_value>,16
+create clone of <node_value>,10
+<value> - <node_value>,4
+item of <node_list>,6
+letter <node_value> of <nod_value>,2
+<value> + <value>,2
+node_variable,17
+set <node_variable> to <node_value>,69
+repeat until <condition>,20
+letter of <node_value>,4
+<node_value> = <node_value>,9
+change <node_variable> by <value>,42
+add <node_value> to <node_list>,3
+letter <value> of <node_value>,4
+<node_value>=<node_value>,2
+node_variables,24
+delete all of <nodes_value>,2
+not <node_value>,48
+<node_value>=<value>,10
+<node_value> of <node_value>,25
+<node_value> and <node_value>,19
+add <value> to <node_list>,19
+delete all of <node_list>,17
+<node_value> > <node_value>,4
+wait until <node_variable>,2
+set volume to <value> %,9
+set <node_value> effect to <node_value>,5
+play sound <node_value> until done,66
+node_varible,2
+<node_variable>=<node_variable>,4
+pick random <node_value> to <node_value>,6
+for each <node_variable> in <node_value>,10
+<node_value> contains <node_value>,4
+join <node_values> <node_values>,2
+when i receive <node_values>,2
+set <node_variable>to <node_value>,2
+reset timer,3
+<node_variable>  >  value,2
+join <node_value> <value>,9
+go to x:<value>y:<value>,2
+change <node_value> by <value>,6
+length of <node_variable>,7
+join <node_variable> <node_value>,9
+<node_value> - <node_value>,11
+<node_value> contains <node_value> ?,2
+pen extension api call <erase all>,9
+if <condition_node> then block,4
+stop <node_value>,25
+pen extension api call <stamp>,41
+<node_variable> =  <value>,4
+pen extension api <erase all>,10
+pen extension api <stamp>,13
+when i receive <node_changes>,2
+pen extension api call,7
+forever block,54
+<node_value> or <node_value>,17
+pick random <value> to <value>,12
+broadcast <node_valaue>,2
+when i receive <node_change>,2
+next costume,63
+<node_value> = <node_variable>,14
+join <node_variable><value>,2
+join <node_variable> <value>,4
+<node_variable> = <node_value>,3
+if <node_variable> = <value>,4
+ask <value> and wait,17
+pen extension api <eraseall>,2
+not <node_variable>,2
+broadcast <node_values>,5
+join <value> <node_value>,12
+replace item <node_variable> of <node_list> with <node_value>,4
+<node_value> > <value>,9
+wait until <node_value>,2
+set <node_value> effect to <node_variable>,2
+<node_variable> = <node_variable>,16
+<node_variable> > <value>,8
+for each <node_variable> in <node_list>,2
+<node_variable> + <value>,4
+<node_value> + <node_value>,56
+<node_value> * <node_value>,28
+item # of <node_value>,4
+item # of <value> in <node_list>,2
+say <value> for <value> seconds,151
+say <node_value>,2
+switch backdrop to <node_value>,22
+start sound <node_value>,32
+touching <node>,2
+set rotation style <node_value>,5
+"if on edge, bounce",3
+move <value> steps,39
+define <values>,39
+<node_variable> + <node_value>,6
+when <node_value> key pressed,15
+set <node_variable> to <variable>,9
+round <node_value>,6
+<node_variable> / <value>,6
+key <node_value> pressed,8
+<node_value> - <value>,26
+pick random <value> to <node_value>,4
+<node_variable> - <value>,8
+<node_value> < <value>,8
+<node_value> > <node_variable>,4
+<node_value> * <node_variable>,5
+set <node_variable> to <node_list>,2
+repeat <node_value>,7
+if <node_variable> then block else block,2
+set <node_variable> to <node_variable>,11
+change <node_variab le> by <value>,2
+custom script,2
+hide variable <variable_name>,6
+<node_variable> and <node_variable>,2
+show variable <node_variable>,10
+<node_variable> < <node_variable>,2
+set volume to <node_variable> %,4
+repeat <value>,61
+<node_variable> < <value>,10
+say <value>,9
+turn right <value> degrees,30
+point in direction <value>,18
+label,17
+turn left <value> degrees,28
+move <node_value> steps,3
+turn right <node_value> degrees,4
+<value> / <node_value>  degrees,2
+pen extension api call <pen down>,3
+pen extension api call <set pen size to <value>>,2
+repeat <node_variable>,5
+pen extension api call <set pen <node_value>to <node_value>>,2
+<value>  / <node_variable>,2
+say <node_value> for <value> seconds,2
+stop <node_variable>,3
+go to x: <node_variable> y: <node_variable>,8
+when i start as a clone,5
+touching <node_value> ?,18
+<node_value> of <node_variable>,29
+move <node_variable> steps,11
+change <node_variable> by <node_variable>,4
+hide variable <node_variable>,10
+repeat until <node_value>,9
+change <node_variable> by <node_value>,8
+say <node_variable>,3
+when backdrop switches to <node_value>,13
+glide <value> secs to x: <value> y: <value>,11
+touching <node_value>,5
+think <value> for <value> seconds,13
+go to <node_value>,18
+forever,3
+change <node_value> effect by <value>,4
+key <node_value> pressed ?,13
+change x by <value>,10
+stop all sounds,11
+go to x: <value>  y: <value>,2
+music extension api <play drum <node_value> for <value> beats>,2
+text to speech extension api call <set voice to <node_value>>,2
+text to speech extension api call <set language to <node_value>>,2
+text to speech extension api call <speak <value>>,2
+text to speech extension api call <speak <node_value>>,2
+next backdrop,2
+when i receive  <node_value>,2
+go <node_value> <value> layers,3
+go <node_value>  layer,2
+set <node_value> effect to <value>,26
+boost extension api call <set motor <node_value> speed to <custom script call> %>,5
+boost extension api call <set motor <node_value> direction <node_value> >,13
+boost extension api call <turn motor <node_value> for <node_valuel>> rotations,9
+<node_value> / <value>,21
+boost extension api call <set light color to <value>>,6
+set size to <value>,2
+<value> * <node_variable>,4
+<node_value> / <node_value>,2
+glide <node_value> secs to x: <node_value> y: <node_value>,3
+<node_variable> * <node_value>,33
+<value> - <node_variable>,20
+<node_value> / <node_variable>,4
+turn left <node_value>  degrees,2
+clear graphic effects,3
+point towards <node_value>,3
+<node_variable> mode <node_variable>,2
+when this flag clicked,2
+change size by <value>,9
+change <node_value> by <node_value>,2
+<value> / <node_variable>,8
+distance to <node_value>,3
+replace item <value> of <node_list> with <node_value>,45
+<node_variable>,3
+add <node_value>,2
+replace item <value> of <node_list> with <value>,35
+replace item <node_value> of <node_list> with <node_value>,2
+letter <node_value> of <node_value>,4
+<node_variable> * <node_variable>,36
+<node_value> mod <value>,36
+<value> / <node_value>,2
+<node_variable> - <node_variable>,4
+clear graphics effect,4
+join <node_variable> <node_variable>,2
+<value> -  <node_value>,6
+<node_variable> mod <value>,6
+set x to <node_value>,2
+<node_value>,2
+<value> * <node_value>,4
+<value> * <value>,5
+clear graphics effects,13
+<node_variable> / <node_variable>,2
+letter <value> of <node_variable>,2
+mouse down ?,4
+go to x: <value> y: <node_value>,2
+<value> + <node_value>,2
+set <node_value> effect  to <node_value>,6
+<node_variables>,2
+key <node_value> pressed?,10
+join <value> <value>,2
+<value> / <value>,3
+mouse down?,4

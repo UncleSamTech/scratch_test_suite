@@ -1,0 +1,155 @@
+Node Type,Count
+when I receive <node_value>,135
+set <node_variable> to <value>,125
+hide,117
+if <condition> then block,76
+custom script call,71
+broadcast <node_value>,69
+when flag clicked,67
+show,64
+<node_variable> = <value>,50
+set <node_variable> to <node_value>,46
+<node_value> + <value>,45
+when this sprite clicked,39
+letter <node_variable> of <node_value>,37
+not <node_value>,33
+wait <value> seconds,29
+item <node_variable> of <node_list>,29
+item <node_value> of <node_list>,28
+next costume,27
+if <condition> then block else block,26
+node_variables,24
+<node_value> = <value>,24
+repeat until <condition>,20
+stop <node_value>,20
+add <value> to <node_list>,18
+node_variable,16
+delete all of <node_list>,15
+<node_value> of <node_value>,15
+<node_value> = <node_variable>,14
+<node_value> * <node_value>,14
+<node_variable> = <node_variable>,14
+<node_value> * <value>,13
+go to x: <node_value> y: <node_value>,13
+pen extension api call <stamp>,13
+<node_value> + <node_value>,12
+set <node_value> to <value>,12
+item <value> of <node_value>,12
+Item <value> of <node_list>,12
+change <node_variable> by <value>,11
+say <value> for <value> seconds,10
+for each <node_variable> in <node_value>,10
+<node_value>=<value>,10
+define <values>,10
+set <node_variable> to <variable>,9
+join <node_variable> <node_value>,9
+pen extension api <erase all>,9
+<node_value> = <node_value>,9
+<node_value> and <node_value>,9
+start sound <node_value>,9
+pen extension api <stamp>,8
+<node_value> or <node_value>,8
+key <node_value> pressed,8
+<node_variable> - <value>,8
+pen extension api call,7
+set volume to <value> %,7
+length of <node_value>,7
+pen extension api call <erase all>,7
+length of <node_variable>,7
+ask <value> and wait,7
+join <node_value> <value>,7
+<node_variable> / <value>,6
+show variable <node_variable>,6
+hide variable <variable_name>,6
+change x by <node_value>,6
+change y by <node_value>,6
+go to x: <value> y: <value>,6
+round <node_value>,6
+play sound <node_value> until done,6
+<node_variable> + <node_value>,6
+if  <condition> then block,6
+item of <node_list>,6
+pick random <node_value> to <node_value>,6
+forever block,6
+<node_value> - <value>,6
+create clone of <node_value>,5
+broadcast <node_values>,5
+custom function call,5
+set <node_variable> to <node_variable>,5
+move <value> steps,4
+switch backdrop to <node_value>,4
+pick random <value> to <node_value>,4
+<node_value> > <node_variable>,4
+if <node_variable> = <value>,4
+<node_value> * <node_variable>,4
+<node_value> < <value>,4
+replace item <node_variable> of <node_list> with <node_value>,4
+if <condition_node> then block,4
+<node_value> contains <node_value>,4
+letter <value> of <node_value>,4
+<node_variable> =  <value>,4
+letter of <node_value>,4
+<node_variable>=<node_variable>,4
+<node_variable> > <value>,3
+<value> - <node_value>,3
+<node_value> > <value>,3
+join <value> <node_value>,3
+add <node_value> to <node_list>,3
+reset timer,3
+<node_variable> = <node_value>,3
+join <node_variable> <value>,3
+set volume to <node_variable> %,3
+set size to <node> %,2
+<node_value>=<node_value>,2
+delete all of <nodes_value>,2
+<value> + <value>,2
+letter <node_value> of <nod_value>,2
+when <node_value> key pressed,2
+<node_value> > <node_value>,2
+go to <node> layer,2
+when I receive <node_changes>,2
+set <node_variable> to <node_list>,2
+repeat <node_value>,2
+forever,2
+if <node_variable> then block else block,2
+define <nodes_value>,2
+change <node_variab le> by <value>,2
+custom script,2
+<node_variable> = <value> operator node,2
+<node_variable> and <node_variable>,2
+not <node_variable> = <value>,2
+<node_variable> < <node_variable>,2
+repeat <value> block,2
+repeat <value>,2
+<node_variable> < <value>,2
+wait until <node_variable>,2
+node_varible,2
+set <node_value> effect to <node_value>,2
+<node_value> -  <node_value>,2
+broadcast <node_valaue>,2
+when I receive <node_change>,2
+<node_value> contains <node_value> ?,2
+join <node_variable><value>,2
+<node_value> - <node_value>,2
+change <node_value> by <value>,2
+pen extension api <eraseall>,2
+not <node_variable>,2
+go to x:<value>y:<value>,2
+<node_variable>  >  value,2
+wait until <node_val>,2
+set <node_value> effect to <node_variable>,2
+set size to <node_value>,2
+"if on edge, bounce",2
+for each <node_variable> in <node_list>,2
+<node_variable> + <value>,2
+set <node_variable>to <node_value>,2
+when I receive <node_values>,2
+if <node_value> then,2
+item # of <node_value>,2
+join <node_values> <node_values>,2
+item # of <value> in <node_list>,2
+say <node_value>,2
+pick random <value> to <value>,2
+touching <node>,2
+set rotation style <node_value>,2
+say <value>,2

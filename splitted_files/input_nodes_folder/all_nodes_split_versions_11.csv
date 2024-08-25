@@ -1,0 +1,5 @@
+Node_Type,Count
+think <value> for <value> seconds,13
+go to <node_value>,16
+forever,3
+change <node_value> effect by <value>,2

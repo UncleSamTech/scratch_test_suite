@@ -1,0 +1,21 @@
+Node_Type,Count
+<node_variable> * <node_value>,33
+<value> - <node_variable>,20
+<node_value> / <node_variable>,4
+turn left <node_value>  degrees,2
+clear graphic effects,3
+point towards <node_value>,3
+<node_variable> mode <node_variable>,2
+when this flag clicked,2
+change size by <value>,9
+change <node_value> by <node_value>,2
+<value> / <node_variable>,8
+distance to <node_value>,3
+replace item <value> of <node_list> with <node_value>,45
+<node_variable>,3
+add <node_value>,2
+replace item <value> of <node_list> with <value>,35
+replace item <node_value> of <node_list> with <node_value>,2
+letter <node_value> of <node_value>,4
+<node_variable> * <node_variable>,36
+<node_value> mod <value>,36

@@ -1,0 +1,21 @@
+Node_Type,Count
+show variable <node_variable>,6
+<node_variable> < <node_variable>,2
+set volume to <node_variable> %,3
+repeat <value>,48
+<node_variable> < <value>,6
+say <value>,5
+turn right <value> degrees,30
+point in direction <value>,15
+label,9
+turn left <value> degrees,28
+move <node_value> steps,2
+turn right <node_value> degrees,4
+<value> / <node_value>  degrees,2
+pen extension api call <pen down>,3
+pen extension api call <set pen size to <value>>,2
+repeat <node_variable>,4
+pen extension api call <set pen <node_value>to <node_value>>,2
+<value>  / <node_variable>,2
+say <node_value> for <value> seconds,2
+stop <node_variable>,3

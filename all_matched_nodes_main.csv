@@ -1,0 +1,21 @@
+Node_Type,Count
+join <node_values> <node_values>,2
+when i receive <node_values>,2
+next backdrop,2
+when i receive  <node_value>,2
+when i receive <node_change>,2
+go <node_value>  layer,2
+wait until <node_variable>,2
+delete all of <nodes_value>,2
+<node_value>=<node_value>,2
+say <node_value> for <value> seconds,2
+<value>  / <node_variable>,2
+set size to <value>,2
+pen extension api call <set pen <node_value>to <node_value>>,2
+<node_value> / <node_value>,2
+join <node_variable><value>,2
+pen extension api call <set pen size to <value>>,2
+<value> + <value>,2
+turn left <node_value>  degrees,2
+<value> / <node_value>  degrees,2
+text to speech extension api call <set language to <node_value>>,2

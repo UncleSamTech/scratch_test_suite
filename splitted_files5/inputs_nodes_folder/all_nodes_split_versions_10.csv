@@ -1,0 +1,21 @@
+Node_Type,Count
+go to x: <node_variable> y: <node_variable>,8
+when i start as a clone,5
+touching <node_value> ?,18
+<node_value> of <node_variable>,29
+move <node_variable> steps,11
+change <node_variable> by <node_variable>,4
+hide variable <node_variable>,10
+repeat until <node_value>,9
+change <node_variable> by <node_value>,8
+say <node_variable>,3
+when backdrop switches to <node_value>,13
+glide <value> secs to x: <value> y: <value>,11
+touching <node_value>,5
+think <value> for <value> seconds,13
+go to <node_value>,18
+forever,3
+change <node_value> effect by <value>,4
+key <node_value> pressed ?,13
+change x by <value>,10
+stop all sounds,11

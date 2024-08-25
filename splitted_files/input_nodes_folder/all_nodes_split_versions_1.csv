@@ -1,0 +1,21 @@
+Node_Type,Count
+when flag clicked,154
+show,131
+when this sprite clicked,84
+broadcast <node_value>,78
+set <node_variable> to <value>,142
+when i receive <node_value>,144
+if <condition> then block,88
+hide,169
+not <node_variable> = <value>,2
+custom script call,72
+item <value> of <node_list>,40
+item <node_value> of <node_list>,28
+<node_value> * <value>,13
+<node_value> + <value>,45
+custom function call,5
+wait <value> seconds,168
+if <condition> then block else block,26
+<node_variable> = <value> operator node,2
+define <nodes_value>,2
+created by <value>,15

@@ -1,0 +1,21 @@
+Node_Type,Count
+go to x: <value>  y: <value>,2
+music extension api <play drum <node_value> for <value> beats>,2
+text to speech extension api call <set voice to <node_value>>,2
+text to speech extension api call <set language to <node_value>>,2
+text to speech extension api call <speak <value>>,2
+text to speech extension api call <speak <node_value>>,2
+next backdrop,2
+when i receive  <node_value>,2
+go <node_value> <value> layers,3
+go <node_value>  layer,2
+set <node_value> effect to <value>,26
+boost extension api call <set motor <node_value> speed to <custom script call> %>,5
+boost extension api call <set motor <node_value> direction <node_value> >,13
+boost extension api call <turn motor <node_value> for <node_valuel>> rotations,9
+<node_value> / <value>,21
+boost extension api call <set light color to <value>>,6
+set size to <value>,2
+<value> * <node_variable>,4
+<node_value> / <node_value>,2
+glide <node_value> secs to x: <node_value> y: <node_value>,3

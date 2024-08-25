@@ -1,0 +1,23 @@
+Node_Type,Count
+<value> / <node_value>,2
+<node_variable> - <node_variable>,4
+clear graphics effect,4
+join <node_variable> <node_variable>,2
+<value> -  <node_value>,6
+<node_variable> mod <value>,6
+set x to <node_value>,2
+<node_value>,2
+<value> * <node_value>,4
+<value> * <value>,5
+clear graphics effects,13
+<node_variable> / <node_variable>,2
+letter <value> of <node_variable>,2
+mouse down ?,4
+go to x: <value> y: <node_value>,2
+<value> + <node_value>,2
+set <node_value> effect  to <node_value>,6
+<node_variables>,2
+key <node_value> pressed?,10
+join <value> <value>,2
+<value> / <value>,3
+mouse down?,4
