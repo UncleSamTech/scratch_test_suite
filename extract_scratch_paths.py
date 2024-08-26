@@ -281,6 +281,7 @@ class Scratch_Path:
         sc_gr_pos = nx.spring_layout(graph)
         nx.draw(graph,sc_gr_pos,with_labels=True,arrows=True)
         plt.show()
+
     
 sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
