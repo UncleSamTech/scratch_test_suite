@@ -22,12 +22,16 @@ def conv_pkl_to_txt(pickle_file,train_output_file):
     data_train_pkl = None
     with open(pickle_file,'rb') as pkl_file:
         data_train_pkl = pickle.load(pkl_file)
-        print(type(data_train_pkl))
-    data_train = str(data_train_pkl)
+        
+    
 
 
-    #with open(train_output_file,'w') as txt_file:
-        #txt_file.write(data_train)
+    with open(train_output_file,'w') as txt_file:
+        if isinstance(data_train_pkl,list):
+            for ele in data_train_pkl:
+                txt_file.write(f"{ele}\n")
+        else:
+            txt_file.write(str(data_train_pkl))
 
 
 #test_train_test_split("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_data_version4.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt")
