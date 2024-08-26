@@ -26,7 +26,7 @@ def get_all_train_hashes():
     select_train_hashes = """SELECT hash from contents;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2_train()
+    conn,curr = get_connection()
     if conn != None:
          curr.execute(select_train_hashes)  
          val = curr.fetchall()
@@ -39,10 +39,10 @@ def get_all_train_hashes():
     return fin_resp
 
 def get_all_test_hashes():
-    select_test_hashes = """SELECT hash from contents;"""
+    select_test_hashes = """SELECT hash from contents_copy;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection2()
+    conn,curr = get_connection_test()
     if conn != None:
          curr.execute(select_test_hashes)  
          val = curr.fetchall()
@@ -69,10 +69,10 @@ def get_duplicate_hashes():
 
 def delete_duplicate_hashes():
     duplicate_hashes = get_duplicate_hashes()
-    conn,curr = get_connection2()
+    conn,curr = get_connection_test()
     if len(duplicate_hashes) > 0:
         for hash in duplicate_hashes:
-            delete_duplicate_test_value_statement =  """delete from contents where hash = (?);"""
+            delete_duplicate_test_value_statement =  """delete from contents_copy where hash = (?);"""
             
             if conn != None:
                 curr.execute(delete_duplicate_test_value_statement,(hash,)) 
