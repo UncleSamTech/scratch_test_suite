@@ -22,7 +22,7 @@ def conv_pkl_to_txt(pickle_file,train_output_file):
     data_train_pkl = None
     with open(pickle_file,'rb') as pkl_file:
         data_train_pkl = pickle.load(pkl_file)
-        print(type(data_train))
+        print(type(data_train_pkl))
     data_train = str(data_train_pkl)
 
 
