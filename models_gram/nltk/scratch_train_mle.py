@@ -242,7 +242,7 @@ class scratch_train_mle:
         for each_gram in list_ngrams:
             try:
                 self.train_mle(train_data,each_gram,model_name)
-                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk_first(test_data,f'{model_name}_{each_gram}.pkl',each_gram)
+                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl',each_gram)
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
                 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_current_upd.txt","a") as precs:
@@ -282,3 +282,4 @@ tr_scr.multiple_train([2,3,4,5,6,7,8,9,10,11,12,13,14,15],"/media/crouton/siwuch
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
 #tr_scr.plot_precision_recall_curve("nltk-plot_prec_rec_acc")
+tr_scr.scratch_evaluate_model_nltk()
