@@ -3,14 +3,13 @@ import random
 
 
 
-def load_files(path):
+def load_files(path,shuffled_file):
     with open(path,mode="r",encoding="utf-8") as shf_file:
         files = list(csv.reader(shf_file))
         
     random.shuffle(files)
         
-   
-    with open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/new_shuffled_record.csv","w") as sgf:
+    with open(shuffled_file,"w") as sgf:
         writer = csv.writer(sgf)
         writer.writerows(files)
 
@@ -57,7 +56,10 @@ def filter_commit_projectname_file(filepath):
                     rec.write(f"{proj_name},{file_name},{revision},{commit}")
                     rec.write(f"\n")
 
-load_files("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/main_revisions_shuffled_output.csv")
+
+
+
+load_files("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/scratch_train_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_scratch_test_data_10.txt")
 #filter_commit_projectname_file("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/model_deployment/revisions_record.csv")
 
 #remove_redundant_records("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/main_revisions_shuffled.csv","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/main_revisions_shuffled_output.csv")
