@@ -242,7 +242,7 @@ class scratch_train_mle:
         for each_gram in list_ngrams:
             try:
                 self.train_mle(train_data,each_gram,model_name)
-                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl',each_gram)
+                acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
                 with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_current_upd.txt","a") as precs:
