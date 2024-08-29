@@ -92,25 +92,37 @@ class kenlm_train:
         return accuracy,precision,recall,f1score
 
 
-    def create_vocab(self,arpa_file,vocab_file):
-        with open(arpa_file,"r",encoding="utf-8") as fr:
-            lines = fr.readlines()
-            one_grams_seen = False
-            i = 0
-            for line in lines:
+    def create_vocab(self,arpa_file,vocab_file,arpa_path):
+        arpa_names = []
+        for i in os.listdir(arpa_path):
+            if len(i) > 1 and os.path.isfile(f'{arpa_path}/{i}'):
+                i = i.strip()
+                arpa_names.append(i)
+            else:
+                continue
+        for index,arpa_file in enumerate(arpa_names):    
+            with open(arpa_file,"r",encoding="utf-8") as fr:
+                lines = fr.readlines()
+                one_grams_seen = False
+                i = 0
+                for line in lines:
                 
-                line=line.strip()
+                    line=line.strip()
                 
-                if "\\1-grams" in line:
-                    one_grams_seen = True
-                    continue
-                if one_grams_seen:
-                    with open(vocab_file,"a") as vf:
-                        if len(line) > 1:
-                            print(line)
-                            token = line.split("\t")[1]
+                    if "\\1-grams" in line:
+                        one_grams_seen = True
+                        continue
+                    
+                    if one_grams_seen:
                         
-                            vf.write(token+"\n") 
+                        with open(f"{vocab_file}_{index}","a") as vf:
+                            if len(line) > 1:
+                                print(line)
+                                token = line.split("\t")[1]
+                        
+                                vf.write(token+"\n") 
+                    else:
+                        continue
                     
                    
     def predict_next_token_kenlm(self,model, context):
