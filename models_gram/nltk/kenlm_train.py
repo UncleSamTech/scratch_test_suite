@@ -92,7 +92,7 @@ class kenlm_train:
         return accuracy,precision,recall,f1score
 
 
-    def create_vocab(self,arpa_file,vocab_file,arpa_path):
+    def create_vocab(self,vocab_file,arpa_path):
         arpa_names = []
         for i in os.listdir(arpa_path):
             if len(i) > 1 and os.path.isfile(f'{arpa_path}/{i}'):
@@ -115,7 +115,7 @@ class kenlm_train:
                     
                     if one_grams_seen:
                         
-                        with open(f"{vocab_file}_{index}","a") as vf:
+                        with open(f"{vocab_file}_{index}.vocab","a") as vf:
                             if len(line) > 1:
                                 print(line)
                                 token = line.split("\t")[1]
@@ -237,7 +237,7 @@ kn = kenlm_train()
 
 
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
-kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa/kenln_order3.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order3.vocab")
+kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa")
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
