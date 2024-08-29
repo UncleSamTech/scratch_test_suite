@@ -121,7 +121,7 @@ class kenlm_train:
                             if len(line) > 1:
                                 print(line)
                                 token = line.split("\t")[1]
-                        
+                                print(token)
                                 vf.write(token+"\n") 
                             else:
                                 continue
