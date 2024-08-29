@@ -117,7 +117,7 @@ class kenlm_train:
                     
                     if one_grams_seen:
                         name = arpa_file.split(".arpa")[0]
-                        with open(f"{name}_{vocab_file}_{index}.vocab","a") as vf:
+                        with open(f"{vocab_file}_{index}_{name}.vocab","a") as vf:
                             if len(line) > 1:
                                 print(line)
                                 token = line.split("\t")[1]
