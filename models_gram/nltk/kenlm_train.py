@@ -100,8 +100,9 @@ class kenlm_train:
                 arpa_names.append(i)
             else:
                 continue
+        print(arpa_names)
         for index,arpa_file in enumerate(arpa_names):  
-            arpa_file = arpa_file.split()  
+            arpa_file = arpa_file.strip()  
             with open(arpa_file,"r",encoding="utf-8") as fr:
                 lines = fr.readlines()
                 one_grams_seen = False
