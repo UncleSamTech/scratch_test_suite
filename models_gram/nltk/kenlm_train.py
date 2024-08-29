@@ -106,9 +106,11 @@ class kenlm_train:
                     continue
                 if one_grams_seen:
                     with open(vocab_file,"a") as vf:
-                        token = line.split("\t")[1]
+                        if len(line) > 1:
+                            print(line)
+                            token = line.split("\t")[1]
                         
-                        vf.write(token+"\n") 
+                            vf.write(token+"\n") 
                     
                    
     def predict_next_token_kenlm(self,model, context):
