@@ -100,7 +100,8 @@ class kenlm_train:
                 arpa_names.append(i)
             else:
                 continue
-        for index,arpa_file in enumerate(arpa_names):    
+        for index,arpa_file in enumerate(arpa_names):  
+            arpa_file = arpa_file.split()  
             with open(arpa_file,"r",encoding="utf-8") as fr:
                 lines = fr.readlines()
                 one_grams_seen = False
@@ -237,7 +238,7 @@ kn = kenlm_train()
 
 
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
-kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa")
+kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa/")
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
