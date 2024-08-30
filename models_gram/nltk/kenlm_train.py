@@ -320,7 +320,7 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order_0_kenln_order14.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order14.arpa")
+kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order_11_kenln_order15.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order15.arpa")
 
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
