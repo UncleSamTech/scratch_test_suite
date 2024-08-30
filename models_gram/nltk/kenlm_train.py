@@ -1,5 +1,5 @@
 import os
-#import kenlm
+import kenlm
 import sys
 import nltk
 import numpy as np
@@ -50,12 +50,15 @@ class kenlm_train:
             return ""
 
     
-    def scratch_evaluate_model_kenlm(self,test_data,model_name):
-
+    def scratch_evaluate_model_kenlm(self,test_data,vocab_name,model_name):
+        
+        model_rec = None
+        
         y_true = []
         i=0
         y_pred = []
-        model = kenlm.Model(model_name)
+        
+        model_rec = kenlm.Model(model_name)
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
@@ -70,7 +73,7 @@ class kenlm_train:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
             
-                predicted_next_word = self.predict_next_token_kenlm(model,context)
+                predicted_next_word,vocab_name = self.predict_next_token_kenlm(model_rec,context,vocab_name)
                 
                 
                 i+=1
@@ -86,9 +89,60 @@ class kenlm_train:
         precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
-        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_acc_prec_rec_f1.txt","a") as frp:
-            frp.write(f" order 7 accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
-            frp.write("\n")
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_acc_prec_rec_f1_new.txt","a") as frp:
+            frp.write(f"vocab name {vocab_name} order accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}\n")
+            
+        return accuracy,precision,recall,f1score
+    
+
+    def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
+        arpa_names = []
+        model_rec = None
+        for i in os.listdir(arpa_path):
+            if len(i) > 1 and os.path.isfile(f'{arpa_path}/{i}'):
+                i = i.strip()
+                arpa_names.append(i)
+            else:
+                continue
+        y_true = []
+        i=0
+        y_pred = []
+        for each_model in arpa_names:
+            each_model = each_model.strip()
+            model_rec = kenlm.Model(each_model)
+
+            with open(test_data,"r",encoding="utf-8") as f:
+                lines= f.readlines()
+                random.shuffle(lines)
+            
+            
+                for line in lines:
+                    #line = self.replace_non_vs_string_with_tokens(line)
+                    line = line.strip()
+                    sentence_tokens = line.split()
+            
+                    context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
+                    true_next_word = sentence_tokens[-1]
+            
+                    predicted_next_word,vocab_name = self.predict_next_token_kenlm(model_rec,context,vocab_path)
+                
+                
+                    i+=1
+                    if i%500 == 0:
+                        print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
+            
+                    y_true.append(true_next_word)
+                    y_pred.append(predicted_next_word)
+
+
+        #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+        recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+        f1score = f1_score(y_true,y_pred,average="weighted")
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_acc_prec_rec_f1_new.txt","a") as frp:
+            frp.write(f"vocab name {vocab_name} order accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}\n")
+            
         return accuracy,precision,recall,f1score
 
 
@@ -129,19 +183,40 @@ class kenlm_train:
                         continue
                     
                    
-    def predict_next_token_kenlm(self,model, context):
-    #context_tokens = context.split(" ")
+    def predict_next_token_kenlm(self,model, context,vocab_name):
+        
         next_token_probabilities = {}
-
-        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab", "r", encoding="utf8") as vocab_f:
-            vocabulary = vocab_f.readlines()
-            for candidate_word in vocabulary:
-                candidate_word = candidate_word.strip()
-                context_with_candidate = context + " " + candidate_word
-                next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+        
+        with open(vocab_name, "r", encoding="utf8") as vocab_f:
+                vocabulary = vocab_f.readlines()
+                for candidate_word in vocabulary:
+                    candidate_word = candidate_word.strip()
+                    context_with_candidate = context + " " + candidate_word
+                    next_token_probabilities[candidate_word] = model.score(context_with_candidate)
 
         predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
         return predicted_next_token
+    
+    def predict_next_token_kenlm2(self,model, context,vocab_path):
+        vocab_names = []
+        for i in os.listdir(vocab_path):
+            if len(i) > 1 and os.path.isfile(f'{vocab_path}/{i}'):
+                i = i.strip()
+                vocab_names.append(i)
+            else:
+                continue
+        next_token_probabilities = {}
+        for each_vocab in vocab_names:
+            each_vocab = each_vocab.strip()
+            with open(f"{vocab_path}/{each_vocab}", "r", encoding="utf8") as vocab_f:
+                vocabulary = vocab_f.readlines()
+                for candidate_word in vocabulary:
+                    candidate_word = candidate_word.strip()
+                    context_with_candidate = context + " " + candidate_word
+                    next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+        return predicted_next_token,each_vocab
     
     def plot_precision_recall_curve(self,plot_name):
 
@@ -241,11 +316,11 @@ kn = kenlm_train()
 
 
 #kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order10.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/vocabs_folder/kenlm_sb3_order2.vocab")
-kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa")
+#kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa")
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-#val = kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order11.arpa")
+kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order_18_kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order2.arpa")
 #print(val)
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
