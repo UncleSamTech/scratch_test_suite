@@ -73,7 +73,7 @@ class kenlm_train:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
             
-                predicted_next_word,vocab_name = self.predict_next_token_kenlm(model_rec,context,vocab_name)
+                predicted_next_word = self.predict_next_token_kenlm(model_rec,context,vocab_name)
                 
                 
                 i+=1
