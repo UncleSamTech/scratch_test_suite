@@ -89,7 +89,7 @@ class kenlm_train:
         precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
-        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_acc_prec_rec_f1_new.txt","a") as frp:
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_acc_prec_rec_f1_new_vocab2.txt","a") as frp:
             frp.write(f"vocab name {vocab_name} order accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}\n")
             
         return accuracy,precision,recall,f1score
@@ -262,6 +262,30 @@ class kenlm_train:
                    0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815
                    ]
         
+        accurracy_score_2_10 = [0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217
+                               ,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        precision_2_10 = [0.358121314258974,0.33285318756910176,0.589214697331858,0.5936961737776529,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
+        recall_2_10 = [0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        f1_score_2_10 = [0.03620538803538,0.051215288426201,0.1410810665330756,0.1521354021873837,0.1519912821686130,0.151991282168613,0.151991282168613,0.1519912821686130,0.151991282168613]
+
+        accuracy_score_11_19 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328
+                                ,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,
+                                0.16819198698393328]
+        precision_11_19 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
+        recall_11_19 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        f1_score_11_19 = [0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861]
+
+        #accurracy_score_12_16 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        #precision_12_16 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
+        #recall_12_16 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        #f1_score_12_16 = [0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613]
+
+        #accurracy_score_17_20 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        #precision_17_20 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
+        #recall_17_20 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
+        #f1_score_17_20 = [0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613]
+
+
         accuracy_plot_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
         recall_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
         accuracy_plot_9_15 = [0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
@@ -275,6 +299,8 @@ class kenlm_train:
         ngrams9_15 = list(range(9,16))
 
         Ngrams_all = list(range(2,21))
+        ngrams_2_10 = list(range(2,11))
+        ngrams_11_19 = list(range(11,20))
         #[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
         #fig = plt.figure()
@@ -286,15 +312,15 @@ class kenlm_train:
         #axes.legend(loc ="center right")
 
         
-        plt.plot(ngrams9_15, precision_9_15, label = "Precision")
-        plt.plot(ngrams9_15, recall_9_15, label = "Recall")
-        plt.plot(ngrams9_15, f1_9_15, label = "F1")
-        plt.plot(ngrams9_15, accuracy_plot_9_15, label = "Accuracy")
+        plt.plot(ngrams_11_19, precision_11_19, label = "Precision")
+        plt.plot(ngrams_11_19, recall_11_19, label = "Recall")
+        plt.plot(ngrams_11_19, f1_score_11_19, label = "F1")
+        plt.plot(ngrams_11_19, accuracy_score_11_19, label = "Accuracy")
         
         
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
-        plt.title('Kenlm_Model Scores vs N-Gram Orders for replaced tokens')
+        plt.title('Kenlm_Model Scores vs N-Gram Orders 11 - 19')
         plt.legend()
         #plt.xlim(0,21)
         #plt.ylim(0,0.79)
@@ -302,7 +328,7 @@ class kenlm_train:
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
-        plt.savefig(f'{plot_name}_kenlm_9_15.pdf')
+        plt.savefig(f'{plot_name}_11_19.pdf')
 
     def paired_t_test(self,nltk_2_10,nltk_11_19):
         if isinstance(nltk_2_10,list) and len(nltk_2_10) > 0 and isinstance(nltk_11_19,list) and len(nltk_11_19) > 0:
@@ -320,8 +346,8 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order_6_kenln_order20.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa")
-
+kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_vocabs_folder/kenlm_sb3_order_18_kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order2.arpa")
+#kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order")
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
 #print("accuracy parametric ttest on kenln",accuracy)
@@ -332,11 +358,15 @@ kn.scratch_evaluate_model_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_fil
 #print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
 
 
+#accuracy_wilconsin = kn.wilcon_t_test([0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328],[0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328])
+#recall_wilconsin = kn.wilcon_t_test([0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328],[0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328])
 #accuracy_wilconsin = kn.wilcon_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004],[0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609])
-#print("accuracy wilconxon test for kenlm ", accuracy_wilconsin)
-#precision_wilconsin = kn.wilcon_t_test([0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364],[0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916])
+#print("recall wilconxon test for kenlm ", recall_wilconsin)
+
+#precision_wilconsin = kn.wilcon_t_test([0.358121314258974,0.33285318756910176,0.589214697331858,0.5936961737776529,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781],[0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781])
 #print("precision wilconxon test for kenlm ", precision_wilconsin)
-#f1_wilconxon = kn.wilcon_t_test([0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005],[0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815])
+
+#f1_wilconxon = kn.wilcon_t_test([0.03620538803538,0.051215288426201,0.1410810665330756,0.1521354021873837,0.1519912821686130,0.151991282168613,0.151991282168613,0.1519912821686130,0.151991282168613],[0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861])
 #print("f1 wilconxon test for kenlm ", f1_wilconxon)
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 7  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa       
 #cmake -DKENLM_MAX_ORDER=10 ..
