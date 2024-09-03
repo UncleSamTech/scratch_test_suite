@@ -134,7 +134,7 @@ class bi_lstm_scratch:
 
     def plot_graph(self,string_va,result_path):
 
-        with open(f"{result_path}main_historyrec_150embedtime2.pickle","rb") as rh:
+        with open(f"{result_path}main_historyrec_150embedtime3.pickle","rb") as rh:
             val = pickle.load(rh)
         
             plt.plot(val.history[string_va])
@@ -150,7 +150,7 @@ class bi_lstm_scratch:
         plt.xlabel("Epochs")
         plt.ylabel(string_va)
         #plt.show()
-        plt.savefig(f"{result_path}{string_va}bilstm_150embedtime2_quick.pdf")
+        plt.savefig(f"{result_path}{string_va}bilstm_150embedtime3_quick.pdf")
 
         
 
@@ -166,13 +166,13 @@ class bi_lstm_scratch:
 
                 history = loaded_model.fit(xs,ys,epochs=50,verbose=1,callbacks=[lr_scheduler,early_stopping])
 
-                file_name = f"{result_path}main_bilstm_scratch_model_150embedtime2.keras"
+                file_name = f"{result_path}main_bilstm_scratch_model_150embedtime3.keras"
                 if os.path.exists(file_name):
                     os.remove(file_name)
 
                 loaded_model.save(file_name)
 
-                with open(f"{result_path}main_historyrec_150embedtime2.pickle","wb") as hs:
+                with open(f"{result_path}main_historyrec_150embedtime3.pickle","wb") as hs:
                     pickle.dump(history,hs)
         else:
             print("Please install GPU version of TF")
@@ -180,13 +180,13 @@ class bi_lstm_scratch:
 
             history = loaded_model.fit(xs,ys,epochs=50,verbose=1)
 
-            file_name = f"{result_path}main_bilstm_scratch_model_150embedtime2.keras"
+            file_name = f"{result_path}main_bilstm_scratch_model_150embedtime3.keras"
             if os.path.exists(file_name):
                 os.remove(file_name)
 
             loaded_model.save(file_name)
 
-            with open(f"{result_path}main_historyrec_150embedtime2.pickle","wb") as hs:
+            with open(f"{result_path}main_historyrec_150embedtime3.pickle","wb") as hs:
                 pickle.dump(history,hs)
                 
 
@@ -210,13 +210,13 @@ class bi_lstm_scratch:
         #return val
 
     def consolidate_data_train(self,filepath,result_path):
-        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        #padd_seq,max_len = self.pad_sequ(input_seq)
-        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        padd_seq,max_len = self.pad_sequ(input_seq)
+        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
         #print(history)
-        #model_name = "main_bilstm_scratch_model_150embedtime1.keras"
-        #self.train_model_again(model_name,result_path,xs,ys)
+        model_name = "main_bilstm_scratch_model_150embedtime2.keras"
+        self.train_model_again(model_name,result_path,xs,ys)
 
         self.plot_graph("accuracy",result_path)
 
