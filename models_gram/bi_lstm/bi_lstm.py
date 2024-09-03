@@ -188,6 +188,7 @@ class bi_lstm_scratch:
 
             with open(f"{result_path}main_historyrec_150embedtime2.pickle","wb") as hs:
                 pickle.dump(history,hs)
+                
 
     def consolidate_data(self,filepath,testfile,model_path,result_path):
         
@@ -214,9 +215,10 @@ class bi_lstm_scratch:
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
         #print(history)
-        model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/main_bilstm_scratch_model_150embedtime1.keras"
-        history_again = self.train_model_again(model_path,result_path,xs,ys)
-        #self.plot_graph("loss",result_path)
+        model_name = "main_bilstm_scratch_model_150embedtime1.keras"
+        self.train_model_again(model_name,result_path,xs,ys)
+
+        self.plot_graph("loss",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
