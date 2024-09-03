@@ -150,7 +150,7 @@ class bi_lstm_scratch:
         plt.xlabel("Epochs")
         plt.ylabel(string_va)
         #plt.show()
-        plt.savefig(f"{result_path}{string_va}bilstm_100embedtime2_quick.pdf")
+        plt.savefig(f"{result_path}{string_va}bilstm_150embedtime2_quick.pdf")
 
         
 
@@ -214,7 +214,7 @@ class bi_lstm_scratch:
         #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
         #print(history)
-        self.plot_graph("accuracy",result_path)
+        self.plot_graph("loss",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
