@@ -134,7 +134,7 @@ class bi_lstm_scratch:
 
     def plot_graph(self,string_va,result_path):
 
-        with open(f"{result_path}main_historyrec_50embedtime2.pickle","rb") as rh:
+        with open(f"{result_path}main_historyrec_150embedtime1.pickle","rb") as rh:
             val = pickle.load(rh)
         
             plt.plot(val.history[string_va])
@@ -209,11 +209,11 @@ class bi_lstm_scratch:
         #return val
 
     def consolidate_data_train(self,filepath,result_path):
-        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
-        print(history)
+        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        #padd_seq,max_len = self.pad_sequ(input_seq)
+        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        #print(history)
         self.plot_graph("accuracy",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
@@ -284,6 +284,8 @@ class bi_lstm_scratch:
     def predict_next_token_bilstm(self,context,maxseqlen,model_path,result_path):
         token_list = None
         
+        with open(f"{result_path}main_seqlen_150embedtime1.txt","r") as se:
+            val = se.read()
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
             with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
@@ -318,7 +320,8 @@ class bi_lstm_scratch:
                 tokenz = pickle.load(tk)
                 token_list = tokenz.texts_to_sequences([context])
             
-                padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre',truncating='pre'))
+                #padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre',truncating='pre'))
+                padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre'))
                 #print("evaluation shape  ", padded_in_seq.shape)
                 load_mod = load_model(f"{result_path}{model_path}",compile=False)
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
