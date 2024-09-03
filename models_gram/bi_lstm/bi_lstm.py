@@ -210,13 +210,13 @@ class bi_lstm_scratch:
         #return val
 
     def consolidate_data_train(self,filepath,result_path):
-        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        #padd_seq,max_len = self.pad_sequ(input_seq)
+        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
         #print(history)
-        model_name = "main_bilstm_scratch_model_150embedtime1.keras"
-        self.train_model_again(model_name,result_path,xs,ys)
+        #model_name = "main_bilstm_scratch_model_150embedtime1.keras"
+        #self.train_model_again(model_name,result_path,xs,ys)
 
         self.plot_graph("accuracy",result_path)
 
