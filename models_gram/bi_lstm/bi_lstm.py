@@ -218,7 +218,7 @@ class bi_lstm_scratch:
         model_name = "main_bilstm_scratch_model_150embedtime1.keras"
         self.train_model_again(model_name,result_path,xs,ys)
 
-        self.plot_graph("loss",result_path)
+        self.plot_graph("accuracy",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
