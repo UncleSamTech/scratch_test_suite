@@ -263,7 +263,7 @@ class bi_lstm_scratch:
                 
                 i+=1
                 if i%500 == 0:
-                    print("good progress")
+                    
                     print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
             
                 y_true.append(true_next_word)
@@ -304,15 +304,14 @@ class bi_lstm_scratch:
             
             
                 padded_in_seq = np.array(pad_sequences([token_list],maxlen=maxseqlen,padding='pre',truncating='pre'))
-                #print("evaluation shape  ", padded_in_seq.shape)
+                
                 try:
                     load_mod = load_model(f"{result_path}{model_name}",compile=False)
                 except OSError as e:
-                    print(f"Error loading model: {e}")
+                    
                     return None
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
-                num_classes = np.array(predicted).size
-                print("number of classes",num_classes)
+                
 
                 pred_token_index = np.argmax(predicted,axis=-1)[0]
         
@@ -334,10 +333,10 @@ class bi_lstm_scratch:
                     print(f"Error loading model: {e}")
                     return None 
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
-                num_classes = np.array(predicted).size
-                print("number of classes",num_classes)
+                
+                
                 pred_token_index = np.argmax(predicted,axis=-1)[0]
-                print("class with maximum probability", pred_token_index)
+                
                 #print("index",pred_token_index)
 
                 for word,index in tokenz.word_index.items():
