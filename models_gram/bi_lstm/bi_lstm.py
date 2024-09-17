@@ -303,7 +303,7 @@ class bi_lstm_scratch:
                 print(f"Default GPU device : {gpu[0].name}")
             
             
-                padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
+                padded_in_seq = np.array(pad_sequences([token_list],maxlen=maxseqlen,padding='pre',truncating='pre'))
                 #print("evaluation shape  ", padded_in_seq.shape)
                 try:
                     load_mod = load_model(f"{result_path}{model_name}",compile=False)
@@ -327,7 +327,7 @@ class bi_lstm_scratch:
                 return None
         
             else:   
-                padded_in_seq = np.array(pad_sequences(token_value,maxlen=maxseqlen,padding='pre')) 
+                padded_in_seq = np.array(pad_sequences([token_value],maxlen=maxseqlen,padding='pre')) 
                 try:
                     load_mod = load_model(f"{result_path}{model_name}",compile=False)
                 except OSError as e:
