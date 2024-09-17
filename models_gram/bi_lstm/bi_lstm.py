@@ -279,55 +279,60 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_100embedtime1.txt","a") as blm:
+        with open(f"{result_path}bilstmmetrics_150embedtime5.txt","a") as blm:
             blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
         
         return accuracy,precision,recall,f1score
 
     
-    def predict_next_token_bilstm(self,context,maxseqlen,model_path,result_path):
+    def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
         token_list = None
+        token_value = None
+        gpu = tf.config.list_physical_devices('GPU')
         
-        with open(f"{result_path}main_seqlen_150embedtime1.txt","r") as se:
-            val = se.read()
-        if tf.test.gpu_device_name():
-            print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
-            
-                with tf.device('/GPU:0'):
-                    tokenz = pickle.load(tk)
-                    token_list = tokenz.texts_to_sequences([context])
-            
-                    padded_in_seq = np.array(pad_sequences(token_list,maxlen=44,padding='pre',truncating='pre'))
-                    #print("evaluation shape  ", padded_in_seq.shape)
-                    load_mod = load_model(f"{result_path}{model_path}",compile=False)
-                    predicted = load_mod.predict(padded_in_seq,verbose=1)
-                    num_classes = np.array(predicted).size
-                    print("number of classes",num_classes)
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            tokenz = pickle.load(tk)
+            context = context.strip()
 
-                    pred_token_index = np.argmax(predicted,axis=-1)[0]
+            token_list = tokenz.texts_to_sequences([context])
+            if not token_list or len(token_list[0]) == 0:
+                print("Empty token list, unable to predict token.")
+                return None
+            token_value = token_list[0]
+            if gpu:
+                print(f"Default GPU device : {gpu[0].name}")
+            
+            
+                padded_in_seq = np.array(pad_sequences(token_list,maxlen=maxseqlen,padding='pre',truncating='pre'))
+                #print("evaluation shape  ", padded_in_seq.shape)
+                try:
+                    load_mod = load_model(f"{result_path}{model_name}",compile=False)
+                except OSError as e:
+                    print(f"Error loading model: {e}")
+                    return None
+                predicted = load_mod.predict(padded_in_seq,verbose=1)
+                num_classes = np.array(predicted).size
+                print("number of classes",num_classes)
+
+                pred_token_index = np.argmax(predicted,axis=-1)[0]
         
      
-                    #print("index",pred_token_index)
-                    if pred_token_index in tokenz.index_word:
-
-                        next_pred_token = tokenz.index_word[pred_token_index]
-            
+                #print("index",pred_token_index)
+                for token,index in tokenz.word_index.items():
+                    if index == pred_token_index:
+                        next_pred_token = token
+                        print(next_pred_token)
                         return next_pred_token
-                    else:
-                        next_pred_token = None
-
-                        return next_pred_token
-                    
-        else:
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
-                tokenz = pickle.load(tk)
-                token_list = tokenz.texts_to_sequences([context])
-            
-                #padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre',truncating='pre'))
-                padded_in_seq = np.array(pad_sequences(token_list,maxlen=11,padding='pre'))
-                #print("evaluation shape  ", padded_in_seq.shape)
-                load_mod = load_model(f"{result_path}{model_path}",compile=False)
+                            
+                return None
+        
+            else:   
+                padded_in_seq = np.array(pad_sequences(token_value,maxlen=maxseqlen,padding='pre')) 
+                try:
+                    load_mod = load_model(f"{result_path}{model_name}",compile=False)
+                except OSError as e:
+                    print(f"Error loading model: {e}")
+                    return None 
                 predicted = load_mod.predict(padded_in_seq,verbose=1)
                 num_classes = np.array(predicted).size
                 print("number of classes",num_classes)
@@ -335,8 +340,12 @@ class bi_lstm_scratch:
                 print("class with maximum probability", pred_token_index)
                 #print("index",pred_token_index)
 
-                next_pred_token = tokenz.index_word[pred_token_index] if pred_token_index in tokenz.index_word else None
-                return next_pred_token
+                for word,index in tokenz.word_index.items():
+                    if index == pred_token_index:
+                        next_pred_token = word
+                        print(next_pred_token)
+                        return next_pred_token
+                return None
        
 
     def load_trained_model(self,model_name) :
@@ -347,8 +356,8 @@ class bi_lstm_scratch:
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-#cl_ob.evaluate_bilstm("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt")
+cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt",45,"main_historyrec_150embedtime5.pickle","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")

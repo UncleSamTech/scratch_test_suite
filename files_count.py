@@ -178,6 +178,21 @@ def split_csv(input_file, output_prefix, lines_per_file=20):
                 writer.writerow(header)
                 writer.writerows(output_rows)
                 
+def count_open_codes(input_file):
+    opencode_stores = {"introducing control flow structure": ["when I receive <node_value>","broadcast <node_value>"],"introducing event listeners":["when this sprite clicked"],               
+    "introducing decision flow":["if <condition> then block","if <condition> then block else block"],
+    "creating and utilizing custom blocks":["custom script call","define <nodes_value>"],
+    "assigning values to variable":["set <node_variable> to <value>","set size to <node_value>","set size to <value> %","set size to <node_value> %","set size to <node> %","set <node_variable> to <node_value>","set volume to <value> %","set <node_value> effect to <value>"],"adding iteration to a program":["for each <node_value> in <node_value>","for each <node_variable> in <node_value>"],
+    "creating clones of nodes":["create clone of <node_value>"],
+    "concatenation of nodes":["join <node_value> <node_value>","join <value> <node_value>","join <node_value> <value>",
+                              "join <node_variable> <node_value>","join <node_variable> <value>",
+                              "join <node_variable> <node_variable>","join <value> <value>",
+                              "join <node_values> <node_values>","join <node_variable><value>"], 
+                              "introducing arithmetic operations":["<value> + <value>","<node_value> + <node_value>",
+                              "<node_value> + <value>","<node_variable> + <node_value>","<node_variable> + <value>"
+                              ,"<value> + <node_value>","<value> + <value>","<node_variable> * <value>",
+                              "<node_variable> * <node_variable>",
+                              "<node_value> * <node_value>","<node_value> * <value>"]}
             
 
 def main(pdf_path, csv_path):
