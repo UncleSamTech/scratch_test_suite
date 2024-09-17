@@ -266,14 +266,17 @@ class bi_lstm_scratch:
                     
                     print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
             
-                y_true.append(true_next_word)
+                if predicted_next_word is not None:
+                    y_true.append(true_next_word)
                 
-                y_pred.append(predicted_next_word)
+                    y_pred.append(predicted_next_word)
                 
 
                 print(f"trueword {true_next_word} context {context} predicted {predicted_next_word} ytrue {y_true} ypred {y_pred}")
                 
-
+                if len(y_true) == 0 or len(y_pred) == 0:
+                    print("No valid predictions made.")
+                    return None, None, None, None
         accuracy = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
