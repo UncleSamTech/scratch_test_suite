@@ -779,6 +779,37 @@ def create_db_table_train(db_path):
     c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
     connection.commit()
     connection.close() 
+
+def create_db_table_test(db_path):
+    connection = sqlite3.connect(db_path)
+    c =  connection.cursor()
+    
+    revision = """CREATE TABLE "Revisions" (
+    "Project_Name" TEXT,
+    "File" TEXT,
+    "Revision" TEXT,
+    "Commit_SHA" TEXT,
+    "Commit_Date" TEXT,
+    "Hash" TEXT,
+    "Nodes" INTEGER,
+    "Edges" INTEGER
+    );"""
+    c.execute(revision)
+
+    contents = """CREATE TABLE "Contents" (
+    "Hash" TEXT,
+    "Content" TEXT
+    );"""
+    c.execute(contents)
+    
+    train_projects = """CREATE TABLE test_projects(project_name,number);"""
+    c.execute(train_projects)
+
+    connection.commit()
+
+    c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
+    connection.commit()
+    connection.close() 
     
 
 
@@ -787,3 +818,4 @@ def create_db_table_train(db_path):
 #main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
 #main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 create_db_table_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db")
+create_db_table_test("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db")
