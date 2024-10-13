@@ -1,0 +1,201 @@
+Code,Count
+addition of objects (i.e sprites),11
+addition of functions (i.e. scripts),30
+introducing control flow structure,13
+introducing event listeners,16
+introducing decision flow,6
+creating and utilizing custom blocks,13
+assigning values to variable,1
+adding iteration to a program,4
+creating clones of nodes,1
+concatenation of nodes,2
+introducing arithmetic operations,10
+updating a node list,1
+introducing delay to a program,14
+comparing two nodes,2
+adding motion to sprites,3
+user interface improvement,6
+accessing an element of a node list,1
+adding values to a node list,3
+deleting all elements of a node list,2
+adding sound to a sprite,4
+adding an event node,23
+addition of objects (i.e. sprites),26
+program redirection,1
+changing sprite apperance,1
+api utilization,10
+controlling sprite display,3
+assigning values to variables,2
+introducing unending iteration,10
+randomizing values,3
+changing sprite costumes,14
+calculating the length of a node list,2
+zooming sprites out,2
+repeating node actions,13
+slicing through node values,1
+changing node variables values,1
+utilizing a node variable,1
+updating a node list value,1
+introducing conditional delay to a program,1
+adding motions to sprite,6
+displaying text,11
+changing backdrop costumes,4
+adding sounds to a sprite,3
+assigning values to a variable,1
+scripts removal,1
+adding motions to sprites,20
+addition of functions (i.e scripts),4
+changing y coordinate value,3
+introducing delay to program,1
+displaying comments,3
+addition of functions to backdrops (i.e scripts),1
+changing backdrops costumes,1
+changing x coordinate value,3
+displaying node variable,1
+hiding node variable,1
+changing sprite size,3
+changing node variable value,7
+introducing arithmetic operation,1
+introducing sensing to sprites,1
+introducing logical operators,7
+introducing pointers,4
+file renamed without node change,2
+file renamed without node changes,1
+introducing an event listener,1
+introducing an unending loop,1
+adding sound to sprites,1
+repeating node action,1
+changing node value effect,1
+changing node values,2
+introducing comparison operators,3
+assigning values to node variables,10
+introducing decision block,6
+adding sounds to sprites,10
+adjusting sounds volumes of sprites,1
+concatenating nodes,1
+measuring distance between sprites,2
+updating elements of a node list,1
+randomizing node values,3
+slicing node values,1
+selecting value from a node list,2
+deleting elements of a node list,1
+calculating the lenght of a node list,1
+comparing node values,6
+removing graphics effects,3
+assigning values to node value effect,1
+slicing values from a variable,1
+modullus operation on nodes,1
+repeat node actions,1
+introducing sensing,6
+assigning values to x coordinates,1
+adding motions to a sprite,1
+negating node values,2
+updating values in a node list,1
+introducing arithemetic operations,1
+slicing values from node value,1
+changing size value,1
+assigning value to node value effect,1
+concatenating node values,1
+selecting values from a node list,1
+adjusting sound volumes of sprites,1
+changing node value,1
+introducing condition block,1
+introducing unending iterations to sprites,1
+assigning values to node variable,3
+creating clone of node values,1
+addition of scripts to backdrops (i.e functions),1
+introducing an unending iteration,3
+creating a clone of sprite,1
+changing sprite appearance,2
+introducing a decision block,3
+deleting clone of sprites,1
+slicing node value of node variables,1
+repeat node actions conditionally,1
+removal of scripts from sprites,1
+comparing node variable to a value,1
+deleting a sprite clone,1
+slicing values from a node variable,1
+addition of scripts (i.e. functions),1
+introducing iteration to a program,3
+introducing mathematical operations,2
+introducing iterations to a program,2
+adding rotations style,1
+assigning size to sprite,1
+displaying text in sprites,1
+stoping a node,1
+assigning values to a node variable,2
+slicing values of node variables,1
+assigning values to nodes effect,1
+removing api extensions,1
+change sprite rotation style,1
+file renamed without changes,1
+adding an interactive node,3
+creating and utilizing a custom block,1
+changing sprite costume,1
+controlling the appearance of sprites,2
+assigning size to node values,1
+addition of event nodes,4
+introducing user interactions in programs,1
+stop node,1
+addition of an event node,1
+addition of motions to sprites,1
+adding decision blocks to sprites,1
+changing x coordinates of sprites,1
+changing y coordinates of sprites,1
+zooming out sprites,1
+removal of nodes,1
+rearranging nodes position,1
+adding decision block,1
+removing sounds,1
+removing sounds from sprites,1
+rearrannodenodes positions,1
+adding event nodes,2
+introducing unending iteration to a program,1
+changing node effect value,1
+assigning size to sprites,2
+zooming sprites,2
+removal of objects (i.e. sprites),1
+removal of functions (i.e. scripts),1
+changing node size,1
+approximate node values,1
+node variable,1
+create and utilize custom blocks,1
+introducing decision blocks,4
+controlling sprites appearance,1
+updating element of a node list,1
+selecting a value from a node list,1
+controlling sprite appearance,6
+delete all of node list,1
+delete node list,1
+displaying variables,1
+adjusting sprite volumes,1
+adding pointers to sprites,1
+stopping nodes,1
+node values change,1
+adding disjoint nodes,1
+introducing objects to a program (i.e. sprites),3
+introducing functions to a program (i.e. scripts),4
+repeating actions,1
+assigning size to nodes,1
+introducing iteration in program,1
+introducing delay in program,1
+changing backdrop costume,1
+introducting objects to a program (i.e. sprites),1
+introduction of event listeners,1
+addition of nodes,1
+addition of motions to scripts,1
+creating and utilizing custom scripts,2
+moving files to a new folder,2
+addition of event node,1
+repeating nodes actions,2
+introducing delay in programs,1
+additon of rotation to sprites,1
+file renamed,11
+addition an event nodes,1
+adding an iteration to a program,1
+introducing an arithmetic operation,1
+stoping node variables,1
+removing graphics,1
+assigning values to node effect value,1
+importing api,1
+removing api,1

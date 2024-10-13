@@ -153,8 +153,27 @@ def sort_csv(file_csv):
     df_sorted = df.sort_values(by='Count', ascending=False)
 
     # Save the sorted DataFrame back to a CSV file
-    sorted_csv_path = 'sorted_nodes_count_version4.csv'
+    sorted_csv_path = 'sorted_unique_open_codes.csv'
     df_sorted.to_csv(sorted_csv_path, index=False)
+
+
+
+
+def sum_count_column(file_path):
+    total_count = 0
+    
+    # Open and read the CSV file
+    with open(file_path, mode='r') as file:
+        csv_reader = csv.DictReader(file)
+        
+        # Sum the values in the "Count" column
+        for row in csv_reader:
+            total_count += int(row['Count'])
+    print("total count",total_count)
+    #total count 5094
+    return total_count
+
+
 
 def split_csv(input_file, output_prefix, lines_per_file=20):
     print(input_file)
@@ -202,6 +221,33 @@ def main(pdf_path, csv_path):
     #write_nodes_to_csv(node_counts, csv_path)
     print(f"CSV file '{csv_path}' has been created successfully.")
 
+
+def extract_codes(text_parsed):
+    # Regular expression to match the lines of the codes under "Version"
+    pattern = r'\d+\.\s*(.*)'
+    matches = re.findall(pattern, text_parsed)
+    return [match.strip() for match in matches]
+
+def load_file_count_generate_new_file(file_path,new_file_name):
+    df = pd.read_excel(file_path, sheet_name=0, engine='openpyxl')
+
+    count_open_codes = {}
+    for text in df['Codes']:
+        if isinstance(text, str):
+            codes = extract_codes(text)
+            for code in codes:
+            
+                if code in count_open_codes:
+                    count_open_codes[code] += 1
+                else:
+                    count_open_codes[code] = 1
+    result_df = pd.DataFrame(list(count_open_codes.items()), columns=['Code', 'Count'])
+    result_df.to_csv(new_file_name, index=False)
+
+
+
+
+
 # Example usage
 '''
 if __name__ == "__main__":
@@ -210,8 +256,11 @@ if __name__ == "__main__":
     main(pdf_path, csv_path)
 '''
 #extract_match_file('/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/revision_changes_description.txt',"all_matched_nodes_main_version6.csv")
-plot_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_matched_nodes_main.csv","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/output_nodes_plot/least20_nodes_plot.pdf","Least 20 Nodes Count Plot")
+#plot_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_matched_nodes_main.csv","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/output_nodes_plot/least20_nodes_plot.pdf","Least 20 Nodes Count Plot")
 #sort_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_matched_nodes_main_version6.csv")
 #consolidate_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_matched_nodes.txt","counted_nodes.csv")
 #split_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_matched_nodes_main_version6.csv","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/inputs_nodes_folder/all_nodes_split_versions")
 #plot_data_group("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/inputs_nodes_folder","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/output_nodes_plot")
+#sum_count_column("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/sorted_nodes_count_version4.csv")
+#load_file_count_generate_new_file("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/Opencoding.xlsx","new_unique_open_codes.csv")
+sort_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/new_unique_open_codes.csv")
