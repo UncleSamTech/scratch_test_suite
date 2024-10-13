@@ -19,12 +19,12 @@ from sklearn.model_selection import train_test_split
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
 def get_connection_test():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -678,7 +678,7 @@ def main2(project_path: str):
         else:
             continue
     
-    #split_train_test_projects(proj_names)
+    split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
     
     train_projects = get_all_train_projects()   
@@ -816,6 +816,6 @@ def create_db_table_test(db_path):
 
 
 #main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-create_db_table_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db")
-create_db_table_test("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#create_db_table_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db")
+#create_db_table_test("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db")
