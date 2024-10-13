@@ -2919,5 +2919,5 @@ con_test = scratch_parser_inst.flatten_inner_nested_lists(scratch_parser_inst.co
 #print(scratch_parser_inst.read_files("files/Chicken Clicker remix-4.sb3"))
 
     
-print(scratch_parser_inst.correct_parse("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/scratch_files/Project.sb3"))
+#print(scratch_parser_inst.correct_parse("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/scratch_files/Project.sb3"))
 #print(scratch_parser_inst.correct_parse_loop("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/scratch_files"))
