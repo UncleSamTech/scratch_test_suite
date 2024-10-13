@@ -30,10 +30,28 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
 #df_proj_load("Authors_Project",connection,if_exists='replace',index=False)
 
-content_parent_object =  connection.cursor()
+c =  connection.cursor()
 cont_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
-content_parent_object.execute(cont_parent_table)
+c.execute(cont_parent_table)
 
+revision = """CREATE TABLE "Revisions" (
+  "Project_Name" TEXT,
+  "File" TEXT,
+  "Revision" TEXT,
+  "Commit_SHA" TEXT,
+  "Commit_Date" TEXT,
+  "Hash" TEXT,
+  "Nodes" INTEGER,
+  "Edges" INTEGER
+);"""
+c.execute(revision)
+
+contents = """CREATE TABLE "Contents" (
+  "Hash" TEXT,
+  "Content" TEXT
+);"""
+c.execute(contents)
+connection.commit()
 '''
 revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
 revision_project_index="""CREATE INDEX "sc_Revisions_Projects_index" ON "Revisions" ("Project_Name"); """
@@ -46,5 +64,7 @@ content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "
 '''
 
 # step 5: close 
+
+c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 connection.commit()
 connection.close()
