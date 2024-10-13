@@ -1,3 +1,4 @@
+
 import sqlite3
 #import pandas as pd
 
@@ -57,4 +58,3 @@ curs.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");'''
 # step 5: close 
 connection.commit()
 connection.close()
-
