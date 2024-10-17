@@ -678,7 +678,7 @@ def main2(project_path: str):
         else:
             continue
     
-    split_train_test_projects(proj_names)
+    #split_train_test_projects(proj_names)
     projects_to_skip = get_all_projects_in_db_train()
     
     train_projects = get_all_train_projects()   
