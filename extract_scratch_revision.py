@@ -815,7 +815,7 @@ def create_db_table_test(db_path):
 
 
 
-main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 #create_db_table_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db")
 #create_db_table_test("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db")
