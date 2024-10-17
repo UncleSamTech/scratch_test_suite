@@ -131,7 +131,7 @@ def get_all_projects_in_db_train():
     select_projects = """SELECT Project_Name from revisions;"""
     val = []
     fin_resp = []
-    conn,curr = get_connection()
+    conn,curr = get_connection2()
     if conn != None:
          curr.execute(select_projects)  
          val = curr.fetchall()
@@ -351,7 +351,7 @@ def get_revisions_and_run_parser(cwd, main_branch,project_name , debug=False):
                 insert_revision_statement = """INSERT INTO Revisions (Project_Name, File, Revision, Commit_SHA, Commit_Date, Hash, Nodes, Edges) VALUES(?,?,?,?,?,?,?,?);"""
                 insert_hash_statement = """INSERT INTO Contents (Hash,Content) VALUES(?,?);"""
                 tree_value = str(json_output)
-                conn,cur = get_connection()
+                conn,cur = get_connection2()
                 val = None
                 
                 if conn != None:
@@ -400,8 +400,8 @@ def main2(project_path: str):
 
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions5_all.txt", "a")
-                    #f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4_main.txt","a")
+                    #f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3_extracted_revisions/exceptions5_all.txt", "a")
+                    f = open("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos/exceptions4_main.txt","a")
                     f.write("{}\n".format(e))
                     f.close()
                     
@@ -417,5 +417,5 @@ def main2(project_path: str):
 
     
 
-#main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/repos")
+#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")

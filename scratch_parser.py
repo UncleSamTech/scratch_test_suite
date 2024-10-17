@@ -543,6 +543,24 @@ class scratch_parser:
                                                 
         return self.child_input_keys
     
+    def get_children_key_recursively_optimized(self,blocks_values,spec_block,child_keys=None):
+        if child_keys is None:
+            child_keys = []
+        if not spec_block or not blocks_values:
+            return []
+        inp_block = spec_block.get("inputs", {})
+        if isinstance(inp_block,dict) and inp_block:
+            for k,v in inp_block.items():
+                if isinstance(v,list) and v:
+                    for each_val in v:
+                        if isinstance(each_val,str) and each_val:
+                            
+                                child_keys.append(each_val)
+                                bloc = self.get_any_block_by_id(blocks_values,each_val)
+                                if bloc.get("inputs"):
+                                    self.get_children_key_recursively_optimized(blocks_values,bloc,child_keys) 
+                                                
+        return child_keys
     def get_children_key_recursively_modified(self,blocks_values,spec_block):
         if spec_block == None or spec_block == {} or blocks_values == None or blocks_values == []:
             return []
@@ -566,11 +584,22 @@ class scratch_parser:
     def get_next_child_keys(self,blocks_values,inp_block):
         all_next_keys = []
         
-        all_child_keys = self.get_children_key_recursively(blocks_values,inp_block)
+        all_child_keys = self.get_children_key_recursively_optimized(blocks_values,inp_block)
         for each_key in all_child_keys:
             block = self.get_any_block_by_id(blocks_values,each_key)
             if block and 'next' in block:
                 all_next_keys.append(block['next'])
+        return all_next_keys
+    def get_next_child_keys_optimized(self, blocks_values, inp_block):
+        # Recursively get all child keys
+        all_child_keys = self.get_children_key_recursively_optimized(blocks_values, inp_block)
+    
+        # Build a list of 'next' keys using a list comprehension
+        all_next_keys = [
+            block['next'] for each_key in all_child_keys
+            if (block := self.get_any_block_by_id(blocks_values, each_key)) and 'next' in block
+        ]
+    
         return all_next_keys
     
     def get_next_child_keys_modified(self,blocks_values,inp_block):
@@ -592,6 +621,14 @@ class scratch_parser:
                     if isinstance(v2,dict) and v2.get('parent') is None:
                         all_parent_keys.append(k2)
         return all_parent_keys
+    def get_all_parent_keys_optimized(self, blocks_values):
+        if not blocks_values:
+            return []
+
+        return [
+            k2 for v in blocks_values.values() if isinstance(v, dict)
+            for k2, v2 in v.items() if isinstance(v2, dict) and v2.get('parent') is None
+        ]
     
     def get_all_parent_keys_modified(self,blocks_values):
         self.all_parents_keys_val = []
@@ -620,6 +657,21 @@ class scratch_parser:
             
             return self.compare_parent_keys(blocks_values,parent_block,parent_key)
         return False
+    
+    def compare_parent_keys_optimized(self,blocks_values,block_key,parent_key,cache=None):
+        if cache is None:
+            cache = {}
+        while block_key and isinstance(block_key,dict) and 'parent' in block_key:
+            parent_id = block_key['parent']
+            if parent_id == parent_key:
+                return True
+            
+            if parent_id not in cache:
+                cache[parent_id] = self.get_any_block_by_id(blocks_values,parent_id)
+            
+            block_key = cache[parent_id]
+        return False
+
                 
             
     def compare_parent_keys_modified(self,blocks_values,block_key,parent_key):
@@ -638,6 +690,7 @@ class scratch_parser:
 
     def break_down(self,blocks_values,parent_key):
         spec = []
+        seen_blocks = set()
         if not blocks_values or not parent_key:
             return []
         
@@ -647,12 +700,14 @@ class scratch_parser:
 
                 for k2,v2 in v.items():
                     
-                    if isinstance(v2,dict):
+                    if isinstance(v2,dict) and v2:
                         block_by_id = self.get_any_block_by_id(blocks_values, k2)
                         next_block = v2.get("next")
-                        if parent_key in self.get_all_parent_keys(blocks_values) and next_block not in self.get_children_key_recursively(blocks_values,block_by_id) and next_block not in self.get_next_child_keys(blocks_values,block_by_id) and self.compare_parent_keys(blocks_values,self.get_any_block_by_id(blocks_values,next_block),parent_key):
-                            print(next_block)
-                            spec.append(next_block)
+                        if next_block not in seen_blocks:
+                            seen_blocks.add(next_block)
+                            if parent_key in self.get_all_parent_keys_optimized(blocks_values) and next_block not in self.get_children_key_recursively_optimized(blocks_values,block_by_id) and next_block not in self.get_next_child_keys_optimized(blocks_values,block_by_id) and self.compare_parent_keys_optimized(blocks_values,self.get_any_block_by_id(blocks_values,next_block),parent_key):
+                                print(next_block)
+                                spec.append(next_block)
         return spec
     def json_dump_encoder(self,obj):
         if obj is False:
@@ -1009,7 +1064,7 @@ class scratch_parser:
         corr_block_tree = []
         if not input_block or not blocks_values:
             return []
-        if isinstance(input_block,dict) and input_block:
+        if isinstance(input_block,dict):
             if opcode_par in self.substack_replacement.keys():
                 for k,v in input_block.items():
                     if opcode_par != "control_if_else":
@@ -1159,6 +1214,48 @@ class scratch_parser:
                             corr_block_tree.append(self.get_input_block_by_id_key_disp_modified(blocks_values,ids,k))
         return corr_block_tree
 
+    def correct_input_block_tree_by_id_disp_optimized(self, blocks_values, input_block, ids):
+        # Cache opcode_par to avoid redundant lookups
+        opcode_par = self.get_opcode_from_id(blocks_values, ids)
+        corr_block_tree = []
+    
+        if not input_block or not blocks_values:
+            return []
+    
+        if isinstance(input_block, dict):
+            substack_replace = self.substack_replacement.get(opcode_par)
+
+            for k, v in input_block.items():
+                # Only process lists with valid values
+                if isinstance(v, list) and len(v) > 1:
+                    block_id = v[1]
+                    if isinstance(block_id, str) and len(block_id) > 0:
+                        opcode = self.get_opcode_from_id(blocks_values, block_id)
+                        recur_val = self.correct_input_block_tree_by_id_disp(blocks_values, self.read_input_values_by_id(blocks_values, block_id), block_id)
+                    
+                        any_block = self.get_any_block_by_id(blocks_values, block_id)
+                        next_block_id = any_block.get("next")
+                        next_opcode = self.get_opcode_from_id(blocks_values, next_block_id) if next_block_id else {}
+                        next_rec = self.correct_input_block_tree_by_id_disp(blocks_values, self.read_input_values_by_id(blocks_values, next_block_id), next_block_id) if next_block_id else []
+                    
+                        # Handle different cases based on 'next' and recursion
+                        if next_block_id and next_rec:
+                            corr_block_tree.append([
+                            substack_replace if k.startswith("SUBS") else k,
+                            [opcode, [recur_val], next_opcode, [next_rec]]
+                            ])
+                        elif next_block_id or next_rec:
+                            corr_block_tree.append([
+                            substack_replace if k.startswith("SUBS") else k,
+                            [opcode, [recur_val]]
+                            ])
+                        else:
+                            corr_block_tree.append([substack_replace if k.startswith("SUBS") else k, opcode])
+                    elif isinstance(v[1], list) and len(v[1]) > 1 and isinstance(v[1][1], str):
+                        corr_block_tree.append(self.get_input_block_by_id_key_disp(blocks_values, ids, k))
+
+        return corr_block_tree
+    
     def create_next_values2(self,blocks_values,file_name):  
         tr = [] 
         final_tree = []
@@ -1199,7 +1296,7 @@ class scratch_parser:
                     opcode_ks = self.get_opcode_from_id(blocks_values, ks)
                     if isinstance(opcode_ks,str) and opcode_ks.startswith("event") or opcode_ks.startswith("control"):
                         
-                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] if self.get_complete_fields_inputs(blocks_values,v2) == '' or self.get_complete_fields_inputs(blocks_values,v2) == None else [self.get_opcode_from_id(blocks_values,v2),[self.get_complete_fields_inputs(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs ]
+                        val =  [[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp_optimized(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)] if self.get_complete_fields_inputs(blocks_values,v2) == '' or self.get_complete_fields_inputs(blocks_values,v2) == None else [self.get_opcode_from_id(blocks_values,v2),[self.get_complete_fields_inputs(blocks_values,v2),self.correct_input_block_tree_by_id_disp_optimized(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs ]
                         
                         tr.append([self.get_opcode_from_id(blocks_values,ks),val] if self.get_complete_fields_inputs(blocks_values,ks) == "" or self.get_complete_fields_inputs(blocks_values,ks) == None else [self.get_opcode_from_id(blocks_values,ks),[self.get_complete_fields_inputs(blocks_values,ks),val]])
                         
@@ -1207,7 +1304,7 @@ class scratch_parser:
                         if self.get_opcode_from_id2(blocks_values, ks) == self.get_opcode_from_id(blocks_values,ks):
                             blocks = self.get_any_block_by_id(blocks_values,ks)
                             
-                            val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
+                            val = [[self.iterate_procedure_input(blocks_values,blocks),[self.get_opcode_from_id(blocks_values,v2),self.correct_input_block_tree_by_id_disp_optimized(blocks_values,self.read_input_values_by_id(blocks_values,v2),v2)]] for v2 in vs if isinstance(vs,list) and len(vs) > 0]
                              
                             tr.append([self.get_opcode_from_id(blocks_values,ks),val])
                                                    
@@ -1218,7 +1315,7 @@ class scratch_parser:
         tr = [] 
         final_tree = []
         
-        loaded_dump = self.tem_file_spit(blocks_values)
+        
         all_val = self.get_all_next_id_test_modified(blocks_values)     
         
         if all_val == None or all_val == {}:

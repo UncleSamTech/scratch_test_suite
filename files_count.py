@@ -246,6 +246,33 @@ def load_file_count_generate_new_file(file_path,new_file_name):
 
 
 
+# Function to extract tags after 'Tags:'
+def extract_tags(code):
+    text = str(code).replace('\n', ' ').replace('\r', ' ')
+    all_matches = re.findall(r'Tags:\s*(.*?)(?=\s*Version|\s*$)', text, re.IGNORECASE | re.DOTALL)
+    tags = []
+    for match in all_matches:
+        # Split tags by commas and strip spaces
+        tags.extend([tag.strip() for tag in match.split(',')])
+    return tags
+
+def extract_axial_codes(file_sheet):
+    df = pd.read_excel(file_sheet)
+    # Extract tags from the 'Codes' column
+    df['TagsList'] = df['Codes'].apply(extract_tags)
+
+    # Flatten the list of all tags
+    all_tags = [tag for sublist in df['TagsList'] for tag in sublist]
+
+    # Count distinct tags
+    tag_counts = pd.Series(all_tags).value_counts().reset_index()
+    tag_counts.columns = ['AxialCodes', 'Count']
+
+    # Write the result to a CSV file
+    tag_counts.to_csv('axial_tags_count_8.csv', index=False)
+
+   
+
 
 
 # Example usage
@@ -263,4 +290,5 @@ if __name__ == "__main__":
 #plot_data_group("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/inputs_nodes_folder","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/splitted_files5/output_nodes_plot")
 #sum_count_column("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/sorted_nodes_count_version4.csv")
 #load_file_count_generate_new_file("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/Opencoding.xlsx","new_unique_open_codes.csv")
-sort_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/new_unique_open_codes.csv")
+#sort_csv("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/new_unique_open_codes.csv")
+extract_axial_codes("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/Opencoding_1.xlsx")

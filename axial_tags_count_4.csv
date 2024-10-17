@@ -1,0 +1,26 @@
+AxialCodes,Count
+animating sprites,8
+decision making,5
+repeating sprite actions,5
+user interaction,4
+data management,4
+code reuse,4
+data manipulation,3
+alternating sprite avatars,2
+communicating to users,2
+sprite interactions,2
+drawing capabilities,1
+sampling values,1
+custom graphics,1
+sprite sensing,1
+time manipulation,1
+backdrop animation,1
+UI/UX improvement   Version 2     1. addition of objects (i.e. sprites)     2. addition of functions (i.e. scripts)     3. program redirection     4. introducing control flow structure     5. changing sprite apperance     6. api utilization     7. controlling sprite display     8. assigning values to variables     9. introducing event listeners    10. introducing decision flow    11. introducing unending iteration    12. randomizing values    13. changing sprite costumes    14. calculating the length of a node list    15. concatenation of nodes    16. introducing delay to a program    17. zooming sprites out    18. deleting all elements of a node list    19. creating and utilizing custom blocks    20. repeating node actions     21. slicing through node values    22. changing node variables values    23. utilizing a node variable    24. comparing two nodes    25. updating a node list value    26. adding values to a node list    27. adding iteration to a program    28. introducing conditional delay to a program    29. adding sound to a sprite    30.  adding motions to sprite    31.  adding an event node  Tags : program restructuring,1
+decision making  Version 2     1. file renamed without node change  Tags : repository maintenance    Version 3     1. file renamed without node change  Tags : repository maintenance,1
+adding sprite effects,1
+alternating sprite costumes,1
+sprite sensing  Version 2      1. removal of nodes    2. rearranging nodes position    3. adding decision block    4. removing sounds     Tags: program modification,1
+animating sprites  Version 3     1. adding sounds to sprites    2. introducing event listeners  Tags : animating sprites,1
+sprite sensing  Version 4     1. addition of objects (i.e. sprites)    2. addition of functions (i.e. scripts)    3. removing sounds from sprites    4. introducing decision block    5. rearrannodenodes positions    6. adding event nodes    7. adding motions to sprites    8. introducing unending iteration to a program    9. changing node effect value    Tags : animating sprites,1
+data manipulation  Version 3     1. introducing delay to a program    2. controlling sprite appearance    3. adding motions to sprite    4. creating and utilizing custom blocks    5. adding disjoint nodes  Tags : animating sprites,1
+program modification,1
