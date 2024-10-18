@@ -205,11 +205,18 @@ def move_table_commit_parents(commit_parents_path,cons_path):
   curs_all.execute("DETACH DATABASE commit_parents_db;")
   cons_db_conn.close()
 
-
+def create_content_parent(db_path):
+  conn = sqlite3.connect(db_path)
+  curs = conn.cursor()
+  create_state = """CREATE TABLE "Content_Parents" ("Project_Name" TEXT,"File" TEXT,"Commit_SHA" TEXT,"Content_Parent_SHA" TEXT);"""
+  curs.execute(create_state)
+  conn.commit()
+  conn.close()
 
 former_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
 cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
-move_table_commit_parents(former_path,cons_path)
+#move_table_commit_parents(former_path,cons_path)
+create_content_parent(cons_path)
 #c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 #connection.commit()
 #connection.close()
