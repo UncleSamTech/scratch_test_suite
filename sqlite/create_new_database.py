@@ -120,12 +120,34 @@ def merge_table_hash(train_path,test_path,cons_path):
   curs_all.execute("DETACH DATABASE test_db;")
   cons_db_conn.close()
 
+def merge_table_authors(authors_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
 
-test_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db'
-train_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db'
+  #attatch authors
+  curs_all.execute(f"ATTACH '{authors_path}' AS authors_db")
+  
+
+  create_table = """CREATE TABLE IF NOT EXISTS Authors (
+  "Commit_SHA" TEXT,
+  "Author_Name" TEXT,
+  "Author_Email" TEXT,
+  "Committer_Name" TEXT,
+  "Committer_Email" TEXT
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Authors (Commit_SHA,Author_Name,Author_Email,Committer_Name,Committer_Email) SELECT Commit_SHA,Author_Name,Author_Email,Committer_Name,Committer_Email from authors_db.Authors;"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE authors_db;")
+  cons_db_conn.close()
+
+
+
+authors_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
 cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
-merge_table_hash(train_path,test_path,cons_path)
-merge_table_revisions(train_path,test_path,cons_path)
+merge_table_authors(authors_path,cons_path)
 #c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 #connection.commit()
 #connection.close()
