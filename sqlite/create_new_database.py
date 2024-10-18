@@ -209,7 +209,7 @@ def move_table_commit_parents(commit_parents_path,cons_path):
 
 former_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
 cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
-move_table_projects(former_path,cons_path)
+move_table_commit_parents(former_path,cons_path)
 #c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 #connection.commit()
 #connection.close()
