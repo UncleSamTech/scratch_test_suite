@@ -4,7 +4,7 @@ import os
 def extract_all_projects(project_path,extracted_path):
     proj_names = []
     for i in os.listdir(project_path):
-        if i and os.path.isdir(f'{project_path}/{i}'):
+        if len(i) > 1 and os.path.isdir(f'{project_path}/{i}'):
             proj_names.append(i)
             with open(extracted_path,"w") as proj_names:
                 proj_names.write(f"{i}/n")
