@@ -199,7 +199,7 @@ def move_table_commit_parents(commit_parents_path,cons_path):
   );"""
   curs_all.execute(create_table)
 
-  insert_statement = """INSERT INTO Commit_Parents (Commit_SHA,Parent_SHA) SELECT Commit_SHA,Parent_SHA from commit_parents_db.Commit_Parents;"""
+  insert_statement = """INSERT INTO Commit_Parents (Commit_SHA,Parent_SHA) SELECT Commit_SHA,Commit_Parent from commit_parents_db.Commit_Parents;"""
   curs_all.execute(insert_statement)
   cons_db_conn.commit()
   curs_all.execute("DETACH DATABASE commit_parents_db;")
