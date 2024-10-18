@@ -158,7 +158,7 @@ def move_table_commit_message(commit_message_path,cons_path):
   );"""
   curs_all.execute(create_table)
 
-  insert_statement = """INSERT INTO Commit_Messages (Commit_SHA,Commit_Message) SELECT Commit_SHA,Commit_Message from commit_message_db.Commit_Messages;"""
+  insert_statement = """INSERT INTO Commit_Messages (Commit_SHA,Commit_Message) SELECT Commit_SHA,Commit_Message from commit_message_db.Commit_Message;"""
   curs_all.execute(insert_statement)
   cons_db_conn.commit()
   curs_all.execute("DETACH DATABASE commit_message_db;")
