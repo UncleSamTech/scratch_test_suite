@@ -164,15 +164,6 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
  
 
 
-        # all_sha_dates = {}
-        # for c in all_sha_names.keys():
-        #     commit_date = subprocess.run(['git log -1 --format=%ci {}'.format(c)], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, cwd=cwd, shell=True).stdout.decode()
-        #     parsed_date = datetime.strptime(commit_date.strip(), '%Y-%m-%d %H:%M:%S %z')
-            
-
-        #     all_sha_dates[c] = parsed_date
-
-            # fill in the gaps
             prev_fn = f
             for c in all_sha_names.keys():
                 if all_sha_names[c] is None:
@@ -192,13 +183,13 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
             
 
                 if len(parents_of_c) == 0:
-                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new.txt", "a") as outfile:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/ccontent_parents_optimized.csv", "a") as outfile:
                         outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
                 else:
                     # we have a set of valid parents for c Get the node and edge count at each of these parents
                     for parent in parents_of_c:
 
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new.txt", "a") as outfile:
+                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized.csv", "a") as outfile:
                             outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, parent))
 
         return 1
@@ -224,7 +215,7 @@ def main2(project_path: str):
                     
                 except Exception as e:
                     
-                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/exceptions3.txt", "a")
+                    f = open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/exceptions4.txt", "a")
                     f.write("{}\n".format(e))
                     f.close()
                     #logging.error(f'skipped {project_name}  to {logging.ERROR}')
@@ -238,6 +229,30 @@ def main2(project_path: str):
         else:
             print("skipped")
             continue
+
+
+
+def main2_optimized(project_path: str):
+    proj_names = [i for i in os.listdir(project_path) if os.path.isdir(f'{project_path}/{i}') and len(i) > 1]
+    
+    for proj_name in proj_names:
+        repo = f'{project_path}/{proj_name}'
+        try:
+            # Get the current branch name
+            result = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=False)
+            main_branch = result.stdout.decode("utf-8").strip()
+
+            # Check if main_branch and repo are valid
+            if main_branch and repo:
+                # Run the parser if branch name is valid
+                get_revisions_and_run_parser(repo, proj_name, main_branch)
+            else:
+                print(f"Skipped project: {proj_name}")
+        
+        except Exception as e:
+            # Log exceptions with proper error handling
+            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/exceptions4.txt", "a") as f:
+                f.write(f"Error with project {proj_name}: {e}\n")
 
 def insert_into_content_parent_table(file_path):
     lines = None
@@ -296,8 +311,53 @@ def insert_into_content_parent_table(file_path):
                 print("connection failed")
             conn.commit()
 
-#main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new_unique.txt")
+def insert_into_content_parent_table_optimized(file_path):
+    def parse_line(content):
+        # Strip each part of the content
+        content = [item.strip() for item in content]
+        
+        # Determine values based on the number of parts in the line
+        project_name = content[0] if len(content) > 0 else "None"
+        file_name = content[1] if len(content) > 1 else "None"
+        commit_sha = content[2] if len(content) > 2 and is_sha1(content[2]) else "None"
+        content_sha = content[3] if len(content) > 3 and is_sha1(content[3].strip()) else "None"
+        
+        return (project_name, file_name, commit_sha, content_sha)
+
+    # Open connection once
+    conn, cur = get_connection_val()
+    if conn is None:
+        print("Connection failed")
+        return
+    
+    insert_into_content_parent = """
+        INSERT INTO Content_Parents (Project_Name, File, Commit_SHA, Content_Parent_SHA) 
+        VALUES (?, ?, ?, ?);
+    """
+    
+    # List to store parsed rows for batch insertion
+    data_to_insert = []
+    
+    with open(file_path, "r", encoding="utf-8") as cpd:
+        lines = cpd.readlines()
+
+        for each_line in lines:
+            content = each_line.split("_COMMA_")
+            parsed_row = parse_line(content)
+            data_to_insert.append(parsed_row)
+
+    # Use executemany to batch insert all rows at once
+    try:
+        cur.executemany(insert_into_content_parent, data_to_insert)
+        conn.commit()
+        print(f"{len(data_to_insert)} rows inserted.")
+    except Exception as e:
+        print(f"Error occurred during insertion: {e}")
+    finally:
+        conn.close()
+
+main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new_unique.txt")
 
 
 
