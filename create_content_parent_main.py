@@ -79,7 +79,7 @@ def get_valid_parents_recursive(c, parents_of_c, commits_which_modified_file_f, 
 
 
 def get_connection_val():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -358,7 +358,7 @@ def insert_into_content_parent_table_optimized(file_path):
         conn.close()
 
 main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-#insert_into_content_parent_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_1_new_unique.txt")
+#insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_unique.csv")
 
 
 
