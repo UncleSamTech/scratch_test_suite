@@ -58,6 +58,7 @@ def get_node_and_edge_count(project_name, file_name, c):
         cursor.close()
         node_count = nodes_edges[0][0]
         edge_count = nodes_edges[0][1]
+        print(f"all {nodes_edges} nodes {node_count} edges {edge_count}")
     except:
         node_count = 0
         edge_count = 0
@@ -162,6 +163,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 
                 file_name = f.replace(",", "_COMMA_")
                 node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count(project_name, file_name, c)
+                print(f"node count {node_count_of_f_at_c}, edge count {edge_count_of_f_at_c}")
                 content_parents_of_c = get_content_parents_of_c(project_name, file_name, c)
 
                 for parent in content_parents_of_c:
@@ -173,7 +175,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd.csv", "a") as outfile:
                     outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
 
                     
