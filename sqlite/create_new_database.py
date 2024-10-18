@@ -185,6 +185,26 @@ def move_table_projects(projects_path,cons_path):
   curs_all.execute("DETACH DATABASE projects_db;")
   cons_db_conn.close()
 
+def move_table_commit_parents(commit_parents_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
+
+  #attatch authors
+  curs_all.execute(f"ATTACH '{commit_parents_path}' AS commit_parents_db")
+  
+
+  create_table = """CREATE TABLE IF NOT EXISTS Commit_Parents (
+  "Commit_SHA" TEXT,
+  "Parent_SHA" TEXT
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Commit_Parents (Commit_SHA,Parent_SHA) SELECT Commit_SHA,Parent_SHA from commit_parents_db.Commit_Parents;"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE commit_parents_db;")
+  cons_db_conn.close()
+
 
 
 former_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
