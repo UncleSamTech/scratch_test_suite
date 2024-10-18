@@ -120,7 +120,7 @@ def merge_table_hash(train_path,test_path,cons_path):
   curs_all.execute("DETACH DATABASE test_db;")
   cons_db_conn.close()
 
-def merge_table_authors(authors_path,cons_path):
+def move_table_authors(authors_path,cons_path):
   cons_db_conn = sqlite3.connect(cons_path)
   curs_all = cons_db_conn.cursor()
 
@@ -144,10 +144,31 @@ def merge_table_authors(authors_path,cons_path):
   cons_db_conn.close()
 
 
+def move_table_commit_message(commit_message_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
 
-authors_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
+  #attatch authors
+  curs_all.execute(f"ATTACH '{commit_message_path}' AS commit_message_db")
+  
+
+  create_table = """CREATE TABLE IF NOT EXISTS Commit_Messages (
+  "Commit_SHA" TEXT,
+  "Commit_Message" TEXT
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Commit_Messages (Commit_SHA,Commit_Message) SELECT Commit_SHA,Commit_Message from commit_message_db.Commit_Messages;"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE commit_message_db;")
+  cons_db_conn.close()
+
+
+
+former_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
 cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
-merge_table_authors(authors_path,cons_path)
+move_table_commit_message(former_path,cons_path)
 #c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 #connection.commit()
 #connection.close()
