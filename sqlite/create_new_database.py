@@ -164,11 +164,32 @@ def move_table_commit_message(commit_message_path,cons_path):
   curs_all.execute("DETACH DATABASE commit_message_db;")
   cons_db_conn.close()
 
+def move_table_projects(projects_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
+
+  #attatch authors
+  curs_all.execute(f"ATTACH '{projects_path}' AS projects_db")
+  
+
+  create_table = """CREATE TABLE IF NOT EXISTS Projects (
+  "Project_Name" TEXT,
+  "Default_Branch" TEXT,
+  "Total_Commits" INTEGER
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Projects (Project_Name,Default_Branch,Total_Commits) SELECT Project_Name,Default_Branch,Total_Commits from projects_db.Projects;"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE projects_db;")
+  cons_db_conn.close()
+
 
 
 former_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db'
 cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
-move_table_commit_message(former_path,cons_path)
+move_table_projects(former_path,cons_path)
 #c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
 #connection.commit()
 #connection.close()
