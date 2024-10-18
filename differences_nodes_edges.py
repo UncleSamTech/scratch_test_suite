@@ -7,7 +7,7 @@ import subprocess
 from pathlib import Path
 import sqlite3
 
-conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db')
+conn = sqlite3.connect('/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db')
 
 def is_sha1(maybe_sha):
     if len(maybe_sha) != 40:
@@ -19,7 +19,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -173,7 +173,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized.csv", "a") as outfile:
                     outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
 
                     
@@ -211,6 +211,29 @@ def correct_code_replace(byte_val):
         #print(f"original {byte_val} after decode {decoded_byte} after replacement {replace_val} final value {encoded_byte}")
       
         return encoded_byte
+
+
+def main2_optimized(project_path: str):
+    proj_names = [i for i in os.listdir(project_path) if os.path.isdir(f'{project_path}/{i}') and len(i) > 1]
+
+    for proj_name in proj_names:
+        repo = f'{project_path}/{proj_name}'
+        try:
+            # Get the current branch name
+            result = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=False)
+            main_branch = result.stdout.decode("utf-8").strip()
+
+            # Check if main_branch and repo are valid
+            if main_branch and repo:
+                # Run the parser if the branch name is valid
+                get_revisions_and_run_parser(repo, proj_name, main_branch)
+            else:
+                print(f"Skipped project: {proj_name}")
+
+        except Exception as e:
+            # Use 'with' to ensure file is closed properly
+            with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_exceptions3.txt", "a") as f:
+                f.write(f"Error with project {proj_name}: {e}\n")
 
 
 def main2(project_path: str):
@@ -254,4 +277,4 @@ def main2(project_path: str):
     
 
 #main2("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
