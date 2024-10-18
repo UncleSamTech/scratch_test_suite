@@ -18,7 +18,7 @@ import sqlite3
 
 # step 3: create/connect to database
 #connection = sqlite3.connect("scratch_revisions_database.db")
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all_final.db")
+#connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all_final.db")
 #connection = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
 #connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train3.db")
 #connection_test = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db")
@@ -30,10 +30,11 @@ connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/
 #df5.to_sql("Content_Parents",connection,if_exists='replace',index=False)
 #df_proj_load("Authors_Project",connection,if_exists='replace',index=False)
 
-c =  connection.cursor()
-cont_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
-c.execute(cont_parent_table)
+#c =  connection.cursor()
+#cont_parent_table = """CREATE TABLE Content_Parents(Project_Name,File,Commit_SHA,Content_Parent_SHA);"""
+#c.execute(cont_parent_table)
 
+'''
 revision = """CREATE TABLE "Revisions" (
   "Project_Name" TEXT,
   "File" TEXT,
@@ -52,7 +53,7 @@ contents = """CREATE TABLE "Contents" (
 );"""
 c.execute(contents)
 connection.commit()
-'''
+
 revision_hash_index="""CREATE INDEX "sc_Revisions_Hashes_index" ON "Revisions" ("Hash"); """
 revision_project_index="""CREATE INDEX "sc_Revisions_Projects_index" ON "Revisions" ("Project_Name"); """
 revision_commit_index="""CREATE INDEX "sc_Revisions_Commit_index" ON "Revisions" ("Commit_SHA"); """
@@ -65,6 +66,66 @@ content_parents_commit_sha_index="""CREATE INDEX "ix_Content_Parents_index" ON "
 
 # step 5: close 
 
-c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
-connection.commit()
-connection.close()
+def merge_table_revisions(train_path,test_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
+
+  #attatch train and test db
+  curs_all.execute(f"ATTACH '{train_path}' AS train_db")
+  curs_all.execute(f"ATTACH '{test_path}' AS test_db")
+
+  create_table = """CREATE TABLE IF NOT EXISTS Revisions (
+  "Project_Name" TEXT,
+  "File" TEXT,
+  "Revision" TEXT,
+  "Commit_SHA" TEXT,
+  "Commit_Date" TEXT,
+  "Hash" TEXT,
+  "Nodes" INTEGER,
+  "Edges" INTEGER
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Revisions (Project_Name, File, Revision,Commit_SHA,Commit_Date,Hash,Nodes,Edges)
+    SELECT Project_Name, File, Revision,Commit_SHA,Commit_Date,Hash,Nodes,Edges from train_db.Revisions
+    UNION ALL
+    SELECT Project_Name, File, Revision,Commit_SHA,Commit_Date,Hash,Nodes,Edges from test_db.Revisions"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE train_db;")
+  curs_all.execute("DETACH DATABASE test_db;")
+  cons_db_conn.close()
+
+def merge_table_hash(train_path,test_path,cons_path):
+  cons_db_conn = sqlite3.connect(cons_path)
+  curs_all = cons_db_conn.cursor()
+
+  #attatch train and test db
+  curs_all.execute(f"ATTACH '{train_path}' AS train_db")
+  curs_all.execute(f"ATTACH '{test_path}' AS test_db")
+
+  create_table = """CREATE TABLE IF NOT EXISTS Contents (
+  "Hash" TEXT,
+  "Content" TEXT
+  );"""
+  curs_all.execute(create_table)
+
+  insert_statement = """INSERT INTO Contents (Hash,Content)
+    SELECT Hash,Content from train_db.Contents
+    UNION ALL
+    SELECT Hash,Content from test_db.Contents"""
+  curs_all.execute(insert_statement)
+  cons_db_conn.commit()
+  curs_all.execute("DETACH DATABASE train_db;")
+  curs_all.execute("DETACH DATABASE test_db;")
+  cons_db_conn.close()
+
+
+test_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db'
+train_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_train_final.db'
+cons_path = '/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db'
+merge_table_hash(train_path,test_path,cons_path)
+merge_table_revisions(train_path,test_path,cons_path)
+#c.execute('''CREATE UNIQUE INDEX "ix_Hashes_index" ON "Contents" ("Hash");''')
+#connection.commit()
+#connection.close()
