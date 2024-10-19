@@ -135,7 +135,7 @@ Distribution of Revisions Per Scratch3 file
 '''
 
 
-
+"""
 cursor.execute('''SELECT Project_Name, File, COUNT(Revision) AS Revision_Count FROM Revisions WHERE File IS NOT NULL AND FILE <> '' GROUP BY Project_Name, File;''')
 revisions = cursor.fetchall()
 
@@ -151,13 +151,15 @@ plt.title('Histogram of Number of Revisions Per Scratch3 File')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/revisions_per_file_upd.pdf')
 plt.close()
 
+"""
+
 '''
 
 Distribution of Scratch3 files per project
 
 '''
 
-
+"""
 cursor.execute('''SELECT Project_Name, COUNT(DISTINCT File) AS File_Count FROM Revisions GROUP BY Project_Name;''')
 files = cursor.fetchall()
 
@@ -200,6 +202,7 @@ plt.title('Histogram of Number of Scratch3 Files Per Project (Without Revisions)
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/scratch3_files_per_project_upd.pdf')
 plt.close()
 
+"""
 
 
 '''
@@ -209,7 +212,7 @@ Commits per project distribution
 '''
 
 
-"""
+
 
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
@@ -228,7 +231,7 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Commits Per Project')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project_upd.pdf')
 plt.close()
 
 
@@ -259,7 +262,7 @@ plt.yscale('log')
 plt.xlabel('Number of Authors Per Project For the Scratch3 Files')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Authors Per Project For the Scratch3 Files')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/Authors_per_project.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/Authors_per_project_upd.pdf')
 plt.close()
 
 
@@ -284,7 +287,7 @@ print("Scratch3 Projects with one authors: ", len(author_1))
 
 cursor.close()
 
-"""
+
 
 connection.commit()
 connection.close()
