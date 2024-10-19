@@ -1,4 +1,7 @@
 #!/bin/bash
+# Set the directory path and output file from arguments
+PROJECT_DIR="/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted"
+OUTPUT_FILE="/media/crouton/siwuchuk/newdir/vscode_repos_files/all_extracted_projects.csv"
 
 # Check if the directory path is provided
 if [ -z "$1" ]; then
@@ -6,9 +9,7 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-# Set the directory path and output file from arguments
-PROJECT_DIR="/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted"
-OUTPUT_FILE="/media/crouton/siwuchuk/newdir/vscode_repos_files/all_extracted_projects.csv"
+
 
 # Find all directories (excluding hidden ones) within the provided path, and write them to a CSV
 find "$PROJECT_DIR" -mindepth 1 -maxdepth 1 -type d -not -path '*/\.*' -exec basename {} \; > "$OUTPUT_FILE"
