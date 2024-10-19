@@ -57,6 +57,7 @@ df = pd.DataFrame(nodes_edges, columns=['Nodes', 'Edges'])
 nodes = df['Nodes'].values
 edges = df['Edges'].values
 
+"""
 cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 1 and nodes <= 50;''')
 num_nodes_1_50 = cursor.fetchall()
     
@@ -123,9 +124,9 @@ plt.title('Histogram of Number of Edges Per Revision of a Scratch3 File')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_upd.pdf')
 plt.close()
 
-
-
 """
+
+
 
 '''
 
@@ -147,7 +148,7 @@ plt.yscale('log')
 plt.xlabel('Number of Revisions Per Scratch3 File')
 plt.ylabel('Number of Scratch3 Files (Log Scale)')
 plt.title('Histogram of Number of Revisions Per Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/revisions_per_file.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/revisions_per_file_upd.pdf')
 plt.close()
 
 '''
@@ -196,10 +197,9 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Scratch3 Files Per Project (Without Revisions)')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Scratch3 Files Per Project (Without Revisions)')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/scratch3_files_per_project.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/scratch3_files_per_project_upd.pdf')
 plt.close()
 
-"""
 
 
 '''
@@ -208,7 +208,9 @@ Commits per project distribution
 
 '''
 
+
 """
+
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
@@ -228,11 +230,11 @@ plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project.pdf')
 plt.close()
-"""
 
 
 
-"""
+
+
 '''
 
 Author who contributed to the Scratch3 files distribution per project
