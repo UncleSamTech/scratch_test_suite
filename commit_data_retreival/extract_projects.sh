@@ -4,7 +4,7 @@ PROJECT_DIR="/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirro
 OUTPUT_FILE="/media/crouton/siwuchuk/newdir/vscode_repos_files/all_extracted_projects.csv"
 
 # Check if the directory path is provided
-if [ -z "$1" ]; then
+if [ -z "/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted" ]; then
   echo "Usage: $0 <directory_path> <output_file.csv>"
   exit 1
 fi
