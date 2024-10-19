@@ -119,7 +119,7 @@ plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Connections Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
-plt.title('Histogram of Number of Connections Per Revision of a Scratch3 File')
+plt.title('Histogram of Number of Edges Per Revision of a Scratch3 File')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_upd.pdf')
 plt.close()
 
