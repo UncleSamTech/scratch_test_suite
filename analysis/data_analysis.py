@@ -11,7 +11,7 @@ Distribution of nodes and edges
 
 '''
 
-cursor.execute('''SELECT Nodes, Edges FROM Revisions where nodes > 0;''')
+cursor.execute('''SELECT Nodes, Edges FROM Revisions;''')
 nodes_edges = cursor.fetchall()
 
 # Create a DataFrame
