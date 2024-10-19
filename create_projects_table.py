@@ -30,4 +30,4 @@ def insert_into_projects_table(project_commit_branch_path):
 #create_projects("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects
 #insert_into_projects_table("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/all_projects_names_commit_branch.csv")
-insert_into_projects_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects/all_projects_names_commit_branch_cleaned.csv")
+insert_into_projects_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/projects/all_projects_names_commit_branch_upd_filtered2.csv")
