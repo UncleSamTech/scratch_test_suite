@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sqlite3
 
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_analysis.db")
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db")
 cursor = connection.cursor()
 
 '''
@@ -33,7 +33,7 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Nodes Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
 plt.title('Histogram of Number of Nodes Per Revision of a Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file_non0.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file_non0_new.pdf')
 plt.close()
 
 plt.hist(edges, color='lightblue', ec='black', bins=20)
@@ -42,7 +42,7 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Connections Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
 plt.title('Histogram of Number of Connections Per Revision of a Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_non0.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_non0_new.pdf')
 plt.close()
 
 
