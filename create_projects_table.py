@@ -22,7 +22,7 @@ def insert_into_projects_table(project_commit_branch_path):
 
     #connect to database
     #connection = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
-    connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db")
+    connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db")
     #load data into file
     df.to_sql("Projects", connection, if_exists='replace', index=False)
 
