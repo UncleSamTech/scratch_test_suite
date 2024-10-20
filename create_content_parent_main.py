@@ -184,13 +184,13 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
             
 
                 if len(parents_of_c) == 0:
-                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/ccontent_parents_optimized.csv", "a") as outfile:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
                         outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
                 else:
                     # we have a set of valid parents for c Get the node and edge count at each of these parents
                     for parent in parents_of_c:
 
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized.csv", "a") as outfile:
+                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
                             outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, parent))
 
         return 1
@@ -357,8 +357,8 @@ def insert_into_content_parent_table_optimized(file_path):
     finally:
         conn.close()
 
-#main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_unique.csv")
+main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_unique_upd.csv")
 
 
 
