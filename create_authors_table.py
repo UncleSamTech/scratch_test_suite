@@ -116,6 +116,72 @@ def insert_into_authors_table(file_path):
             conn.commit()
 
 
+def insert_into_authors_table_optimized(file_path):
+    # Helper function to hash author details
+    def hash_if_present(data):
+        return calculate_sha256(data.strip()) if len(data.strip()) > 0 else "None"
+
+    # Get all existing commit SHAs from the database
+    all_commits = get_all_commit_sha()
+    print("allcommits", all_commits)
+
+    # Establish the database connection once
+    conn, cur = get_connection()
+
+    if conn is None:
+        print("Connection failed")
+        return
+
+    try:
+        # Read the file content line by line
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as cm:
+            insert_authors_data = """INSERT INTO authors (commit_sha, author_name, author_email, committer_name, committer_email) 
+                                     VALUES (?, ?, ?, ?, ?);"""
+            
+            for line in cm:
+                content = line.strip().split(",")
+
+                # Parse commit_sha and author details based on the content
+                if len(content) >= 1:
+                    commit_sha = content[0] if is_sha1(content[0]) else "None"
+                else:
+                    continue
+
+                if len(content) == 2:
+                    authors_details = content[1].split("_COMMA_")
+                else:
+                    authors_details = []
+
+                # Default all values to "None"
+                authors_name = authors_email = committers_name = commiters_email = "None"
+
+                # Assign values based on the length of authors_details
+                if len(authors_details) == 4:
+                    authors_name, authors_email, committers_name, commiters_email = map(hash_if_present, authors_details)
+                elif len(authors_details) == 3:
+                    authors_name, authors_email, committers_name = map(hash_if_present, authors_details[:3])
+                elif len(authors_details) == 2:
+                    authors_name, authors_email = map(hash_if_present, authors_details[:2])
+                elif len(authors_details) == 1:
+                    authors_name = hash_if_present(authors_details[0])
+
+                # Print for debugging (can be removed in production)
+                print(f"authors_name: {authors_name}, committers_name: {committers_name}, authors_email: {authors_email}, commiters_email: {commiters_email}")
+
+                # Insert into database if commit_sha is not already in the list
+                if commit_sha not in all_commits:
+                    cur.execute(insert_authors_data, (commit_sha, authors_name, authors_email, committers_name, commiters_email))
+
+            # Commit all changes after processing all lines
+            conn.commit()
+
+    except Exception as e:
+        print(f"Error processing file: {e}")
+    
+    finally:
+        # Ensure the connection is closed properly
+        conn.close()
+
 def get_all_commit_sha():
     select_projects = """SELECT commit_sha from authors;"""
     val = []
@@ -132,5 +198,5 @@ def get_all_commit_sha():
     #conn.close()
     return fin_resp 
 
-insert_into_authors_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/commitsha_authors_upd_filtered.csv")
+insert_into_authors_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/commitsha_authors_upd_filtered.csv")
 #insert_into_authors_table("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/commit_authors.csv")
