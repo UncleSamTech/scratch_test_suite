@@ -395,7 +395,7 @@ def main2_optimized(project_path: str):
             # Check if main_branch and repo are valid
             if main_branch and repo:
                 # Run the parser if the branch name is valid
-                get_revisions_and_run_parser(repo, proj_name, main_branch)
+                get_revisions_and_run_parser_optimized(repo, proj_name, main_branch)
             else:
                 print(f"Skipped project: {proj_name}")
 
