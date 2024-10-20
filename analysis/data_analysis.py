@@ -262,7 +262,7 @@ plt.yscale('log')
 plt.xlabel('Number of Authors Per Project For the Scratch3 Files')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Authors Per Project For the Scratch3 Files')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/Authors_per_project_upd.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/Authors_per_project_upd1.pdf')
 plt.close()
 
 

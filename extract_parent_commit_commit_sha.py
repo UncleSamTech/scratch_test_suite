@@ -19,3 +19,4 @@ def parent_commit(path):
                                 pc.write(commit_sha + "," + f'{p}\n')
                                 
 parent_commit("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/parent_commits_upd")
+#/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/all_parent_commits/parent_commits_result_upd_filtered.csv

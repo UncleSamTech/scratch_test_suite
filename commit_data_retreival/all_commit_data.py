@@ -6,7 +6,7 @@ def extract_all_projects(project_path,extracted_path):
     for i in os.listdir(project_path):
         if len(i) > 1:
             proj_names.append(i)
-            with open(extracted_path,"w") as proj_names_cd:
+            with open(extracted_path,"a") as proj_names_cd:
                 proj_names_cd.write(f"{i}\n")
         else:
             continue
