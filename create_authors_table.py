@@ -13,7 +13,7 @@ def is_sha1(maybe_sha):
 
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db",isolation_level=None)
     #conn = sqlite3.connect("/Users/samueliwuchukwu/documents/scratch_database/scratch_revisions_main_train2.db")
     cursor =  conn.cursor()
     return conn,cursor
@@ -132,5 +132,5 @@ def get_all_commit_sha():
     #conn.close()
     return fin_resp 
 
-insert_into_authors_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/commitsha_authors_unique.csv")
+insert_into_authors_table("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/authors/commitsha_authors_upd_filtered.csv")
 #insert_into_authors_table("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/commit_authors.csv")
