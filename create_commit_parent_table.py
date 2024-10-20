@@ -3,7 +3,7 @@ import pandas as pd
 
 df_comm_par = pd.read_csv('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/all_parent_commits/parent_commits_result_upd_filtered.csv')
 
-connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_cons.db")
+connection = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db")
 
 c = connection.cursor()
 
