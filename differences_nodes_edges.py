@@ -227,7 +227,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 diff_edge_count = 0
                 
                 file_name = f.replace(",", "_COMMA_")
-                node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count_optimized(project_name, file_name, c)
+                node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count(project_name, file_name, c)
                 print(f"node count {node_count_of_f_at_c}, edge count {edge_count_of_f_at_c}")
                 content_parents_of_c = get_content_parents_of_c(project_name, file_name, c)
 
@@ -236,7 +236,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count = node_count_of_f_at_c
                         diff_edge_count = edge_count_of_f_at_c
                     else:
-                        node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count_optimized(project_name, file_name, parent)
+                        node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count(project_name, file_name, parent)
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
@@ -449,4 +449,4 @@ def main2(project_path: str):
     
 
 #main2("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/repos")
-main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
