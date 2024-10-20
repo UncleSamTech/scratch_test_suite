@@ -51,7 +51,7 @@ def insert_into_commit_messages(file_path):
 
         
 def get_all_commit_sha():
-    select_projects = """SELECT commit_sha from commit_message;"""
+    select_projects = """SELECT commit_sha from commit_messages;"""
     val = []
     fin_resp = []
     conn,curr = get_connection()
