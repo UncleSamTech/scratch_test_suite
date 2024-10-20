@@ -257,7 +257,7 @@ authors = df['Authors'].values
 print("Authors contributution per Scratch3 file",df["Authors"].describe())
 
 
-plt.hist(authors, color='lightblue', ec='black', bins=20)
+plt.hist(authors, color='lightblue', ec='black', bins=10)
 plt.yscale('log')
 plt.xlabel('Number of Authors Per Project For the Scratch3 Files')
 plt.ylabel('Number of Projects (Log Scale)')

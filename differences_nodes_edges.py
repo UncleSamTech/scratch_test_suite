@@ -40,6 +40,34 @@ def get_all_projects_in_db():
     conn.commit()
     return fin_resp
 
+def get_all_projects_in_db_optimized():
+    select_projects = """SELECT Project_Name FROM revisions;"""
+    fin_resp = []
+
+    # Establish the database connection
+    conn, curr = get_connection()
+
+    if conn is None:
+        print("Connection failed")
+        return fin_resp  # Return empty list on failure
+
+    try:
+        # Execute the query and fetch all results
+        curr.execute(select_projects)
+        val = curr.fetchall()
+
+        # Flatten the result list if it contains tuples
+        fin_resp = [each_val[0] for each_val in val if isinstance(each_val, tuple) and each_val]
+
+    except Exception as e:
+        print(f"Error fetching projects: {e}")
+
+    finally:
+        # Ensure the connection is closed
+        conn.commit()
+        conn.close()
+
+    return fin_resp
 
 def get_content_parents_of_c(project_name, file_name, c):
     
@@ -65,6 +93,33 @@ def get_node_and_edge_count(project_name, file_name, c):
     
     return node_count, edge_count
 
+def get_node_and_edge_count_optimized(project_name, file_name, commit_sha):
+    node_count, edge_count = 0, 0  # Default values
+
+    try:
+        # Open a cursor using context management (ensures automatic cleanup)
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """SELECT Nodes, Edges 
+                   FROM Revisions 
+                   WHERE Project_Name = ? AND File = ? AND Commit_SHA = ?""",
+                (project_name, file_name, commit_sha)
+            )
+
+            # Fetch the result and check if it exists
+            nodes_edges = cursor.fetchone()
+            
+            if nodes_edges:
+                node_count, edge_count = nodes_edges[0], nodes_edges[1]
+                print(f"nodes: {node_count}, edges: {edge_count}")
+            else:
+                print(f"No data found for project {project_name}, file {file_name}, commit {commit_sha}")
+
+    except Exception as e:
+        print(f"Error fetching node and edge count: {e}")
+
+    return node_count, edge_count
+
 
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
@@ -78,10 +133,17 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
         # for all pd files in ths project
         for f in filenames:
             proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f,f)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
             proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
+            
             proc3 = correct_code_replace(proc2.stdout)
             proc4 = subprocess.run(['xargs -0 echo'], input=proc3, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+            
+            #decoded_proc4 = proc4.stdout.decode()
+            
             filename_shas = proc4.stdout.decode().strip().split('\n')
+            
             filename_shas = [x for x in filename_shas if x != '']
 
             #if 2 ¬ then it is the original filename that we are trying to trace back (includes original filename, commit)
@@ -162,7 +224,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 diff_edge_count = 0
                 
                 file_name = f.replace(",", "_COMMA_")
-                node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count(project_name, file_name, c)
+                node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count_optimized(project_name, file_name, c)
                 print(f"node count {node_count_of_f_at_c}, edge count {edge_count_of_f_at_c}")
                 content_parents_of_c = get_content_parents_of_c(project_name, file_name, c)
 
@@ -171,16 +233,121 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count = node_count_of_f_at_c
                         diff_edge_count = edge_count_of_f_at_c
                     else:
-                        node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count(project_name, file_name, parent)
+                        node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count_optimized(project_name, file_name, parent)
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd_2.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd_3.csv", "a") as outfile:
                     outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
 
                     
 
         return 1
+    
+def get_revisions_and_run_parser_optimized(cwd, project_name, main_branch, debug=False):
+    try:
+        # Get all commit hashes from the main branch excluding merge commits
+        proc1 = subprocess.run(
+            ['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)],
+            stdout=subprocess.PIPE, cwd=cwd, shell=True
+        )
+        
+        # List files in each commit, filter for `.sb3` files, and get unique filenames
+        proc2 = subprocess.run(
+            ['xargs -I{} git ls-tree -r --name-only {}'],
+            input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True
+        )
+        proc3 = subprocess.run(
+            ['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True
+        )
+        proc4 = subprocess.run(
+            ['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True
+        )
+        
+        # Decode filenames and filter out any empty strings
+        filenames = proc4.stdout.decode().strip().split('\n')
+        filenames = [f for f in filenames if f]
+
+        if not filenames:
+            print(f"No .sb3 files found in project {project_name}.")
+            return
+
+        # Process each filename
+        for f in filenames:
+            # Get the full commit history for the file
+            proc1 = subprocess.run(
+                ['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f, f)],
+                stdout=subprocess.PIPE, cwd=cwd, shell=True
+            )
+            proc2 = subprocess.run(
+                ["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True
+            )
+
+            # Process the output for filename SHAs
+            proc3 = correct_code_replace(proc2.stdout)
+            proc4 = subprocess.run(['xargs -0 echo'], input=proc3, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+
+            # Parse and clean the SHA data
+            filename_shas = proc4.stdout.decode().strip().split('\n')
+            filename_shas = [x for x in filename_shas if x]
+
+            # Map all SHAs to filenames (initialize None)
+            proc1 = subprocess.run(
+                ['git --no-pager log --all --pretty=tformat:"%H" -- "{}"'.format(f)], stdout=subprocess.PIPE, cwd=cwd, shell=True
+            )
+            all_shas = proc1.stdout.decode().strip().split('\n')
+            all_sha_names = {x: None for x in all_shas if x}
+
+            # Assign filenames to SHAs based on their separation pattern
+            for fn in filename_shas:
+                separator_count = fn.strip().count('-')
+                split_line = fn.strip('-').split('-')
+
+                if separator_count == 2 and is_sha1(split_line[-1]):
+                    all_sha_names[split_line[-1]] = split_line[0]
+                elif fn[0] == '-' and is_sha1(split_line[-1]):
+                    all_sha_names[split_line[-1]] = split_line[0]
+                elif separator_count == 3 and is_sha1(split_line[-1]):
+                    all_sha_names[split_line[-1]] = split_line[0]
+                elif separator_count == 1:
+                    continue
+                else:
+                    raise ValueError('Unknown case for file')
+
+            # Fill in gaps in the SHA-filename mapping
+            prev_fn = f
+            for c in all_sha_names.keys():
+                if all_sha_names[c] is None:
+                    all_sha_names[c] = prev_fn
+                prev_fn = all_sha_names[c]
+
+            commits_which_modified_file_f = set(all_sha_names.keys())
+
+            # Calculate node and edge differences for each commit
+            for c in commits_which_modified_file_f:
+                node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count_optimized(project_name, f, c)
+                content_parents_of_c = get_content_parents_of_c(project_name, f, c)
+
+                diff_node_count, diff_edge_count = 0, 0
+                for parent in content_parents_of_c:
+                    if parent == c:
+                        diff_node_count = node_count_of_f_at_c
+                        diff_edge_count = edge_count_of_f_at_c
+                    else:
+                        node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count_optimized(
+                            project_name, f, parent)
+                        diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
+                        diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
+
+                # Save results to the output file
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd_3.csv", "a") as outfile:
+                    outfile.write(f"{project_name}_COMMA_{f}_COMMA_{c}_COMMA_{diff_node_count}_COMMA_{diff_edge_count}\n")
+
+        return 1
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return 0
                 
 def is_valid_encoding(byte_string,encoding='utf-8'):
     try:
@@ -228,7 +395,7 @@ def main2_optimized(project_path: str):
             # Check if main_branch and repo are valid
             if main_branch and repo:
                 # Run the parser if the branch name is valid
-                get_revisions_and_run_parser(repo, proj_name, main_branch)
+                get_revisions_and_run_parser_optimized(repo, proj_name, main_branch)
             else:
                 print(f"Skipped project: {proj_name}")
 
@@ -279,4 +446,4 @@ def main2(project_path: str):
     
 
 #main2("/mnt/c/Users/USER/Documents/scratch_tester/scratch_test_suite/files/repos")
-main2("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
