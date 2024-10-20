@@ -124,8 +124,11 @@ def get_node_and_edge_count_optimized(project_name, file_name, commit_sha):
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
-    proc3 = subprocess.run(['grep -i "\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    
+    proc3 = subprocess.run(['grep -i "\\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    
     proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
+    
     filenames = proc4.stdout.decode().strip().split('\n')
 
   
@@ -175,7 +178,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         continue
 
                     all_sha_names[c] = split_line[0]
-                    #print("Separator count 2: assigning {} to {}".format(c, split_line[0]))
+                        #print("Separator count 2: assigning {} to {}".format(c, split_line[0]))
         
                 elif fn[0] == '-':
                     new_name = split_line[0]
@@ -237,7 +240,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
                 
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd_3.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_new_update_new_optimized_upd_3_modified.csv", "a") as outfile:
                     outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, str(diff_node_count), str(diff_edge_count)))
 
                     
@@ -395,7 +398,7 @@ def main2_optimized(project_path: str):
             # Check if main_branch and repo are valid
             if main_branch and repo:
                 # Run the parser if the branch name is valid
-                get_revisions_and_run_parser_optimized(repo, proj_name, main_branch)
+                get_revisions_and_run_parser(repo, proj_name, main_branch)
             else:
                 print(f"Skipped project: {proj_name}")
 
