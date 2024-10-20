@@ -182,19 +182,51 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 if len(commits_which_modified_file_f) > 1: 
                     get_valid_parents_recursive(c, parents_of_c, commits_which_modified_file_f, visited_parents)
             
+                write_content_parents(project_name,f,c,parents_of_c)
+                # if len(parents_of_c) == 0:
+                #     with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
+                #         outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
+                # else:
+                #     # we have a set of valid parents for c Get the node and edge count at each of these parents
+                #     for parent in parents_of_c:
 
-                if len(parents_of_c) == 0:
-                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
-                        outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
-                else:
-                    # we have a set of valid parents for c Get the node and edge count at each of these parents
-                    for parent in parents_of_c:
-
-                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
-                            outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, parent))
+                #         with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
+                #             outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, parent))
 
         return 1
-                
+
+def write_content_parents(project_name, f, c, parents_of_c):
+    # Path to the output file
+    output_file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv"
+    
+    # Initialize a set to track unique lines, starting with the current file contents
+    written_lines = set()
+
+    # Read existing lines in the file and add them to the set
+    try:
+        with open(output_file_path, "r") as infile:
+            for line in infile:
+                written_lines.add(line.strip())  # Strip newline characters
+    except FileNotFoundError:
+        # If the file doesn't exist yet, we just continue with an empty set
+        pass
+
+    # Prepare lines to be written based on parents_of_c
+    if len(parents_of_c) == 0:
+        line = "{}_COMMA_{}_COMMA_{}_COMMA_{}".format(project_name, f, c, c)
+        if line not in written_lines:
+            with open(output_file_path, "a") as outfile:
+                outfile.write(line + "\n")
+            written_lines.add(line)
+    else:
+        # Loop through valid parents and write unique lines
+        for parent in parents_of_c:
+            line = "{}_COMMA_{}_COMMA_{}_COMMA_{}".format(project_name, f, c, parent)
+            if line not in written_lines:
+                with open(output_file_path, "a") as outfile:
+                    outfile.write(line + "\n")
+                written_lines.add(line)
+
 def main2(project_path: str):
     proj_names = []
     for i in os.listdir(project_path):
