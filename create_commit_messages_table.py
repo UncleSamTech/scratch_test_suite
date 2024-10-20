@@ -33,7 +33,7 @@ def insert_into_commit_messages(file_path):
                 commit_sha = complete_content[0] if is_sha1(complete_content[0]) else "None"
                 commit_message = "None"
          
-            insert_commit_message = """INSERT INTO Commit_Message (Commit_Sha, Commit_Message) VALUES(?,?);"""
+            insert_commit_message = """INSERT INTO Commit_Messages (Commit_Sha, Commit_Message) VALUES(?,?);"""
             
             conn,cur = get_connection()
             val = None
