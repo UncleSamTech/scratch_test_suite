@@ -391,11 +391,11 @@ def main2_optimized(project_path: str):
             # Get the current branch name
             result = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], stdout=subprocess.PIPE, cwd=repo, shell=False)
             main_branch = result.stdout.decode("utf-8").strip()
-
+            print(f"main branch {main_branch}")
             # Check if main_branch and repo are valid
             if main_branch and repo:
                 # Run the parser if the branch name is valid
-                get_revisions_and_run_parser_optimized(repo, proj_name, main_branch)
+                get_revisions_and_run_parser(repo, proj_name, main_branch)
             else:
                 print(f"Skipped project: {proj_name}")
 
