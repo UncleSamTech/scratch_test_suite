@@ -12,7 +12,7 @@ def is_sha1(maybe_sha):
     return True
 
 def get_connection():
-    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_all.db",isolation_level=None)
+    conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_cons_all.db",isolation_level=None)
     cursor =  conn.cursor()
     return conn,cursor
 
@@ -67,4 +67,4 @@ def get_all_commit_sha():
     return fin_resp 
 
 
-insert_into_commit_messages("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages_unique_cleaned.csv")
+insert_into_commit_messages("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/commit_messages/commitsha_commitmessages_upd.csv")
