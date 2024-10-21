@@ -20,7 +20,7 @@ print("Nodes <= 27: ", len(nodes[nodes <= 27]))
 print("Edges <= 17: ", len(edges[edges <= 17]))
 
 
-plt.hist(nodes, color='lightblue', ec='black', bins=20)
+plt.hist(nodes, color='lightblue', ec='black', bins=30, alpha=0.75, rwidth=0.9)
 plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Difference in Nodes Per Revision of a Scratch3 File')
@@ -29,7 +29,7 @@ plt.title('Histogram of Difference in Nodes Per Revision of a Scratch3 File')
 #plt.show()
 #plt.savefig("diff_nodes_per_revision_distribution.pdf")
 
-plt.hist(edges, color='lightblue', ec='black', bins=25, rwidth=0.9)
+plt.hist(edges, color='lightblue', ec='black', bins=30, alpha=0.75, rwidth=0.9)
 plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Difference in Edges Per Revision of a Scratch3 File')
