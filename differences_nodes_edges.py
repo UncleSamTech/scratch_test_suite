@@ -23,22 +23,22 @@ def get_connection():
     cursor =  conn.cursor()
     return conn,cursor
 
-# def get_all_projects_in_db():
-#     select_projects = """SELECT Project_Name from revisions;"""
-#     val = []
+def get_all_projects_in_db():
+    select_projects = """SELECT Project_Name from projects;"""
+    val = []
 
     
-#     fin_resp = []
-#     conn,curr = get_connection()
-#     if conn != None:
-#          curr.execute(select_projects)  
-#          val = curr.fetchall()
-#          fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+    fin_resp = []
+    conn,curr = get_connection()
+    if conn != None:
+         curr.execute(select_projects)  
+         val = curr.fetchall()
+         fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
                      
-#     else:
-#         print("connection failed")
-#     conn.commit()
-#     return fin_resp
+    else:
+        print("connection failed")
+    conn.commit()
+    return fin_resp
 
 # def get_all_projects_in_db_optimized():
 #     select_projects = """SELECT Project_Name FROM revisions;"""
@@ -411,7 +411,8 @@ def correct_code_replace(byte_val):
 
 
 def main2_optimized(project_path: str):
-    proj_names = [i for i in os.listdir(project_path) if os.path.isdir(f'{project_path}/{i}') and len(i) > 1]
+    #proj_names = [i for i in os.listdir(project_path) if os.path.isdir(f'{project_path}/{i}') and len(i) > 1]
+    proj_names = get_all_projects_in_db()
 
     for proj_name in proj_names:
         repo = f'{project_path}/{proj_name}'
