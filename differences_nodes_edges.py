@@ -106,7 +106,7 @@ def get_node_and_edge_count(project_name, file_name, c):
         print(f"all {nodes_edges} nodes {node_count} edges {edge_count}")
         return node_count, edge_count
     except Exception as e:
-        print(f"error fetching nodes ane edges {e}")
+        print(f"error fetching nodes ane edges  for {project_name} and {file_name} {e}")
         return 0,0
     finally:
         conn.commit()
