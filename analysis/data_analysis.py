@@ -136,7 +136,7 @@ Distribution of Revisions Per Scratch3 file
 '''
 
 
-"""
+
 cursor.execute('''SELECT Project_Name, File, COUNT(Revision) AS Revision_Count FROM Revisions WHERE File IS NOT NULL AND FILE <> '' GROUP BY Project_Name, File;''')
 revisions = cursor.fetchall()
 
@@ -149,10 +149,10 @@ plt.yscale('log')
 plt.xlabel('Number of Revisions Per Scratch3 File')
 plt.ylabel('Number of Scratch3 Files (Log Scale)')
 plt.title('Histogram of Number of Revisions Per Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/revisions_per_file_upd.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/revisions_per_file_distribution.pdf')
 plt.close()
 
-"""
+
 
 '''
 
@@ -214,7 +214,7 @@ Commits per project distribution
 
 
 
-
+"""
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
@@ -234,7 +234,7 @@ plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits_per_projects_distribution.pdf')
 plt.close()
-
+"""
 
 
 
