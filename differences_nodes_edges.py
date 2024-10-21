@@ -101,11 +101,11 @@ def get_node_and_edge_count(project_name, file_name, c):
         curr.execute("SELECT Nodes, Edges FROM Revisions WHERE Project_Name = ? AND File = ? AND Commit_SHA = ?", (project_name, file_name, c))
         nodes_edges = curr.fetchall()
         print(f"nodes edges list for {project_name} and {file_name} is {nodes_edges}")
-        if len(nodes_edges) > 1:
-            node_count = nodes_edges[0][0]
-            edge_count = nodes_edges[0][1]
-            print(f"all {nodes_edges} nodes {node_count} edges {edge_count}")
-            return node_count, edge_count
+        
+        node_count = nodes_edges[0][0]
+        edge_count = nodes_edges[0][1]
+        print(f"all project {project_name} filename {file_name} {nodes_edges} nodes {node_count} edges {edge_count}")
+        return node_count, edge_count
     except Exception as e:
         print(f"error fetching nodes ane edges  for {project_name} and {file_name} {e}")
         return 0,0
