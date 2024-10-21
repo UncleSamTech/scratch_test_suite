@@ -24,7 +24,7 @@ def get_connection():
     return conn,cursor
 
 def get_all_projects_in_db():
-    select_projects = """SELECT Project_Name from projects;"""
+    select_projects = """SELECT Project_Name from revisions;"""
     val = []
 
     
