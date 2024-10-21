@@ -232,7 +232,7 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Commits Per Project')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Commits Per Project')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project_upd.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits_per_projects_distribution.pdf')
 plt.close()
 
 
