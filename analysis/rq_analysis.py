@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_final_value_copy.csv")
+df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_unique.csv")
 df.replace([float('inf'), -float('inf')], pd.NA, inplace=True)
 df = df.dropna()
 
@@ -27,7 +27,7 @@ plt.xlabel('Difference in Nodes Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions (Log Scale)')
 plt.title('Histogram of Difference in Nodes Per Revision of a Scratch3 File')
 #plt.show()
-#plt.savefig("diff_nodes_per_revision.pdf")
+plt.savefig("diff_nodes_per_revision_distribution.pdf")
 
 plt.hist(edges, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
@@ -36,7 +36,7 @@ plt.xlabel('Difference in Connections Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions (Log Scale)')
 plt.title('Histogram of Difference in Connections Per Revision of a Scratch3 File')
 #plt.show()
-plt.savefig("diff_edges_per_revision.pdf")
+plt.savefig("diff_edges_per_revision_distribution.pdf")
 
 # median value
 print(df["Diff_Nodes"].sort_values().median())
