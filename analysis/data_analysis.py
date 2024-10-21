@@ -11,7 +11,7 @@ Distribution of nodes and edges
 
 '''
 
-'''
+
 cursor.execute("""SELECT Nodes, Edges FROM Revisions;""")
 nodes_edges = cursor.fetchall()
 
@@ -23,10 +23,10 @@ edges = df['Edges'].values
 print(df["Nodes"].describe())
 print(df["Edges"].describe())
 
-cursor.execute("""SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;""")
-num_nodes_gt_500 = cursor.fetchall()
+#cursor.execute("""SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;""")
+#num_nodes_gt_500 = cursor.fetchall()
 
-print("Number of nodes >= 500: ", num_nodes_gt_500)
+#print("Number of nodes >= 500: ", num_nodes_gt_500)
 
 plt.hist(nodes, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
@@ -34,19 +34,19 @@ plt.ticklabel_format(axis='x', style='plain')
 plt.xlabel('Number of Nodes Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
 plt.title('Histogram of Number of Nodes Per Revision of a Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file_non0_new.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/nodes_per_file_distribution.pdf')
 plt.close()
 
 plt.hist(edges, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
 plt.ticklabel_format(axis='x', style='plain')
-plt.xlabel('Number of Connections Per Revision of a Scratch3 File')
+plt.xlabel('Number of Edges Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions of Scratch3 Files (Log Scale)')
-plt.title('Histogram of Number of Connections Per Revision of a Scratch3 File')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_non0_new.pdf')
+plt.title('Histogram of Number of Edges Per Revision of a Scratch3 File')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_distribution.pdf')
 plt.close()
 
-'''
+
 
 cursor.execute("""SELECT Nodes, Edges FROM Revisions;""")
 nodes_edges = cursor.fetchall()
@@ -213,7 +213,7 @@ Commits per project distribution
 
 
 
-
+"""
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
@@ -234,7 +234,7 @@ plt.title('Histogram of Number of Commits Per Project')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project_upd.pdf')
 plt.close()
 
-
+"""
 
 
 
@@ -245,6 +245,7 @@ Author who contributed to the Scratch3 files distribution per project
 '''
 
 
+"""
 cursor.execute('''SELECT Revisions.Project_Name, COUNT(DISTINCT Authors.Author_Name)
 FROM Revisions
 JOIN Authors ON Revisions.Commit_SHA = Authors.Commit_SHA
@@ -288,6 +289,6 @@ print("Scratch3 Projects with one authors: ", len(author_1))
 cursor.close()
 
 
-
+"""
 connection.commit()
 connection.close()
