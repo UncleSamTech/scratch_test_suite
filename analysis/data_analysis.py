@@ -144,7 +144,7 @@ df = pd.DataFrame(revisions, columns=['Project_Name', 'File', 'Revisions'])
 data = df["Revisions"].values
 print("Revisions per Scratch3 file ",df["Revisions"].describe())
 
-plt.hist(data, color='lightblue', ec='black', bins=15)
+plt.hist(data, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
 plt.xlabel('Number of Revisions Per Scratch3 File')
 plt.ylabel('Number of Scratch3 Files (Log Scale)')
