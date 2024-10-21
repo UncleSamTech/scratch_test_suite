@@ -27,7 +27,7 @@ plt.xlabel('Difference in Nodes Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions (Log Scale)')
 plt.title('Histogram of Difference in Nodes Per Revision of a Scratch3 File')
 #plt.show()
-plt.savefig("diff_nodes_per_revision_distribution.pdf")
+#plt.savefig("diff_nodes_per_revision_distribution.pdf")
 
 plt.hist(edges, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
