@@ -214,7 +214,7 @@ Commits per project distribution
 
 
 
-"""
+
 cursor.execute('''SELECT Total_Commits FROM Projects;''')
 total_commits = cursor.fetchall()
 df = pd.DataFrame(total_commits, columns=['Commits'])
@@ -222,9 +222,9 @@ df['Commits'] = df['Commits'].astype(int)
 commits = df['Commits'].values
 print("Commits per projects", df["Commits"].describe())
 
-#cursor.execute('''SELECT COUNT(total_commits) FROM projects WHERE total_commits <= 20;''')
-#commits_20 = cursor.fetchall()
-#print("Projects with <=20 commits: ", commits_20)
+cursor.execute('''SELECT COUNT(total_commits) FROM projects WHERE total_commits <= 20;''')
+commits_20 = cursor.fetchall()
+print("Projects with <=20 commits: ", commits_20)
 
 plt.hist(commits, color='lightblue', ec='black', bins=20)
 plt.yscale('log')
@@ -235,7 +235,7 @@ plt.title('Histogram of Number of Commits Per Project')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/commits2_per_project_upd.pdf')
 plt.close()
 
-"""
+
 
 
 
@@ -245,7 +245,7 @@ Author who contributed to the Scratch3 files distribution per project
 
 '''
 
-
+"""
 
 cursor.execute('''SELECT Revisions.Project_Name, COUNT(DISTINCT Authors.Author_Name)
 FROM Revisions
@@ -289,7 +289,7 @@ print("Scratch3 Projects with one authors: ", len(author_1))
 
 cursor.close()
 
-
+"""
 
 connection.commit()
 connection.close()
