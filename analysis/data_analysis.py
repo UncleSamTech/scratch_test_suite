@@ -11,8 +11,9 @@ Distribution of nodes and edges
 
 '''
 
+"""
 
-cursor.execute("""SELECT Nodes, Edges FROM Revisions;""")
+cursor.execute('''SELECT Nodes, Edges FROM Revisions;''')
 nodes_edges = cursor.fetchall()
 
 # Create a DataFrame
@@ -23,7 +24,7 @@ edges = df['Edges'].values
 print(df["Nodes"].describe())
 print(df["Edges"].describe())
 
-#cursor.execute("""SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;""")
+#cursor.execute('''SELECT COUNT(nodes) FROM revisions WHERE nodes >= 500;''')
 #num_nodes_gt_500 = cursor.fetchall()
 
 #print("Number of nodes >= 500: ", num_nodes_gt_500)
@@ -46,7 +47,7 @@ plt.title('Histogram of Number of Edges Per Revision of a Scratch3 File')
 plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/edges_per_file_distribution.pdf')
 plt.close()
 
-
+"""
 
 cursor.execute("""SELECT Nodes, Edges FROM Revisions;""")
 nodes_edges = cursor.fetchall()
@@ -245,7 +246,7 @@ Author who contributed to the Scratch3 files distribution per project
 '''
 
 
-"""
+
 cursor.execute('''SELECT Revisions.Project_Name, COUNT(DISTINCT Authors.Author_Name)
 FROM Revisions
 JOIN Authors ON Revisions.Commit_SHA = Authors.Commit_SHA
@@ -255,7 +256,7 @@ author_count = cursor.fetchall()
 
 df = pd.DataFrame(author_count, columns=['Project_Name', 'Authors'])
 authors = df['Authors'].values
-print("Authors contributution per Scratch3 file",df["Authors"].describe())
+print(df["Authors"].describe())
 
 
 plt.hist(authors, color='lightblue', ec='black', bins=10)
@@ -263,7 +264,7 @@ plt.yscale('log')
 plt.xlabel('Number of Authors Per Project For the Scratch3 Files')
 plt.ylabel('Number of Projects (Log Scale)')
 plt.title('Histogram of Number of Authors Per Project For the Scratch3 Files')
-plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/Authors_per_project_upd1.pdf')
+plt.savefig('/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/analysis/authors_per_project_distribution.pdf')
 plt.close()
 
 
@@ -289,6 +290,6 @@ print("Scratch3 Projects with one authors: ", len(author_1))
 cursor.close()
 
 
-"""
+
 connection.commit()
 connection.close()
