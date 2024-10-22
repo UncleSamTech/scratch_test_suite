@@ -186,7 +186,7 @@ class Scratch_Path:
         int_val = None
         conn,curr = self.get_connection()
         if conn != None:
-         curr.execute("select distinct(content) from contents_copy where hash = ? ", (hash,))  
+         curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
          try:
             int_val = curr.fetchall()[0][0]
             #fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
@@ -285,7 +285,7 @@ class Scratch_Path:
         hashes = [h.strip() for h in hashes if isinstance(h, str)]
 
         # Open the extracted paths log file once
-        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_test_upd.txt", "a") as exp:
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_train_upd.txt", "a") as exp:
             for each_hash in hashes:
                 contents = self.get_all_contents(each_hash)
             
