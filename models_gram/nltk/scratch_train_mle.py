@@ -82,7 +82,7 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
 
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                with open("seelogs.txt","a") as fp:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
@@ -131,7 +131,7 @@ class scratch_train_mle:
             
                     predicted_next_word = self.predict_next_scratch_token(model_name,context)
                     #print(f"compare {true_next_word} with predicted next word {predicted_next_word}")
-                    with open("seelogs.txt","a") as fp:
+                    with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs.txt","a") as fp:
                         fp.write(f"for context {context} next token {predicted_next_word}")
                         fp.write("\n")
                 
@@ -256,7 +256,7 @@ class scratch_train_mle:
                 acc,precision,rec,f1_score = self.scratch_evaluate_model_nltk(test_data,f'{model_name}_{each_gram}.pkl')
 
                 final_result[f'{each_gram}-gram_nltk'] = [acc,precision,rec,f1_score]
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/trained_data_prec_rec_acc_current_upd.txt","a") as precs:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc.txt","a") as precs:
                     precs.write(f"{each_gram} order accuracy {acc} precision {precision} recall {rec} f1score {f1_score}")
                     precs.write("\n")
             except:
@@ -286,9 +286,9 @@ tr_scr = scratch_train_mle()
 #print("accuracy wilcoxon result for nltk model 7 - 11 vs 12 - 16 ", accuracy_wilcoxon_2)
 #precision_wilcoxon_2 =tr_scr.wilcon_t_test([0.22551918224779507,0.2264853658226743,0.2264853658226743,0.22696845761011392,0.22696845761011392],[0.22721000350383372])
 #print("precision parametric t-test for nltk model 7 - 11 vs 12 - 16 ",precision_wilcoxon_2)
-f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
-print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
-#tr_scr.multiple_train([15,16,17,18,19,20],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_trained_model_version4_curr_new_accurate","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/scratch_train_data_90.txt")
+#f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
+#print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
+tr_scr.multiple_train([15,16,17,18,19,20],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/scratch_trained_model_nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
