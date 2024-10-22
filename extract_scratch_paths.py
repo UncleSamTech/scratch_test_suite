@@ -172,7 +172,7 @@ class Scratch_Path:
 
     def get_connection(self):
         #conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_database6.db",isolation_level=None)
-        conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test3.db",isolation_level=None)
+        conn = sqlite3.connect("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/scratch_revisions_main_test_final.db",isolation_level=None)
         cursor =  conn.cursor()
         return conn,cursor
     
@@ -258,7 +258,7 @@ class Scratch_Path:
                                     try:
                                         val = self.slice_from_start(each_connection)
                                         sec_val  = self.replace_non_vs_string_with_tokens(val)
-                                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_test.txt","a") as exp:
+                                        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_test_upd.txt","a") as exp:
                                             exp.write(f"old val {val} replaced value {sec_val}")
                                             exp.write("\n")
                                         
@@ -274,7 +274,58 @@ class Scratch_Path:
                         continue 
       
                 
-                       
+    def generate_simple_graph_optimized(self, file_path, path_name):
+        hashes = self.get_all_hashes(file_path)
+        print(hashes)
+
+        if not hashes:
+            return
+
+        # Pre-process hashes by stripping white spaces
+        hashes = [h.strip() for h in hashes if isinstance(h, str)]
+
+        # Open the extracted paths log file once
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_test_upd.txt", "a") as exp:
+            for each_hash in hashes:
+                contents = self.get_all_contents(each_hash)
+            
+                if not contents:  # Continue if no contents
+                    continue
+
+                # Attempt to parse the contents
+                try:
+                    contents2 = json.loads(contents)
+                    self.all_connections = contents2["stats"].get("connections", [])
+                    self.all_nodes = contents2["stats"].get("all_nodes", [])
+                except (KeyError, ValueError):
+                    self.all_connections = []
+                    self.all_nodes = []
+
+                # Skip if there are no connections
+                if not isinstance(self.all_connections, list) or not self.all_connections:
+                    continue
+
+                # Open the output file for this hash once
+                with open(f"{path_name}{each_hash}.txt", "a") as fp:
+                    for each_connection in self.all_connections:
+                        if not each_connection:
+                            continue
+
+                        try:
+                            val = self.slice_from_start(each_connection)
+                            sec_val = self.replace_non_vs_string_with_tokens(val)
+
+                            # Log the old and replaced values
+                            exp.write(f"old val {val} replaced value {sec_val}\n")
+                        except Exception:
+                            sec_val = ''
+
+                        # Continue if the processed value is empty
+                        if not sec_val:
+                            continue
+
+                        # Write the processed value to the output file
+                        fp.write(f"{sec_val}\n")                  
         
     
     def visualize_graph(self,graph):
@@ -287,7 +338,7 @@ sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 #print(sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 
-sc_path.generate_simple_graph("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/all_distinct_hashes_main_test.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths7_test/")
+sc_path.generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/main_all_distinct_hashes_test.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/main_extracted_path_test/")
 #sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
 
 #v = sc_path.get_all_contents("cfbab365b6dd7f4138823df8ff2e89a108f43dbf8c9950ab27ac8cc981b9adac")
