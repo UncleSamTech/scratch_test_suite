@@ -16,6 +16,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
+import time
 
 class bi_lstm_scratch:
 
@@ -77,9 +78,11 @@ class bi_lstm_scratch:
     
     def train_stand_alone(self,total_words,max_seq,xs,ys,result_path):
         print(tf.__version__)
+        
         if tf.test.gpu_device_name():
             print(f"Default GPU device : {tf.test.gpu_device_name()}")
             with tf.device('/GPU:0'):
+                start_time = time.time()
                 model = Sequential()
                 model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
                 model.add(Bidirectional(LSTM(150)))
@@ -92,20 +95,21 @@ class bi_lstm_scratch:
                     pickle.dump(history,hs)
 
                 print(model.summary())
-        
+                end_time = time.time()
+                time_spent = end_time - start_time
                 file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1.keras"
                 if os.path.exists(file_name):
                     os.remove(file_name)
 
                 with open(f"{result_path}main_seqlen_150embedtime1.txt","a") as se:
-                    se.write(f"sequence length {max_seq} \n")
+                    se.write(f"sequence length {max_seq} training time {time_spent:.2f} seconds \n")
                 
 
                 model.save(file_name)
                 #print("model weight",model.get_weights())
         else:
             print("Please install GPU version of TF")
-
+            start_time = time.time()
             
             model = Sequential()
             model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
@@ -119,18 +123,20 @@ class bi_lstm_scratch:
                     pickle.dump(history,hs)
 
             print(model.summary())
-        
+            end_time = time.time()
+            time_spent = end_time - start_time
             file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1.keras"
             if os.path.exists(file_name):
                 os.remove(file_name)
 
             with open(f"{result_path}main_seqlen_150embedtime1.txt","a") as se:
-                se.write(f"sequence length {max_seq} \n")
+                se.write(f"sequence length {max_seq} training time {time_spent:.2f} seconds \n")
 
             model.save(file_name)
             #print("model weight",model.get_weights())
 
             return history,model
+        
 
     def plot_graph(self,string_va,result_path):
 
@@ -244,6 +250,8 @@ class bi_lstm_scratch:
         i=0
         y_pred = []
         
+        # Start the evaluation timer
+        start_time = time.time()
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
@@ -277,13 +285,15 @@ class bi_lstm_scratch:
                 if len(y_true) == 0 or len(y_pred) == 0:
                     print("No valid predictions made.")
                     return None, None, None, None
+        end_time = time.time()
+        time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
         precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
         with open(f"{result_path}bilstmmetrics_150embedtime5.txt","a") as blm:
-            blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} \n")
+            blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} evaluation time {time_spent:.2f} seconds \n")
         
         return accuracy,precision,recall,f1score
 
