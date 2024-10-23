@@ -370,7 +370,11 @@ class kenlm_train:
         #precision_17_20 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
         #recall_17_20 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
         #f1_score_17_20 = [0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613]
-
+        main_accuracy = [0.5163701599641202,0.46838092390491853,0.4444183414134079,0.4541357879674519,0.44591333319095317,0.4443115562864404,0.4369860965764688,0.40779104286354995,0.3887619332379386]
+        main_precision = [0.7604222887232679,0.7406965196347256,0.7550783228901023,0.7296587264633992,0.7297606037154738,0.7297170540839317,0.7295136930570918,0.7286296210329786,0.733519014367716]
+        main_recall = [0.5163701599641202,0.46838092390491853,0.4444183414134079,0.4541357879674519,0.44591333319095317,0.4443115562864404,0.4369860965764688,0.40779104286354995,0.3887619332379386]
+        main_f1_score = [0.5125859302212626,0.49460469224057596,0.4833296250062442,0.4888788547708773, 0.4840548194069682,0.48309593108594684,0.47866884739599813,0.4602679270147011,0.4480608614341063]
+        main_ngram_2_10 = list(range(2,11))
 
         accuracy_plot_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
         recall_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
@@ -398,15 +402,15 @@ class kenlm_train:
         #axes.legend(loc ="center right")
 
         
-        plt.plot(ngrams_11_19, precision_11_19, label = "Precision")
-        plt.plot(ngrams_11_19, recall_11_19, label = "Recall")
-        plt.plot(ngrams_11_19, f1_score_11_19, label = "F1")
-        plt.plot(ngrams_11_19, accuracy_score_11_19, label = "Accuracy")
+        plt.plot(main_precision, precision_11_19, label = "Precision")
+        plt.plot(main_recall, recall_11_19, label = "Recall")
+        plt.plot(main_f1_score, f1_score_11_19, label = "F1")
+        plt.plot(main_accuracy, accuracy_score_11_19, label = "Accuracy")
         
         
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
-        plt.title('Kenlm_Model Scores vs N-Gram Orders 11 - 19')
+        plt.title('Kenlm Evaluation Metrics vs N-Gram Orders 2 - 10')
         plt.legend()
         #plt.xlim(0,21)
         #plt.ylim(0,0.79)
@@ -414,7 +418,7 @@ class kenlm_train:
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
-        plt.savefig(f'{plot_name}_11_19.pdf')
+        plt.savefig(f'{plot_name}_main_metrics.pdf')
 
     def paired_t_test(self,nltk_2_10,nltk_11_19):
         if isinstance(nltk_2_10,list) and len(nltk_2_10) > 0 and isinstance(nltk_11_19,list) and len(nltk_11_19) > 0:
@@ -432,8 +436,8 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab/kenln_order10.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order10.arpa")
-#kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order")
+#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab/kenln_order10.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order10.arpa")
+kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order")
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
 #print("accuracy parametric ttest on kenln",accuracy)
