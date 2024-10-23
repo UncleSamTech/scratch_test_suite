@@ -210,15 +210,15 @@ class bi_lstm_scratch:
         #return val
 
     def consolidate_data_train(self,filepath,result_path):
-        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        #padd_seq,max_len = self.pad_sequ(input_seq)
-        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        padd_seq,max_len = self.pad_sequ(input_seq)
+        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
         #print(history)
-        #model_name = "main_bilstm_scratch_model_150embedtime4.keras"
+        model_name = "main_bilstm_scratch_model_150embedtime4.keras"
         #self.train_model_again(model_name,result_path,xs,ys)
 
-        self.plot_graph("loss",result_path)
+        #self.plot_graph("loss",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
@@ -358,8 +358,8 @@ class bi_lstm_scratch:
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models/")
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt",44,"main_bilstm_scratch_model_150embedtime5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
+#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt",44,"main_bilstm_scratch_model_150embedtime5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")

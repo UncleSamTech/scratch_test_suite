@@ -1,5 +1,5 @@
 import os
-import kenlm
+#import kenlm
 import sys
 import nltk
 import numpy as np
@@ -402,10 +402,10 @@ class kenlm_train:
         #axes.legend(loc ="center right")
 
         
-        plt.plot(main_precision, precision_11_19, label = "Precision")
-        plt.plot(main_recall, recall_11_19, label = "Recall")
-        plt.plot(main_f1_score, f1_score_11_19, label = "F1")
-        plt.plot(main_accuracy, accuracy_score_11_19, label = "Accuracy")
+        plt.plot(main_ngram_2_10, main_precision, label = "Precision")
+        plt.plot(main_ngram_2_10, main_recall, label = "Recall")
+        plt.plot(main_ngram_2_10, main_f1_score, label = "F1")
+        plt.plot(main_ngram_2_10, main_accuracy, label = "Accuracy")
         
         
         plt.xlabel('Ngram-order')
@@ -437,7 +437,7 @@ kn = kenlm_train()
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
 #kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab/kenln_order10.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order10.arpa")
-kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order")
+kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order_2_10")
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
 #print("accuracy parametric ttest on kenln",accuracy)
