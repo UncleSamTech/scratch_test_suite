@@ -79,34 +79,41 @@ class bi_lstm_scratch:
     def train_stand_alone(self,total_words,max_seq,xs,ys,result_path):
         print(tf.__version__)
         
-        if tf.test.gpu_device_name():
-            print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with tf.device('/GPU:0'):
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu,True)
+                print(f"Default GPU device : {tf.test.gpu_device_name()}")
                 start_time = time.time()
-                model = Sequential()
-                model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
-                model.add(Bidirectional(LSTM(150)))
-                model.add(Dense(total_words,activation='softmax'))
-                adam = Adam(learning_rate=0.01)
-                model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
-                history = model.fit(xs,ys,epochs=50,verbose=1)
+                with tf.device('/GPU:0'):
+                    model = Sequential()
+                    model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
+                    model.add(Bidirectional(LSTM(150)))
+                    model.add(Dense(total_words,activation='softmax'))
+                    adam = Adam(learning_rate=0.01)
+                    model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
+                    history = model.fit(xs,ys,epochs=50,verbose=1)
 
-                with open(f"{result_path}main_historyrec_150embedtime1.pickle","wb") as hs:
-                    pickle.dump(history,hs)
+                    with open(f"{result_path}main_historyrec_150embedtime1.pickle","wb") as hs:
+                        pickle.dump(history,hs)
 
-                print(model.summary())
-                end_time = time.time()
-                time_spent = end_time - start_time
-                file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1.keras"
-                if os.path.exists(file_name):
-                    os.remove(file_name)
+                    print(model.summary())
+                    end_time = time.time()
+                    time_spent = end_time - start_time
+                    file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1.keras"
+                    if os.path.exists(file_name):
+                        os.remove(file_name)
 
-                with open(f"{result_path}main_seqlen_150embedtime1.txt","a") as se:
-                    se.write(f"sequence length {max_seq} training time {time_spent:.2f} seconds \n")
+                    with open(f"{result_path}main_seqlen_150embedtime1.txt","a") as se:
+                        se.write(f"sequence length {max_seq} training time {time_spent:.2f} seconds \n")
                 
 
-                model.save(file_name)
-                #print("model weight",model.get_weights())
+                    model.save(file_name)
+                    
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
         else:
             print("Please install GPU version of TF")
             start_time = time.time()
@@ -368,7 +375,7 @@ class bi_lstm_scratch:
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt",44,"main_bilstm_scratch_model_150embedtime5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
