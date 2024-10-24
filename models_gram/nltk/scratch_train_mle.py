@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 #import pandas as pd
 import random
 import scipy.stats as stats
+import math
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
 
 class scratch_train_mle:
@@ -83,7 +84,7 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
 
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs.txt","a") as fp:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs_portion.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
@@ -173,6 +174,9 @@ class scratch_train_mle:
             shuffled_res = ''.join(shuffled_list)
             return shuffled_res
     
+    def convert_hours(self,seconds):
+        return round((seconds / 3600),2)
+
     def plot_precision_recall_curve(self,plot_name):
 
         Accuracy = [0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367]
@@ -224,20 +228,30 @@ class scratch_train_mle:
         precision_11_19 = [0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145,0.03634422546717145]
         recall_11_19 = [0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037,0.0278625177954037]
         f1_11_19 = [0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823]
+        
+        main_accuracy = [0.009372597103015442,0.026268210062553254,0.02728651883871236,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844]
+        main_precision = [0.00250684777717733,0.02000157711620491,0.02054685262657442,0.045356115385945,0.045356115385945,0.045356115385945,0.045356115385945,0.045356115385945,0.045356115385945]
+        main_recall = [0.009372597103015442,0.026268210062553254,0.02728651883871236,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844,0.028803591097071844]
+        main_f1 = [0.0033898931640232023,0.019506147406811364,0.020210073337690322,0.022929111031605567,0.022929111031605567,0.022929111031605567,0.022929111031605567,0.022929111031605567,0.022929111031605567]
+        main_training_time = [self.convert_hours(177.9156),self.convert_hours(249.6270),self.convert_hours(349.6335),self.convert_hours(475.4877),self.convert_hours(642.8615),self.convert_hours(861.8450),self.convert_hours(1094.8200),self.convert_hours(1372.9215),self.convert_hours(1628.4691)]
+        main_evaluation_time = [self.convert_hours(512.2936),self.convert_hours(1200.4897),self.convert_hours(2738.8720),self.convert_hours(5382.5739),self.convert_hours(9082.1960),self.convert_hours(13952.8228),self.convert_hours(20310.5438),self.convert_hours(24475.8971),self.convert_hours(34695.9437)]
+        main_gram_range = list(range(2,11))
 
-        plt.plot(ngram_11_19, precision_11_19, label = "Precision",color="red")
-        plt.plot(ngram_11_19, recall_11_19, label = "Recall",color="yellow")
-        plt.plot(ngram_11_19,f1_11_19, label = "F1",color="green")
-        plt.plot(ngram_11_19, accurracy_11_19, label = "Accuracy")
+        plt.plot(main_gram_range, main_precision, label = "Precision")
+        plt.plot(main_gram_range, main_recall, label = "Recall")
+        plt.plot(main_gram_range,main_f1, label = "F1")
+        plt.plot(main_gram_range, main_accuracy, label = "Accuracy")
+        #plt.plot(main_gram_range,main_training_time,label="Training Time converted to hrs")
+        #plt.plot(main_gram_range,main_evaluation_time,label="Evaluation Time converted to hrs")
         
         plt.xlabel('Ngram-order')
         plt.ylabel('Model-Scores')
-        plt.title('Nltk_Model Scores vs N-Gram Orders 11 - 19')
+        plt.title('Nltk_Model Scores vs N-Gram Orders 2 - 10 on the portion')
         plt.legend()
         #plt.xlim(min(Ngrams3), max(Ngrams3))
         #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
 
-        plt.savefig(f'{plot_name}_11_19.pdf')
+        plt.savefig(f'{plot_name}_2_10.pdf')
         #plt.show()
 
     def paired_t_test(self,nltk_2_10,nltk_11_19):
@@ -270,7 +284,7 @@ class scratch_train_mle:
 
     def multiple_train_time_metrics(self, list_ngrams, test_data, model_name, train_data):
         final_result = {}
-        log_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc.txt"
+        log_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc_portions.txt"
     
         for each_gram in list_ngrams:
             try:
@@ -328,9 +342,13 @@ tr_scr = scratch_train_mle()
 #print("precision parametric t-test for nltk model 7 - 11 vs 12 - 16 ",precision_wilcoxon_2)
 #f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
 #print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
-tr_scr.multiple_train_time_metrics([2,3,4,5,6,7,8,9,10],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/scratch_trained_model_nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt")
+tr_scr.multiple_train_time_metrics([2,3,4,5,6,7,8,9,10],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/scratch_trained_model_nltk_portion","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
-#tr_scr.plot_precision_recall_curve("nltk_evaluation_metrics_results")
+#tr_scr.plot_precision_recall_curve("nltk_evaluation_metrics_results_main_portion")
 #tr_scr.scratch_evaluate_model_nltk()
+
+# shuffle and split training and test set into four parts for training in parallel
+#shuf /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt | split -d -n r/4 - /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_ --additional-suffix=.txt
+#shuf /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt | split -d -n r/4 - /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_ --additional-suffix=.txt
