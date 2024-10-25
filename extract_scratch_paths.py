@@ -187,9 +187,10 @@ class Scratch_Path:
         all_hashes = []
         with open(project_path,"r") as file:
             reader = csv.reader(file)
-            project_names = [row for row in reader]
-        
+            project_names = [row[0] for row in reader]
+            print(project_names)
         for project_name in project_names:
+            project_name = str(project_name).strip()
             curr.execute("SELECT hash FROM revisions WHERE project_name = ?", (project_name,))
             all_hashes.extend([row[0] for row in curr.fetchall()])
         
