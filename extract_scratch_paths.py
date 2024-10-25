@@ -2,6 +2,7 @@ import networkx as nx
 import sqlite3
 import json
 import matplotlib.pyplot as plt
+import csv
 
 
 class Scratch_Path:
@@ -181,7 +182,22 @@ class Scratch_Path:
         cursor =  conn.cursor()
         return conn,cursor
 
-    
+    def get_all_hash_for_projects(self,project_path):
+        conn,curr = self.get_connection()
+        all_hashes = []
+        with open(project_path,"r") as file:
+            reader = csv.reader(file)
+            project_names = [row for row in reader]
+        
+        for project_name in project_names:
+            curr.execute("SELECT hash FROM revisions WHERE project_name = ?", (project_name,))
+            all_hashes.extend([row[0] for row in curr.fetchall()])
+        
+        conn.close()
+        return all_hashes
+
+
+
     def get_all_contents(self,hash):
         int_val = None
         conn,curr = self.get_connection()
@@ -233,7 +249,7 @@ class Scratch_Path:
             
     def generate_simple_graph(self,file_path,path_name):
         
-        hashes = self.get_all_hashes(file_path)
+        hashes = self.get_all_hash_for_projects(file_path)
         print(hashes)
             
         if len(hashes) > 0:
@@ -275,7 +291,7 @@ class Scratch_Path:
       
                 
     def generate_simple_graph_optimized(self, file_path, path_name):
-        hashes = self.get_all_hashes(file_path)
+        hashes = self.get_all_hash_for_projects(file_path)
         print(hashes)
 
         if not hashes:
@@ -285,7 +301,7 @@ class Scratch_Path:
         hashes = [h.strip() for h in hashes if isinstance(h, str)]
 
         # Open the extracted paths log file once
-        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/extracted_paths_logs_unique_final_train_upd.txt", "a") as exp:
+        with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/general_logs/extracted_paths_logs_unique_final_train_upd.txt", "a") as exp:
             for each_hash in hashes:
                 contents = self.get_all_contents(each_hash)
             
@@ -338,7 +354,7 @@ sc_path = Scratch_Path()
 #print(sc_path.get_all_hashes("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 #print(sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/sc_hash_local.txt"))
 
-sc_path.generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/main_all_distinct_hashes_train.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/sqlite/list_of_hashes/main_extracted_path_train/")
+sc_path.generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/sampled_projects/sampled_ten_projects.csv","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/list_paths_10/")
 #sc_path.generate_simple_graph("/Users/samueliwuchukwu/documents/scratch_database/scratch_local_hash2.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths/")
 
 #v = sc_path.get_all_contents("cfbab365b6dd7f4138823df8ff2e89a108f43dbf8c9950ab27ac8cc981b9adac")
