@@ -84,7 +84,7 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1]
 
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs_portion.txt","a") as fp:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs_portion_10_projects.txt","a") as fp:
                     fp.write(f"for context {context} next token {predicted_next_word}")
                     fp.write("\n")
                 
@@ -284,7 +284,7 @@ class scratch_train_mle:
 
     def multiple_train_time_metrics(self, list_ngrams, test_data, model_name, train_data):
         final_result = {}
-        log_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc_portions.txt"
+        log_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc_10_projects.txt"
     
         for each_gram in list_ngrams:
             try:
@@ -296,6 +296,7 @@ class scratch_train_mle:
             
                 # Log the time for evaluating the model
                 eval_start_time = time.time()  # Start time
+
                 acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{model_name}_{each_gram}.pkl')
                 eval_end_time = time.time()  # End time
                 eval_duration = eval_end_time - eval_start_time  # Calculate duration
@@ -342,7 +343,7 @@ tr_scr = scratch_train_mle()
 #print("precision parametric t-test for nltk model 7 - 11 vs 12 - 16 ",precision_wilcoxon_2)
 #f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
 #print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
-tr_scr.multiple_train_time_metrics([2,3,4,5,6,7,8,9,10],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/scratch_trained_model_nltk_portion","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt")
+tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
