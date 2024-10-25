@@ -285,38 +285,40 @@ class scratch_train_mle:
     def multiple_train_time_metrics(self, list_ngrams, test_data, model_name, train_data):
         final_result = {}
         log_file = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/trained_data_prec_rec_acc_10_projects.txt"
-    
-        for each_gram in list_ngrams:
-            try:
-                # Log the time for training the model
-                train_start_time = time.time()  # Start time
-                self.train_mle(train_data, each_gram, model_name)
-                train_end_time = time.time()  # End time
-                train_duration = train_end_time - train_start_time  # Calculate duration
+
+        for each_run in range(1,6):
+            for each_gram in list_ngrams:
+                try:
+                    # Log the time for training the model
+                    train_start_time = time.time()  # Start time
+                    self.train_mle(train_data, each_gram, model_name)
+                    train_end_time = time.time()  # End time
+                    train_duration = train_end_time - train_start_time  # Calculate duration
             
-                # Log the time for evaluating the model
-                eval_start_time = time.time()  # Start time
+                    # Log the time for evaluating the model
+                    eval_start_time = time.time()  # Start time
 
-                acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{model_name}_{each_gram}.pkl')
-                eval_end_time = time.time()  # End time
-                eval_duration = eval_end_time - eval_start_time  # Calculate duration
+                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{model_name}_{each_gram}.pkl')
+                    eval_end_time = time.time()  # End time
+                    eval_duration = eval_end_time - eval_start_time  # Calculate duration
 
-                # Store results
-                final_result[f'{each_gram}-gram_nltk'] = [acc, precision, rec, f1_score]
+                    # Store results
+                    final_result[f'{each_gram}-gram_nltk'] = [acc, precision, rec, f1_score]
 
-                #Log training and evaluation results, including time
-                with open(log_file, "a") as precs:
-                    precs.write(f"{each_gram}-gram order:\n")
-                    precs.write(f"Training time: {train_duration:.4f} seconds\n")
-                    precs.write(f"Evaluation time: {eval_duration:.4f} seconds\n")
-                    precs.write(f"Accuracy: {acc}, Precision: {precision}, Recall: {rec}, F1 Score: {f1_score}\n")
-                    precs.write("\n")
+                    #Log training and evaluation results, including time
+                    with open(log_file, "a") as precs:
+                        precs.write(f"Run {each_run} metrics for 10 projects")
+                        precs.write(f"{each_gram}-gram order:\n")
+                        precs.write(f"Training time: {train_duration:.4f} seconds\n")
+                        precs.write(f"Evaluation time: {eval_duration:.4f} seconds\n")
+                        precs.write(f"Accuracy: {acc}, Precision: {precision}, Recall: {rec}, F1 Score: {f1_score}\n")
+                        precs.write("\n")
         
-            except Exception as e:
-                # In case of an exception, log the error and mark the result as 0
-                final_result[f'{each_gram}-gram_nltk'] = [0, 0, 0, 0]
-                with open(log_file, "a") as precs:
-                    precs.write(f"Error training or evaluating {each_gram}-gram model: {e}\n")
+                except Exception as e:
+                    # In case of an exception, log the error and mark the result as 0
+                    final_result[f'{each_gram}-gram_nltk'] = [0, 0, 0, 0]
+                    with open(log_file, "a") as precs:
+                        precs.write(f"Error training or evaluating {each_gram}-gram model: {e}\n")
     
         return final_result
 
