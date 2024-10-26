@@ -172,7 +172,7 @@ class kenlm_train:
         for vocab_name, model_name in vocab_model_pairs:
             vocab_path = os.path.join(vocab_folder, vocab_name)
             model_path = os.path.join(model_folder, model_name)
-
+            print(f"model  {model_path} vocab {vocab_path}")
             # Load the language model
             model_rec = kenlm.Model(model_path)
             y_true, y_pred = [], []
