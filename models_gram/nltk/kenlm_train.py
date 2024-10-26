@@ -131,7 +131,7 @@ class kenlm_train:
             
                     i += 1
                     if i % 500 == 0:
-                        print(f"Progress: {i} true next word: {true_next_word} predicted next word: {predicted_next_word}")
+                        print(f"Progress: {i} true next word: {true_next_word} predicted next words: {predicted_next_word}")
             
                     y_true.append(true_next_word)
                     y_pred.append(predicted_next_word)
@@ -148,7 +148,7 @@ class kenlm_train:
 
             # Log the evaluation metrics and time
             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
-                frp.write(f"Run {each_run} for 50 projects Vocab name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
+                frp.write(f"Run {each_run} for 50 projects Vocabs name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
 
             
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
