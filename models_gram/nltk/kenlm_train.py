@@ -7,6 +7,7 @@ import subprocess
 import random
 import scipy.stats as stats
 import time
+import pandas as pd
 
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
@@ -150,6 +151,70 @@ class kenlm_train:
             with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
                 frp.write(f"Run {each_run} for 50 projects Vocabs name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
 
+    
+
+    def evaluate_all_models_in_folder(self, test_data, vocab_folder, model_folder,proj_number):
+        # Get vocab and model files
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+    
+        # Match vocab and model files by order number
+        vocab_model_pairs = []
+        for vocab in vocab_files:
+            vocab_order = vocab.split("order")[1].split(".")[0]
+            for model in model_files:
+                model_order = model.split("order")[1].split(".")[0]
+                if vocab_order == model_order:
+                    vocab_model_pairs.append((vocab, model))
+                    break
+
+        # Evaluate each vocab-model pair
+        for vocab_name, model_name in vocab_model_pairs:
+            vocab_path = os.path.join(vocab_folder, vocab_name)
+            model_path = os.path.join(model_folder, model_name)
+
+            # Load the language model
+            model_rec = kenlm.Model(model_path)
+            y_true, y_pred = [], []
+        
+            start_time = time.time()
+        
+            # Perform evaluation for each run
+            for each_run in range(1, 6):
+                with open(test_data, "r", encoding="utf-8") as f:
+                    lines = f.readlines()
+                    random.shuffle(lines)
+
+                    for line in lines:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        sentence_tokens = line.split()
+                        if len(sentence_tokens) < 2:
+                            continue
+
+                        context = ' '.join(sentence_tokens[:-1])
+                        true_next_word = sentence_tokens[-1]
+                        predicted_next_word = self.predict_next_token_kenlm(model_rec, context, vocab_path)
+                    
+                        y_true.append(true_next_word)
+                        y_pred.append(predicted_next_word)
+
+                end_time = time.time()
+                evaluation_time = end_time - start_time
+
+                # Calculate metrics
+                accuracy = accuracy_score(y_true, y_pred)
+                precision = precision_score(y_true, y_pred, average='weighted', zero_division=np.nan)
+                recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
+                f1score = f1_score(y_true, y_pred, average="weighted")
+
+                # Log results
+                log_path = f"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlm_eval_results_{proj_number}.txt"
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"Run {each_run} for Vocab: {vocab_name} Model: {model_name} | "
+                               f"Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | "
+                               f"F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
             
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
         arpa_names = []
@@ -429,6 +494,11 @@ class kenlm_train:
         
     def wilcon_t_test(self,group1,group2):
         return stats.wilcoxon(group1,group2)
+    
+    def create_dataframe(data1,data2):
+        df = pd.DataFrame({'10-projects':data1,'50-projects':data2})
+        print(df)
+
 kn = kenlm_train()
 
 
@@ -437,7 +507,7 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
 #model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_50_projects/kenln_order6.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_50_projects/kenln_order6.arpa")
+#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_50_projects/kenln_order6.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_50_projects/kenln_order6.arpa")
 #kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order_2_10_whole_datasets")
 #kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
 #accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
@@ -463,3 +533,4 @@ kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vsc
 #cmake -DKENLM_MAX_ORDER=10 ..
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2 --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_50_projects/kenln_order2.arpa
+kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_100_projects","100")
