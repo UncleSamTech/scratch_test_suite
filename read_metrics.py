@@ -13,7 +13,7 @@ def extract_metrics(file_path):
     accuracy_pattern = re.compile(r"Accuracy:\s([0-9.]+)")
     precision_pattern = re.compile(r"Precision:\s([0-9.]+)")
     recall_pattern = re.compile(r"Recall:\s([0-9.]+)")
-    f1_score_pattern = re.compile(r"F1-score:\s([0-9.]+)")
+    f1_score_pattern = re.compile(r"F1 Score:\s([0-9.]+)")
     training_time_pattern = re.compile(r"Training time:\s([0-9.]+)\sseconds")
     evaluation_time_pattern = re.compile(r"Evaluation time:\s([0-9.]+)\sseconds")
 
