@@ -37,14 +37,14 @@ def extract_metrics(file_path):
                 evaluation_time_nltk.append(float(evaluation_time_match.group(1)))
 
     # Print the extracted lists or return them if needed
-    print(f"data_150_projects_accuracy_kenlm =  {accuracy_nltk}\n")
-    print(f"data_150_projects_precision_kenlm = {precision_nltk}\n")
-    print(f"data_150_projects_recall_kenlm = {recall_nltk}\n")
-    print(f"data_150_projects_f1_score_kenlm = {f1_score_nltk}\n")
-    print(f"data_150_projects_evaluation_time_kenlm = {evaluation_time_nltk}")
+    print(f"data_500_projects_accuracy_kenlm =  {accuracy_nltk}\n")
+    print(f"data_500_projects_precision_kenlm = {precision_nltk}\n")
+    print(f"data_500_projects_recall_kenlm = {recall_nltk}\n")
+    print(f"data_500_projects_f1_score_kenlm = {f1_score_nltk}\n")
+    print(f"data_500_projects_evaluation_time_kenlm = {evaluation_time_nltk}")
 
     return accuracy_nltk, precision_nltk, recall_nltk, f1_score_nltk, evaluation_time_nltk
 
 # Usage
-file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlm_eval_results_100.txt"
+file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlm_eval_results_500.txt"
 extract_metrics(file_path)
