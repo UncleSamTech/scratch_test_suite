@@ -46,5 +46,5 @@ def extract_metrics(file_path):
     return accuracy_nltk, precision_nltk, recall_nltk, f1_score_nltk, evaluation_time_nltk
 
 # Usage
-file_path = "/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/kenlnm_acc_prec_rec_f1_50_projects.txt"
+file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlm_eval_results_100.txt"
 extract_metrics(file_path)
