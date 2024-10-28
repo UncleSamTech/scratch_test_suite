@@ -274,7 +274,7 @@ class bi_lstm_scratch:
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
-                predicted_next_word = self.predict_next_token_bilstm(context,maxlen,model_path,result_path)
+                predicted_next_word = self.predict_token(context,maxlen,model_path,result_path)
                 
                 
                 i+=1
@@ -368,6 +368,38 @@ class bi_lstm_scratch:
                         break
                 return output_word
        
+
+    def predict_token(context, tokenz, load_mod, maxseqlen):
+        token_list = None
+        token_value = None
+        output_word = ""
+    
+    
+        # Tokenize context
+        context = context.strip()
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            print("Empty token list, unable to predict token.")
+            return None
+    
+        token_value = token_list[0]
+        padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
+
+        # Ensure input is a tensor with consistent shape
+        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+
+        # Predict the next token
+        predicted = load_mod.predict(padded_in_seq)
+
+        # Retrieve the predicted token
+        pred_token_index = np.argmax(predicted, axis=-1)
+        for token, index in tokenz.word_index.items():
+            if index == pred_token_index:
+                output_word = token
+                print(output_word)
+                break
+
+        return output_word
 
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
