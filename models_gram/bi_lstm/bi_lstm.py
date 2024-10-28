@@ -374,7 +374,7 @@ class bi_lstm_scratch:
                 return output_word
        
 
-    def predict_token(context, tokenz, load_mod, maxseqlen):
+    def predict_token(self,context, tokenz, load_mod, maxseqlen):
         token_list = None
         token_value = None
         output_word = ""
