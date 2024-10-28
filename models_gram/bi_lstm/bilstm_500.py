@@ -436,7 +436,7 @@ class bi_lstm_scratch:
                 return
 
         else:
-            print("No GPU available. Running on CPU.")
+            print("No GPU available. Running on CPU")
 
         # Define callbacks outside the loop to maintain consistency
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
