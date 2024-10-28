@@ -35,6 +35,9 @@ class bi_lstm_scratch:
         
         with open(file_name,"r",encoding="utf-8") as rf:
             lines = rf.readlines()
+            lines = [line.replace("_","UNDERSCORE") for line in lines]
+            lines = [line.replace(">","RIGHTANG") for line in lines]
+            lines = [line.replace("<","LEFTANG") for line in lines]
             #qjg = self.quick_iterate(lines)
             max_len_ov = max([len(each_line) for each_line in lines])
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -209,12 +212,12 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #history_again = self.train_model_again(model_path,result_path,xs,ys)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
+        #history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
 
         
-        #val = self.evaluate_bilstm(testfile,max_len,model_path,result_path)
-        print(history)
-        self.plot_graph("accuracy",result_path)
+        val = self.evaluate_bilstm(testfile,max_len,model_path,result_path)
+        #print(history)
+        #self.plot_graph("accuracy",result_path)
         #self.plot_graph("loss",result_path)
         #val = self.predict_word("event_whenflagclicked control_forever",model,2,max_len,tokenizer)
         #print(val)
@@ -226,9 +229,10 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        history,model = self.train_stand_alone(total_words,max_len,xs,ys,result_path)
-        #print(history)
         model_name = "main_bilstm_scratch_model_150embedtime4.keras"
+        history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
+        #print(history)
+        
         #self.train_model_again(model_name,result_path,xs,ys)
 
         #self.plot_graph("loss",result_path)
@@ -256,6 +260,11 @@ class bi_lstm_scratch:
         y_true = []
         i=0
         y_pred = []
+        tokenz = None
+        loaded_model = load_model(f"{result_path}{model_path}",compile=False)
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            tokenz = pickle.load(tk)
+            
         
         # Start the evaluation timer
         start_time = time.time()
@@ -269,17 +278,17 @@ class bi_lstm_scratch:
                
                 line = line.strip()
                 
-                sentence_tokens = line.split()
+                sentence_tokens = line.split(" ")
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
-                predicted_next_word = self.predict_next_token_bilstm(context,maxlen,model_path,result_path)
+                predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
                 i+=1
                 if i%500 == 0:
                     
-                    print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
+                    print(f"progress {i}")
             
                 if predicted_next_word is not None:
                     y_true.append(true_next_word)
@@ -287,7 +296,7 @@ class bi_lstm_scratch:
                     y_pred.append(predicted_next_word)
                 
 
-                print(f"trueword {true_next_word} context {context} predicted {predicted_next_word} ytrue {y_true} ypred {y_pred}")
+                print(f"trueword {true_next_word} context {context} predicted {predicted_next_word}")
                 
                 if len(y_true) == 0 or len(y_pred) == 0:
                     print("No valid predictions made.")
@@ -299,8 +308,8 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_150embedtime5.txt","a") as blm:
-            blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} evaluation time {time_spent:.2f} seconds \n")
+        with open(f"{result_path}bilstmmetrics_150embedtime1.txt","a") as blm:
+            blm.write(f" another accuracy {accuracy} \n |  precision {precision} \n  |  recall {recall} \n  | f1score {f1score} \n  | evaluation time {time_spent:.2f} seconds \n")
         
         return accuracy,precision,recall,f1score
 
@@ -309,6 +318,7 @@ class bi_lstm_scratch:
         token_list = None
         token_value = None
         gpu = tf.config.list_physical_devices('GPU')
+        output_word = ""
         
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
@@ -323,54 +333,149 @@ class bi_lstm_scratch:
                 print(f"Default GPU device : {gpu[0].name}")
             
             
-                padded_in_seq = np.array(pad_sequences([token_value],maxlen=maxseqlen,padding='pre',truncating='pre'))
+                padded_in_seq = pad_sequences([token_value],maxlen=maxseqlen-1,padding='pre')
                 
                 try:
                     load_mod = load_model(f"{result_path}{model_name}",compile=False)
                 except OSError as e:
                     
                     return None
-                predicted = load_mod.predict(padded_in_seq,verbose=1)
+                predicted = load_mod.predict(padded_in_seq)
                 
 
-                pred_token_index = np.argmax(predicted,axis=-1)[0]
+                pred_token_index = np.argmax(predicted,axis=-1)
         
      
-                #print("index",pred_token_index)
+                
                 for token,index in tokenz.word_index.items():
                     if index == pred_token_index:
-                        next_pred_token = token
-                        print(next_pred_token)
-                        return next_pred_token
+                        output_word = token
+                        print(output_word)
+                        break
                             
-                return None
+                return output_word
         
             else:   
-                padded_in_seq = np.array(pad_sequences([token_value],maxlen=maxseqlen,padding='pre',truncating='pre')) 
+                padded_in_seq = np.array(pad_sequences([token_value],maxlen=maxseqlen-1,padding='pre',truncating='pre')) 
                 try:
                     load_mod = load_model(f"{result_path}{model_name}",compile=False)
                 except OSError as e:
                     print(f"Error loading model: {e}")
                     return None 
-                predicted = load_mod.predict(padded_in_seq,verbose=1)
+                predicted = load_mod.predict(padded_in_seq)
                 
                 
-                pred_token_index = np.argmax(predicted,axis=-1)[0]
+                pred_token_index = np.argmax(predicted,axis=-1)
                 
                 #print("index",pred_token_index)
 
                 for word,index in tokenz.word_index.items():
                     if index == pred_token_index:
-                        next_pred_token = word
-                        print(next_pred_token)
-                        return next_pred_token
-                return None
+                        output_word = word
+                        print(output_word)
+                        break
+                return output_word
        
+
+    def predict_token(self,context, tokenz, load_mod, maxseqlen):
+        token_list = None
+        token_value = None
+        output_word = ""
+    
+        
+        # Tokenize context
+        context = context.strip()
+        context = context.replace("_","UNDERSCORE")
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            print("Empty token list, unable to predict token.")
+            return None
+    
+        token_value = token_list[0]
+        padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
+
+        # Ensure input is a tensor with consistent shape
+        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+
+        # Predict the next token
+        predicted = load_mod.predict(padded_in_seq)
+
+        # Retrieve the predicted token
+        pred_token_index = np.argmax(predicted, axis=-1)
+        for token, index in tokenz.word_index.items():
+            if index == pred_token_index:
+                output_word = token
+                print(output_word)
+                break
+        output_word  = output_word.replace("UNDERSCORE","_")
+        return output_word
 
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
             self.loaded_scratch_model = pickle.load(f)
         return self.loaded_scratch_model
+
+    
+    def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
+        print(tf.__version__)
+
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Default GPU device : {tf.test.gpu_device_name()}")
+            
+                model = None
+                for run in range(1, 6):  # Run 5 times
+                    print(f"\nStarting run {run}...\n")
+                
+                    start_time = time.time()
+
+                    # Load the model from the previous run, or create a new one for the first run
+                    if run == 1:
+                        model = Sequential([
+                        Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                        Bidirectional(LSTM(150)),
+                        Dense(total_words, activation='softmax')
+                        ])
+                        adam = Adam(learning_rate=0.01)
+                        model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+                    else:
+                        #model_name_comp = f"{result_path}{loaded_model}"
+                        model = load_model(model,compile=True)
+                        # Apply learning rate scheduling and early stopping
+                        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+                        
+                        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+                    
+                    # Fit the model
+                    history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping] if run > 1 else None)
+
+                    # Save history
+                    with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
+                        pickle.dump(history.history, hs)
+
+                    end_time = time.time()
+                    time_spent = end_time - start_time
+                    print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
+
+                    # Save model and record sequence length
+                    model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
+                    model.save(model_file_name)
+                
+                    with open(f"{result_path}main_seqlen_150embedtime{run}.txt", "a") as se:
+                        se.write(f"Run {run}: sequence length {max_seq}, training time {time_spent:.2f} seconds\n")
+
+                    print(f"Model for run {run} saved as {model_file_name}")
+
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+    
+        else:
+            print("No GPU available. Please install the GPU version of TensorFlow.")
+            return None
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
@@ -378,14 +483,14 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150_v2/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
 
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/models_train_test/shuffled_v1_scratch_test_data_10.txt",44,"main_bilstm_scratch_model_150embedtime5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/main_bilstm_results/")
+#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",41,"main_bilstm_scratch_model_150embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")

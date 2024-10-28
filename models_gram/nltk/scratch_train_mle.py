@@ -23,6 +23,9 @@ class scratch_train_mle:
 
         with open(train_data,"r",encoding="utf-8") as f:
             lines = f.readlines()
+            #lines = [line.replace("_","UNDERSCORE") for line in lines]
+            #lines = [line.replace("<","LEFTANG") for line in lines]
+            #lines = [line.replace(">","RIGHTANG") for line in lines]
             #sublines = lines[:10000]
             tokenized_scratch_data = [list(word_tokenize(sent.strip())) for sent in lines]
             train_data,padded_sents = padded_everygram_pipeline(n,tokenized_scratch_data)
@@ -70,11 +73,10 @@ class scratch_train_mle:
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
+            #lines = [line.replace("_","UNDERSCORE") for line in lines]
+            #lines = [line.replace("<","LEFTANG") for line in lines]
+            #lines = [line.replace(">","RIGHTANG") for line in lines]
             random.shuffle(lines)
-            lines_lenght = len(lines)
-            print("lenght",lines_lenght)
-            offset_lenght = lines_lenght - 50
-            new_lines = lines[:offset_lenght]
             
             for line in lines:
                 line = line.strip()
@@ -115,11 +117,10 @@ class scratch_train_mle:
 
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
+            #lines = [line.replace("_","UNDERSCORE") for line in lines]
+            #lines = [line.replace("<","LEFTANG") for line in lines]
+            #lines = [line.replace(">","RIGHTANG") for line in lines]
             random.shuffle(lines)
-            lines_lenght = len(lines)
-            #print("lenght",lines_lenght)
-            offset_lenght = lines_lenght - 50
-            new_lines = lines[:offset_lenght]
             
             for line in lines:
                 line = line.strip()

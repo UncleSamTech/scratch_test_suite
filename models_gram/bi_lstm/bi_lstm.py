@@ -35,6 +35,9 @@ class bi_lstm_scratch:
         
         with open(file_name,"r",encoding="utf-8") as rf:
             lines = rf.readlines()
+            lines = [line.replace("_","UNDERSCORE") for line in lines]
+            lines = [line.replace(">","RIGHTANG") for line in lines]
+            lines = [line.replace("<","LEFTANG") for line in lines]
             #qjg = self.quick_iterate(lines)
             max_len_ov = max([len(each_line) for each_line in lines])
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -382,6 +385,7 @@ class bi_lstm_scratch:
         
         # Tokenize context
         context = context.strip()
+        context = context.replace("_","UNDERSCORE")
         token_list = tokenz.texts_to_sequences([context])
         if not token_list or len(token_list[0]) == 0:
             print("Empty token list, unable to predict token.")
@@ -403,7 +407,7 @@ class bi_lstm_scratch:
                 output_word = token
                 print(output_word)
                 break
-
+        output_word  = output_word.replace("UNDERSCORE","_")
         return output_word
 
     def load_trained_model(self,model_name) :
@@ -412,7 +416,7 @@ class bi_lstm_scratch:
         return self.loaded_scratch_model
 
     
-    def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,loaded_model=None):
+    def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
 
         gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -439,8 +443,8 @@ class bi_lstm_scratch:
                         adam = Adam(learning_rate=0.01)
                         model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
                     else:
-                        model_name_comp = f"{result_path}{loaded_model}"
-                        model = load_model(model_name_comp,compile=True)
+                        #model_name_comp = f"{result_path}{loaded_model}"
+                        model = load_model(model,compile=True)
                         # Apply learning rate scheduling and early stopping
                         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
                         
@@ -458,7 +462,7 @@ class bi_lstm_scratch:
                     print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
 
                     # Save model and record sequence length
-                    model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_{run}.keras"
+                    model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
                     model.save(model_file_name)
                 
                     with open(f"{result_path}main_seqlen_150embedtime{run}.txt", "a") as se:
@@ -479,7 +483,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
@@ -488,5 +492,5 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",41,"main_bilstm_scratch_model_150embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10/")
+#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",41,"main_bilstm_scratch_model_150embedtime1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
