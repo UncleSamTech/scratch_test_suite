@@ -232,6 +232,10 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         model_name = "main_bilstm_scratch_model_150embedtime4.keras"
+        print(f"total words {total_words}")
+        print(f"max len {max_len} xs {xs}")
+        print(f"ys {ys}")
+        print(f"result path {result_path}")
         history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
         #print(history)
         
