@@ -38,7 +38,7 @@ class bi_lstm_scratch:
             lines = [line.replace("_","UNDERSCORE") for line in lines]
             lines = [line.replace(">","RIGHTANG") for line in lines]
             lines = [line.replace("<","LEFTANG") for line in lines]
-            print(lines)
+            print("see lines" ,lines)
             #qjg = self.quick_iterate(lines)
             max_len_ov = max([len(each_line) for each_line in lines])
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -54,6 +54,7 @@ class bi_lstm_scratch:
                 for i in range(1,len(self.token_list)):
                     ngram_seq = self.token_list[:i+1]
                     self.encompass.append(ngram_seq)
+        print(f" first stage {self.encompass} {self.total_words} {self.tokenizer}")
         return self.encompass,self.total_words,self.tokenizer
     
   
