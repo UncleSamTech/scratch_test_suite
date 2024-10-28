@@ -285,7 +285,7 @@ class bi_lstm_scratch:
                 i+=1
                 if i%500 == 0:
                     
-                    print(f"progress {i} true next word {true_next_word} predicted next word {predicted_next_word}")
+                    print(f"progress {i}")
             
                 if predicted_next_word is not None:
                     y_true.append(true_next_word)
@@ -293,7 +293,7 @@ class bi_lstm_scratch:
                     y_pred.append(predicted_next_word)
                 
 
-                print(f"trueword {true_next_word} context {context} predicted {predicted_next_word} ytrue {y_true} ypred {y_pred}")
+                print(f"trueword {true_next_word} context {context} predicted {predicted_next_word}")
                 
                 if len(y_true) == 0 or len(y_pred) == 0:
                     print("No valid predictions made.")
@@ -305,8 +305,8 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_150embedtime5.txt","a") as blm:
-            blm.write(f" another accuracy {accuracy} precision {precision} recall {recall} f1score {f1score} evaluation time {time_spent:.2f} seconds \n")
+        with open(f"{result_path}bilstmmetrics_150embedtime1.txt","a") as blm:
+            blm.write(f" another accuracy {accuracy} \n |  precision {precision} \n  |  recall {recall} \n  | f1score {f1score} \n  | evaluation time {time_spent:.2f} seconds \n")
         
         return accuracy,precision,recall,f1score
 
