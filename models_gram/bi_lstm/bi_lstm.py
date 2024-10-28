@@ -257,6 +257,7 @@ class bi_lstm_scratch:
         y_true = []
         i=0
         y_pred = []
+        loaded_model = load_model(f"{result_path}{model_path}",compile=False)
         
         # Start the evaluation timer
         start_time = time.time()
@@ -274,7 +275,7 @@ class bi_lstm_scratch:
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
-                predicted_next_word = self.predict_token(context,maxlen,model_path,result_path)
+                predicted_next_word = self.predict_token(context,maxlen,loaded_model,result_path)
                 
                 
                 i+=1
