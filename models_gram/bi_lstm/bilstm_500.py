@@ -416,117 +416,72 @@ class bi_lstm_scratch:
         return self.loaded_scratch_model
 
     
+
+
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
-        model = None
 
+        # Check for GPU availability
         gpus = tf.config.experimental.list_physical_devices('GPU')
         if gpus:
             print(f"Default GPU device: {gpus[0]}")
             try:
                 for gpu in gpus:
                     tf.config.experimental.set_memory_growth(gpu, True)
-                    print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            
-                
-                for run in range(1, 6):  # Run 5 times
-                    print(f"\nStarting run {run}...\n")
-                
-                    start_time = time.time()
-
-                    # Load the model from the previous run, or create a new one for the first run
-                    if run == 1:
-                        model = Sequential([
-                        Embedding(total_words, 100, input_shape=(max_seq - 1,)),
-                        Bidirectional(LSTM(150)),
-                        Dense(total_words, activation='softmax')
-                        ])
-                        adam = Adam(learning_rate=0.01)
-                        model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-                    else:
-                        #model_name_comp = f"{result_path}{loaded_model}"
-                        model = load_model(model,compile=True)
-                        # Apply learning rate scheduling and early stopping
-                        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
-                        
-                        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-                    
-                    # Fit the model
-                    history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping] if run > 1 else None)
-
-                    # Save history
-                    with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
-                        pickle.dump(history.history, hs)
-
-                    end_time = time.time()
-                    time_spent = end_time - start_time
-                    print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
-
-                    # Save model and record sequence length
-                    model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-                    model.save(model_file_name)
-                
-                    with open(f"{result_path}main_seqlen_150embedtime{run}.txt", "a") as se:
-                        se.write(f"Run {run}: sequence length {max_seq}, training time {time_spent:.2f} seconds\n")
-
-                    print(f"Model for run {run} saved as {model_file_name}")
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
 
             except RuntimeError as e:
                 print(f"Error setting up GPU: {e}")
-    
+                return
+
         else:
-            print("No GPU available. Please install the GPU version of TensorFlow.")
-            for run in range(1, 6):  # Run 5 times
-                print(f"\nStarting run {run}...\n")
-                
-                start_time = time.time()
+            print("No GPU available. Running on CPU.")
 
-                # Load the model from the previous run, or create a new one for the first run
-                model = Sequential()
-                if run == 1:
-                    
-                    model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
-                    model.add(Bidirectional(LSTM(150)))
-                    model.add(Dense(total_words,activation='softmax'))
-                    adam = Adam(learning_rate=0.01)
-                    model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
-                    #history = model.fit(xs,ys,epochs=50,verbose=1)
+        # Define callbacks outside the loop to maintain consistency
+        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
 
-                    #model = Sequential([
-                    #Embedding(total_words, 100, input_shape=(max_seq - 1,)),
-                    #Bidirectional(LSTM(150)),
-                    #Dense(total_words, activation='softmax')
-                    #])
-                    #adam = Adam(learning_rate=0.01)
-                    #model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-                else:
-                    #model_name_comp = f"{result_path}{loaded_model}"
-                    model = load_model(model,compile=True)
-                    # Apply learning rate scheduling and early stopping
-                    lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
-                        
-                    early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-                    
-                # Fit the model
-                history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping] if run > 1 else None)
+        # Run model training for 5 runs, reloading the model each time
+        model_file_name = None
+        for run in range(1, 6):
+            print(f"\nStarting run {run}...\n")
+            start_time = time.time()
 
-                # Save history
-                with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
-                    pickle.dump(history.history, hs)
+            # Load the previous model if it exists, else create a new one
+            if run == 1 or model_file_name is None:
+                # First run or no saved model, initialize a new model
+                model = Sequential([
+                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                Bidirectional(LSTM(150)),
+                Dense(total_words, activation='softmax')
+                ])
+                adam = Adam(learning_rate=0.01)
+                model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+            else:
+                # Load the model saved from the previous run
+                run_curr = run - 1
+                model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run_curr}.keras"
+                model = load_model(model_file_name, compile=True)
 
-                end_time = time.time()
-                time_spent = end_time - start_time
-                print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
+            # Fit the model
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
-                # Save model and record sequence length
-                model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-                model.save(model_file_name)
-                
-                with open(f"{result_path}main_seqlen_150embedtime{run}.txt", "a") as se:
-                    se.write(f"Run {run}: sequence length {max_seq}, training time {time_spent:.2f} seconds\n")
+            # Save the history
+            with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
+                pickle.dump(history.history, hs)
 
-                print(f"Model for run {run} saved as {model_file_name}")
+            end_time = time.time()
+            time_spent = end_time - start_time
+            print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
 
+            # Save the model and record training details
+            model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
+            model.save(model_file_name)
+
+            with open(f"{result_path}main_seqlen_150embedtime{run}.txt", "a") as se:
+                se.write(f"Run {run}: sequence length {max_seq}, training time {time_spent:.2f} seconds\n")
+
+            print(f"Model for run {run} saved as {model_file_name}")
             
 
 cl_ob = bi_lstm_scratch()
