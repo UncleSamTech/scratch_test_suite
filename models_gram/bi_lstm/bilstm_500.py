@@ -482,14 +482,23 @@ class bi_lstm_scratch:
                 start_time = time.time()
 
                 # Load the model from the previous run, or create a new one for the first run
+                model = Sequential()
                 if run == 1:
-                    model = Sequential([
-                    Embedding(total_words, 100, input_shape=(max_seq - 1,)),
-                    Bidirectional(LSTM(150)),
-                    Dense(total_words, activation='softmax')
-                    ])
+                    
+                    model.add(Embedding(total_words,100,input_shape=(max_seq-1,)))
+                    model.add(Bidirectional(LSTM(150)))
+                    model.add(Dense(total_words,activation='softmax'))
                     adam = Adam(learning_rate=0.01)
-                    model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+                    model.compile(loss='categorical_crossentropy',optimizer=adam,metrics=['accuracy'])
+                    #history = model.fit(xs,ys,epochs=50,verbose=1)
+
+                    #model = Sequential([
+                    #Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                    #Bidirectional(LSTM(150)),
+                    #Dense(total_words, activation='softmax')
+                    #])
+                    #adam = Adam(learning_rate=0.01)
+                    #model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
                 else:
                     #model_name_comp = f"{result_path}{loaded_model}"
                     model = load_model(model,compile=True)
