@@ -38,6 +38,7 @@ class bi_lstm_scratch:
             lines = [line.replace("_","UNDERSCORE") for line in lines]
             lines = [line.replace(">","RIGHTANG") for line in lines]
             lines = [line.replace("<","LEFTANG") for line in lines]
+            print(lines)
             #qjg = self.quick_iterate(lines)
             max_len_ov = max([len(each_line) for each_line in lines])
             self.tokenizer = Tokenizer(oov_token='<oov>')
