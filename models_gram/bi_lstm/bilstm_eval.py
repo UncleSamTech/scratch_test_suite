@@ -318,7 +318,7 @@ class bi_lstm_scratch:
             recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
             f1score = f1_score(y_true,y_pred,average="weighted")
 
-            with open(f"{result_path}bilstmmetrics_150embedtime1_main.txt","a") as blm:
+            with open(f"{result_path}bilstmmetrics_150embedtime1_main_{each_run}.txt","a") as blm:
                 blm.write(f"Run {each_run} metrics : \n Accuracy {accuracy} \n |  Precision {precision} \n  |  Recall {recall} \n  | F1-Score {f1score} \n  | Evaluation Time {time_spent:.2f} seconds \n")
             return accuracy,precision,recall,f1score
 
