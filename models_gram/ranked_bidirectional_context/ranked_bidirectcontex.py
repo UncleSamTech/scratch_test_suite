@@ -33,6 +33,9 @@ class bidirectional_context:
         
         with open(dataset_path,'r',encoding='utf-8') as f:
             linesval = f.readlines()
+            linesval = [line.replace("_","UNDERSCORE") for line in linesval]
+            linesval = [line.replace(">","RIGHTANG") for line in linesval]
+            linesval = [line.replace("<","LEFTANG") for line in linesval]
             def tokenize_function(val):
                 val = linesval
                 max_len_ov = max([len(each_line) for each_line in val])
@@ -71,7 +74,9 @@ class bidirectional_context:
 
         with open(dataset_path,'r',encoding='utf-8') as f:
             linesval = f.readlines()
-
+            linesval = [line.replace("_","UNDERSCORE") for line in linesval]
+            linesval = [line.replace(">","RIGHTANG") for line in linesval]
+            linesval = [line.replace("<","LEFTANG") for line in linesval]
         
         def custom_data_collator(dictionary_data):
             dictionary_data = linesval
@@ -155,6 +160,9 @@ class bidirectional_context:
 
          with open(test_data,"r",encoding="utf-8",errors="ignore") as td:
               lines = td.readlines()
+              lines = [line.replace("_","UNDERSCORE") for line in lines]
+              lines = [line.replace(">","RIGHTANG") for line in lines]
+              lines = [line.replace("<","LEFTANG") for line in lines]
 
                #mask all tokens at index 1 provided the sentence length is more that 1
                #define a custom data collator for this
