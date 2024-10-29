@@ -275,52 +275,52 @@ class bi_lstm_scratch:
         # Start the evaluation timer
         start_time = time.time()
 
-        with open(test_data,"r",encoding="utf-8") as f:
-            lines= f.readlines()
-            random.shuffle(lines)
-            lines = [line.replace("_","UNDERSCORE") for line in lines]
-            lines = [line.replace(">","RIGHTANG") for line in lines]
-            lines = [line.replace("<","LEFTANG") for line in lines]
+        for each_run in range(1,6):
+            with open(test_data,"r",encoding="utf-8") as f:
+                lines= f.readlines()
+                random.shuffle(lines)
+                lines = [line.replace("_","UNDERSCORE") for line in lines]
+                lines = [line.replace(">","RIGHTANG") for line in lines]
+                lines = [line.replace("<","LEFTANG") for line in lines]
             
-            for line in lines:
+                for line in lines:
                
-                line = line.strip()
+                    line = line.strip()
                 
                 
-                sentence_tokens = line.split(" ")
+                    sentence_tokens = line.split(" ")
             
-                context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
-                true_next_word = sentence_tokens[-1]
-                predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
+                    context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
+                    true_next_word = sentence_tokens[-1]
+                    predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
-                i+=1
-                if i%500 == 0:
+                    i+=1
+                    if i%500 == 0:
                     
-                    print(f"progress {i}")
+                        print(f"progress {i}")
             
-                if predicted_next_word is not None:
-                    y_true.append(true_next_word)
+                    if predicted_next_word is not None:
+                        y_true.append(true_next_word)
                 
-                    y_pred.append(predicted_next_word)
+                        y_pred.append(predicted_next_word)
                 
 
-                print(f"trueword {true_next_word} context {context} predicted {predicted_next_word}")
+                    print(f"trueword {true_next_word} context {context} predicted {predicted_next_word}")
                 
-                if len(y_true) == 0 or len(y_pred) == 0:
-                    print("No valid predictions made.")
-                    return None, None, None, None
-        end_time = time.time()
-        time_spent = end_time - start_time
-        accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        f1score = f1_score(y_true,y_pred,average="weighted")
+                    if len(y_true) == 0 or len(y_pred) == 0:
+                        print("No valid predictions made.")
+                        return None, None, None, None
+            end_time = time.time()
+            time_spent = end_time - start_time
+            accuracy = accuracy_score(y_true, y_pred)
+            precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+            recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+            f1score = f1_score(y_true,y_pred,average="weighted")
 
-        with open(f"{result_path}bilstmmetrics_150embedtime1.txt","a") as blm:
-            blm.write(f" another accuracy {accuracy} \n |  precision {precision} \n  |  recall {recall} \n  | f1score {f1score} \n  | evaluation time {time_spent:.2f} seconds \n")
-        
-        return accuracy,precision,recall,f1score
+            with open(f"{result_path}bilstmmetrics_150embedtime1_main.txt","a") as blm:
+                blm.write(f"Run {each_run} metrics : \n Accuracy {accuracy} \n |  Precision {precision} \n  |  Recall {recall} \n  | F1-Score {f1score} \n  | Evaluation Time {time_spent:.2f} seconds \n")
+            return accuracy,precision,recall,f1score
 
     
     def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
