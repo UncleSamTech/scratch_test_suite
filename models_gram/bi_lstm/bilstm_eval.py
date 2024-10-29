@@ -320,7 +320,7 @@ class bi_lstm_scratch:
 
             with open(f"{result_path}bilstmmetrics_150embedtime1_main_{each_run}.txt","a") as blm:
                 blm.write(f"Run {each_run} metrics : \n Accuracy {accuracy} \n |  Precision {precision} \n  |  Recall {recall} \n  | F1-Score {f1score} \n  | Evaluation Time {time_spent:.2f} seconds \n")
-            return accuracy,precision,recall,f1score
+        return 0,0,0,0
 
     
     def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
