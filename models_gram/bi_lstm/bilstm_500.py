@@ -32,31 +32,45 @@ class bi_lstm_scratch:
         self.model = keras.Sequential()
 
     
-    def tokenize_data_inp_seq(self,file_name,result_path):
-        
-        with open(file_name,"r",encoding="utf-8") as rf:
+    def tokenize_data_inp_seq(self, file_name, result_path):
+        with open(file_name, "r", encoding="utf-8") as rf:
             lines = rf.readlines()
-            lines = [line.replace("_","UNDERSCORE") for line in lines]
-            lines = [line.replace(">","RIGHTANG") for line in lines]
-            lines = [line.replace("<","LEFTANG") for line in lines]
-            print("see lines" ,lines)
-            #qjg = self.quick_iterate(lines)
-            max_len_ov = max([len(each_line) for each_line in lines])
+            # Replace specific characters
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            print("see lines:", lines)
+
+            # Initialize and fit the tokenizer
             self.tokenizer = Tokenizer(oov_token='<oov>')
             self.tokenizer.fit_on_texts(lines)
 
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle","wb") as tk:
-                pickle.dump(self.tokenizer,tk,protocol=pickle.HIGHEST_PROTOCOL)
+            # Save the tokenizer
+            with open(f"{result_path}tokenized_file_50embedtime1.pickle", "wb") as tk:
+                pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
-            self.total_words = len(self.tokenizer.word_index) + 1
+            # Define total_words based on the tokenizer
+            self.total_words = len(self.tokenizer.word_index) + 1  # +1 to account for <oov>
+            print(f"Total words (vocabulary size): {self.total_words}")
+
+            # Generate token sequences (ngrams)
+            self.encompass = []
+            max_index = 0  # Track max token index to verify alignment with `total_words`
             for each_line in lines:
                 each_line = each_line.strip()
                 self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
-                for i in range(1,len(self.token_list)):
-                    ngram_seq = self.token_list[:i+1]
+                max_index = max(max_index, max(self.token_list, default=0))  # Update max_index
+                for i in range(1, len(self.token_list)):
+                    ngram_seq = self.token_list[:i + 1]
                     self.encompass.append(ngram_seq)
-        print(f" first stage {self.encompass} {self.total_words} {self.tokenizer}")
-        return self.encompass,self.total_words,self.tokenizer
+
+            # Verify that total_words aligns with max index in token_list
+            if max_index >= self.total_words:
+                print(f"Warning: max index {max_index} exceeds total_words {self.total_words}")
+                self.total_words = max_index + 1  # Update total_words if needed
+
+            print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
+            return self.encompass, self.total_words, self.tokenizer
+    
+
     
   
     
