@@ -441,9 +441,10 @@ class bi_lstm_scratch:
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
         
+        total_words_in_ys = ys.shape[1]
         max_index_in_xs = np.max(xs)
-        if total_words <= max_index_in_xs:
-            total_words = max_index_in_xs + 1
+        if total_words != total_words_in_ys:
+            total_words = total_words_in_ys
             print(f"Adjusting total_words from {total_words} to cover max token index in xs: {max_index_in_xs + 1}")
             
 
