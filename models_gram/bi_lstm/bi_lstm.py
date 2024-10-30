@@ -443,11 +443,15 @@ class bi_lstm_scratch:
         
         max_index_in_xs = np.max(xs)
         total_words_in_ys = ys.shape[1]
+
+        # Ensure total_words is the larger of max_index_in_xs + 1 and total_words_in_ys
+        total_words = max(max_index_in_xs + 1, total_words_in_ys)
+        print(f"Adjusted total_words to: {total_words}")
         
-        # Ensure total_words is at least the maximum index in xs plus one
-        if total_words <= max_index_in_xs:
-            total_words = max(max_index_in_xs + 1, total_words_in_ys)
-            print(f"Adjusted total_words to: {total_words}")
+        # # Ensure total_words is at least the maximum index in xs plus one
+        # if total_words <= max_index_in_xs:
+        #     total_words = max(max_index_in_xs + 1, total_words_in_ys)
+        #     print(f"Adjusted total_words to: {total_words}")
             
 
         # Clip xs to ensure indices are within the allowed range
