@@ -49,6 +49,7 @@ class bi_lstm_scratch:
 
             # Define total_words based on the tokenizer
             self.total_words = len(self.tokenizer.word_index) + 1  # +1 to account for <oov>
+            
             print(f"Total words (vocabulary size): {self.total_words}")
 
             # Generate token sequences (ngrams)
@@ -64,7 +65,7 @@ class bi_lstm_scratch:
 
             # Verify that total_words aligns with max index in token_list
             if max_index >= self.total_words:
-                print(f"Warning: max index {max_index} exceeds total_words {self.total_words}")
+                print(f"Adjusting total_words to cover max token index: {max_index}")
                 self.total_words = max_index + 1  # Update total_words if needed
 
             #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
@@ -439,7 +440,13 @@ class bi_lstm_scratch:
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
-         # Clip xs to ensure indices are within the allowed range
+        
+        max_index_in_xs = np.max(xs)
+        if total_words <= max_index_in_xs:
+            print(f"Adjusting total_words from {total_words} to cover max token index in xs: {max_index_in_xs + 1}")
+            total_words = max_index_in_xs + 1
+
+        # Clip xs to ensure indices are within the allowed range
         xs = np.clip(xs, 0, total_words - 1)
         print(f"Total words (vocabulary size): {total_words}")
         print(f"Max token index in xs after clipping: {np.max(xs)}")
@@ -477,7 +484,7 @@ class bi_lstm_scratch:
             if run == 1 or model_file_name is None:
                 # First run or no saved model, initialize a new model
                 model = Sequential([
-                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                Embedding(total_words, 100, input_shape=(max_seq - 1)),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
