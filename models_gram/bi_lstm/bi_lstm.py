@@ -439,7 +439,10 @@ class bi_lstm_scratch:
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
-
+         # Clip xs to ensure indices are within the allowed range
+        xs = np.clip(xs, 0, total_words - 1)
+        print(f"Total words (vocabulary size): {total_words}")
+        print(f"Max token index in xs after clipping: {np.max(xs)}")
         # Check for GPU availability
         gpus = tf.config.experimental.list_physical_devices('GPU')
         if gpus:
@@ -486,7 +489,7 @@ class bi_lstm_scratch:
                 model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run_curr}.keras"
                 model = load_model(model_file_name, compile=True)
 
-            xs = np.clip(xs, 0, total_words - 1)
+            
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
 
