@@ -94,13 +94,13 @@ class bi_lstm_scratch:
         xs,labels = padded_seq[:,:-1],padded_seq[:,-1]
 
         max_label_index = np.max(labels)
-        if total_words <= max_label_index:
+        if max_label_index >= total_words:
             print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
             total_words = max_label_index + 1
         
         # Ensure labels do not exceed the total words range
-        if max_label_index >= total_words:
-            raise ValueError(f"Max label index {max_label_index} exceeds total_words {total_words - 1}")
+        if np.any(labels >= total_words):
+            raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
     
         ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs, ys, labels
