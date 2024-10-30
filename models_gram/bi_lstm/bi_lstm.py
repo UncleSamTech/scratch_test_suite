@@ -448,7 +448,7 @@ class bi_lstm_scratch:
             
 
         # Clip xs to ensure indices are within the allowed range
-        total_words += 1
+        #total_words += 1
         xs = np.clip(xs, 0, total_words - 1)
         print(f"Total words (vocabulary size): {total_words}")
         print(f"Max token index in xs after clipping: {np.max(xs)}")
