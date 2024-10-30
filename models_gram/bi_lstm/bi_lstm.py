@@ -58,15 +58,15 @@ class bi_lstm_scratch:
             for each_line in lines:
                 each_line = each_line.strip()
                 self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
-                max_index = max(max_index, max(self.token_list, default=0))  # Update max_index
+                #max_index = max(max_index, max(self.token_list, default=0))  # Update max_index
                 for i in range(1, len(self.token_list)):
                     ngram_seq = self.token_list[:i + 1]
                     self.encompass.append(ngram_seq)
 
             # Verify that total_words aligns with max index in token_list
-            if max_index >= self.total_words:
-                print(f"Adjusting total_words to cover max token index: {max_index}")
-                self.total_words = max_index + 1  # Update total_words if needed
+            # if max_index >= self.total_words:
+            #     print(f"Adjusting total_words to cover max token index: {max_index}")
+            #     self.total_words = max_index + 1  # Update total_words if needed
 
             #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
             return self.encompass, self.total_words, self.tokenizer
@@ -97,6 +97,10 @@ class bi_lstm_scratch:
         if total_words <= max_label_index:
             print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
             total_words = max_label_index + 1
+        
+        # Ensure labels do not exceed the total words range
+        if max_label_index >= total_words:
+            raise ValueError(f"Max label index {max_label_index} exceeds total_words {total_words - 1}")
     
         ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs, ys, labels
@@ -450,11 +454,14 @@ class bi_lstm_scratch:
         print(tf.__version__)
         
         max_index_in_xs = np.max(xs)
-        total_words_in_ys = ys.shape[1]
+        if max_index_in_xs >= total_words:
+            raise ValueError(f"Max index in xs {max_index_in_xs} exceeds total_words {total_words - 1}")
+
+        #total_words_in_ys = ys.shape[1]
 
         # Ensure total_words is the larger of max_index_in_xs + 1 and total_words_in_ys
-        total_words = max(max_index_in_xs + 1, total_words_in_ys)
-        print(f"Adjusted total_words to: {total_words}")
+        #total_words = max(max_index_in_xs + 1, total_words_in_ys)
+        #print(f"Adjusted total_words to: {total_words}")
         
         # # Ensure total_words is at least the maximum index in xs plus one
         # if total_words <= max_index_in_xs:
