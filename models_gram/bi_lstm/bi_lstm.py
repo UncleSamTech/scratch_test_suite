@@ -17,6 +17,7 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 import time
+from sklearn.utils.class_weight import compute_class_weight
 
 class bi_lstm_scratch:
 
@@ -446,6 +447,10 @@ class bi_lstm_scratch:
         # Define callbacks outside the loop to maintain consistency
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+        # Calculate class weights based on ys
+        unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
+        class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
+        class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
 
         # Run model training for 5 runs, reloading the model each time
         model_file_name = None
@@ -470,7 +475,7 @@ class bi_lstm_scratch:
                 model = load_model(model_file_name, compile=True)
 
             # Fit the model
-            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
 
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:

@@ -17,6 +17,7 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 import time
+from sklearn.utils.class_weight import compute_class_weight
 
 class bi_lstm_scratch:
 
@@ -38,7 +39,7 @@ class bi_lstm_scratch:
             lines = [line.replace("_","UNDERSCORE") for line in lines]
             lines = [line.replace(">","RIGHTANG") for line in lines]
             lines = [line.replace("<","LEFTANG") for line in lines]
-            
+            print("see lines" ,lines)
             #qjg = self.quick_iterate(lines)
             max_len_ov = max([len(each_line) for each_line in lines])
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -54,7 +55,7 @@ class bi_lstm_scratch:
                 for i in range(1,len(self.token_list)):
                     ngram_seq = self.token_list[:i+1]
                     self.encompass.append(ngram_seq)
-        
+        print(f" first stage {self.encompass} {self.total_words} {self.tokenizer}")
         return self.encompass,self.total_words,self.tokenizer
     
   
@@ -231,6 +232,11 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        model_name = "main_bilstm_scratch_model_150embedtime4.keras"
+        print(f"total words {total_words}")
+        print(f"max len {max_len} xs {xs}")
+        print(f"ys {ys}")
+        print(f"result path {result_path}")
         history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
         #print(history)
         
@@ -441,6 +447,10 @@ class bi_lstm_scratch:
         # Define callbacks outside the loop to maintain consistency
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+        # Calculate class weights based on ys
+        unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
+        class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
+        class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
 
         # Run model training for 5 runs, reloading the model each time
         model_file_name = None
@@ -465,7 +475,7 @@ class bi_lstm_scratch:
                 model = load_model(model_file_name, compile=True)
 
             # Fit the model
-            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
 
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
