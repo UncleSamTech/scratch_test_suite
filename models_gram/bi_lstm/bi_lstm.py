@@ -484,7 +484,7 @@ class bi_lstm_scratch:
             if run == 1 or model_file_name is None:
                 # First run or no saved model, initialize a new model
                 model = Sequential([
-                Embedding(total_words, 100, input_shape=(max_seq - 1)),
+                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
