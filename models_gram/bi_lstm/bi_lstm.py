@@ -92,8 +92,16 @@ class bi_lstm_scratch:
 
     def prep_seq_labels(self,padded_seq,total_words):
         xs,labels = padded_seq[:,:-1],padded_seq[:,-1]
+
+        max_label_index = np.max(labels)
+        if total_words <= max_label_index:
+            print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
+            total_words = max_label_index + 1
+    
         ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
-        return xs,ys,labels
+        return xs, ys, labels
+        #ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
+        #return xs,ys,labels
     
     def train_stand_alone(self,total_words,max_seq,xs,ys,result_path):
         print(tf.__version__)
