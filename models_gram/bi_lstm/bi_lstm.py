@@ -67,7 +67,7 @@ class bi_lstm_scratch:
                 print(f"Warning: max index {max_index} exceeds total_words {self.total_words}")
                 self.total_words = max_index + 1  # Update total_words if needed
 
-            print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
+            #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
             return self.encompass, self.total_words, self.tokenizer
     
   
@@ -485,7 +485,7 @@ class bi_lstm_scratch:
                 run_curr = run - 1
                 model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run_curr}.keras"
                 model = load_model(model_file_name, compile=True)
-                
+
             xs = np.clip(xs, 0, total_words - 1)
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
