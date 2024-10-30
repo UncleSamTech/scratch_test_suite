@@ -453,6 +453,7 @@ class bi_lstm_scratch:
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
         
+        print(f"Max index in xs: {np.max(xs)}")
         max_index_in_xs = np.max(xs)
         if max_index_in_xs >= total_words:
             raise ValueError(f"Max index in xs {max_index_in_xs} exceeds total_words {total_words - 1}")
@@ -491,6 +492,8 @@ class bi_lstm_scratch:
             print("No GPU available. Running on CPU.")
 
         # Define callbacks outside the loop to maintain consistency
+        print(f"Shape of xs: {xs.shape}, Shape of ys: {ys.shape}")
+        print(f"Max index in xs: {np.max(xs)}, Min index in xs: {np.min(xs)}")
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         # Calculate class weights based on ys
