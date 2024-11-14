@@ -286,6 +286,7 @@ class bi_lstm_scratch:
                     break
             seed_text += " " + output_word
         print(seed_text)
+        return seed_text
 
 
     def evaluate_bilstm(self,test_data,maxlen,model_path,result_path):
