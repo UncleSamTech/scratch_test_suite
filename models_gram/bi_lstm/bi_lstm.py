@@ -421,7 +421,7 @@ class bi_lstm_scratch:
         
         # Tokenize context
         context = context.strip()
-        context = context.replace("_","UNDERSCORE")
+        #context = context.replace("_","UNDERSCORE")
         token_list = tokenz.texts_to_sequences([context])
         if not token_list or len(token_list[0]) == 0:
             print("Empty token list, unable to predict token.")
@@ -443,7 +443,7 @@ class bi_lstm_scratch:
                 output_word = token
                 print(output_word)
                 break
-        output_word  = output_word.replace("UNDERSCORE","_")
+        #output_word  = output_word.replace("UNDERSCORE","_")
         return output_word
 
     def load_trained_model(self,model_name) :
