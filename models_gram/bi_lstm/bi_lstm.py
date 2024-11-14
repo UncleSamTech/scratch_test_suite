@@ -329,7 +329,7 @@ class bi_lstm_scratch:
                     y_pred.append(predicted_next_word)
                 
                 with open(f"{result_path}predicted_true_logs.txt","a") as prd:
-                    prd.write(f"trueword {true_next_word} predicted {predicted_next_word}")
+                    prd.write(f"trueword {true_next_word} \n predicted {predicted_next_word} \n")
                 #print(f"trueword {true_next_word} context {context} predicted {predicted_next_word}")
                 
                 if len(y_true) == 0 or len(y_pred) == 0:
