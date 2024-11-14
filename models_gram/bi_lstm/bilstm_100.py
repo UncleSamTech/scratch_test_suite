@@ -488,6 +488,7 @@ class bi_lstm_scratch:
                 model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run_curr}.keras"
                 model = load_model(model_file_name, compile=True)
 
+            xs = np.clip(xs, 0, total_words - 1)
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
 
