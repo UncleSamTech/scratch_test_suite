@@ -306,10 +306,11 @@ class bi_lstm_scratch:
             lines= f.readlines()
             random.shuffle(lines)
             
-            
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             for line in lines:
                
                 line = line.strip()
+                
                 
                 sentence_tokens = line.split(" ")
             
