@@ -62,6 +62,7 @@ class scratch_train_mle:
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
         #print("predicted score ", scratch_next_probaility_tokens)
+        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token,str) else scratch_predicted_next_token
         return scratch_predicted_next_token
     
     def scratch_evaluate_model_nltk(self,test_data,model_name,result_path):
