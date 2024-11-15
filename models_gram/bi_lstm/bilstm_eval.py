@@ -288,55 +288,57 @@ class bi_lstm_scratch:
                 matching_files.append(filename)
         if not matching_files:
             return 0.0,0.0,0.0,0.0
+        
         for each_model in matching_files:
             each_model = each_model.strip()
             loaded_model = load_model(f"{result_path}{each_model}",compile=False)
-            with open(test_data,"r",encoding="utf-8") as f:
-                lines= f.readlines()
-                random.shuffle(lines)
-                lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            for each_run in range(1,6):
+                with open(test_data,"r",encoding="utf-8") as f:
+                    lines= f.readlines()
+                    random.shuffle(lines)
+                    lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             
-                for line in lines:
+                    for line in lines:
                
-                    line = line.strip()
+                        line = line.strip()
                 
                 
-                    sentence_tokens = line.split(" ")
+                        sentence_tokens = line.split(" ")
             
-                    context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
-                    true_next_word = sentence_tokens[-1].lower()
-                    predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
+                        context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
+                        true_next_word = sentence_tokens[-1].lower()
+                        predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
-                    i+=1
-                    if i%500 == 0:
+                        i+=1
+                        if i%500 == 0:
                     
-                        print(f"progress {i}")
+                            print(f"progress {i}")
             
-                    if predicted_next_word is not None:
-                        y_true.append(true_next_word)
+                        if predicted_next_word is not None:
+                            y_true.append(true_next_word)
                 
-                        y_pred.append(predicted_next_word)
+                            y_pred.append(predicted_next_word)
                 
 
                     
-                    if len(y_true) == 0 or len(y_pred) == 0:
-                        print("No valid predictions made.")
-                        return None, None, None, None
-            end_time = time.time()
-            time_spent = end_time - start_time
-            accuracy = accuracy_score(y_true, y_pred)
-            precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-            recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-            f1score = f1_score(y_true,y_pred,average="weighted")
+                        if len(y_true) == 0 or len(y_pred) == 0:
+                            print("No valid predictions made.")
+                            return None, None, None, None
+                end_time = time.time()
+                time_spent = end_time - start_time
+                accuracy = accuracy_score(y_true, y_pred)
+                precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+                recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
+                f1score = f1_score(y_true,y_pred,average="weighted")
             
-            # Check if the file exists and write the header if it's empty
-            if not os.path.exists(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.txt") or os.path.getsize(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.txt") == 0:
-                with open(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.csv", "a") as blm:
-                    blm.write("modelname, accuracy, precision, recall, f1score, evaluation_time\n")
+                # Check if the file exists and write the header if it's empty
+                if not os.path.exists(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.txt") or os.path.getsize(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.txt") == 0:
+                    with open(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.csv", "a") as blm:
+                        blm.write("modelname, run, accuracy, precision, recall, f1score, evaluation_time\n")
 
-            with open(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.csv","a") as blm:
-                blm.write(f"{each_model} ,  {accuracy} , {precision} , {recall}, {f1score} , {time_spent:.2f} \n")
+                with open(f"{result_path}bilstmmetrics_150embedtime1_metrics_10_projects.csv","a") as blm:
+                    blm.write(f"{each_model} , {each_run}, {accuracy} , {precision} , {recall}, {f1score} , {time_spent:.2f} \n")
         return 0.0,0.0,0.0,0.0
 
     
