@@ -282,7 +282,8 @@ class scratch_train_mle:
 
     def multiple_train_time_metrics(self, list_ngrams, result_path, test_data, model_name, train_data,proj_number):
         final_result = {}
-        log_file = f"{result_path}/logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
+        log_file = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
+        log_file_error = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects_error.txt"
 
         for each_run in range(1,6):
             for each_gram in list_ngrams:
@@ -315,7 +316,7 @@ class scratch_train_mle:
                 except Exception as e:
                     # In case of an exception, log the error and mark the result as 0
                     final_result[f'{each_gram}-gram_nltk'] = [0, 0, 0, 0]
-                    with open(log_file, "a") as precs:
+                    with open(log_file_error, "a") as precs:
                         precs.write(f"Error training or evaluating {each_gram}-gram model: {e}\n")
     
         return final_result
@@ -344,7 +345,7 @@ tr_scr = scratch_train_mle()
 #f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
 #print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt")
-tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_50_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","50")
+tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_50_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","50")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
