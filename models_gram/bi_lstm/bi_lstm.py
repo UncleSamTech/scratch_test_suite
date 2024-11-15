@@ -345,7 +345,7 @@ class bi_lstm_scratch:
         f1score = f1_score(y_true,y_pred,average="weighted")
 
         with open(f"{result_path}bilstmmetrics_150embedtime1_debug.txt","a") as blm:
-            blm.write(f" another accuracy {accuracy} \n |  precision {precision} \n  |  recall {recall} \n  | f1score {f1score} \n  | evaluation time {time_spent:.2f} seconds \n")
+            blm.write(f" model 4 |  another accuracy {accuracy} \n |  precision {precision} \n  |  recall {recall} \n  | f1score {f1score} \n  | evaluation time {time_spent:.2f} seconds \n")
         
         return accuracy,precision,recall,f1score
 
