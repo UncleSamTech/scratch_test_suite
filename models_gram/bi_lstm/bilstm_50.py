@@ -49,7 +49,7 @@ class bi_lstm_scratch:
 
             # Define total_words based on the tokenizer
             self.total_words = len(self.tokenizer.word_index) + 1  # +1 to account for <oov>
-            print(f"Total words (vocabulary size): {self.total_words}")
+            
 
             # Generate token sequences (ngrams)
             self.encompass = []
@@ -63,11 +63,11 @@ class bi_lstm_scratch:
                     self.encompass.append(ngram_seq)
 
             # Verify that total_words aligns with max index in token_list
-            if max_index >= self.total_words:
-                print(f"Warning: max index {max_index} exceeds total_words {self.total_words}")
-                self.total_words = max_index + 1  # Update total_words if needed
+            # if max_index >= self.total_words:
+            #     print(f"Warning: max index {max_index} exceeds total_words {self.total_words}")
+            #     self.total_words = max_index + 1  # Update total_words if needed
 
-            print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
+            # print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
             return self.encompass, self.total_words, self.tokenizer
     
 
@@ -245,12 +245,8 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        model_name = "main_bilstm_scratch_model_150embedtime4.keras"
-        print(f"total words {total_words}")
-        print(f"max len {max_len} xs {xs}")
-        print(f"ys {ys}")
-        print(f"result path {result_path}")
-        history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
+      
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -460,11 +456,7 @@ class bi_lstm_scratch:
         # Define callbacks outside the loop to maintain consistency
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-        # Calculate class weights based on ys
-        unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
-        class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
-        class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
-
+        
         # Run model training for 5 runs, reloading the model each time
         model_file_name = None
         for run in range(1, 6):
@@ -489,7 +481,7 @@ class bi_lstm_scratch:
 
             xs = np.clip(xs, 0, total_words - 1)
             # Fit the model
-            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
@@ -515,7 +507,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_v3/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_v2/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
