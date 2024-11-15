@@ -199,40 +199,36 @@ class bi_lstm_scratch:
         
 
     def train_model_again(self,model_name,result_path,xs,ys):
-        model_name_comp = f"{result_path}{model_name}"
-        if tf.test.gpu_device_name():
-            print(f"Default GPU device : {tf.test.gpu_device_name()}")
-            with tf.device('/GPU:0'):
-                loaded_model = load_model(model_name_comp,compile=True)
-                # Reduce learning rate when a metric has stopped improving
-                lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
-                early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
 
-                history = loaded_model.fit(xs,ys,epochs=50,verbose=1,callbacks=[lr_scheduler,early_stopping])
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
 
-                file_name = f"{result_path}main_bilstm_scratch_model_150embedtime5.keras"
-                if os.path.exists(file_name):
-                    os.remove(file_name)
-
-                loaded_model.save(file_name)
-
-                with open(f"{result_path}main_historyrec_150embedtime5.pickle","wb") as hs:
-                    pickle.dump(history,hs)
         else:
-            print("Please install GPU version of TF")
-            loaded_model = load_model(model_name_comp,compile=True)
+            print("No GPU available. Running on CPU.")
+        model_name_comp = f"{result_path}{model_name}"
+        
+        loaded_model = load_model(model_name_comp,compile=True)
+        # Reduce learning rate when a metric has stopped improving
+        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
 
-            history = loaded_model.fit(xs,ys,epochs=50,verbose=1)
+        history = loaded_model.fit(xs,ys,epochs=50,verbose=1,callbacks=[lr_scheduler,early_stopping])
 
-            file_name = f"{result_path}main_bilstm_scratch_model_150embedtime5.keras"
-            if os.path.exists(file_name):
-                os.remove(file_name)
+        file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_5.keras"
+        
+        loaded_model.save(file_name)
 
-            loaded_model.save(file_name)
-
-            with open(f"{result_path}main_historyrec_150embedtime5.pickle","wb") as hs:
-                pickle.dump(history,hs)
-                
+        with open(f"{result_path}main_historyrec_150embedtime5.pickle","wb") as hs:
+            pickle.dump(history,hs)
+                        
 
     def consolidate_data(self,filepath,testfile,model_path,result_path):
         
@@ -257,15 +253,12 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        model_name = "main_bilstm_scratch_model_150embedtime4.keras"
-        print(f"total words {total_words}")
-        print(f"max len {max_len} xs {xs}")
-        print(f"ys {ys}")
-        print(f"result path {result_path}")
-        history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
+        model_name = "main_bilstm_scratch_model_150embedtime1_main_4.keras"
+       
+        #history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
         #print(history)
         
-        #self.train_model_again(model_name,result_path,xs,ys)
+        self.train_model_again(model_name,result_path,xs,ys)
 
         #self.plot_graph("loss",result_path)
 
@@ -495,17 +488,17 @@ class bi_lstm_scratch:
         else:
             print("No GPU available. Running on CPU.")
 
-        print(f"Total words: {total_words}, Max seq: {max_seq}")
+        # print(f"Total words: {total_words}, Max seq: {max_seq}")
     
-        # Ensure total_words is as expected
-        print(f"Shape of xs: {xs.shape}, Shape of ys: {ys.shape}")
-        print(f"Max index in xs: {np.max(xs)}, Min index in xs: {np.min(xs)}")
+        # # Ensure total_words is as expected
+        # print(f"Shape of xs: {xs.shape}, Shape of ys: {ys.shape}")
+        # print(f"Max index in xs: {np.max(xs)}, Min index in xs: {np.min(xs)}")
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-        # Calculate class weights based on ys
-        unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
-        class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
-        class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
+        # # Calculate class weights based on ys
+        # unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
+        # class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
+        # class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
 
         # Run model training for 5 runs, reloading the model each time
         model_file_name = None
@@ -531,7 +524,7 @@ class bi_lstm_scratch:
 
             
             # Fit the model
-            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping],class_weight=class_weight_dict)
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
@@ -557,7 +550,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v3/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
@@ -566,5 +559,5 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
+#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
