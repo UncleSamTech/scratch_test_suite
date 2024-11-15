@@ -289,7 +289,7 @@ class bi_lstm_scratch:
                     sentence_tokens = line.split(" ")
             
                     context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
-                    true_next_word = sentence_tokens[-1]
+                    true_next_word = sentence_tokens[-1].lower()
                     predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
