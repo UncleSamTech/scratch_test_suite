@@ -279,9 +279,7 @@ class bi_lstm_scratch:
             with open(test_data,"r",encoding="utf-8") as f:
                 lines= f.readlines()
                 random.shuffle(lines)
-                lines = [line.replace("_","UNDERSCORE") for line in lines]
-                lines = [line.replace(">","RIGHTANG") for line in lines]
-                lines = [line.replace("<","LEFTANG") for line in lines]
+                lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             
                 for line in lines:
                
@@ -318,7 +316,7 @@ class bi_lstm_scratch:
             recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
             f1score = f1_score(y_true,y_pred,average="weighted")
 
-            with open(f"{result_path}bilstmmetrics_150embedtime1_main_{each_run}.txt","a") as blm:
+            with open(f"{result_path}bilstmmetrics_150embedtime1_main_{each_run}_real.txt","a") as blm:
                 blm.write(f"Run {each_run} metrics : \n Accuracy {accuracy} \n |  Precision {precision} \n  |  Recall {recall} \n  | F1-Score {f1score} \n  | Evaluation Time {time_spent:.2f} seconds \n")
         return 0.0,0.0,0.0,0.0
 
@@ -506,5 +504,5 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"main_bilstm_scratch_model_150embedtime1_main_1.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
+cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
