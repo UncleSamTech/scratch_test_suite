@@ -27,11 +27,11 @@ class scratch_train_mle:
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             
             tokenized_scratch_data = [list(word_tokenize(sent.strip())) for sent in lines]
-            train_data,padded_sents = padded_everygram_pipeline(n,tokenized_scratch_data)
+            train_data_val,padded_sents = padded_everygram_pipeline(n,tokenized_scratch_data)
         
         try:
             self.scratch_model = MLE(n)
-            self.scratch_model.fit(train_data,padded_sents)
+            self.scratch_model.fit(train_data_val,padded_sents)
 
             with open(f'{model_name}_{n}.pkl',"wb") as fd:
                 pickle.dump(self.scratch_model,fd)
@@ -56,7 +56,6 @@ class scratch_train_mle:
         scratch_next_probaility_tokens = {}
 
         for prospect_token in loaded_model.vocab:
-            print("see token" , prospect_token)
             #print(f"context data {context_data}")
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
@@ -84,13 +83,10 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1].lower()
 
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/logs/seelogs_portion_10_projects.txt","a") as fp:
-                    fp.write(f"for context {context} next token {predicted_next_word}")
-                    fp.write("\n")
+                
                 
                 i+=1
-                if i%500 == 0:
-                    print("see it",i)
+                
             
                 y_true.append(true_next_word)
                 y_pred.append(predicted_next_word)
