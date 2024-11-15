@@ -286,8 +286,8 @@ class scratch_train_mle:
         log_file = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
         log_file_error = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects_error.txt"
         real_model_name = f"{result_path}{model_name}"
-        for each_run in range(1,6):
-            for each_gram in list_ngrams:
+        for each_gram in list_ngrams:
+            for each_run in range(1,6):
                 try:
                     # Log the time for training the model
                     train_start_time = time.time()  # Start time
