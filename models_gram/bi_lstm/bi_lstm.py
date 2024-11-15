@@ -35,6 +35,8 @@ class bi_lstm_scratch:
     def tokenize_data_inp_seq(self, file_name, result_path):
         with open(file_name, "r", encoding="utf-8") as rf:
             lines = rf.readlines()
+            #shuffle train set every run
+            random.shuffle(lines)
             # Replace specific characters
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             print("see lines:", lines)
@@ -253,12 +255,12 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        model_name = "main_bilstm_scratch_model_150embedtime1_main_4.keras"
+        
        
-        #history,model = self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path)
         #print(history)
         
-        self.train_model_again(model_name,result_path,xs,ys)
+        #self.train_model_again(model_name,result_path,xs,ys)
 
         #self.plot_graph("loss",result_path)
 
@@ -450,29 +452,7 @@ class bi_lstm_scratch:
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path):
         print(tf.__version__)
         
-        print(f"Max index in xs: {np.max(xs)}")
-        max_index_in_xs = np.max(xs)
-        if max_index_in_xs >= total_words:
-            raise ValueError(f"Max index in xs {max_index_in_xs} exceeds total_words {total_words - 1}")
-
-        #total_words_in_ys = ys.shape[1]
-
-        # Ensure total_words is the larger of max_index_in_xs + 1 and total_words_in_ys
-        #total_words = max(max_index_in_xs + 1, total_words_in_ys)
-        #print(f"Adjusted total_words to: {total_words}")
         
-        # # Ensure total_words is at least the maximum index in xs plus one
-        # if total_words <= max_index_in_xs:
-        #     total_words = max(max_index_in_xs + 1, total_words_in_ys)
-        #     print(f"Adjusted total_words to: {total_words}")
-            
-
-        # Clip xs to ensure indices are within the allowed range
-        #total_words += 1
-        xs = np.clip(xs, 0, total_words - 1)
-        print(f"Total words (vocabulary size): {total_words}")
-        print(f"Max token index in xs after clipping: {np.max(xs)}")
-        # Check for GPU availability
         gpus = tf.config.experimental.list_physical_devices('GPU')
         if gpus:
             print(f"Default GPU device: {gpus[0]}")
@@ -488,39 +468,27 @@ class bi_lstm_scratch:
         else:
             print("No GPU available. Running on CPU.")
 
-        # print(f"Total words: {total_words}, Max seq: {max_seq}")
-    
-        # # Ensure total_words is as expected
-        # print(f"Shape of xs: {xs.shape}, Shape of ys: {ys.shape}")
-        # print(f"Max index in xs: {np.max(xs)}, Min index in xs: {np.min(xs)}")
+        
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-        # # Calculate class weights based on ys
-        # unique_classes = np.argmax(ys, axis=1)  # Convert one-hot labels to single-class labels if needed
-        # class_weights = compute_class_weight('balanced', classes=np.unique(unique_classes), y=unique_classes)
-        # class_weight_dict = {i: class_weights[i] for i in range(len(class_weights))}
+        
 
-        # Run model training for 5 runs, reloading the model each time
+        # Run model training for 5 runs, with each run with a sampled data
         model_file_name = None
         for run in range(1, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
             # Load the previous model if it exists, else create a new one
-            if run == 1 or model_file_name is None:
-                # First run or no saved model, initialize a new model
-                model = Sequential([
+            
+            model = Sequential([
                 Embedding(total_words, 100, input_shape=(max_seq - 1,)),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
-                adam = Adam(learning_rate=0.01)
-                model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-            else:
-                # Load the model saved from the previous run
-                run_curr = run - 1
-                model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run_curr}.keras"
-                model = load_model(model_file_name, compile=True)
+            adam = Adam(learning_rate=0.01)
+            model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+            
 
             
             # Fit the model
@@ -550,7 +518,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
