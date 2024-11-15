@@ -60,7 +60,7 @@ class scratch_train_mle:
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
-        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token) else scratch_predicted_next_token
+        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token,str) else scratch_predicted_next_token
         #print("predicted score ", scratch_next_probaility_tokens)
         return scratch_predicted_next_token
     
