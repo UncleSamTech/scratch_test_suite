@@ -283,23 +283,23 @@ class scratch_train_mle:
 
     def multiple_train_time_metrics(self, list_ngrams, result_path, test_data, model_name, train_data,proj_number):
         final_result = {}
-        log_file = f"{result_path}/logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
+        log_file = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
         log_file_error = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects_error.txt"
-
+        real_model_name = f"{result_path}{model_name}"
         for each_run in range(1,6):
             for each_gram in list_ngrams:
                 try:
                     # Log the time for training the model
                     train_start_time = time.time()  # Start time
-                    model_name = f"{result_path}{model_name}"
-                    self.train_mle(train_data, each_gram, model_name)
+                    
+                    self.train_mle(train_data, each_gram, real_model_name)
                     train_end_time = time.time()  # End time
                     train_duration = train_end_time - train_start_time  # Calculate duration
             
                     # Log the time for evaluating the model
                     eval_start_time = time.time()  # Start time
 
-                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{model_name}_{each_gram}.pkl',result_path)
+                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path)
                     eval_end_time = time.time()  # End time
                     eval_duration = eval_end_time - eval_start_time  # Calculate duration
 
