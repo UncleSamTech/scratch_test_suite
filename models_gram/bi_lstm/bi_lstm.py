@@ -286,7 +286,6 @@ class bi_lstm_scratch:
 
     def evaluate_bilstm(self,test_data,maxlen,model,result_path,proj_number,train_time):
         y_true = []
-        i=0
         y_pred = []
         tokenz = None
         #loaded_model = load_model(f"{model_path}",compile=False)
@@ -302,7 +301,7 @@ class bi_lstm_scratch:
             random.shuffle(lines)
             
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
-            for line in lines:
+            for i,line in enumerate(lines):
                
                 line = line.strip()
                 
@@ -315,10 +314,6 @@ class bi_lstm_scratch:
                 predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
                 
                 
-                i+=1
-                if i%500 == 0:
-                    
-                    print(f"progress {i}")
             
                 if predicted_next_word is not None:
                     y_true.append(true_next_word)
@@ -326,10 +321,13 @@ class bi_lstm_scratch:
                     y_pred.append(predicted_next_word)
                 
                
-                
-                if len(y_true) == 0 or len(y_pred) == 0:
-                    print("No valid predictions made.")
-                    return None, None, None, None
+                if i % 500 == 0:
+                    print(f"Progress: {i} lines processed.")
+
+        if not y_true or not y_pred:
+            print("No valid predictions made.")
+            return None, None, None, None
+        
         end_time = time.time()
         time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
@@ -337,10 +335,11 @@ class bi_lstm_scratch:
         recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
         f1score = f1_score(y_true,y_pred,average="weighted")
 
-        if os.path.exists(f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt") or os.path.getsize() == 0:
-            with open(f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt","") as fl:
+        metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
+        if os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+            with open(metrics_file,"a") as fl:
                 fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time")
-        with open(f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt","a") as blm:
+        with open(metrics_file,"a") as blm:
             blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
         
         return accuracy,precision,recall,f1score
@@ -476,12 +475,12 @@ class bi_lstm_scratch:
         
 
         # Run model training for 5 runs, with each run with a sampled data
-        model_file_name = None
+      
         for run in range(1, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
-            # Load the previous model if it exists, else create a new one
+           
             
             model = Sequential([
                 Embedding(total_words, 100, input_shape=(max_seq - 1,)),
@@ -518,7 +517,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","10")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
