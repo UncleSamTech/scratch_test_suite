@@ -338,7 +338,7 @@ class bi_lstm_scratch:
         metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
         if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
             with open(metrics_file,"a") as fl:
-                fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time")
+                fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time\n")
         with open(metrics_file,"a") as blm:
             blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
         
