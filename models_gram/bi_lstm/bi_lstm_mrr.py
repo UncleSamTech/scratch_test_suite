@@ -474,9 +474,9 @@ class bi_lstm_scratch:
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         
 
-        # Run model training for 5 runs, with each run with a sampled data
+        # Run model training for 2 runs, with each run with a sampled data
       
-        for run in range(1, 6):
+        for run in range(1, 3):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
