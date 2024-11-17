@@ -513,8 +513,8 @@ class bi_lstm_scratch:
         if not token_list or len(token_list[0]) == 0:
             return -1  # Assign low score for empty contexts
 
-        token_value = token_list[0] + [tokenz.word_index.get(token, 0)]
-        padded_in_seq = pad_sequences([token_value], maxlen=maxlen, padding="pre")
+        token_value = token_list[0][-maxlen + 1:] + [tokenz.word_index.get(token, 0)]
+        padded_in_seq = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")
         padded_in_seq = tf.convert_to_tensor(padded_in_seq)
 
         prediction = model.predict(padded_in_seq)
@@ -522,6 +522,7 @@ class bi_lstm_scratch:
 
     def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
         tokenz = None
+        
         with open(f"{result_path}tokenized_file_50embedtime1.pickle", "rb") as tk:
             tokenz = pickle.load(tk)
 
@@ -576,6 +577,62 @@ class bi_lstm_scratch:
         print(f"MRR: {mrr}")
         return mrr  
             
+    def evaluate_bilstm_mrr_single(self, test_data, maxlen, model, result_path, proj_number):
+        tokenz = None
+        loaded_model = load_model(model,compile=False)
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle", "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())  # Training vocabulary
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            random.shuffle(lines)
+
+            for i, line in enumerate(lines):
+                line = line.strip().replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG")
+                sentence_tokens = line.split(" ")
+                context = " ".join(sentence_tokens[:-1])  # Exclude last word
+                true_next_word = sentence_tokens[-1].lower()
+
+                scores = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
+                    scores.append((context_score, token))
+
+                # Sort scores in descending order
+                scores.sort(reverse=True, key=lambda x: x[0])
+
+                # Extract top predictions
+                top_predictions = [t[1] for t in scores[:10]]
+
+                # Calculate reciprocal rank
+                if true_next_word in top_predictions:
+                    rank = top_predictions.index(true_next_word) + 1
+                    reciprocal_ranks.append(1 / rank)
+                else:
+                    reciprocal_ranks.append(0)
+
+                if i % 500 == 0:
+                    print(f"Progress: {i} lines processed.")
+
+        # Mean Reciprocal Rank
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+
+        end_time = time.time()
+        time_spent = end_time - start_time
+
+        metrics_file = f"{result_path}bilstm_mrr_metrics_{proj_number}.txt"
+        if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+            with open(metrics_file, "a") as fl:
+                fl.write("MRR,Training_Time,Evaluation_Time\n")
+        with open(metrics_file, "a") as blm:
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr  
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
@@ -583,7 +640,8 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
+cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
