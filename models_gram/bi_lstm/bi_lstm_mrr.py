@@ -694,10 +694,10 @@ class bi_lstm_scratch:
             blm.write(f"{mrr},{time_spent:.2f}\n")
 
         # Save top 10 predictions for each line
-        top_10_file = f"{result_path}bilstm_top_10_predictions_{proj_number}.txt"
-        with open(top_10_file, "w") as top_file:
-            for i, predictions in enumerate(all_top_10_predictions):
-                top_file.write(f"Line {i+1}: {predictions}\n")
+        #top_10_file = f"{result_path}bilstm_top_10_predictions_{proj_number}.txt"
+        # with open(top_10_file, "w") as top_file:
+        #     for i, predictions in enumerate(all_top_10_predictions):
+        #         top_file.write(f"Line {i+1}: {predictions}\n")
 
         print(f"MRR: {mrr}")
         return mrr
