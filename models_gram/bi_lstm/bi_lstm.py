@@ -508,7 +508,73 @@ class bi_lstm_scratch:
             self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
             #model.save(model_file_name)
 
-            
+    def predict_token_score(self, context, token, tokenz, model, maxlen):
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            return -1  # Assign low score for empty contexts
+
+        token_value = token_list[0] + [tokenz.word_index.get(token, 0)]
+        padded_in_seq = pad_sequences([token_value], maxlen=maxlen, padding="pre")
+        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+
+        prediction = model.predict(padded_in_seq)
+        return prediction[0][-1]  # Score of the token  
+
+    def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
+        tokenz = None
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle", "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())  # Training vocabulary
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            random.shuffle(lines)
+
+            for i, line in enumerate(lines):
+                line = line.strip().replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG")
+                sentence_tokens = line.split(" ")
+                context = " ".join(sentence_tokens[:-1])  # Exclude last word
+                true_next_word = sentence_tokens[-1].lower()
+
+                scores = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
+                    scores.append((context_score, token))
+
+                # Sort scores in descending order
+                scores.sort(reverse=True, key=lambda x: x[0])
+
+                # Extract top predictions
+                top_predictions = [t[1] for t in scores[:10]]
+
+                # Calculate reciprocal rank
+                if true_next_word in top_predictions:
+                    rank = top_predictions.index(true_next_word) + 1
+                    reciprocal_ranks.append(1 / rank)
+                else:
+                    reciprocal_ranks.append(0)
+
+                if i % 500 == 0:
+                    print(f"Progress: {i} lines processed.")
+
+        # Mean Reciprocal Rank
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+
+        end_time = time.time()
+        time_spent = end_time - start_time
+
+        metrics_file = f"{result_path}bilstm_mrr_metrics_{proj_number}.txt"
+        if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+            with open(metrics_file, "a") as fl:
+                fl.write("MRR,Training_Time,Evaluation_Time\n")
+        with open(metrics_file, "a") as blm:
+            blm.write(f"{mrr},{train_time},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr  
             
 
 cl_ob = bi_lstm_scratch()
