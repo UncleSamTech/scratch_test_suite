@@ -619,7 +619,7 @@ class bi_lstm_scratch:
                     context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
                     #print(f"current token : {token} matching score {context_score}")
                     with open(f"debug.txt","a") as fp:
-                        fp.write(f"prediction score for token {token}  is {context_score} \n")
+                        fp.write(f"for context {context} prediction score for token {token}  is {context_score} \n")
                     scores.append((context_score, token))
 
                     # Sort scores in descending order
