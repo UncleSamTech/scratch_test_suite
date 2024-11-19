@@ -513,8 +513,11 @@ class bi_lstm_scratch:
         token_list = tokenz.texts_to_sequences([context])
         if not token_list or len(token_list[0]) == 0:
             return -1  # Assign low score for empty contexts
-
-        token_value = token_list[0][-maxlen + 1:] + [tokenz.word_index.get(token, 0)]
+        token_context = token_list[0][-maxlen + 1:]
+        token_end  = [tokenz.word_index.get(token, 0)]
+        token_value = token_context + token_end
+        with open(f"debug.txt","a") as fp:
+            fp.write(f"token context {token_context} token end {token_end} token value {token_value}")
         padded_in_seq = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")
         padded_in_seq = tf.convert_to_tensor(padded_in_seq)
 
@@ -543,42 +546,44 @@ class bi_lstm_scratch:
 
                 scores = []
                 for token in vocab:
+                    print(f"{token}")
                     context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
-                    scores.append((context_score, token))
+                    print(context_score)
+        #             scores.append((context_score, token))
 
-                # Sort scores in descending order
-                print(f"scores before sorting : {scores}")
-                scores.sort(reverse=True, key=lambda x: x[0])
-                print(f"scores after sorting : {scores}")
+        #         # Sort scores in descending order
+        #         print(f"scores before sorting : {scores}")
+        #         scores.sort(reverse=True, key=lambda x: x[0])
+        #         print(f"scores after sorting : {scores}")
                 
-                # Extract top predictions
-                top_predictions = [t[1] for t in scores[:10]]
+        #         # Extract top predictions
+        #         top_predictions = [t[1] for t in scores[:10]]
 
-                # Calculate reciprocal rank
-                if true_next_word in top_predictions:
-                    rank = top_predictions.index(true_next_word) + 1
-                    reciprocal_ranks.append(1 / rank)
-                else:
-                    reciprocal_ranks.append(0)
+        #         # Calculate reciprocal rank
+        #         if true_next_word in top_predictions:
+        #             rank = top_predictions.index(true_next_word) + 1
+        #             reciprocal_ranks.append(1 / rank)
+        #         else:
+        #             reciprocal_ranks.append(0)
 
-                if i % 500 == 0:
-                    print(f"Progress: {i} lines processed.")
+        #         if i % 500 == 0:
+        #             print(f"Progress: {i} lines processed.")
 
-        # Mean Reciprocal Rank
-        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+        # # Mean Reciprocal Rank
+        # mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
 
-        end_time = time.time()
-        time_spent = end_time - start_time
+        # end_time = time.time()
+        # time_spent = end_time - start_time
 
-        metrics_file = f"{result_path}bilstm_mrr_metrics_{proj_number}.txt"
-        if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
-            with open(metrics_file, "a") as fl:
-                fl.write("MRR,Training_Time,Evaluation_Time\n")
-        with open(metrics_file, "a") as blm:
-            blm.write(f"{mrr},{train_time},{time_spent:.2f}\n")
+        # metrics_file = f"{result_path}bilstm_mrr_metrics_{proj_number}.txt"
+        # if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+        #     with open(metrics_file, "a") as fl:
+        #         fl.write("MRR,Training_Time,Evaluation_Time\n")
+        # with open(metrics_file, "a") as blm:
+        #     blm.write(f"{mrr},{train_time},{time_spent:.2f}\n")
 
-        print(f"MRR: {mrr}")
-        return mrr  
+        # print(f"MRR: {mrr}")
+        #return mrr  
             
     def evaluate_bilstm_mrr_single(self, test_data, maxlen, model, result_path, proj_number):
         tokenz = None
