@@ -547,8 +547,10 @@ class bi_lstm_scratch:
                     scores.append((context_score, token))
 
                 # Sort scores in descending order
+                print(f"scores before sorting : {scores}")
                 scores.sort(reverse=True, key=lambda x: x[0])
-
+                print(f"scores after sorting : {scores}")
+                
                 # Extract top predictions
                 top_predictions = [t[1] for t in scores[:10]]
 
