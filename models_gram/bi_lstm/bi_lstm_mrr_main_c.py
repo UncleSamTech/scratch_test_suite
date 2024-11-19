@@ -549,9 +549,7 @@ class bi_lstm_scratch:
                     print(f"{token}")
                     context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
                     print(context_score)
-                    with open(f"debug.txt","a") as fp:
-                        fp.write(f"prediction score for token {token}  is {context_score} \n")
-        #             scores.append((context_score, token))
+                    scores.append((context_score, token))
 
         #         # Sort scores in descending order
         #         print(f"scores before sorting : {scores}")
@@ -620,6 +618,8 @@ class bi_lstm_scratch:
                     
                     context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
                     #print(f"current token : {token} matching score {context_score}")
+                    with open(f"debug.txt","a") as fp:
+                        fp.write(f"prediction score for token {token}  is {context_score} \n")
                     scores.append((context_score, token))
 
                     # Sort scores in descending order
