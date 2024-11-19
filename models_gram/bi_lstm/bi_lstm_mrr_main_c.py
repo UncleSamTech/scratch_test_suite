@@ -608,6 +608,7 @@ class bi_lstm_scratch:
 
                 scores = []
                 for token in vocab:
+                    print(f"current token : {token}")
                     context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
                     scores.append((context_score, token))
 
