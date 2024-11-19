@@ -610,7 +610,7 @@ class bi_lstm_scratch:
                 for token in vocab:
                     
                     context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
-                    print(f"current token : {token} matching score {context_score}")
+                    #print(f"current token : {token} matching score {context_score}")
                     scores.append((context_score, token))
 
                     # Sort scores in descending order
