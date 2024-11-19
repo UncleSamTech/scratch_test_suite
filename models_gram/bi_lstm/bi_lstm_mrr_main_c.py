@@ -520,8 +520,7 @@ class bi_lstm_scratch:
         padded_in_seq = tf.convert_to_tensor(padded_in_seq)
 
         prediction = model.predict(padded_in_seq)
-        with open(f"debug.txt","a") as fp:
-            fp.write(f"prediction {prediction[0][-1]}")
+        
         
         return prediction[0][-1]  # Score of the token  
 
@@ -550,6 +549,8 @@ class bi_lstm_scratch:
                     print(f"{token}")
                     context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
                     print(context_score)
+                    with open(f"debug.txt","a") as fp:
+                        fp.write(f"prediction score for token {token}  is {context_score}")
         #             scores.append((context_score, token))
 
         #         # Sort scores in descending order
