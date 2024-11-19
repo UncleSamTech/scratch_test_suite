@@ -600,7 +600,7 @@ class bi_lstm_scratch:
         with open(test_data, "r", encoding="utf-8") as f:
             lines = f.readlines()
             random.shuffle(lines)
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             for i, line in enumerate(lines):
                 if not line.strip():
                     continue
