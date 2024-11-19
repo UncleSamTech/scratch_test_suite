@@ -516,12 +516,13 @@ class bi_lstm_scratch:
         token_context = token_list[0][-maxlen + 1:]
         token_end  = [tokenz.word_index.get(token, 0)]
         token_value = token_context + token_end
-        with open(f"debug.txt","a") as fp:
-            fp.write(f"token context {token_context} token end {token_end} token value {token_value}")
         padded_in_seq = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")
         padded_in_seq = tf.convert_to_tensor(padded_in_seq)
 
         prediction = model.predict(padded_in_seq)
+        with open(f"debug.txt","a") as fp:
+            fp.write(f"prediction {prediction[0][-1]}")
+        
         return prediction[0][-1]  # Score of the token  
 
     def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
