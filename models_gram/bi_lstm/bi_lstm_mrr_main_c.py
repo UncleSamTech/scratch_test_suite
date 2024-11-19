@@ -608,8 +608,9 @@ class bi_lstm_scratch:
 
                 scores = []
                 for token in vocab:
-                    print(f"current token : {token}")
+                    
                     context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
+                    print(f"current token : {token} matching score {context_score}")
                     scores.append((context_score, token))
 
                     # Sort scores in descending order
@@ -621,6 +622,7 @@ class bi_lstm_scratch:
                     # Calculate reciprocal rank
                     if true_next_word in top_predictions:
                         rank = top_predictions.index(true_next_word) + 1
+                        print(f"true word {true_next_word} rank {rank}")
                         reciprocal_ranks.append(1 / rank)
                     else:
                         reciprocal_ranks.append(0)
