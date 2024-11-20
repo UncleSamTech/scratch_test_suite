@@ -100,13 +100,19 @@ class bi_lstm_scratch:
 
     def pad_sequ(self,input_seq):
         
-        
+        if isinstance(input_seq, tf.Tensor):
+            input_seq = input_seq.numpy()
+
         max_seq_len = max([len(x) for x in input_seq])
         padded_in_seq = np.array(pad_sequences(input_seq,maxlen=max_seq_len,padding='pre'))
         #print("input shape training  ", padded_in_seq.shape)
         return padded_in_seq,max_seq_len
 
     def prep_seq_labels(self,padded_seq,total_words):
+        # Ensure input is a NumPy array for slicing operations
+        if isinstance(padded_seq, tf.Tensor):
+            padded_seq = padded_seq.numpy() 
+
         xs,labels = padded_seq[:,:-1],padded_seq[:,-1]
 
         max_label_index = np.max(labels)
@@ -427,33 +433,40 @@ class bi_lstm_scratch:
         token_value = None
         output_word = ""
     
-        
-        # Tokenize context
-        context = context.strip()
-        #context = context.replace("_","UNDERSCORE")
-        token_list = tokenz.texts_to_sequences([context])
-        if not token_list or len(token_list[0]) == 0:
-            print("Empty token list, unable to predict token.")
-            return None
+        try:
+            # Tokenize context
+            context = context.strip()
+            #context = context.replace("_","UNDERSCORE")
+            token_list = tokenz.texts_to_sequences([context])
+            if not token_list or len(token_list[0]) == 0:
+                print("Empty token list, unable to predict token.")
+                return None
     
-        token_value = token_list[0]
-        padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
+            token_value = token_list[0]
+            padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
 
-        # Ensure input is a tensor with consistent shape
-        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+            # Ensure input is a tensor with consistent shape
+            padded_in_seq = tf.convert_to_tensor(padded_in_seq,dtype=tf.float32)
 
-        # Predict the next token
-        predicted = load_mod.predict(padded_in_seq)
+            # Predict the next token
+            predicted = load_mod.predict(padded_in_seq,verbose=0)
 
-        # Retrieve the predicted token
-        pred_token_index = np.argmax(predicted, axis=-1)
-        for token, index in tokenz.word_index.items():
-            if index == pred_token_index:
-                output_word = token
-                print(output_word)
-                break
-        #output_word  = output_word.replace("UNDERSCORE","_")
-        return output_word
+            # Retrieve the predicted token
+            pred_token_index = np.argmax(predicted, axis=-1)[0]
+            for token, index in tokenz.word_index.items():
+                if index == pred_token_index:
+                    output_word = token
+                    print(output_word)
+                    break
+            #output_word  = output_word.replace("UNDERSCORE","_")
+            if output_word:
+                print(f"Predicted token: {output_word}")
+            else:
+                print("No matching token found for the predicted index.")
+            return output_word
+        except Exception as e:
+            print(f"Error during token prediction: {e}")
+            return None
 
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
