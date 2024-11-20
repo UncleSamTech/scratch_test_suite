@@ -85,6 +85,8 @@ class bi_lstm_scratch:
             #     self.total_words = max_index + 1  # Update total_words if needed
 
             #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
+            # Convert to tensor
+            self.encompass = tf.convert_to_tensor(self.encompass, dtype=tf.int32)
             return self.encompass, self.total_words, self.tokenizer
     
   
@@ -486,9 +488,13 @@ class bi_lstm_scratch:
         
         
         
-        
+         # Convert xs and ys to Tensors
+        xs = tf.convert_to_tensor(xs, dtype=tf.int32)
+        ys = tf.convert_to_tensor(ys, dtype=tf.float32)
+
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+        
         
         # Convert data to a TensorFlow Dataset
         dataset = tf.data.Dataset.from_tensor_slices((xs, ys))
@@ -501,6 +507,7 @@ class bi_lstm_scratch:
 
            
             tf.keras.backend.clear_session() 
+            
             model = Sequential([
                 Embedding(input_dim=total_words, output_dim=100, input_length=max_seq - 1),
                 Bidirectional(LSTM(150)),
