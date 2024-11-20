@@ -106,7 +106,7 @@ class bi_lstm_scratch:
             input_seq = input_seq.numpy()
 
         max_seq_len = max([len(x) for x in input_seq])
-        padded_in_seq = np.array(pad_sequences(input_seq,maxlen=max_seq_len,padding='pre'))
+        padded_in_seq = pad_sequences(input_seq,maxlen=max_seq_len,padding='pre')
         #print("input shape training  ", padded_in_seq.shape)
         return padded_in_seq,max_seq_len
 
@@ -117,7 +117,8 @@ class bi_lstm_scratch:
 
         xs,labels = padded_seq[:,:-1],padded_seq[:,-1]
 
-        max_label_index = np.max(labels)
+        max_label_index = tf.reduce_max(labels)
+        max_label_index = int(max_label_index)
         if max_label_index >= total_words:
             print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
             total_words = max_label_index + 1
@@ -507,7 +508,7 @@ class bi_lstm_scratch:
 
            
             tf.keras.backend.clear_session() 
-            
+
             model = Sequential([
                 Embedding(input_dim=total_words, output_dim=100, input_length=max_seq - 1),
                 Bidirectional(LSTM(150)),
