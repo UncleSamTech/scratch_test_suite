@@ -30,20 +30,6 @@ class bi_lstm_scratch:
         self.ne_input_sequences = []
         self.encompass = []
         self.model = keras.Sequential()
-        self.gpus = tf.config.experimental.list_physical_devices('GPU')
-        if self.gpus:
-            #print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in self.gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
-
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
-
-        else:
-            print("No GPU available. Running on CPU.")
 
     
     def tokenize_data_inp_seq(self, file_name, result_path):
@@ -85,10 +71,6 @@ class bi_lstm_scratch:
             #     self.total_words = max_index + 1  # Update total_words if needed
 
             #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
-            # Convert to tensor
-            # Now pad the sequences to ensure they're all the same length
-            #self.encompass = pad_sequences(self.encompass, padding='pre')
-            self.encompass,_ = self.pad_sequ(self.encompass)
             return self.encompass, self.total_words, self.tokenizer
     
   
@@ -104,24 +86,16 @@ class bi_lstm_scratch:
 
     def pad_sequ(self,input_seq):
         
-        if isinstance(input_seq, tf.Tensor):
-            input_seq = input_seq.numpy()
-
+        
         max_seq_len = max([len(x) for x in input_seq])
-        padded_in_seq = pad_sequences(input_seq,maxlen=max_seq_len,padding='pre')
+        padded_in_seq = np.array(pad_sequences(input_seq,maxlen=max_seq_len,padding='pre'))
         #print("input shape training  ", padded_in_seq.shape)
-        padded_in_seq = tf.convert_to_tensor(padded_in_seq, dtype=tf.int32)
         return padded_in_seq,max_seq_len
 
     def prep_seq_labels(self,padded_seq,total_words):
-        # Ensure input is a NumPy array for slicing operations
-        if isinstance(padded_seq, tf.Tensor):
-            padded_seq = padded_seq.numpy() 
-
         xs,labels = padded_seq[:,:-1],padded_seq[:,-1]
 
-        max_label_index = tf.reduce_max(labels)
-        max_label_index = int(max_label_index)
+        max_label_index = np.max(labels)
         if max_label_index >= total_words:
             print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
             total_words = max_label_index + 1
@@ -130,7 +104,7 @@ class bi_lstm_scratch:
         if np.any(labels >= total_words):
             raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
     
-        ys = np.array(tf.keras.utils.to_categorical(labels, num_classes=total_words))
+        ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs, ys, labels
         #ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         #return xs,ys,labels
@@ -280,7 +254,7 @@ class bi_lstm_scratch:
     def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(input_seq,total_words)
+        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
        
         self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
@@ -439,40 +413,33 @@ class bi_lstm_scratch:
         token_value = None
         output_word = ""
     
-        try:
-            # Tokenize context
-            context = context.strip()
-            #context = context.replace("_","UNDERSCORE")
-            token_list = tokenz.texts_to_sequences([context])
-            if not token_list or len(token_list[0]) == 0:
-                print("Empty token list, unable to predict token.")
-                return None
-    
-            token_value = token_list[0]
-            padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
-
-            # Ensure input is a tensor with consistent shape
-            padded_in_seq = tf.convert_to_tensor(padded_in_seq,dtype=tf.float32)
-
-            # Predict the next token
-            predicted = load_mod.predict(padded_in_seq,verbose=0)
-
-            # Retrieve the predicted token
-            pred_token_index = np.argmax(predicted, axis=-1)[0]
-            for token, index in tokenz.word_index.items():
-                if index == pred_token_index:
-                    output_word = token
-                    print(output_word)
-                    break
-            #output_word  = output_word.replace("UNDERSCORE","_")
-            if output_word:
-                print(f"Predicted token: {output_word}")
-            else:
-                print("No matching token found for the predicted index.")
-            return output_word
-        except Exception as e:
-            print(f"Error during token prediction: {e}")
+        
+        # Tokenize context
+        context = context.strip()
+        #context = context.replace("_","UNDERSCORE")
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            print("Empty token list, unable to predict token.")
             return None
+    
+        token_value = token_list[0]
+        padded_in_seq = pad_sequences([token_value], maxlen=maxseqlen - 1, padding='pre')
+
+        # Ensure input is a tensor with consistent shape
+        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+
+        # Predict the next token
+        predicted = load_mod.predict(padded_in_seq)
+
+        # Retrieve the predicted token
+        pred_token_index = np.argmax(predicted, axis=-1)
+        for token, index in tokenz.word_index.items():
+            if index == pred_token_index:
+                output_word = token
+                print(output_word)
+                break
+        #output_word  = output_word.replace("UNDERSCORE","_")
+        return output_word
 
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
@@ -483,47 +450,50 @@ class bi_lstm_scratch:
 
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
-        #print(tf.__version__)
+        print(tf.__version__)
         print("max length",max_seq)
         
-        print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
-        print(f"xs type: {type(xs)}, ys type: {type(ys)}") 
-        print(f"xs type: {type(xs)}, ys type: {type(ys)}")     
         
-        
-        
-         # Convert xs and ys to Tensors
-        xs = tf.convert_to_tensor(xs, dtype=tf.int32)
-        ys = tf.convert_to_tensor(ys, dtype=tf.float32)
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
 
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
+
+        else:
+            print("No GPU available. Running on CPU.")
+
+        
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         
-        
-        # Convert data to a TensorFlow Dataset
-        dataset = tf.data.Dataset.from_tensor_slices((xs, ys))
-        dataset = dataset.batch(32).prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+
         # Run model training for 5 runs, with each run with a sampled data
       
-        for run in range(1, 6):
+        for run in range(5, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
            
-            tf.keras.backend.clear_session() 
-
+            
             model = Sequential([
-                Embedding(input_dim=total_words, output_dim=100, input_length=max_seq - 1),
+                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
             adam = Adam(learning_rate=0.01)
             model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
             
-            print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
+
             
             # Fit the model
-            history = model.fit(dataset, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+            history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
@@ -546,8 +516,9 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
-
 cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_150_projects.txt","/home/siwuchuk/thesis_project/models_150_projects/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","150")
+
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","150")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
