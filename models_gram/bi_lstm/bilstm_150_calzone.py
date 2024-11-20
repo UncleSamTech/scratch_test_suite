@@ -86,7 +86,9 @@ class bi_lstm_scratch:
 
             #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
             # Convert to tensor
-            self.encompass = tf.convert_to_tensor(self.encompass, dtype=tf.int32)
+            # Now pad the sequences to ensure they're all the same length
+            #self.encompass = pad_sequences(self.encompass, padding='pre')
+            self.encompass,_ = self.pad_sequ(self.encompass)
             return self.encompass, self.total_words, self.tokenizer
     
   
@@ -108,6 +110,7 @@ class bi_lstm_scratch:
         max_seq_len = max([len(x) for x in input_seq])
         padded_in_seq = pad_sequences(input_seq,maxlen=max_seq_len,padding='pre')
         #print("input shape training  ", padded_in_seq.shape)
+        padded_in_seq = tf.convert_to_tensor(padded_in_seq, dtype=tf.int32)
         return padded_in_seq,max_seq_len
 
     def prep_seq_labels(self,padded_seq,total_words):
@@ -277,7 +280,7 @@ class bi_lstm_scratch:
     def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        xs,ys,labels = self.prep_seq_labels(input_seq,total_words)
         
        
         self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
