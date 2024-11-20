@@ -31,6 +31,19 @@ class bi_lstm_scratch:
         self.encompass = []
         self.model = keras.Sequential()
         self.gpus = tf.config.experimental.list_physical_devices('GPU')
+        if self.gpus:
+            #print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in self.gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
+
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
+
+        else:
+            print("No GPU available. Running on CPU.")
 
     
     def tokenize_data_inp_seq(self, file_name, result_path):
@@ -456,19 +469,7 @@ class bi_lstm_scratch:
         
         
         
-        if self.gpus:
-            #print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in self.gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
-
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
-
-        else:
-            print("No GPU available. Running on CPU.")
+        
 
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
