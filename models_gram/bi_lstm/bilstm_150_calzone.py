@@ -490,7 +490,9 @@ class bi_lstm_scratch:
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         
-
+        # Convert xs and ys to tensors if needed
+        xs = tf.convert_to_tensor(xs, dtype=tf.int32)  # Assuming integer sequences
+        ys = tf.convert_to_tensor(ys, dtype=tf.float32)  # Assuming one-hot encoded labels
         # Run model training for 5 runs, with each run with a sampled data
       
         for run in range(1, 6):
@@ -508,9 +510,7 @@ class bi_lstm_scratch:
             model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
             
             print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
-            # Convert xs and ys to tensors if needed
-            xs = tf.convert_to_tensor(xs, dtype=tf.int32)  # Assuming integer sequences
-            ys = tf.convert_to_tensor(ys, dtype=tf.float32)  # Assuming one-hot encoded labels
+            
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
