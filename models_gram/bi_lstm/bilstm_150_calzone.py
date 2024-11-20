@@ -30,6 +30,7 @@ class bi_lstm_scratch:
         self.ne_input_sequences = []
         self.encompass = []
         self.model = keras.Sequential()
+        self.gpus = tf.config.experimental.list_physical_devices('GPU')
 
     
     def tokenize_data_inp_seq(self, file_name, result_path):
@@ -450,15 +451,15 @@ class bi_lstm_scratch:
 
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
-        print(tf.__version__)
+        #print(tf.__version__)
         print("max length",max_seq)
         
         
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        if gpus:
-            print(f"Default GPU device: {gpus[0]}")
+        
+        if self.gpus:
+            #print(f"Default GPU device: {gpus[0]}")
             try:
-                for gpu in gpus:
+                for gpu in self.gpus:
                     tf.config.experimental.set_memory_growth(gpu, True)
                 print(f"Using GPU: {tf.test.gpu_device_name()}")
 
