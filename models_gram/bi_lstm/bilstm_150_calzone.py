@@ -481,7 +481,8 @@ class bi_lstm_scratch:
         print("max length",max_seq)
         
         print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
-        print(f"xs type: {type(xs)}, ys type: {type(ys)}")      
+        print(f"xs type: {type(xs)}, ys type: {type(ys)}") 
+        print(f"xs type: {type(xs)}, ys type: {type(ys)}")     
         
         
         xs = tf.convert_to_tensor(xs, dtype=tf.int32)  # Assuming integer token IDs
@@ -500,7 +501,7 @@ class bi_lstm_scratch:
            
             tf.keras.backend.clear_session() 
             model = Sequential([
-                Embedding(input_dim=total_words, output_dim=100, input_length=(max_seq - 1,)),
+                Embedding(input_dim=total_words, output_dim=100, input_length=max_seq - 1),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
