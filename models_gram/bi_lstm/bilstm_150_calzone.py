@@ -480,10 +480,12 @@ class bi_lstm_scratch:
         #print(tf.__version__)
         print("max length",max_seq)
         
+        print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
+        print(f"xs type: {type(xs)}, ys type: {type(ys)}")      
         
         
-        
-
+        xs = tf.convert_to_tensor(xs, dtype=tf.int32)  # Assuming integer token IDs
+        ys = tf.convert_to_tensor(ys, dtype=tf.float32)  # Assuming one-hot encoding
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
@@ -496,16 +498,16 @@ class bi_lstm_scratch:
             start_time = time.time()
 
            
-            
+            tf.keras.backend.clear_session() 
             model = Sequential([
-                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                Embedding(input_dim=total_words, output_dim=100, input_length=(max_seq - 1,)),
                 Bidirectional(LSTM(150)),
                 Dense(total_words, activation='softmax')
                 ])
             adam = Adam(learning_rate=0.01)
             model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
             
-
+            print(f"xs shape: {xs.shape}, ys shape: {ys.shape}")
             
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
