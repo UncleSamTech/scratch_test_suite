@@ -130,7 +130,7 @@ class bi_lstm_scratch:
         if np.any(labels >= total_words):
             raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
     
-        ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
+        ys = np.array(tf.keras.utils.to_categorical(labels, num_classes=total_words))
         return xs, ys, labels
         #ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         #return xs,ys,labels
