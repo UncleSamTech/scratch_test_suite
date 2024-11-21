@@ -118,7 +118,7 @@ class bi_lstm_scratch:
         if np.any(labels >= total_words):
             raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
     
-        ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
+        ys = np.array(tf.keras.utils.to_categorical(labels, num_classes=total_words))
         return xs, ys, labels
         #ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         #return xs,ys,labels
@@ -469,7 +469,8 @@ class bi_lstm_scratch:
         
         
         
-
+        print(f"xs : {xs}")
+        print(f"ys : {ys}")
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
