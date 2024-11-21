@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import numpy as np
 import random
 import tensorflow as tf
@@ -30,20 +31,20 @@ class bi_lstm_scratch:
         self.ne_input_sequences = []
         self.encompass = []
         self.model = keras.Sequential()
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        if gpus:
-            print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
+        # gpus = tf.config.experimental.list_physical_devices('GPU')
+        # if gpus:
+        #     print(f"Default GPU device: {gpus[0]}")
+        #     try:
+        #         for gpu in gpus:
+        #             tf.config.experimental.set_memory_growth(gpu, True)
+        #         print(f"Using GPU: {tf.test.gpu_device_name()}")
 
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
+        #     except RuntimeError as e:
+        #         print(f"Error setting up GPU: {e}")
+        #         return
 
-        else:
-            print("No GPU available. Running on CPU.")
+        # else:
+        #     print("No GPU available. Running on CPU.")
 
     
     def tokenize_data_inp_seq(self, file_name, result_path):
@@ -478,7 +479,7 @@ class bi_lstm_scratch:
 
         # Run model training for 5 runs, with each run with a sampled data
       
-        for run in range(5, 6):
+        for run in range(1, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
