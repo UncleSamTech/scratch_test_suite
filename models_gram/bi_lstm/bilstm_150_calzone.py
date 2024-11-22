@@ -346,9 +346,9 @@ class bi_lstm_scratch:
         end_time = time.time()
         time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
+        recall = recall_score(y_true, y_pred, average='weighted', zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="weighted", zero_division=0)
 
         metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
         if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
