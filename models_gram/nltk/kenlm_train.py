@@ -211,7 +211,7 @@ class kenlm_train:
 
                 # Log results
                 log_path = f"{vocab_folder}/metrics_kenlm_{proj_number}.txt"
-                if not os.path.exists(log_path) or os.path.getsize() == 0:
+                if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
                     with open(log_path,"a") as fp:
                         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time")
                 with open(log_path, "a") as log_file:
