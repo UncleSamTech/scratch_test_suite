@@ -213,9 +213,9 @@ class kenlm_train:
                 log_path = f"{vocab_folder}/metrics_kenlm_{proj_number}.txt"
                 if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
                     with open(log_path,"a") as fp:
-                        fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time")
+                        fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
                 with open(log_path, "a") as log_file:
-                    log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}")
+                    log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f} \n")
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
         arpa_names = []
         model_rec = None
