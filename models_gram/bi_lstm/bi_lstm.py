@@ -469,8 +469,8 @@ class bi_lstm_scratch:
 
             if all_accuracies:
                 # Convert to NumPy array for easier computation
-                accuracies_array = np.array(all_accuracies)
-                avg_each = [np.mean(val) for val in accuracies_array]
+                #accuracies_array = np.array(all_accuracies)
+                avg_each = [np.mean(val) for val in all_accuracies]
                 final_val  = np.mean(avg_each)
                 print(final_val)
 
