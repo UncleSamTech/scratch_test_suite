@@ -17,6 +17,7 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 import time
+import glob
 from sklearn.utils.class_weight import compute_class_weight
 
 class bi_lstm_scratch:
@@ -446,7 +447,38 @@ class bi_lstm_scratch:
             self.loaded_scratch_model = pickle.load(f)
         return self.loaded_scratch_model
 
-    
+    def compute_training_accuracy(self,filepath):
+        # Pattern to match the desired files
+        file_pattern = os.path.join(filepath, "main_historyrec_150embedtime*.pickle")
+        # Find all matching files
+        pickle_files = glob.glob(file_pattern)
+        if not pickle_files:
+            print("No matching pickle files found.")
+        else:
+        # List to store accuracy per run
+            all_accuracies = []
+
+            # Load the training histories
+            for file in pickle_files:
+                with open(file, 'rb') as f:
+                    history = pickle.load(f)
+                    if 'accuracy' in history:  # Ensure the 'accuracy' key exists
+                        all_accuracies.append(history['accuracy'])  # Adjust key as needed
+                    else:
+                        print(f"'accuracy' key not found in {file}")
+
+            if all_accuracies:
+                # Convert to NumPy array for easier computation
+                accuracies_array = np.array(all_accuracies)
+
+                # Compute the average accuracy across the runs
+                average_accuracy = np.mean(accuracies_array, axis=0)
+
+                # Print the average accuracy for each epoch
+                print("Average Training Accuracy per Epoch:")
+                print(average_accuracy)
+            else:
+                print("No accuracy data found in the pickle files.")
 
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
@@ -583,13 +615,13 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
 
-
+cl_ob.compute_training_accuracy("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects")
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
