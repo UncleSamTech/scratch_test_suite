@@ -470,7 +470,7 @@ class bi_lstm_scratch:
             if all_accuracies:
                 # Convert to NumPy array for easier computation
                 accuracies_array = np.array(all_accuracies)
-
+                print(len(accuracies_array))
                 # Compute the average accuracy across the runs
                 average_accuracy = np.mean(accuracies_array, axis=0)
                 print(len(average_accuracy))
