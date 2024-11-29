@@ -473,7 +473,7 @@ class bi_lstm_scratch:
 
                 # Compute the average accuracy across the runs
                 average_accuracy = np.mean(accuracies_array, axis=0)
-
+                print(len(average_accuracy))
                 # Print the average accuracy for each epoch
                 print("Average Training Accuracy per Epoch:")
                 print(average_accuracy)
