@@ -471,7 +471,8 @@ class bi_lstm_scratch:
                 # Convert to NumPy array for easier computation
                 accuracies_array = np.array(all_accuracies)
                 avg_each = [np.mean(val) for val in accuracies_array]
-                print(avg_each)
+                final_val  = np.mean(avg_each)
+                print(final_val)
 
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
