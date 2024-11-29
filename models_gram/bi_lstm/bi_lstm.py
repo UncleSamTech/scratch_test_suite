@@ -470,16 +470,8 @@ class bi_lstm_scratch:
             if all_accuracies:
                 # Convert to NumPy array for easier computation
                 accuracies_array = np.array(all_accuracies)
-                print(len(accuracies_array))
-                print(accuracies_array)
-                # Compute the average accuracy across the runs
-                average_accuracy = np.mean(accuracies_array, axis=0)
-                print(len(average_accuracy))
-                # Print the average accuracy for each epoch
-                print("Average Training Accuracy per Epoch:")
-                print(average_accuracy)
-            else:
-                print("No accuracy data found in the pickle files.")
+                avg_each = [np.mean(val) for val in accuracies_array]
+                print(avg_each)
 
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
