@@ -18,6 +18,7 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 import time
+import glob
 from sklearn.utils.class_weight import compute_class_weight
 
 class bi_lstm_scratch:
@@ -462,7 +463,32 @@ class bi_lstm_scratch:
         return self.loaded_scratch_model
 
     
+    def compute_training_accuracy_main(self,filepath):
+        # Pattern to match the desired files
+        file_pattern = os.path.join(filepath, "main_historyrec_150embedtime*.pickle")
+        # Find all matching files
+        pickle_files = glob.glob(file_pattern)
+        if not pickle_files:
+            print("No matching pickle files found.")
+        else:
+        # List to store accuracy per run
+            all_accuracies = []
 
+            # Load the training histories
+            for file in pickle_files:
+                with open(file, 'rb') as f:
+                    history = pickle.load(f)
+                    if 'accuracy' in history:  # Ensure the 'accuracy' key exists
+                        all_accuracies.append(history['accuracy'])  # Adjust key as needed
+                    else:
+                        print(f"'accuracy' key not found in {file}")
+
+            if all_accuracies:
+                # Convert to NumPy array for easier computation
+                #accuracies_array = np.array(all_accuracies)
+                avg_each = [np.mean(val) for val in all_accuracies]
+                final_val  = np.mean(avg_each)
+                print(final_val)
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
         print(tf.__version__)
@@ -519,8 +545,8 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
-cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_150_projects.txt","/home/siwuchuk/thesis_project/models_150_projects/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","150")
-
+#cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_150_projects.txt","/home/siwuchuk/thesis_project/models_150_projects/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","150")
+cl_ob.compute_training_accuracy_main("/home/siwuchuk/thesis_project/models_150_projects")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","150")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
