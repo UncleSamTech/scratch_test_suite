@@ -18,6 +18,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_sco
 import pickle
 import time
 from sklearn.utils.class_weight import compute_class_weight
+import heapq
+from random import sample
 
 class bi_lstm_scratch:
 
@@ -252,10 +254,10 @@ class bi_lstm_scratch:
         #return val
 
     def consolidate_data_train(self,filepath,result_path,test_data,proj_number,model_name):
-        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        padd_seq,max_len = self.pad_sequ(input_seq)
+        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        #padd_seq,max_len = self.pad_sequ(input_seq)
         #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        self.evaluate_bilstm_mrr_single(test_data,max_len,model_name,result_path,proj_number)
+        self.evaluate_bilstm_mrr_single_main(test_data,39,model_name,result_path,proj_number)
         #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
         #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
@@ -510,15 +512,23 @@ class bi_lstm_scratch:
             #model.save(model_file_name)
 
     def predict_token_score(self, context, token, tokenz, model, maxlen):
-        token_list = tokenz.texts_to_sequences([context])
-        if not token_list or len(token_list[0]) == 0:
+        #token_list = tokenz.texts_to_sequences([context])
+        # Early check for out-of-vocabulary token
+        if token not in tokenz.word_index:
             return -1  # Assign low score for empty contexts
 
-        token_value = token_list[0][-maxlen + 1:] + [tokenz.word_index.get(token, 0)]
-        padded_in_seq = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")
-        padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+        # Tokenize combined context and token
+        token_value = tokenz.texts_to_sequences([context + " " + token])[0]
+        # Ensure the input is the correct length
+        if len(token_value) < maxlen - 1:
+            token_value = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")[0]
+        else:
+            token_value = token_value[-(maxlen-1):]
 
-        prediction = model.predict(padded_in_seq)
+         # Convert to a NumPy array (TensorFlow can process this directly)
+        padded_in_seq = np.array([token_value])
+        # Model prediction
+        prediction = model.predict(padded_in_seq, verbose=0)
         return prediction[0][-1]  # Score of the token  
 
     def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
@@ -641,6 +651,63 @@ class bi_lstm_scratch:
 
         print(f"MRR: {mrr}")
         return mrr  
+
+    def random_line_generator(self,file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        line_indices = sample(range(len(lines)), len(lines))
+        for idx in line_indices:
+            yield lines[idx]
+
+    def evaluate_bilstm_mrr_single_main(self, test_data, maxlen, model, result_path, proj_number):
+        loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = tokenz.word_index.keys()
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        for i, line in enumerate(self.random_line_generator(test_data)):
+            if not line.strip():
+                continue
+
+            line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+            sentence_tokens = line.split(" ")
+            if len(sentence_tokens) < 2:
+                continue
+
+            context = " ".join(sentence_tokens[:-1])
+            true_next_word = sentence_tokens[-1]
+
+            scores = []
+            for token in vocab:
+                context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                heapq.heappush(scores, (context_score, token))
+                if len(scores) > 10:
+                    heapq.heappop(scores)
+
+            scores.sort(reverse=True, key=lambda x: x[0])
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
+
+            rank = token_ranks.get(true_next_word, 0)
+            reciprocal_ranks.append(1 / rank if rank else 0)
+
+            if i % 1000 == 0:
+                print(f"Progress: {i} lines processed.")
+
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
