@@ -17,6 +17,8 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 import pickle
 import time
+import heapq
+from random import sample
 from sklearn.utils.class_weight import compute_class_weight
 
 class bi_lstm_scratch:
@@ -251,14 +253,14 @@ class bi_lstm_scratch:
         #print(model)
         #return val
 
-    def consolidate_data_train(self,filepath,result_path,test_data,proj_number,model_name):
+    def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
-        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        self.evaluate_bilstm_mrr_single(test_data,max_len,model_name,result_path,proj_number)
+        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        #self.evaluate_bilstm_mrr_single(test_data,max_len,model_name,result_path,proj_number)
         #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
-        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -475,9 +477,9 @@ class bi_lstm_scratch:
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         
 
-        # Run model training for 2 runs, with each run with a sampled data
+        # Run model training for 5 runs, with each run with a sampled data
       
-        for run in range(1, 3):
+        for run in range(1, 2):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
@@ -506,7 +508,7 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            self.evaluate_bilstm_mrr(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.evaluate_bilstm_mrr_single_main(test_data,max_seq,model,result_path,proj_number,time_spent)
             #model.save(model_file_name)
 
     def predict_token_score(self, context, token, tokenz, model, maxlen):
@@ -653,6 +655,63 @@ class bi_lstm_scratch:
 
         print(f"MRR: {mrr}")
         return mrr  
+    
+    def random_line_generator(self,file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        line_indices = sample(range(len(lines)), len(lines))
+        for idx in line_indices:
+            yield lines[idx]
+
+    def evaluate_bilstm_mrr_single_main(self, test_data, maxlen, model, result_path, proj_number):
+        #loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = tokenz.word_index.keys()
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        for i, line in enumerate(self.random_line_generator(test_data)):
+            if not line.strip():
+                continue
+
+            line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+            sentence_tokens = line.split(" ")
+            if len(sentence_tokens) < 2:
+                continue
+
+            context = " ".join(sentence_tokens[:-1])
+            true_next_word = sentence_tokens[-1]
+
+            scores = []
+            for token in vocab:
+                context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
+                heapq.heappush(scores, (context_score, token))
+                if len(scores) > 10:
+                    heapq.heappop(scores)
+
+            scores.sort(reverse=True, key=lambda x: x[0])
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
+
+            rank = token_ranks.get(true_next_word, 0)
+            reciprocal_ranks.append(1 / rank if rank else 0)
+
+            if i % 1000 == 0:
+                print(f"Progress: {i} lines processed.")
+
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
@@ -661,7 +720,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_1.txt","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras")
+cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_50_projects.txt","/home/siwuchuk/thesis_project/models_50_projects/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","50")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
