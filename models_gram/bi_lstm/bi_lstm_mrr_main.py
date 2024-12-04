@@ -694,9 +694,10 @@ class bi_lstm_scratch:
             reciprocal_ranks.append(1 / rank if rank else 0)
 
             if i % 1000 == 0:
-                print(f"Progress: {i} lines processed.")
+                print(f"Progress: {i} lines processed. with ranks {reciprocal_ranks} totalling {len(reciprocal_ranks)}")
 
         mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+        print(f"total mrr : {mrr}")
         time_spent = time.time() - start_time
 
         metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
