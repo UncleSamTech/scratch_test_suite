@@ -697,7 +697,7 @@ class bi_lstm_scratch:
             true_next_word = true_next_word.strip()
             rank = token_ranks.get(true_next_word, 0)
             
-            a_rank = 1 / rank
+            a_rank = 1 / rank if rank > 0 else 0
             reciprocal_ranks.append(a_rank if rank else 0)
             
 
