@@ -693,10 +693,11 @@ class bi_lstm_scratch:
             
             token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
             
+            print(f"true word {true_next_word} token ranks {token_ranks}")
             rank = token_ranks.get(true_next_word, 0)
-            print(f"rank for true word  {true_next_word} is {rank}")
+            
             reciprocal_ranks.append(1 / rank if rank else 0)
-            print(f"reciprocal rank for true word {true_next_word} => is {reciprocal_ranks}")
+            
 
             if i % 1000 == 0:
                 print(f"Progress: {i} lines processed. with ranks {reciprocal_ranks} totalling {len(reciprocal_ranks)}")
