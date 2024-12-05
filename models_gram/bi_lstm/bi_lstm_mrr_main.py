@@ -690,9 +690,10 @@ class bi_lstm_scratch:
                     heapq.heappop(scores)
             
             scores.sort(reverse=True, key=lambda x: x[0])
-            print(f"{i} scores {scores}")
-            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
             
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
+            print(f"line {i} scores {scores} \n")
+            print(f"token ranks : {token_ranks}")
             rank = token_ranks.get(true_next_word, 0)
             reciprocal_ranks.append(1 / rank if rank else 0)
 
