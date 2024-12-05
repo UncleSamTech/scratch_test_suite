@@ -684,15 +684,15 @@ class bi_lstm_scratch:
             scores = []
             for token in vocab:
                 context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
-                print(f"context score : {context_score}")
+                
                 heapq.heappush(scores, (context_score, token))
                 if len(scores) > 10:
                     heapq.heappop(scores)
-            print(f"{i} scores {scores}")
+            
             scores.sort(reverse=True, key=lambda x: x[0])
+            print(f"{i} scores {scores}")
             token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
-            print(f"token ranks {token_ranks}")
-
+            
             rank = token_ranks.get(true_next_word, 0)
             reciprocal_ranks.append(1 / rank if rank else 0)
 
