@@ -678,17 +678,20 @@ class bi_lstm_scratch:
                 continue
 
             context = " ".join(sentence_tokens[:-1])
-            true_next_word = sentence_tokens[-1]
+            true_next_word = sentence_tokens[-1].lower()
+            print(f"true next word ", true_next_word)
 
             scores = []
             for token in vocab:
                 context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                print(f"context score : {context_score}")
                 heapq.heappush(scores, (context_score, token))
                 if len(scores) > 10:
                     heapq.heappop(scores)
-
+            print(f"{i} scores {scores}")
             scores.sort(reverse=True, key=lambda x: x[0])
             token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
+            print(f"token ranks {token_ranks}")
 
             rank = token_ranks.get(true_next_word, 0)
             reciprocal_ranks.append(1 / rank if rank else 0)
@@ -710,7 +713,7 @@ class bi_lstm_scratch:
         print(f"MRR: {mrr}")
         return mrr
 
-cl_ob = bi_lstm_scratch()
+cl_ob = bi_lstm_scratch(
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
