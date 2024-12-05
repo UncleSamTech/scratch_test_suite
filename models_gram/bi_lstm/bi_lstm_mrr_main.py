@@ -257,7 +257,7 @@ class bi_lstm_scratch:
         #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         #padd_seq,max_len = self.pad_sequ(input_seq)
         #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        self.evaluate_bilstm_mrr_single_main(test_data,39,model_name,result_path,proj_number)
+        self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
         #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
         #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
@@ -716,6 +716,61 @@ class bi_lstm_scratch:
             blm.write(f"{mrr},{time_spent:.2f}\n")
 
         print(f"MRR: {mrr}")
+        return mrr
+    
+
+    def evaluate_bilstm_mrr_single_main2(self, test_data, maxlen, model, result_path, proj_number):
+        loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+        cumulative_rr = 0
+        count = 0
+
+        start_time = time.time()
+        for i, line in enumerate(self.random_line_generator(test_data)):
+            if not line.strip():
+                continue
+
+            line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+            sentence_tokens = line.split(" ")
+            if len(sentence_tokens) < 2:
+                continue
+
+            context = " ".join(sentence_tokens[:-1])
+            true_next_word = sentence_tokens[-1].lower()
+
+            heap = []
+            for token in vocab:
+                context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                if len(heap) < 10:
+                    heapq.heappush(heap, (context_score, token))
+                elif context_score > heap[0][0]:
+                    heapq.heappushpop(heap, (context_score, token))
+
+            heap.sort(reverse=True, key=lambda x: x[0])
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+
+            rank = token_ranks.get(true_next_word.strip(), 0)
+            if rank:
+                cumulative_rr += 1 / rank
+            count += 1
+
+            if i % 1000 == 0:
+                print(f"Progress: {i} lines processed.")
+
+        mrr = cumulative_rr / count if count > 0 else 0
+        print(f"Total MRR: {mrr}")
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
         return mrr
 
 cl_ob = bi_lstm_scratch()
