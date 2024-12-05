@@ -679,7 +679,7 @@ class bi_lstm_scratch:
 
             context = " ".join(sentence_tokens[:-1])
             true_next_word = sentence_tokens[-1].lower()
-            print(f"true next word ", true_next_word)
+            
 
             scores = []
             for token in vocab:
@@ -694,15 +694,17 @@ class bi_lstm_scratch:
             token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
             
             print(f"true word {true_next_word} token ranks {token_ranks}")
+            true_next_word = true_next_word.strip()
             rank = token_ranks.get(true_next_word, 0)
             
-            reciprocal_ranks.append(1 / rank if rank else 0)
+            a_rank = 1 / rank
+            reciprocal_ranks.append(a_rank if rank else 0)
             
 
             if i % 1000 == 0:
                 print(f"Progress: {i} lines processed. with ranks {reciprocal_ranks} totalling {len(reciprocal_ranks)}")
 
-        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+        mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0
         print(f"total mrr : {mrr}")
         time_spent = time.time() - start_time
 
