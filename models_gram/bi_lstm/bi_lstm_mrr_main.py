@@ -864,7 +864,7 @@ class bi_lstm_scratch:
         plt.ylabel('True Labels')
         plt.title('Confusion Matrix')
         plt.savefig(f"{result_path}confusion_matrix_run{run}.pdf")
-        plt.show()
+        #plt.show()
 
 
 cl_ob = bi_lstm_scratch()
