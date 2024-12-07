@@ -500,15 +500,18 @@ class bi_lstm_scratch:
             if os.path.exists(file_name):
                 os.remove(file_name)
             
-            model.save(file_name)
+            
             
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
+            
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
                 pickle.dump(history.history, hs)
 
+            model.save(file_name)
+            
             end_time = time.time()
             time_spent = end_time - start_time
             print(f"Run {run} complete. Training time: {time_spent:.2f} seconds")
