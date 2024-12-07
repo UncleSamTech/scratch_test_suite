@@ -43,7 +43,7 @@ class bi_lstm_scratch:
             #shuffle trainset every run
             random.shuffle(lines)
             # Replace specific characters
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             print("see lines:", lines)
 
             # Initialize and fit the tokenizer
@@ -783,7 +783,7 @@ class bi_lstm_scratch:
         return mrr
 
     def evaluate_bilstm_mrr_chunked(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
-        loaded_model = load_model(model, compile=False)
+        #loaded_model = load_model(model, compile=False)
         with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
             tokenz = pickle.load(tk)
 
@@ -810,7 +810,7 @@ class bi_lstm_scratch:
 
                 heap = []
                 for token in vocab:
-                    context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                    context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
                     if len(heap) < 10:
                         heapq.heappush(heap, (context_score, token))
                     elif context_score > heap[0][0]:
