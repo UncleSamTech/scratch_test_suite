@@ -335,7 +335,7 @@ class kenlm_train:
                     else:
                         continue
                    
-    def predict_next_token_kenlm(self,model, context,vocab_name):
+    def spredict_next_token_kenlm(self,model, context,vocab_name):
         
         next_token_probabilities = {}
         
@@ -541,4 +541,9 @@ kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_fi
 
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects","500")
+
+#preprocess datasets by replacing _, > and < with UNDERSCORE,RIGHTANG AND LEFTANG and then converting them to lowercase
 #sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt
+
+#preprocessing my csvfile for kenlm metrics to insert ngram values based on the number in the vocab file
+#awk -F',' 'NR==1 {print $1",ngram,"substr($0,index($0,$2))} NR>1 {split($2,a,"order"); print $1","a[2]+0","substr($0,index($0,$2))}' metrics_kenlm_500.csv > metrics_kenlm_500_pro.csv

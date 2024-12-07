@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import numpy as np
 import random
 import tensorflow as tf
@@ -15,11 +14,15 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.callbacks import EarlyStopping
 from datetime import datetime
-from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score,confusion_matrix, classification_report
 import pickle
 import time
-import glob
 from sklearn.utils.class_weight import compute_class_weight
+import heapq
+from random import sample
+import seaborn as sns
+
+
 
 class bi_lstm_scratch:
 
@@ -32,20 +35,6 @@ class bi_lstm_scratch:
         self.ne_input_sequences = []
         self.encompass = []
         self.model = keras.Sequential()
-        # gpus = tf.config.experimental.list_physical_devices('GPU')
-        # if gpus:
-        #     print(f"Default GPU device: {gpus[0]}")
-        #     try:
-        #         for gpu in gpus:
-        #             tf.config.experimental.set_memory_growth(gpu, True)
-        #         print(f"Using GPU: {tf.test.gpu_device_name()}")
-
-        #     except RuntimeError as e:
-        #         print(f"Error setting up GPU: {e}")
-        #         return
-
-        # else:
-        #     print("No GPU available. Running on CPU.")
 
     
     def tokenize_data_inp_seq(self, file_name, result_path):
@@ -120,7 +109,7 @@ class bi_lstm_scratch:
         if np.any(labels >= total_words):
             raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
     
-        ys = np.array(tf.keras.utils.to_categorical(labels, num_classes=total_words))
+        ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs, ys, labels
         #ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         #return xs,ys,labels
@@ -267,11 +256,12 @@ class bi_lstm_scratch:
         #print(model)
         #return val
 
-    def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
+    def consolidate_data_train(self,filepath,result_path,test_data,proj_number,model_name):
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        
+        #self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
+        #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
         self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
@@ -316,7 +306,7 @@ class bi_lstm_scratch:
             lines= f.readlines()
             random.shuffle(lines)
             
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             for i,line in enumerate(lines):
                
                 line = line.strip()
@@ -347,9 +337,9 @@ class bi_lstm_scratch:
         end_time = time.time()
         time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
-        recall = recall_score(y_true, y_pred, average='weighted', zero_division=0)
-        f1score = f1_score(y_true,y_pred,average="weighted", zero_division=0)
+        precision = precision_score(y_true, y_pred, average='weighted',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='weighted',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="weighted",zero_division=0)
 
         metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
         if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
@@ -358,7 +348,7 @@ class bi_lstm_scratch:
         with open(metrics_file,"a") as blm:
             blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
         
-        return accuracy,precision,recall,f1score
+        return y_true,y_pred
 
     
     def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
@@ -463,49 +453,36 @@ class bi_lstm_scratch:
         return self.loaded_scratch_model
 
     
-    def compute_training_accuracy_main(self,filepath):
-        # Pattern to match the desired files
-        file_pattern = os.path.join(filepath, "main_historyrec_150embedtime*.pickle")
-        # Find all matching files
-        pickle_files = glob.glob(file_pattern)
-        if not pickle_files:
-            print("No matching pickle files found.")
-        else:
-        # List to store accuracy per run
-            all_accuracies = []
 
-            # Load the training histories
-            for file in pickle_files:
-                with open(file, 'rb') as f:
-                    history = pickle.load(f)
-                    if 'accuracy' in history:  # Ensure the 'accuracy' key exists
-                        all_accuracies.append(history['accuracy'])  # Adjust key as needed
-                    else:
-                        print(f"'accuracy' key not found in {file}")
-
-            if all_accuracies:
-                # Convert to NumPy array for easier computation
-                #accuracies_array = np.array(all_accuracies)
-                avg_each = [np.mean(val) for val in all_accuracies]
-                final_val  = np.mean(avg_each)
-                print(final_val)
 
     def train_model_five_runs(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number):
         print(tf.__version__)
         print("max length",max_seq)
         
         
-        
-        print(f"xs : {xs}")
-        print(f"ys : {ys}")
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
+
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
+
+        else:
+            print("No GPU available. Running on CPU.")
+
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
         
 
-        # Run model training for 5 runs, with each run with a sampled data
+        # Run model training for 2 runs, with each run with a sampled data
       
-        for run in range(1, 6):
+        for run in range(1, 2):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
@@ -519,7 +496,11 @@ class bi_lstm_scratch:
             adam = Adam(learning_rate=0.01)
             model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
             
-
+            file_name = f"{result_path}main_bilstm_scratch_model_150embedtime_{proj_number}.keras"
+            if os.path.exists(file_name):
+                os.remove(file_name)
+            
+            model.save(file_name)
             
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
@@ -534,20 +515,366 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
+            ytrue,ypred = self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,run)
             #model.save(model_file_name)
 
+    def predict_token_score(self, context, token, tokenz, model, maxlen):
+        #token_list = tokenz.texts_to_sequences([context])
+        # Early check for out-of-vocabulary token
+        if token not in tokenz.word_index:
+            return -1  # Assign low score for empty contexts
+
+        # Tokenize combined context and token
+        token_value = tokenz.texts_to_sequences([context + " " + token])[0]
+        # Ensure the input is the correct length
+        if len(token_value) < maxlen - 1:
+            token_value = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")[0]
+        else:
+            token_value = token_value[-(maxlen-1):]
+
+         # Convert to a NumPy array (TensorFlow can process this directly)
+        padded_in_seq = np.array([token_value])
+        # Model prediction
+        prediction = model.predict(padded_in_seq, verbose=0)
+        return prediction[0][-1]  # Score of the token  
+
+    def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
+        tokenz = None
+        
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle", "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())  # Training vocabulary
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            random.shuffle(lines)
+
+            for i, line in enumerate(lines):
+                line = line.strip().replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG")
+                sentence_tokens = line.split(" ")
+                context = " ".join(sentence_tokens[:-1])  # Exclude last word
+                true_next_word = sentence_tokens[-1].lower()
+
+                scores = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
+                    scores.append((context_score, token))
+
+                # Sort scores in descending order
+                scores.sort(reverse=True, key=lambda x: x[0])
+
+                # Extract top predictions
+                top_predictions = [t[1] for t in scores[:10]]
+
+                # Calculate reciprocal rank
+                if true_next_word in top_predictions:
+                    rank = top_predictions.index(true_next_word) + 1
+                    reciprocal_ranks.append(1 / rank)
+                else:
+                    reciprocal_ranks.append(0)
+
+                if i % 500 == 0:
+                    print(f"Progress: {i} lines processed.")
+
+        # Mean Reciprocal Rank
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+
+        end_time = time.time()
+        time_spent = end_time - start_time
+
+        metrics_file = f"{result_path}bilstm_mrr_metrics_{proj_number}.txt"
+        if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+            with open(metrics_file, "a") as fl:
+                fl.write("MRR,Training_Time,Evaluation_Time\n")
+        with open(metrics_file, "a") as blm:
+            blm.write(f"{mrr},{train_time},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr  
             
+    def evaluate_bilstm_mrr_single(self, test_data, maxlen, model, result_path, proj_number):
+        tokenz = None
+        loaded_model = load_model(model,compile=False)
+        tokenizer_path = os.path.join(result_path, "tokenized_file_50embedtime1.pickle")
+        with open(tokenizer_path, "rb") as tk:
+          tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())  # Training vocabulary
+        print(f"vocabulary of 10 projects has a total words of {len(vocab)}  and they are : {vocab}")
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            random.shuffle(lines)
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
+            for i, line in enumerate(lines):
+                if not line.strip():
+                    continue
+
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+                
+                #sentence_tokens = line.split(" ")
+                context = " ".join(sentence_tokens[:-1])  # Exclude last word
+                true_next_word = sentence_tokens[-1].lower()
+
+                scores = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz,loaded_model, maxlen)
+                    scores.append((context_score, token))
+
+                    # Sort scores in descending order
+                    scores.sort(reverse=True, key=lambda x: x[0])
+
+                    # Extract top predictions
+                    top_predictions = [t[1] for t in scores[:10]]
+
+                    # Calculate reciprocal rank
+                    if true_next_word in top_predictions:
+                        rank = top_predictions.index(true_next_word) + 1
+                        reciprocal_ranks.append(1 / rank)
+                    else:
+                        reciprocal_ranks.append(0)
+
+                    if i % 1000 == 0:
+                        print(f"Progress: {i}/{len(lines)} lines processed.")
+
+        # Mean Reciprocal Rank
+        mrr = sum(reciprocal_ranks) / len(reciprocal_ranks) if reciprocal_ranks else 0
+
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)  # Ensure path exists
+        with open(metrics_file, "a") as blm:
+          if os.path.getsize(metrics_file) == 0:
+              blm.write("MRR,Evaluation_Time\n")
+          blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr  
+
+    def random_line_generator(self,file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        line_indices = sample(range(len(lines)), len(lines))
+        for idx in line_indices:
+            yield lines[idx]
+
+    def evaluate_bilstm_mrr_single_main(self, test_data, maxlen, model, result_path, proj_number):
+        loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = tokenz.word_index.keys()
+        reciprocal_ranks = []
+
+        start_time = time.time()
+        for i, line in enumerate(self.random_line_generator(test_data)):
+            if not line.strip():
+                continue
+
+            line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+            sentence_tokens = line.split(" ")
+            if len(sentence_tokens) < 2:
+                continue
+
+            context = " ".join(sentence_tokens[:-1])
+            true_next_word = sentence_tokens[-1].lower()
             
+
+            scores = []
+            for token in vocab:
+                context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                
+                heapq.heappush(scores, (context_score, token))
+                if len(scores) > 10:
+                    heapq.heappop(scores)
+            
+            scores.sort(reverse=True, key=lambda x: x[0])
+            
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(scores)}
+            
+            print(f"true word {true_next_word} token ranks {token_ranks}")
+            true_next_word = true_next_word.strip()
+            rank = token_ranks.get(true_next_word, 0)
+            
+            a_rank = 1 / rank if rank > 0 else 0
+            reciprocal_ranks.append(a_rank if rank else 0)
+            
+
+            if i % 1000 == 0:
+                print(f"Progress: {i} lines processed. with ranks {reciprocal_ranks} totalling {len(reciprocal_ranks)}")
+
+        mrr = np.mean(reciprocal_ranks) if reciprocal_ranks else 0
+        print(f"total mrr : {mrr}")
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        print(f"MRR: {mrr}")
+        return mrr
+    
+
+    def evaluate_bilstm_mrr_single_main2(self, test_data, maxlen, model, result_path, proj_number):
+        loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+        cumulative_rr = 0
+        count = 0
+
+        start_time = time.time()
+        for i, line in enumerate(self.random_line_generator(test_data)):
+            if not line.strip():
+                continue
+
+            line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+            sentence_tokens = line.split(" ")
+            if len(sentence_tokens) < 2:
+                continue
+
+            context = " ".join(sentence_tokens[:-1])
+            true_next_word = sentence_tokens[-1].lower()
+
+            heap = []
+            for token in vocab:
+                context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                if len(heap) < 10:
+                    heapq.heappush(heap, (context_score, token))
+                elif context_score > heap[0][0]:
+                    heapq.heappushpop(heap, (context_score, token))
+
+            heap.sort(reverse=True, key=lambda x: x[0])
+            token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+
+            rank = token_ranks.get(true_next_word.strip(), 0)
+            if rank:
+                cumulative_rr += 1 / rank
+            count += 1
+
+            if i % 1000 == 0:
+                print(f"Progress: {i} lines processed.")
+
+        mrr = cumulative_rr / count if count > 0 else 0
+        print(f"Total MRR: {mrr}")
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        return mrr
+
+    def evaluate_bilstm_mrr_chunked(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
+        loaded_model = load_model(model, compile=False)
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+        total_cumulative_rr = 0
+        total_count = 0
+
+        start_time = time.time()
+        current_chunk = []
+
+        def process_chunk(chunk):
+            nonlocal total_cumulative_rr, total_count
+            for line in chunk:
+                if not line.strip():
+                    continue
+
+                line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                context = " ".join(sentence_tokens[:-1])
+                true_next_word = sentence_tokens[-1].lower()
+
+                heap = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz, loaded_model, maxlen)
+                    if len(heap) < 10:
+                        heapq.heappush(heap, (context_score, token))
+                    elif context_score > heap[0][0]:
+                        heapq.heappushpop(heap, (context_score, token))
+
+                heap.sort(reverse=True, key=lambda x: x[0])
+                token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+
+                rank = token_ranks.get(true_next_word.strip(), 0)
+                if rank:
+                    total_cumulative_rr += 1 / rank
+                total_count += 1
+
+        # Read and process file in chunks
+        with open(test_data, "r", encoding="utf-8") as f:
+            for i, line in enumerate(f):
+                current_chunk.append(line)
+                if len(current_chunk) >= chunk_size:
+                    process_chunk(current_chunk)
+                    current_chunk = []
+                    print(f"Processed {i + 1} lines so far.")
+
+            # Process any remaining lines in the last chunk
+            if current_chunk:
+                process_chunk(current_chunk)
+
+        mrr = total_cumulative_rr / total_count if total_count > 0 else 0
+        print(f"Total MRR: {mrr}")
+        time_spent = time.time() - start_time
+
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        return mrr
+    
+    def compute_confusion_matrix(self,y_true,y_pred,result_path,total_words,run):
+        # Compute confusion matrix
+        print("\nComputing Confusion Matrix...")
+        
+        conf_matrix = confusion_matrix(y_true, y_pred)
+        print(f"Confusion Matrix:\n{conf_matrix}")
+
+        # Optional: Save confusion matrix as a heatmap
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=range(total_words), yticklabels=range(total_words))
+        plt.xlabel('Predicted Labels')
+        plt.ylabel('True Labels')
+        plt.title('Confusion Matrix')
+        plt.savefig(f"{result_path}confusion_matrix_run{run}.pdf")
+        plt.show()
+
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
-cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_150_projects.txt","/home/siwuchuk/thesis_project/models_150_projects_mrr/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","150")
-cl_ob.compute_training_accuracy_main("/home/siwuchuk/thesis_project/models_150_projects")
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","150")
+
+#cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500_projects_mrr_main/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","500","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
