@@ -856,21 +856,26 @@ class bi_lstm_scratch:
 
         return mrr
     
-    def compute_confusion_matrix(self,y_true,y_pred,result_path,total_words,run):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
-        
+    
         conf_matrix = confusion_matrix(y_true, y_pred)
         print(f"Confusion Matrix:\n{conf_matrix}")
-
+    
+        # Determine the top-k classes to display (based on most common labels)
+        class_counts = pd.Series(y_true).value_counts().head(top_k).index
+        filtered_conf_matrix = conf_matrix[np.ix_(class_counts, class_counts)]
+    
         # Optional: Save confusion matrix as a heatmap
         plt.figure(figsize=(10, 8))
-        sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=range(total_words), yticklabels=range(total_words))
+        sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_counts, yticklabels=class_counts)
         plt.xlabel('Predicted Labels')
         plt.ylabel('True Labels')
-        plt.title('Confusion Matrix')
-        plt.savefig(f"{result_path}confusion_matrix_run{run}.pdf")
-        #plt.show()
+        plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        plt.savefig(f"{result_path}confusion_matrix_run_an{run}.pdf")
+        plt.close()
 
 
 cl_ob = bi_lstm_scratch()
