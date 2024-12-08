@@ -260,10 +260,12 @@ class bi_lstm_scratch:
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        ytrue,ypred = self.evaluate_bilstm(test_data,max_len,model_name,result_path,proj_number,"0")
+        self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,1)
         #self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
         #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
-        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -294,7 +296,8 @@ class bi_lstm_scratch:
         y_true = []
         y_pred = []
         tokenz = None
-        #loaded_model = load_model(f"{model_path}",compile=False)
+        model_path = f"{result_path}{model}"
+        loaded_model = load_model(f"{model_path}",compile=False)
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
             
@@ -317,7 +320,7 @@ class bi_lstm_scratch:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1].lower()
 
-                predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
+                predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
             
@@ -518,7 +521,7 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
+            #self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
             ytrue,ypred = self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
             self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,run)
             #model.save(model_file_name)
@@ -877,7 +880,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr_main/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr_main/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10","main_bilstm_scratch_model_150embedtime_10.keras")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
