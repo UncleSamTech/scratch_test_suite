@@ -860,12 +860,21 @@ class bi_lstm_scratch:
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
+        # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
         print(f"Confusion Matrix:\n{conf_matrix}")
     
-        # Determine the top-k classes to display (based on most common labels)
+        # Get the unique class labels in sorted order (this will be used for indexing)
+        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # Determine the top-k most frequent classes based on y_true
         class_counts = pd.Series(y_true).value_counts().head(top_k).index
-        filtered_conf_matrix = conf_matrix[np.ix_(class_counts, class_counts)]
+    
+        # Map the class labels to indices based on the sorted unique classes
+        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+    
+        # Use np.ix_ to index into the confusion matrix
+        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
     
         # Optional: Save confusion matrix as a heatmap
         plt.figure(figsize=(10, 8))
@@ -876,6 +885,7 @@ class bi_lstm_scratch:
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         plt.savefig(f"{result_path}confusion_matrix_run_an{run}.pdf")
         plt.close()
+
 
 
 cl_ob = bi_lstm_scratch()
