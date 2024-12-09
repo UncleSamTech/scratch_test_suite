@@ -115,7 +115,7 @@ class scratch_train_mle:
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
             random.shuffle(lines)
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             
             for line in lines:
                 line = line.strip()
@@ -132,9 +132,9 @@ class scratch_train_mle:
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted')
-        recall = recall_score(y_true, y_pred, average='weighted')
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        precision = precision_score(y_true, y_pred, average='weighted',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='weighted',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="weighted",zero_division=0)
         self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score

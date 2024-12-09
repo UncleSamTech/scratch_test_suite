@@ -10,7 +10,13 @@ import matplotlib.pyplot as plt
 import random
 import scipy.stats as stats
 import math
-from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score,confusion_matrix
+import heapq
+from random import sample
+import seaborn as sns
+import numpy as np
+import pandas as pd
+
 
 class scratch_train_mle:
 
@@ -49,6 +55,43 @@ class scratch_train_mle:
             #print(self.loaded_scratch_model.vocab.lookup("move"))
         return self.loaded_scratch_model
     
+
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,top_k=10):
+        # Compute confusion matrix
+        print("\nComputing Confusion Matrix...")
+    
+        # Compute the confusion matrix
+        conf_matrix = confusion_matrix(y_true, y_pred)
+        print(f"Confusion Matrix:\n{conf_matrix}")
+    
+        # Get the unique class labels in sorted order (this will be used for indexing)
+        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # Determine the top-k most frequent classes based on y_true
+        class_counts = pd.Series(y_true).value_counts().head(top_k).index
+    
+        # Map the class labels to indices based on the sorted unique classes
+        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+    
+        # Use np.ix_ to index into the confusion matrix
+        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
+    
+        # Optional: Save confusion matrix as a heatmap
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+                xticklabels=class_counts, yticklabels=class_counts)
+        
+        # Rotate x-axis labels to avoid overlap
+        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
+        plt.xlabel('Predicted Labels')
+        plt.ylabel('True Labels')
+        plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        # Adjust layout to make sure everything fits
+        plt.tight_layout()
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_nltk_{proj_number}.pdf")
+        plt.close()
    
 
     def predict_next_scratch_token(self,model_name,context_data):
@@ -56,15 +99,15 @@ class scratch_train_mle:
         scratch_next_probaility_tokens = {}
 
         for prospect_token in loaded_model.vocab:
-            #print(f"context data {context_data}")
+            
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
-        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token,str) else scratch_predicted_next_token
         #print("predicted score ", scratch_next_probaility_tokens)
+        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token,str) else scratch_predicted_next_token
         return scratch_predicted_next_token
     
-    def scratch_evaluate_model_nltk(self,test_data,model_name):
+    def scratch_evaluate_model_nltk(self,test_data,model_name,result_path,proj_number):
 
         y_true = []
         y_pred = []
@@ -72,7 +115,7 @@ class scratch_train_mle:
         with open(test_data,"r",encoding="utf-8") as f:
             lines= f.readlines()
             random.shuffle(lines)
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             
             for line in lines:
                 line = line.strip()
@@ -82,16 +125,17 @@ class scratch_train_mle:
                 true_next_word = sentence_tokens[-1].lower()
 
                 predicted_next_word = self.predict_next_scratch_token(model_name,context)
-            
+                
                 y_true.append(true_next_word)
                 y_pred.append(predicted_next_word)
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted')
-        recall = recall_score(y_true, y_pred, average='weighted')
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        precision = precision_score(y_true, y_pred, average='weighted',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='weighted',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="weighted",zero_division=0)
+        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
@@ -290,7 +334,7 @@ class scratch_train_mle:
                     # Log the time for evaluating the model
                     eval_start_time = time.time()  # Start time
 
-                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl')
+                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path)
                     eval_end_time = time.time()  # End time
                     eval_duration = eval_end_time - eval_start_time  # Calculate duration
 
@@ -301,7 +345,7 @@ class scratch_train_mle:
                     if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
                         with open(log_file,"a") as fl:
                             fl.write(f"ngram,run,accuracy,precision,recall,f1score,training_time,evaluation_time\n")
-                            
+
                     with open(log_file, "a") as precs:
                         precs.write(f"{each_gram},{each_run},{acc},{precision},{rec},{f1_score},{train_duration},{eval_duration}\n")
         
@@ -337,7 +381,8 @@ tr_scr = scratch_train_mle()
 #f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
 #print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt")
-tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_500/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
+tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_500/scratch_trained_model_nltk_500_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_500","500")
+#tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","10")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
