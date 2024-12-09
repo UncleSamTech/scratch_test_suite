@@ -880,10 +880,17 @@ class bi_lstm_scratch:
         plt.figure(figsize=(10, 8))
         sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
                 xticklabels=class_counts, yticklabels=class_counts)
+        
+        # Rotate x-axis labels to avoid overlap
+        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
         plt.xlabel('Predicted Labels')
         plt.ylabel('True Labels')
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
-        plt.savefig(f"{result_path}confusion_matrix_run_an{run}.pdf")
+        # Adjust layout to make sure everything fits
+        plt.tight_layout()
+        plt.savefig(f"{result_path}confusion_matrix_run_an2{run}.pdf")
         plt.close()
 
 cl_ob = bi_lstm_scratch()
