@@ -265,7 +265,7 @@ class bi_lstm_scratch:
         #self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
         #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
-        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -521,7 +521,7 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            #self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
             ytrue,ypred = self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
             self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,run)
             #model.save(model_file_name)
@@ -860,11 +860,17 @@ class bi_lstm_scratch:
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
+        # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
         print(f"Confusion Matrix:\n{conf_matrix}")
     
         # Determine the top-k classes to display (based on most common labels)
         class_counts = pd.Series(y_true).value_counts().head(top_k).index
+    
+        # Ensure class_counts is of integer type if it's not already
+        class_counts = np.asarray(class_counts, dtype=int)  # Convert to integer array
+    
+        # Use np.ix_ to index into the confusion matrix
         filtered_conf_matrix = conf_matrix[np.ix_(class_counts, class_counts)]
     
         # Optional: Save confusion matrix as a heatmap
