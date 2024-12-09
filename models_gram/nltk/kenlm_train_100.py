@@ -149,7 +149,7 @@ class kenlm_train:
         start_time = time.time()
 
         # Read and shuffle test data
-        for each_run in range(1,6):
+        for each_run in range(1,2):
             with open(test_data, "r", encoding="utf-8") as f:
                 lines = f.readlines()
                 random.shuffle(lines)
