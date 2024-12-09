@@ -856,7 +856,7 @@ class bi_lstm_scratch:
 
         return mrr
     
-   def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
