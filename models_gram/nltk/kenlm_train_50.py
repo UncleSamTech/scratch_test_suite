@@ -373,7 +373,7 @@ class kenlm_train:
                     else:
                         continue
                    
-    def spredict_next_token_kenlm(self,model, context,vocab_name):
+    def predict_next_token_kenlm(self,model, context,vocab_name):
         
         next_token_probabilities = {}
         
