@@ -128,7 +128,7 @@ class kenlm_train:
             metrics[i]["TN"] = TN
 
         # Write metrics to file and print
-        with open(f"{result_path}/tp_fp_fn_tn_label.txt", "w") as af:
+        with open(f"{result_path}/tp_fp_fn_tn_label_val.txt", "w") as af:
             af.write("Class,TP,FP,FN,TN\n")  # Header
             for label, values in metrics.items():
                 #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
