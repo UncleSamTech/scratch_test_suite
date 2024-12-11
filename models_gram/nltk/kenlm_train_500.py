@@ -115,6 +115,7 @@ class kenlm_train:
         num_classes = conf_matrix.shape[0]
         print(f" number of classes {num_classes}")
         metrics = {id2label[i]:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+        total_tp, total_fp, total_fn, total_tn = 0, 0, 0, 0
 
         for i in range(num_classes):
             TP = conf_matrix[i,i]
@@ -122,10 +123,16 @@ class kenlm_train:
             FN = np.sum(conf_matrix[i, :]) - TP
             TN = np.sum(conf_matrix) - (TP + FP + FN)
 
+            label = id2label[i]
             metrics[label]["TP"] = TP
             metrics[label]["FP"] = FP
             metrics[label]["FN"] = FN
             metrics[label]["TN"] = TN
+
+            total_tp += TP
+            total_fp += FP
+            total_fn += FN
+            total_tn += TN
 
         # Write metrics to file and print
         with open(f"{result_path}/tp_fp_fn_tn_label_val.txt", "w") as af:
@@ -134,6 +141,8 @@ class kenlm_train:
                 #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
                 af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
 
+        # Print total metrics
+        print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
         print(f"Confusion Matrix:\n{conf_matrix}")
     
         # Get the unique class labels in sorted order (this will be used for indexing)
