@@ -142,6 +142,9 @@ class kenlm_train:
                 af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
 
         # Print total metrics
+        with open(f"{result_path}/total_results_bilstm_tp_tn_fp_fn.txt","w") as tot:
+          tot.write("total_tn,total_fp,total_fn,total_tp\n")
+          tot.write(f"{total_tn},{total_fp},{total_fn},{total_tp}")
         print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
         print(f"Confusion Matrix:\n{conf_matrix}")
 
