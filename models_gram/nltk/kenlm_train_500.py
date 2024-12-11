@@ -107,6 +107,10 @@ class kenlm_train:
     
         # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
+        tn, fp, fn, tp = conf_matrix.ravel()
+        with open(f"{result_path}tn_fp_fn_tp.txt","a") as af:
+            af.write(f"{tn},{fp},{fn},{tp}\n")
+
         print(f"Confusion Matrix:\n{conf_matrix}")
     
         # Get the unique class labels in sorted order (this will be used for indexing)
@@ -135,7 +139,7 @@ class kenlm_train:
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # Adjust layout to make sure everything fits
         plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_{proj_number}.pdf")
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_am{proj_number}.pdf")
         plt.close()
 
     def scratch_evaluate_model_kenlm_time_metrics(self, test_data, vocab_name, model_name,result_path,proj_number):
@@ -185,6 +189,7 @@ class kenlm_train:
             recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
             f1score = f1_score(y_true, y_pred, average="weighted")
             self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
+            
             # Log the evaluation metrics and time
             #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
                 #frp.write(f"Run {each_run} for 50 projects Vocabs name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")

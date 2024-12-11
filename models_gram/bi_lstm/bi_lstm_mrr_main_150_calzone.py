@@ -853,7 +853,7 @@ class bi_lstm_scratch:
 
         return mrr
     
-    def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, run, top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
@@ -861,23 +861,33 @@ class bi_lstm_scratch:
         conf_matrix = confusion_matrix(y_true, y_pred)
         print(f"Confusion Matrix:\n{conf_matrix}")
     
-        # Determine the top-k classes to display (based on most common labels)
+        # Get the unique class labels in sorted order (this will be used for indexing)
+        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # Determine the top-k most frequent classes based on y_true
         class_counts = pd.Series(y_true).value_counts().head(top_k).index
     
-        # Ensure class_counts is of integer type if it's not already
-        class_counts = np.asarray(class_counts, dtype=int)  # Convert to integer array
+        # Map the class labels to indices based on the sorted unique classes
+        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
     
         # Use np.ix_ to index into the confusion matrix
-        filtered_conf_matrix = conf_matrix[np.ix_(class_counts, class_counts)]
+        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
     
         # Optional: Save confusion matrix as a heatmap
         plt.figure(figsize=(10, 8))
         sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
                 xticklabels=class_counts, yticklabels=class_counts)
+        
+        # Rotate x-axis labels to avoid overlap
+        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
         plt.xlabel('Predicted Labels')
         plt.ylabel('True Labels')
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
-        plt.savefig(f"{result_path}confusion_matrix_run_an{run}.pdf")
+        # Adjust layout to make sure everything fits
+        plt.tight_layout()
+        plt.savefig(f"{result_path}confusion_matrix_run_an2{run}.pdf")
         plt.close()
 
 

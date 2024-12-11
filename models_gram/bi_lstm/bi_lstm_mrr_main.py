@@ -890,7 +890,7 @@ class bi_lstm_scratch:
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # Adjust layout to make sure everything fits
         plt.tight_layout()
-        plt.savefig(f"{result_path}confusion_matrix_run_an{run}.pdf")
+        plt.savefig(f"{result_path}confusion_matrix_run_an2{run}.pdf")
         plt.close()
 
 
