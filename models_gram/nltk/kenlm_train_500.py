@@ -107,9 +107,25 @@ class kenlm_train:
     
         # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
-        tn, fp, fn, tp = conf_matrix.ravel()
-        with open(f"{result_path}tn_fp_fn_tp.txt","a") as af:
-            af.write(f"{tn},{fp},{fn},{tp}\n")
+        num_classes = conf_matrix.shape[0]
+        print(f" number of classes {num_classes}")
+        metrics = {i:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+
+        for i in range(num_classes):
+            TP = conf_matrix[i,i]
+            FP = np.sum(conf_matrix[:,1])
+            FN = np.sum(conf_matrix[i, :]) - TP
+            TN = np.sum(conf_matrix) - (TP + FP + FN)
+
+            metrics[i]["TP"] = TP
+            metrics[i]["FP"] = FP
+            metrics[i]["FN"] = FN
+            metrics[i]["TN"] = TN
+
+        for class_id, values in metrics.items():
+            print(f"Class {class_id}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
+            with open(f"{result_path}/tp_fp_fn_tn.txt","a") as af:
+                af.write(f"{class_id},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
 
         print(f"Confusion Matrix:\n{conf_matrix}")
     
