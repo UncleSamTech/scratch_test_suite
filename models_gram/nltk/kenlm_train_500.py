@@ -154,8 +154,8 @@ class kenlm_train:
         # Plotting the confusion matrix
         plt.figure(figsize=(6, 4))
         sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False, 
-                xticklabels=['Predicted Negative', 'Predicted Positive'], 
-                yticklabels=['Actual Negative', 'Actual Positive'])
+                xticklabels=['Predicted Positive', 'Predicted Negative'], 
+                yticklabels=['Actual Positive', 'Actual Negative'])
 
         plt.title("Confusion Matrix")
         plt.xlabel("Predicted")
