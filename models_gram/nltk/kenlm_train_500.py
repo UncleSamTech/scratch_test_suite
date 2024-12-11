@@ -144,34 +144,48 @@ class kenlm_train:
         # Print total metrics
         print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
         print(f"Confusion Matrix:\n{conf_matrix}")
-    
-        # Get the unique class labels in sorted order (this will be used for indexing)
-        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
-    
-        # Determine the top-k most frequent classes based on y_true
-        class_counts = pd.Series(y_true).value_counts().head(top_k).index
-    
-        # Map the class labels to indices based on the sorted unique classes
-        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
-    
-        # Use np.ix_ to index into the confusion matrix
-        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
-    
-        # Optional: Save confusion matrix as a heatmap
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
-                xticklabels=class_counts, yticklabels=class_counts)
-        
-        # Rotate x-axis labels to avoid overlap
-        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
-        plt.yticks(rotation=0)  # Keep y-axis labels as they are
 
-        plt.xlabel('Predicted Labels')
-        plt.ylabel('True Labels')
-        plt.title(f'Confusion Matrix (Top {top_k} Classes)')
-        # Adjust layout to make sure everything fits
-        plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_am{proj_number}.pdf")
+        conf_matrix = np.array([[total_tn, total_fp],
+                            [total_fn, total_tp]])
+
+        # Plotting the confusion matrix
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False, 
+                xticklabels=['Predicted Negative', 'Predicted Positive'], 
+                yticklabels=['Actual Negative', 'Actual Positive'])
+
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        #plt.show()
+    
+        # # Get the unique class labels in sorted order (this will be used for indexing)
+        # unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # # Determine the top-k most frequent classes based on y_true
+        # class_counts = pd.Series(y_true).value_counts().head(top_k).index
+    
+        # # Map the class labels to indices based on the sorted unique classes
+        # class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+    
+        # # Use np.ix_ to index into the confusion matrix
+        # filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
+    
+        # # Optional: Save confusion matrix as a heatmap
+        # plt.figure(figsize=(10, 8))
+        # sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+        #         xticklabels=class_counts, yticklabels=class_counts)
+        
+        # # Rotate x-axis labels to avoid overlap
+        # plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        # plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
+        # plt.xlabel('Predicted Labels')
+        # plt.ylabel('True Labels')
+        # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        # # Adjust layout to make sure everything fits
+        # plt.tight_layout()
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_tp_tn_fp_fn{proj_number}.pdf")
         plt.close()
 
     def scratch_evaluate_model_kenlm_time_metrics(self, test_data, vocab_name, model_name,result_path,proj_number):
