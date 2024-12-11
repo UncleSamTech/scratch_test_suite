@@ -122,10 +122,10 @@ class kenlm_train:
             FN = np.sum(conf_matrix[i, :]) - TP
             TN = np.sum(conf_matrix) - (TP + FP + FN)
 
-            metrics[i]["TP"] = TP
-            metrics[i]["FP"] = FP
-            metrics[i]["FN"] = FN
-            metrics[i]["TN"] = TN
+            metrics[label]["TP"] = TP
+            metrics[label]["FP"] = FP
+            metrics[label]["FN"] = FN
+            metrics[label]["TN"] = TN
 
         # Write metrics to file and print
         with open(f"{result_path}/tp_fp_fn_tn_label_val.txt", "w") as af:
