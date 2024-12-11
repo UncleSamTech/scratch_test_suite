@@ -119,7 +119,7 @@ class kenlm_train:
 
         for i in range(num_classes):
             TP = conf_matrix[i,i]
-            FP = np.sum(conf_matrix[:,1]) - TP
+            FP = np.sum(conf_matrix[:,i]) - TP
             FN = np.sum(conf_matrix[i, :]) - TP
             TN = np.sum(conf_matrix) - (TP + FP + FN)
 
