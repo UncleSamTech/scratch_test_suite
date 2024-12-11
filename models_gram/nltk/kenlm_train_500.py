@@ -102,6 +102,11 @@ class kenlm_train:
     
 
     def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,top_k=10):
+        
+        labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
+        id2label = {i: str(label) for i, label in enumerate(labels)}  # Map indices to labels
+        label2id = {v: k for k, v in id2label.items()}  # Reverse mapping (if needed)
+
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
@@ -109,11 +114,11 @@ class kenlm_train:
         conf_matrix = confusion_matrix(y_true, y_pred)
         num_classes = conf_matrix.shape[0]
         print(f" number of classes {num_classes}")
-        metrics = {i:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+        metrics = {id2label[i]:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
 
         for i in range(num_classes):
             TP = conf_matrix[i,i]
-            FP = np.sum(conf_matrix[:,1])
+            FP = np.sum(conf_matrix[:,1]) - TP
             FN = np.sum(conf_matrix[i, :]) - TP
             TN = np.sum(conf_matrix) - (TP + FP + FN)
 
@@ -122,10 +127,12 @@ class kenlm_train:
             metrics[i]["FN"] = FN
             metrics[i]["TN"] = TN
 
-        for class_id, values in metrics.items():
-            print(f"Class {class_id}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
-            with open(f"{result_path}/tp_fp_fn_tn.txt","a") as af:
-                af.write(f"{class_id},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
+        # Write metrics to file and print
+        with open(f"{result_path}/tp_fp_fn_tn_label.txt", "w") as af:
+            af.write("Class,TP,FP,FN,TN\n")  # Header
+            for label, values in metrics.items():
+                #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
+                af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
 
         print(f"Confusion Matrix:\n{conf_matrix}")
     
