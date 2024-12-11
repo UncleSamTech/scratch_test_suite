@@ -145,8 +145,8 @@ class kenlm_train:
         print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
         print(f"Confusion Matrix:\n{conf_matrix}")
 
-        conf_matrix = np.array([[total_tn, total_fp],
-                            [total_fn, total_tp]])
+        conf_matrix = np.array([[total_tp, total_fn],
+                            [total_fp, total_tn]])
 
         # Plotting the confusion matrix
         plt.figure(figsize=(6, 4))
