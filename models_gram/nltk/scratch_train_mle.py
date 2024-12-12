@@ -132,9 +132,9 @@ class scratch_train_mle:
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted',zero_division=0)
-        recall = recall_score(y_true, y_pred, average='weighted',zero_division=0)
-        f1score = f1_score(y_true,y_pred,average="weighted",zero_division=0)
+        precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
         self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
@@ -193,10 +193,10 @@ class scratch_train_mle:
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
-        accuracy = accuracy_score(y_true, y_pred,average='weighted')
-        precision = precision_score(y_true, y_pred, average='weighted')
-        recall = recall_score(y_true, y_pred, average='weighted')
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1score = f1_score(y_true,y_pred)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     

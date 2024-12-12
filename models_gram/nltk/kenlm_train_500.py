@@ -234,9 +234,9 @@ class kenlm_train:
 
             # Compute the metrics
             accuracy = accuracy_score(y_true, y_pred)
-            precision = precision_score(y_true, y_pred, average='weighted', zero_division=np.nan)
-            recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
-            f1score = f1_score(y_true, y_pred, average="weighted")
+            precision = precision_score(y_true, y_pred, average='macro', zero_division=np.nan)
+            recall = recall_score(y_true, y_pred, average='macro', zero_division=np.nan)
+            f1score = f1_score(y_true, y_pred, average="macro")
             self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
             
             # Log the evaluation metrics and time

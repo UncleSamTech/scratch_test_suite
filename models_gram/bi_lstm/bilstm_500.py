@@ -331,9 +331,9 @@ class bi_lstm_scratch:
         end_time = time.time()
         time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
-        precision = precision_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        recall = recall_score(y_true, y_pred, average='weighted',zero_division=np.nan)
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
 
         metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
         if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
@@ -498,6 +498,13 @@ class bi_lstm_scratch:
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
                 pickle.dump(history.history, hs)
+            
+            #save the model for every run
+            file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_run{run}.keras"
+            
+            if os.path.exists(file_name):
+                os.remove(file_name)
+            model.save(file_name)
 
             end_time = time.time()
             time_spent = end_time - start_time
@@ -507,7 +514,6 @@ class bi_lstm_scratch:
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
             self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
             #model.save(model_file_name)
-
             
             
 

@@ -243,9 +243,9 @@ class kenlm_train:
 
                 # Calculate metrics
                 accuracy = accuracy_score(y_true, y_pred)
-                precision = precision_score(y_true, y_pred, average='weighted', zero_division=0)
-                recall = recall_score(y_true, y_pred, average='weighted',zero_division=0)
-                f1score = f1_score(y_true, y_pred, average="weighted",zero_division=0)
+                precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
+                recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+                f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
 
                 # Log results
                 log_path = f"{vocab_folder}/metrics_kenlm_{proj_number}.txt"
