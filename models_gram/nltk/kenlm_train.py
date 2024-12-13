@@ -101,7 +101,7 @@ class kenlm_train:
         return accuracy,precision,recall,f1score
     
 
-    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,ngram,run,top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
@@ -135,7 +135,7 @@ class kenlm_train:
         plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # Adjust layout to make sure everything fits
         plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_{proj_number}.pdf")
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_{proj_number}_{ngram}_{run}.pdf")
         plt.close()
 
     def scratch_evaluate_model_kenlm_time_metrics(self, test_data, vocab_name, model_name,result_path,proj_number):
@@ -184,7 +184,7 @@ class kenlm_train:
             precision = precision_score(y_true, y_pred, average='weighted', zero_division=np.nan)
             recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
             f1score = f1_score(y_true, y_pred, average="weighted")
-            self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
+            self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,2,each_run)
             # Log the evaluation metrics and time
             #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
                 #frp.write(f"Run {each_run} for 50 projects Vocabs name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
@@ -576,8 +576,8 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa
 
-kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10")
-#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/kenlm_confusion","10")
+#kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10")
+kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/kenlm_confusion","10")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects","500")
 
