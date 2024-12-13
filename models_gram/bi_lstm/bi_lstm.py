@@ -554,14 +554,14 @@ class bi_lstm_scratch:
             total_tn += TN
 
         # Write metrics to file and print
-        with open(f"{result_path}/tp_fp_fn_tn_label_val_{proj_number}_{run}.txt", "w") as af:
+        with open(f"{result_path}tp_fp_fn_tn_label_val_{proj_number}_{run}.txt", "w") as af:
             af.write("Class,TP,FP,FN,TN\n")  # Header
             for label, values in metrics.items():
                 #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
                 af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
 
         # Print total metrics
-        with open(f"{result_path}/total_results_bilstm_tp_tn_fp_fn_{proj_number}_{run}.txt","w") as tot:
+        with open(f"{result_path}total_results_bilstm_tp_tn_fp_fn_{proj_number}_{run}.txt","w") as tot:
           tot.write("total_tn,total_fp,total_fn,total_tp\n")
           tot.write(f"{total_tn},{total_fp},{total_fn},{total_tp}")
         print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
@@ -607,7 +607,7 @@ class bi_lstm_scratch:
         # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # # Adjust layout to make sure everything fits
         # plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_{proj_number}_{run}.pdf")
+        plt.savefig(f"{result_path}confusion_matrix_run_an_bilstm_{proj_number}_{run}.pdf")
         plt.close()        
 
 cl_ob = bi_lstm_scratch()
