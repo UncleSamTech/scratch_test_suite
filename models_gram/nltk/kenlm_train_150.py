@@ -248,7 +248,7 @@ class kenlm_train:
                 f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
 
                 # Log results
-                log_path = f"{logs_files}/metrics_kenlm_{proj_number}.txt"
+                log_path = f"{logs_files}/metrics_kenlm_{proj_number}_2.txt"
                 if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
                     with open(log_path,"a") as fp:
                         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
