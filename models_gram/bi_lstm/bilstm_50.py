@@ -14,10 +14,11 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.callbacks import EarlyStopping
 from datetime import datetime
-from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score,confusion_matrix
 import pickle
 import time
 from sklearn.utils.class_weight import compute_class_weight
+import seaborn as sns
 
 class bi_lstm_scratch:
 
@@ -38,7 +39,7 @@ class bi_lstm_scratch:
             #shuffle trainset every run
             random.shuffle(lines)
             # Replace specific characters
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             print("see lines:", lines)
 
             # Initialize and fit the tokenizer
@@ -284,7 +285,7 @@ class bi_lstm_scratch:
         return seed_text
 
 
-    def evaluate_bilstm(self,test_data,maxlen,model,result_path,proj_number,train_time):
+    def evaluate_bilstm(self,test_data,maxlen,model,result_path,proj_number,train_time,run):
         y_true = []
         y_pred = []
         tokenz = None
@@ -300,7 +301,7 @@ class bi_lstm_scratch:
             lines= f.readlines()
             random.shuffle(lines)
             
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             for i,line in enumerate(lines):
                
                 line = line.strip()
@@ -309,7 +310,7 @@ class bi_lstm_scratch:
                 sentence_tokens = line.split(" ")
             
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
-                true_next_word = sentence_tokens[-1].lower()
+                true_next_word = sentence_tokens[-1]
 
                 predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
                 
@@ -328,6 +329,8 @@ class bi_lstm_scratch:
             print("No valid predictions made.")
             return None, None, None, None
         
+        #self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
+        
         end_time = time.time()
         time_spent = end_time - start_time
         accuracy = accuracy_score(y_true, y_pred)
@@ -341,6 +344,8 @@ class bi_lstm_scratch:
                 fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time\n")
         with open(metrics_file,"a") as blm:
             blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
+
+        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
         
         return accuracy,precision,recall,f1score
 
@@ -512,11 +517,98 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent,run)
             #model.save(model_file_name)
 
             
-            
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,run,top_k=10):
+        labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
+        id2label = {i: str(label) for i, label in enumerate(labels)}  # Map indices to labels
+        label2id = {v: k for k, v in id2label.items()}  # Reverse mapping (if needed)
+
+        # Compute confusion matrix
+        print("\nComputing Confusion Matrix...")
+    
+        # Compute the confusion matrix
+        conf_matrix = confusion_matrix(y_true, y_pred)
+        num_classes = conf_matrix.shape[0]
+        print(f" number of classes {num_classes}")
+        metrics = {id2label[i]:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+        total_tp, total_fp, total_fn, total_tn = 0, 0, 0, 0
+
+        for i in range(num_classes):
+            TP = conf_matrix[i,i]
+            FP = np.sum(conf_matrix[:,i]) - TP
+            FN = np.sum(conf_matrix[i, :]) - TP
+            TN = np.sum(conf_matrix) - (TP + FP + FN)
+
+            label = id2label[i]
+            metrics[label]["TP"] = TP
+            metrics[label]["FP"] = FP
+            metrics[label]["FN"] = FN
+            metrics[label]["TN"] = TN
+
+            total_tp += TP
+            total_fp += FP
+            total_fn += FN
+            total_tn += TN
+
+        # Write metrics to file and print
+        with open(f"{result_path}/tp_fp_fn_tn_label_val_{proj_number}_{run}.txt", "w") as af:
+            af.write("Class,TP,FP,FN,TN\n")  # Header
+            for label, values in metrics.items():
+                #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
+                af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
+
+        # Print total metrics
+        with open(f"{result_path}/total_results_bilstm_tp_tn_fp_fn_{proj_number}_{run}.txt","w") as tot:
+          tot.write("total_tn,total_fp,total_fn,total_tp\n")
+          tot.write(f"{total_tn},{total_fp},{total_fn},{total_tp}")
+        print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
+        print(f"Confusion Matrix:\n{conf_matrix}")
+
+        conf_matrix = np.array([[total_tp, total_fn],
+                            [total_fp, total_tn]])
+
+        # Plotting the confusion matrix
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False, 
+                xticklabels=['Predicted Positive', 'Predicted Negative'], 
+                yticklabels=['Actual Positive', 'Actual Negative'])
+
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        #plt.show()
+    
+        # # Get the unique class labels in sorted order (this will be used for indexing)
+        # unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # # Determine the top-k most frequent classes based on y_true
+        # class_counts = pd.Series(y_true).value_counts().head(top_k).index
+    
+        # # Map the class labels to indices based on the sorted unique classes
+        # class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+    
+        # # Use np.ix_ to index into the confusion matrix
+        # filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
+    
+        # # Optional: Save confusion matrix as a heatmap
+        # plt.figure(figsize=(10, 8))
+        # sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+        #         xticklabels=class_counts, yticklabels=class_counts)
+        
+        # # Rotate x-axis labels to avoid overlap
+        # plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        # plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
+        # plt.xlabel('Predicted Labels')
+        # plt.ylabel('True Labels')
+        # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        # # Adjust layout to make sure everything fits
+        # plt.tight_layout()
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_{proj_number}_{run}.pdf")
+        plt.close()        
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
@@ -524,7 +616,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
