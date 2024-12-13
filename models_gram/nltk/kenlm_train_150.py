@@ -101,44 +101,96 @@ class kenlm_train:
         return accuracy,precision,recall,f1score
     
 
-    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,ngram,run,top_k=10):
+        labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
+        id2label = {i: str(label) for i, label in enumerate(labels)}  # Map indices to labels
+        label2id = {v: k for k, v in id2label.items()}  # Reverse mapping (if needed)
+
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
         # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
-        print(f"Confusion Matrix:\n{conf_matrix}")
-    
-        # Get the unique class labels in sorted order (this will be used for indexing)
-        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
-    
-        # Determine the top-k most frequent classes based on y_true
-        class_counts = pd.Series(y_true).value_counts().head(top_k).index
-    
-        # Map the class labels to indices based on the sorted unique classes
-        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
-    
-        # Use np.ix_ to index into the confusion matrix
-        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
-    
-        # Optional: Save confusion matrix as a heatmap
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
-                xticklabels=class_counts, yticklabels=class_counts)
-        
-        # Rotate x-axis labels to avoid overlap
-        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
-        plt.yticks(rotation=0)  # Keep y-axis labels as they are
+        num_classes = conf_matrix.shape[0]
+        print(f" number of classes {num_classes}")
+        metrics = {id2label[i]:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+        total_tp, total_fp, total_fn, total_tn = 0, 0, 0, 0
 
-        plt.xlabel('Predicted Labels')
-        plt.ylabel('True Labels')
-        plt.title(f'Confusion Matrix (Top {top_k} Classes)')
-        # Adjust layout to make sure everything fits
-        plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_{proj_number}.pdf")
+        for i in range(num_classes):
+            TP = conf_matrix[i,i]
+            FP = np.sum(conf_matrix[:,i]) - TP
+            FN = np.sum(conf_matrix[i, :]) - TP
+            TN = np.sum(conf_matrix) - (TP + FP + FN)
+
+            label = id2label[i]
+            metrics[label]["TP"] = TP
+            metrics[label]["FP"] = FP
+            metrics[label]["FN"] = FN
+            metrics[label]["TN"] = TN
+
+            total_tp += TP
+            total_fp += FP
+            total_fn += FN
+            total_tn += TN
+
+        # Write metrics to file and print
+        with open(f"{result_path}/tp_fp_fn_tn_label_val_{ngram}_{run}.txt", "w") as af:
+            af.write("Class,TP,FP,FN,TN\n")  # Header
+            for label, values in metrics.items():
+                #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
+                af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
+
+        # Print total metrics
+        with open(f"{result_path}/total_results_bilstm_tp_tn_fp_fn_{ngram}_{run}.txt","w") as tot:
+          tot.write("total_tn,total_fp,total_fn,total_tp\n")
+          tot.write(f"{total_tn},{total_fp},{total_fn},{total_tp}")
+        print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
+        print(f"Confusion Matrix:\n{conf_matrix}")
+
+        conf_matrix = np.array([[total_tp, total_fn],
+                            [total_fp, total_tn]])
+
+        # Plotting the confusion matrix
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False, 
+                xticklabels=['Predicted Positive', 'Predicted Negative'], 
+                yticklabels=['Actual Positive', 'Actual Negative'])
+
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        #plt.show()
+    
+        # # Get the unique class labels in sorted order (this will be used for indexing)
+        # unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+    
+        # # Determine the top-k most frequent classes based on y_true
+        # class_counts = pd.Series(y_true).value_counts().head(top_k).index
+    
+        # # Map the class labels to indices based on the sorted unique classes
+        # class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+    
+        # # Use np.ix_ to index into the confusion matrix
+        # filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
+    
+        # # Optional: Save confusion matrix as a heatmap
+        # plt.figure(figsize=(10, 8))
+        # sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+        #         xticklabels=class_counts, yticklabels=class_counts)
+        
+        # # Rotate x-axis labels to avoid overlap
+        # plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        # plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
+        # plt.xlabel('Predicted Labels')
+        # plt.ylabel('True Labels')
+        # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        # # Adjust layout to make sure everything fits
+        # plt.tight_layout()
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_kenlm_{proj_number}_{ngram}_{run}.pdf")
         plt.close()
 
-    def scratch_evaluate_model_kenlm_time_metrics(self, test_data, vocab_name, model_name,result_path,proj_number,logs_files):
+    def scratch_evaluate_model_kenlm_time_metrics(self, test_data, vocab_name, model_name,result_path,proj_number):
         model_rec = kenlm.Model(model_name)
     
         y_true = []
@@ -184,14 +236,14 @@ class kenlm_train:
             precision = precision_score(y_true, y_pred, average='weighted', zero_division=np.nan)
             recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
             f1score = f1_score(y_true, y_pred, average="weighted")
-            self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
+            self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,2,each_run)
             # Log the evaluation metrics and time
             #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
                 #frp.write(f"Run {each_run} for 50 projects Vocabs name: {vocab_name} | Accuracy: {accuracy} | Precision: {precision} | Recall: {recall} | F1-score: {f1score} | Evaluation time: {evaluation_time:.2f} seconds\n")
 
     
 
-    def evaluate_all_models_in_folder(self, test_data, vocab_folder, model_folder,proj_number,logs_files):
+    def evaluate_all_models_in_folder(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
         # Get vocab and model files
         vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
         model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
@@ -248,7 +300,7 @@ class kenlm_train:
                 f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
 
                 # Log results
-                log_path = f"{logs_files}/metrics_kenlm_{proj_number}_2.txt"
+                log_path = f"{new_log_path}/metrics_kenlm_{proj_number}.txt"
                 if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
                     with open(log_path,"a") as fp:
                         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
@@ -576,9 +628,8 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa
 
-#kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10")
-kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects_upd","150","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_150")
-#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/kenlm_confusion","150","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_150")
+#kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10")
+kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_150","150")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects","500")
 
