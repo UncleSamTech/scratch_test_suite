@@ -142,7 +142,7 @@ class scratch_train_mle:
         # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # # Adjust layout to make sure everything fits
         # plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_tp_tn_fp_fn{proj_number}.pdf")
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_tp_tn_fp_fn{proj_number}_{ngram}_{run}.pdf")
         plt.close()
 
 
@@ -386,7 +386,7 @@ class scratch_train_mle:
                     # Log the time for evaluating the model
                     eval_start_time = time.time()  # Start time
 
-                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path,each_gram,each_run)
+                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path,proj_number,each_gram,each_run)
                     eval_end_time = time.time()  # End time
                     eval_duration = eval_end_time - eval_start_time  # Calculate duration
 
