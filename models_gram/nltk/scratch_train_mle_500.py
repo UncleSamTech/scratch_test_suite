@@ -30,7 +30,7 @@ class scratch_train_mle:
         with open(train_data,"r",encoding="utf-8") as f:
             lines = f.readlines()
             random.shuffle(lines)
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             
             tokenized_scratch_data = [list(word_tokenize(sent.strip())) for sent in lines]
             train_data_val,padded_sents = padded_everygram_pipeline(n,tokenized_scratch_data)
@@ -56,43 +56,95 @@ class scratch_train_mle:
         return self.loaded_scratch_model
     
 
-    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,ngram,run,top_k=10):
+        labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
+        id2label = {i: str(label) for i, label in enumerate(labels)}  # Map indices to labels
+        label2id = {v: k for k, v in id2label.items()}  # Reverse mapping (if needed)
+
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
-    
+
         # Compute the confusion matrix
         conf_matrix = confusion_matrix(y_true, y_pred)
-        print(f"Confusion Matrix:\n{conf_matrix}")
-    
-        # Get the unique class labels in sorted order (this will be used for indexing)
-        unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
-    
-        # Determine the top-k most frequent classes based on y_true
-        class_counts = pd.Series(y_true).value_counts().head(top_k).index
-    
-        # Map the class labels to indices based on the sorted unique classes
-        class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
-    
-        # Use np.ix_ to index into the confusion matrix
-        filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
-    
-        # Optional: Save confusion matrix as a heatmap
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
-                xticklabels=class_counts, yticklabels=class_counts)
-        
-        # Rotate x-axis labels to avoid overlap
-        plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
-        plt.yticks(rotation=0)  # Keep y-axis labels as they are
+        num_classes = conf_matrix.shape[0]
+        print(f" number of classes {num_classes}")
+        metrics = {id2label[i]:{"TP":0,"FP":0,"FN":0,"TN":0} for i in range(num_classes)}
+        total_tp, total_fp, total_fn, total_tn = 0, 0, 0, 0
 
-        plt.xlabel('Predicted Labels')
-        plt.ylabel('True Labels')
-        plt.title(f'Confusion Matrix (Top {top_k} Classes)')
-        # Adjust layout to make sure everything fits
-        plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_nltk_{proj_number}.pdf")
+        for i in range(num_classes):
+            TP = conf_matrix[i,i]
+            FP = np.sum(conf_matrix[:,i]) - TP
+            FN = np.sum(conf_matrix[i, :]) - TP
+            TN = np.sum(conf_matrix) - (TP + FP + FN)
+
+            label = id2label[i]
+            metrics[label]["TP"] = TP
+            metrics[label]["FP"] = FP
+            metrics[label]["FN"] = FN
+            metrics[label]["TN"] = TN
+
+            total_tp += TP
+            total_fp += FP
+            total_fn += FN
+            total_tn += TN
+
+        # Write metrics to file and print
+        with open(f"{result_path}/tp_fp_fn_tn_label_val_{ngram}_{run}.csv", "w") as af:
+            af.write("Class,TP,FP,FN,TN\n")  # Header
+            for label, values in metrics.items():
+                #print(f"Label {label}: TP={values['TP']}, FP={values['FP']}, FN={values['FN']}, TN={values['TN']}")
+                af.write(f"{label},{values['TP']},{values['FP']},{values['FN']},{values['TN']}\n")
+
+        # Print total metrics
+        #print(f"\nTotal TP={total_tp}, FP={total_fp}, FN={total_fn}, TN={total_tn}")
+        #print(f"Confusion Matrix:\n{conf_matrix}")
+        with open(f"{result_path}/total_results_nltk_tp_tn_fp_fn_{ngram}_{run}.csv","w") as tot:
+          tot.write("total_tn,total_fp,total_fn,total_tp,no_of_classes\n")
+          tot.write(f"{total_tn},{total_fp},{total_fn},{total_tp},{num_classes}")
+
+        conf_matrix = np.array([[total_tp, total_fn],
+                            [total_fp, total_tn]])
+
+        # Plotting the confusion matrix
+        plt.figure(figsize=(6, 4))
+        sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', cbar=False,
+                xticklabels=['Predicted Positive', 'Predicted Negative'],
+                yticklabels=['Actual Positive', 'Actual Negative'])
+
+        plt.title("Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        #plt.show()
+
+        # # Get the unique class labels in sorted order (this will be used for indexing)
+        # unique_classes = np.unique(np.concatenate((y_true, y_pred)))  # Combine y_true and y_pred to cover all classes
+
+        # # Determine the top-k most frequent classes based on y_true
+        # class_counts = pd.Series(y_true).value_counts().head(top_k).index
+
+        # # Map the class labels to indices based on the sorted unique classes
+        # class_indices = [np.where(unique_classes == label)[0][0] for label in class_counts]
+
+        # # Use np.ix_ to index into the confusion matrix
+        # filtered_conf_matrix = conf_matrix[np.ix_(class_indices, class_indices)]
+
+        # # Optional: Save confusion matrix as a heatmap
+        # plt.figure(figsize=(10, 8))
+        # sns.heatmap(filtered_conf_matrix, annot=True, fmt='d', cmap='Blues',
+        #         xticklabels=class_counts, yticklabels=class_counts)
+
+        # # Rotate x-axis labels to avoid overlap
+        # plt.xticks(rotation=45, ha='right')  # Rotate labels and align them to the right
+        # plt.yticks(rotation=0)  # Keep y-axis labels as they are
+
+        # plt.xlabel('Predicted Labels')
+        # plt.ylabel('True Labels')
+        # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
+        # # Adjust layout to make sure everything fits
+        # plt.tight_layout()
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_tp_tn_fp_fn{proj_number}.pdf")
         plt.close()
-   
+
 
     def predict_next_scratch_token(self,model_name,context_data):
         loaded_model = self.load_trained_model(model_name)
@@ -104,10 +156,10 @@ class scratch_train_mle:
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
         #print("predicted score ", scratch_next_probaility_tokens)
-        scratch_predicted_next_token = scratch_predicted_next_token.lower() if isinstance(scratch_predicted_next_token,str) else scratch_predicted_next_token
+        #scratch_predicted_next_token = scratch_predicted_next_token
         return scratch_predicted_next_token
     
-    def scratch_evaluate_model_nltk(self,test_data,model_name,result_path,proj_number):
+    def scratch_evaluate_model_nltk(self,test_data,model_name,result_path,proj_number,ngram,run):
 
         y_true = []
         y_pred = []
@@ -135,7 +187,7 @@ class scratch_train_mle:
         precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
         recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
         f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
-        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number)
+        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,ngram,run)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
@@ -193,10 +245,10 @@ class scratch_train_mle:
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
-        accuracy = accuracy_score(y_true, y_pred,average='weighted')
-        precision = precision_score(y_true, y_pred, average='weighted')
-        recall = recall_score(y_true, y_pred, average='weighted')
-        f1score = f1_score(y_true,y_pred,average="weighted")
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred)
+        recall = recall_score(y_true, y_pred)
+        f1score = f1_score(y_true,y_pred)
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
@@ -334,7 +386,7 @@ class scratch_train_mle:
                     # Log the time for evaluating the model
                     eval_start_time = time.time()  # Start time
 
-                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path)
+                    acc, precision, rec, f1_score = self.scratch_evaluate_model_nltk(test_data, f'{real_model_name}_{each_gram}.pkl',result_path,each_gram,each_run)
                     eval_end_time = time.time()  # End time
                     eval_duration = eval_end_time - eval_start_time  # Calculate duration
 
@@ -381,8 +433,8 @@ tr_scr = scratch_train_mle()
 #f1_wilcoxon_2 = tr_scr.wilcon_t_test([0.0006595641494970354,0.0012696922764036857,0.01547662029383393,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823],[0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823,0.016052136283941823])
 #print("f1 parametric wilcoxon test for nltk model ",f1_wilcoxon_2)
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt")
-tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_500/scratch_trained_model_nltk_500_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_500","500")
-#tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","10")
+#tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/scratch_trained_model_nltk_10_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results","10")
+tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf500/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
