@@ -299,7 +299,7 @@ class kenlm_train:
                 recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
                 f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
                 
-                self.compute_confusion_matrix(y_true,y_pred,new_log_path,proj_number,5,each_run)
+                
                 # Log results
                 log_path = f"{new_log_path}/metrics_kenlm_{proj_number}.txt"
                 if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
@@ -307,6 +307,8 @@ class kenlm_train:
                         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
                 with open(log_path, "a") as log_file:
                     log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}\n")
+                
+                self.compute_confusion_matrix(y_true,y_pred,new_log_path,proj_number,vocab_order,each_run)
 
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
         arpa_names = []
