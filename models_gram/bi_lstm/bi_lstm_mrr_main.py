@@ -44,7 +44,7 @@ class bi_lstm_scratch:
             #shuffle trainset every run
             random.shuffle(lines)
             # Replace specific characters
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
             print("see lines:", lines)
 
             # Initialize and fit the tokenizer
@@ -257,14 +257,14 @@ class bi_lstm_scratch:
         #print(model)
         #return val
 
-    def consolidate_data_train(self,filepath,result_path,test_data,proj_number,model_name):
+    def consolidate_data_train(self,result_path,test_data,proj_number,model_name):
         #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         #padd_seq,max_len = self.pad_sequ(input_seq)
         #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #ytrue,ypred = self.evaluate_bilstm(test_data,max_len,model_name,result_path,proj_number,"0")
         #self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,1)
         #self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
-        self.evaluate_bilstm_mrr_chunked_optimized(test_data,39,model_name,result_path,proj_number)
+        self.evaluate_bilstm_mrr_chunked_new(test_data,39,model_name,result_path,proj_number)
        
         #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
@@ -528,24 +528,30 @@ class bi_lstm_scratch:
             #model.save(model_file_name)
 
     def predict_token_score(self, context, token, tokenz, model, maxlen):
-        #token_list = tokenz.texts_to_sequences([context])
         # Early check for out-of-vocabulary token
-        if token not in tokenz.word_index:
-            return -1  # Assign low score for empty contexts
+        token_index = tokenz.word_index.get(token, -1)
+        if token_index == -1:
+            return -1  # Assign low score for out-of-vocabulary token
 
-        # Tokenize combined context and token
-        token_value = tokenz.texts_to_sequences([context + " " + token])[0]
+        # Tokenize context
+        context_sequence = tokenz.texts_to_sequences([context])[0]
+
+        # Append token index to context
+        token_value = context_sequence + [token_index]
+
         # Ensure the input is the correct length
         if len(token_value) < maxlen - 1:
-            token_value = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")[0]
+            token_value = [0] * (maxlen - 1 - len(token_value)) + token_value
         else:
             token_value = token_value[-(maxlen-1):]
 
-         # Convert to a NumPy array (TensorFlow can process this directly)
-        padded_in_seq = np.array([token_value])
+        # Prepare input as a list
+        padded_in_seq = [token_value]
+
         # Model prediction
         prediction = model.predict(padded_in_seq, verbose=0)
-        return prediction[0][-1]  # Score of the token  
+        return prediction[0][-1]  # Score of the token
+
 
     def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
         tokenz = None
@@ -860,6 +866,77 @@ class bi_lstm_scratch:
 
         return mrr
     
+    def evaluate_bilstm_mrr_chunked_new(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
+        # Load tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+        total_cumulative_rr = 0
+        total_count = 0
+
+        start_time = time.time()
+        trans_table = str.maketrans({"_": "UNDERSCORE", ">": "RIGHTANG", "<": "LEFTANG"})
+
+        def process_chunk(chunk):
+            nonlocal total_cumulative_rr, total_count
+            for line in chunk:
+                line = line.strip().translate(trans_table).lower()
+                if not line or len(line.split()) < 2:
+                    continue
+
+                sentence_tokens = line.split(" ")
+                context, true_next_word = " ".join(sentence_tokens[:-1]), sentence_tokens[-1]
+
+                # Prepare batch input
+                scores = []
+                for token in vocab:
+                    scores.append(self.predict_token_score(context, token, tokenz, model, maxlen))
+
+                # Rank tokens
+                top_tokens = sorted(zip(scores, vocab), reverse=True)[:10]
+                token_ranks = {token: rank + 1 for rank, (_, token) in enumerate(top_tokens)}
+
+                # Calculate reciprocal rank
+                true_next_word = true_next_word.strip()
+                rank = token_ranks.get(true_next_word, 0)
+                if rank:
+                    total_cumulative_rr += 1 / rank
+                total_count += 1
+
+        # Process test data in chunks
+        with open(test_data, "r", encoding="utf-8") as f:
+            chunk = []
+            for i, line in enumerate(f):
+                chunk.append(line)
+                if len(chunk) >= chunk_size:
+                    process_chunk(chunk)
+                    chunk = []
+                    print(f"Processed {i + 1} lines.")
+
+            if chunk:
+                process_chunk(chunk)
+
+        # Compute MRR
+        if total_count == 0:
+            print("No valid evaluations.")
+            return 0
+
+        mrr = total_cumulative_rr / total_count
+        print(f"Total MRR: {mrr}")
+        time_spent = time.time() - start_time
+
+        # Write metrics
+        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
+        os.makedirs(result_path, exist_ok=True)
+        with open(metrics_file, "a") as blm:
+            if os.path.getsize(metrics_file) == 0:
+                blm.write("MRR,Evaluation_Time\n")
+            blm.write(f"{mrr},{time_spent:.2f}\n")
+
+        return mrr
+
+    
     def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
@@ -978,7 +1055,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_mrr_main/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10","main_bilstm_scratch_model_150embedtime_10.keras")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10","main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
