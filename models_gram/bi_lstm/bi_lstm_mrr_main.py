@@ -867,6 +867,7 @@ class bi_lstm_scratch:
         return mrr
     
     def evaluate_bilstm_mrr_chunked_new(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
+        ld = load_model(model,compile=False)
         # Load tokenizer
         with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
             tokenz = pickle.load(tk)
@@ -891,7 +892,7 @@ class bi_lstm_scratch:
                 # Prepare batch input
                 scores = []
                 for token in vocab:
-                    scores.append(self.predict_token_score(context, token, tokenz, model, maxlen))
+                    scores.append(self.predict_token_score(context, token, tokenz, ld, maxlen))
 
                 # Rank tokens
                 top_tokens = sorted(zip(scores, vocab), reverse=True)[:10]
