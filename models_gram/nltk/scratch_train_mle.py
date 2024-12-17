@@ -224,8 +224,9 @@ class scratch_train_mle:
                     if rank:
                         current_rank = 1 / rank
                         total_cumulative_rr += current_rank
+                        print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
                     total_count += 1
-                    print(f"processed line {line} with reciprocal rank {total_cumulative_rr}")
+                    
 
             # Calculate total RR and lines for the file
             time_spent = time.time() - start_time
