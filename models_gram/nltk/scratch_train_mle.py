@@ -44,6 +44,16 @@ class scratch_train_mle:
         except Exception as es:
             print("error as a result of ", es)
 
+    def extract_vocabulary_nltk(self,model_name):
+        # Load the trained MLE model from the pickle file
+        model = self.load_trained_model(model_name)
+    
+        # Access the vocabulary (as an iterable) and convert it to a list
+        vocab_list = list(model.vocab)
+    
+        return vocab_list
+    
+
            
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
@@ -158,6 +168,78 @@ class scratch_train_mle:
         #print("predicted score ", scratch_next_probaility_tokens)
         #scratch_predicted_next_token = scratch_predicted_next_token
         return scratch_predicted_next_token
+    
+    def compute_score(self,model_name,token,context_data):
+        load_model = self.load_trained_model(model_name)
+        token = token.strip()
+        return load_model.score(token, context_data.split(" "))
+    
+
+    def evaluate_mrr_nltk(self,model_name,result_path,split_folder):
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+        all_vocab = self.extract_vocabulary_nltk(model_name)
+
+        # Process each file in the split folder
+        for split_file in sorted(os.listdir(split_folder)):
+            split_file_path = os.path.join(split_folder, split_file)
+            if not os.path.isfile(split_file_path):
+                continue
+
+            total_cumulative_rr = 0
+            total_count = 0
+
+            start_time = time.time()
+
+            # Process each line in the file
+            with open(split_file_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if not line.strip():
+                        continue
+
+                    # Preprocess the line
+                    #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
+
+                    context = " ".join(sentence_tokens[:-1])
+                    true_next_word = sentence_tokens[-1]
+
+                    # Compute scores for tokens
+                    heap = []
+                    for token in all_vocab:
+                        context_score = self.compute_score(model_name, token, context)
+                        if len(heap) < 10:
+                            heapq.heappush(heap, (context_score, token))
+                        elif context_score > heap[0][0]:
+                            heapq.heappushpop(heap, (context_score, token))
+
+                    heap.sort(reverse=True, key=lambda x: x[0])
+                    token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+
+                    # Compute reciprocal rank
+                    true_next_word = true_next_word.strip()
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        current_rank = 1 / rank
+                        total_cumulative_rr += current_rank
+                    total_count += 1
+                    print(f"processed line {line} with reciprocal rank {total_cumulative_rr}")
+
+            # Calculate total RR and lines for the file
+            time_spent = time.time() - start_time
+            result_file = os.path.join(result_path, f"nltk_rr_results.txt")
+
+            with open(result_file, "w") as rf:
+                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                rf.write(f"Total Lines: {total_count}\n")
+                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+
+
+
     
     def scratch_evaluate_model_nltk(self,test_data,model_name,result_path,proj_number,ngram,run):
 
