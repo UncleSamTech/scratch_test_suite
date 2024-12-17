@@ -224,7 +224,7 @@ class scratch_train_mle:
                     if rank:
                         current_rank = 1 / rank
                         total_cumulative_rr += current_rank
-                        print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
+                        #print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
                     total_count += 1
                     
 
