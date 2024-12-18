@@ -22,7 +22,8 @@ from random import sample
 import seaborn as sns
 from concurrent.futures import ProcessPoolExecutor
 import heapq
-
+import cProfile
+import pstats
 
 
 class bi_lstm_scratch:
@@ -895,6 +896,8 @@ class bi_lstm_scratch:
 
             total_cumulative_rr = 0
             total_count = 0
+            profiler = cProfile.Profile()
+            profiler.enable()
 
             start_time = time.time()
 
@@ -933,6 +936,15 @@ class bi_lstm_scratch:
                         total_cumulative_rr += current_rank
                         print(f"processed line  context {context} with rank {current_rank} and tcr {total_cumulative_rr}")
                     total_count += 1
+            
+            profiler.disable()
+
+            # Save profiling results to a file
+            profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
+            with open(profile_file, "w") as pf:
+                stats = pstats.Stats(profiler, stream=pf)
+                stats.sort_stats('cumulative')
+                stats.print_stats()
 
             # Calculate total RR and lines for the file
             time_spent = time.time() - start_time
