@@ -435,7 +435,7 @@ class kenlm_train:
         
         with open(vocab_file, "r", encoding="utf8") as vocab_f:
             all_voc = vocab_f.readlines()
-            return list(all_voc) if not isinstance(all_voc,list) else all_voc
+            return all_voc
 
                    
     def predict_next_token_kenlm(self,model, context,vocab_name):
@@ -638,7 +638,9 @@ class kenlm_train:
                     # Compute scores for tokens
                     heap = []
                     for token in all_vocab:
+                        print(f"processing token {token}")
                         token = token.strip()
+                        context = context.strip()
                         context_score = self.compute_token_score(model_rec, context, token)
                         if len(heap) < 10:
                             heapq.heappush(heap, (context_score, token))
@@ -647,7 +649,7 @@ class kenlm_train:
 
                     heap.sort(reverse=True, key=lambda x: x[0])
                     token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
-
+                    print(f"token ranks {token_ranks}")
                     # Compute reciprocal rank
                     true_next_word = true_next_word.strip()
                     rank = token_ranks.get(true_next_word, 0)
