@@ -1045,11 +1045,11 @@ class bi_lstm_scratch:
             time_spent = time.time() - start_time
             result_file = os.path.join(result_path, f"kenlm_results_file_{filename}.txt")
 
-        with open(result_file, "a") as rf:
-            rf.write(f"File name : {filename}\n")
-            rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-            rf.write(f"Total Lines: {total_count}\n")
-            rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+            with open(result_file, "a") as rf:
+                rf.write(f"File name : {filename}\n")
+                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                rf.write(f"Total Lines: {total_count}\n")
+                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
 
             #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
