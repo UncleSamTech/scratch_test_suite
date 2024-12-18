@@ -233,9 +233,9 @@ class kenlm_train:
 
             # Compute the metrics
             accuracy = accuracy_score(y_true, y_pred)
-            precision = precision_score(y_true, y_pred, average='weighted', zero_division=np.nan)
-            recall = recall_score(y_true, y_pred, average='weighted', zero_division=np.nan)
-            f1score = f1_score(y_true, y_pred, average="weighted")
+            precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
+            recall = recall_score(y_true, y_pred, average='macro', zero_division=0)
+            f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
             self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,2,each_run)
             # Log the evaluation metrics and time
             #with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/logs/kenlnm_acc_prec_rec_f1_50_projects.txt", "a") as frp:
@@ -427,10 +427,9 @@ class kenlm_train:
                         continue
 
     def compute_token_score(self,model,context,token):
-        token = token.strip()
-
         context_with_token = context + " " + token
-        return model.score(context_with_token)
+        token_score = model.score(context_with_token)
+        return token_score
     
     def load_all_vocab(self,vocab_file):
         
@@ -639,6 +638,7 @@ class kenlm_train:
                     # Compute scores for tokens
                     heap = []
                     for token in all_vocab:
+                        token = token.strip()
                         context_score = self.compute_token_score(model_rec, context, token)
                         if len(heap) < 10:
                             heapq.heappush(heap, (context_score, token))
