@@ -530,27 +530,34 @@ class bi_lstm_scratch:
 
     def predict_token_score(self, context, token, tokenz, model, maxlen):
         # Early check for out-of-vocabulary token
-        token_index = tokenz.word_index.get(token, -1)
-        if token_index == -1:
-            return -1  # Assign low score for out-of-vocabulary token
+        LOW_SCORE =  -1
+        token_index = tokenz.word_index.get(token, LOW_SCORE)
+        if token_index == LOW_SCORE:
+            return LOW_SCORE  # Assign low score for out-of-vocabulary token
 
         # Tokenize context
         context_sequence = tokenz.texts_to_sequences([context])[0]
+        if not context_sequence or not context_sequence[0]:
+            raise ValueError("Context could not be tokenized correctly.")
 
         # Append token index to context
         token_value = context_sequence + [token_index]
 
         # Ensure the input is the correct length
-        if len(token_value) < maxlen - 1:
-            token_value = [0] * (maxlen - 1 - len(token_value)) + token_value
-        else:
-            token_value = token_value[-(maxlen-1):]
+        # if len(token_value) < maxlen - 1:
+        #     token_value = [0] * (maxlen - 1 - len(token_value)) + token_value
+        # else:
+        #     token_value = token_value[-(maxlen-1):]
+        
+        token_value = pad_sequences([token_value], maxlen=maxlen-1, padding='pre', truncating='pre')[0]
 
         # Prepare input as a list
         padded_in_seq = [token_value]
 
         # Model prediction
-        prediction = model.predict(padded_in_seq, verbose=0)
+        prediction = model.predict(padded_in_seq, verbose=2)
+        if len(prediction[0]) == 0:
+            raise ValueError("Prediction output is empty.")
         return prediction[0][-1]  # Score of the token
 
 
@@ -1013,7 +1020,7 @@ class bi_lstm_scratch:
                         heapq.heappushpop(heap, (context_score, token))
 
                 heap.sort(reverse=True, key=lambda x: x[0])
-                token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+                token_ranks = {t: rank + 1 for rank, (_, t) in enumerate(heap)}
 
                 # Compute reciprocal rank
                 true_next_word = true_next_word.strip()
@@ -1021,8 +1028,9 @@ class bi_lstm_scratch:
                 if rank:
                     current_rank = 1 / rank
                     total_cumulative_rr += current_rank
-                    print(f"processed line  context {context} with rank {current_rank} and tcr {total_cumulative_rr}")
+                
                 total_count += 1
+                print(f"processed {total_count} line(s) for sentence {line} with rank {current_rank} and tcr {total_cumulative_rr}")
             
             profiler.disable()
 
