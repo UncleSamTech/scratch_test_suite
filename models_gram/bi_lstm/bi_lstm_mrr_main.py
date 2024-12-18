@@ -958,6 +958,94 @@ class bi_lstm_scratch:
             print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
 
+
+    def evaluate_bilstm_mrr_single_file(self, filename, maxlen, model, result_path):
+        """
+        Evaluate the MRR for a single file.
+        Save the total reciprocal rank and total lines for each file to a text file.
+        """
+
+        ld = load_model(model,compile=False)
+        # Load the tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+    
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+
+        # # Process each file in the split folder
+        # for split_file in sorted(os.listdir(split_folder)):
+        #     split_file_path = os.path.join(split_folder, split_file)
+        #     if not os.path.isfile(split_file_path):
+        #         continue
+
+        total_cumulative_rr = 0
+        total_count = 0
+        profiler = cProfile.Profile()
+        profiler.enable()
+
+        start_time = time.time()
+
+            # Process each line in the file
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                # Preprocess the line
+                #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                context = " ".join(sentence_tokens[:-1])
+                true_next_word = sentence_tokens[-1]
+
+                # Compute scores for tokens
+                heap = []
+                for token in vocab:
+                    context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
+                    if len(heap) < 10:
+                        heapq.heappush(heap, (context_score, token))
+                    elif context_score > heap[0][0]:
+                        heapq.heappushpop(heap, (context_score, token))
+
+                heap.sort(reverse=True, key=lambda x: x[0])
+                token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+
+                # Compute reciprocal rank
+                true_next_word = true_next_word.strip()
+                rank = token_ranks.get(true_next_word, 0)
+                if rank:
+                    current_rank = 1 / rank
+                    total_cumulative_rr += current_rank
+                    print(f"processed line  context {context} with rank {current_rank} and tcr {total_cumulative_rr}")
+                total_count += 1
+            
+            profiler.disable()
+
+            # Save profiling results to a file
+            profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
+            with open(profile_file, "w") as pf:
+                stats = pstats.Stats(profiler, stream=pf)
+                stats.sort_stats('cumulative')
+                stats.print_stats()
+
+            # Calculate total RR and lines for the file
+            time_spent = time.time() - start_time
+            result_file = os.path.join(result_path, f"kenlm_results_file_{filename}.txt")
+
+        with open(result_file, "a") as rf:
+            rf.write(f"File name : {filename}\n")
+            rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+            rf.write(f"Total Lines: {total_count}\n")
+            rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+            #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+
+
     
     def evaluate_bilstm_mrr_chunked_new(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
         ld = load_model(model,compile=False)
@@ -1154,8 +1242,22 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
-cl_ob.evaluate_bilstm_mrr_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-
+#cl_ob.evaluate_bilstm_mrr_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_1.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_2.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_3.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_4.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_5.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_6.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_7.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_8.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_9.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_10.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_11.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_11.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_12.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_13.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_14.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
