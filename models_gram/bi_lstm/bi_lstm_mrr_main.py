@@ -950,7 +950,7 @@ class bi_lstm_scratch:
             time_spent = time.time() - start_time
             result_file = os.path.join(result_path, f"{os.path.splitext(split_file)[0]}_results.txt")
 
-            with open(result_file, "w") as rf:
+            with open(result_file, "a") as rf:
                 rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
                 rf.write(f"Total Lines: {total_count}\n")
                 rf.write(f"Time Spent: {time_spent:.2f} seconds\n")

@@ -179,7 +179,7 @@ class scratch_train_mle:
         # Ensure result path exists
         os.makedirs(result_path, exist_ok=True)
         all_vocab = self.extract_vocabulary_nltk(model_name) 
-
+        
         # Process each file in the split folder
         for split_file in sorted(os.listdir(split_folder)):
             split_file_path = os.path.join(split_folder, split_file)
@@ -190,6 +190,7 @@ class scratch_train_mle:
             total_count = 0
 
             start_time = time.time()
+
 
             # Process each line in the file
             with open(split_file_path, "r", encoding="utf-8") as f:
@@ -227,15 +228,15 @@ class scratch_train_mle:
                         #print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
                     total_count += 1
                     
-
+            
             # Calculate total RR and lines for the file
             time_spent = time.time() - start_time
             result_file = os.path.join(result_path, f"nltk_rr_results_{proj_number}.txt")
-
-            with open(result_file, "w") as rf:
+            with open(result_file, "a") as rf:
                 rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
                 rf.write(f"Total Lines: {total_count}\n")
                 rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+            
 
             print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
