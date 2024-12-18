@@ -638,7 +638,7 @@ class kenlm_train:
                     # Compute scores for tokens
                     heap = []
                     for token in all_vocab:
-                        print(f"processing token {token}")
+                        #print(f"processing token {token}")
                         token = token.strip()
                         context = context.strip()
                         context_score = self.compute_token_score(model_rec, context, token)
