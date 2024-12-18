@@ -177,6 +177,7 @@ class scratch_train_mle:
 
     def evaluate_mrr_nltk(self,model_name,result_path,split_folder,proj_number):
         # Ensure result path exists
+        eval_files = ["scratch_test_data_chunk_1.txt","scratch_test_data_chunk_10.txt","scratch_test_data_chunk_11.txt"]
         os.makedirs(result_path, exist_ok=True)
         all_vocab = self.extract_vocabulary_nltk(model_name) 
         
@@ -185,7 +186,11 @@ class scratch_train_mle:
             split_file_path = os.path.join(split_folder, split_file)
             if not os.path.isfile(split_file_path):
                 continue
-
+            
+            split_file = split_file.strip()
+            if split_file in eval_files:
+                continue
+            
             total_cumulative_rr = 0
             total_count = 0
 
