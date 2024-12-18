@@ -931,6 +931,7 @@ class bi_lstm_scratch:
                     if rank:
                         current_rank = 1 / rank
                         total_cumulative_rr += current_rank
+                        print(f"processed context {context} with rank {current_rank} and tcr {total_cumulative_rr}")
                     total_count += 1
 
             # Calculate total RR and lines for the file
