@@ -531,3 +531,7 @@ tr_scr.evaluate_mrr_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scra
 # shuffle and split training and test set into four parts for training in parallel
 #shuf /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80.txt | split -d -n r/4 - /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_ --additional-suffix=.txt
 #shuf /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt | split -d -n r/4 - /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_ --additional-suffix=.txt
+
+#split text file into chunks of 3500 lines per file for evaluating mrr
+#split -l 3500 /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt chunk_ && n=1 && for file in chunk_*; do mv "$file" "scratch_test_data_chunk_$((n++)).txt"; done && read -p "Enter destination folder: " folder && mkdir -p "$folder" && mv scratch_test_data_chunk_*.txt "$folder"
+#mrr = 0.2133 for 10 projects
