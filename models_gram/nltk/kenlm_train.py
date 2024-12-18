@@ -665,7 +665,7 @@ class kenlm_train:
             result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}.txt")
 
             with open(result_file, "a") as rf:
-                rf.write(f"File name : {split_file}")
+                rf.write(f"File name : {split_file}\n")
                 rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
                 rf.write(f"Total Lines: {total_count}\n")
                 rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
