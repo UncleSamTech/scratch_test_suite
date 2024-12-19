@@ -190,7 +190,7 @@ class scratch_train_mle:
             split_file = split_file.strip()
             if split_file in eval_files:
                 continue
-            
+
             total_cumulative_rr = 0
             total_count = 0
 
@@ -238,6 +238,7 @@ class scratch_train_mle:
             time_spent = time.time() - start_time
             result_file = os.path.join(result_path, f"nltk_rr_results_{proj_number}.txt")
             with open(result_file, "a") as rf:
+                rf.write(f"File name : {split_file_path}\n")
                 rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
                 rf.write(f"Total Lines: {total_count}\n")
                 rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
@@ -541,3 +542,5 @@ tr_scr.evaluate_mrr_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scra
 #split text file into chunks of 3500 lines per file for evaluating mrr
 #split -l 3500 /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt chunk_ && n=1 && for file in chunk_*; do mv "$file" "scratch_test_data_chunk_$((n++)).txt"; done && read -p "Enter destination folder: " folder && mkdir -p "$folder" && mv scratch_test_data_chunk_*.txt "$folder"
 #mrr = 0.2133 for 10 projects
+
+#awk '/Total Reciprocal Rank:/ {rr+=$4} /Total Lines:/ {lines+=$3} END {print "Mean Reciprocal Rank: " rr/lines > "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/mrr.txt"}' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/kenlm_rr_results_10.txt
