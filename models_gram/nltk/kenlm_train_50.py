@@ -385,6 +385,7 @@ class kenlm_train:
         # Evaluate each vocab-model pair
         for vocab_name, model_name in vocab_model_pairs:
             vocab_path = os.path.join(vocab_folder, vocab_name)
+            match =  re.search(r"order(\d+)", vocab_path)
             model_path = os.path.join(model_folder, model_name)
             print(f"model  {model_path} vocab {vocab_path}")
             # Load the language model
@@ -418,20 +419,22 @@ class kenlm_train:
                 evaluation_time = end_time - start_time
 
                 # Calculate metrics
-                accuracy = accuracy_score(y_true, y_pred)
-                precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
-                recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
-                f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
+                # accuracy = accuracy_score(y_true, y_pred)
+                # precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
+                # recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+                # f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
                 
                 # Log results
                 log_path = f"{new_log_path}/metrics_kenlm_{proj_number}.txt"
-                self.compute_confusion_matrix(y_true,y_pred,new_log_path,proj_number,vocab_order,each_run)
-
-                if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
-                    with open(log_path,"a") as fp:
-                        fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
-                with open(log_path, "a") as log_file:
-                    log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}\n")
+                if match:
+                    ngram = match.group(1)
+                    self.compute_confusion_matrix(y_true,y_pred,new_log_path,proj_number,ngram,each_run)
+                
+                # if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
+                #     with open(log_path,"a") as fp:
+                #         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
+                # with open(log_path, "a") as log_file:
+                #     log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}\n")
 
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
         arpa_names = []
