@@ -418,11 +418,11 @@ class kenlm_train:
                 end_time = time.time()
                 evaluation_time = end_time - start_time
 
-                # Calculate metrics
-                # accuracy = accuracy_score(y_true, y_pred)
-                # precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
-                # recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
-                # f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
+                #Calculate metrics
+                accuracy = accuracy_score(y_true, y_pred)
+                precision = precision_score(y_true, y_pred, average='macro', zero_division=0)
+                recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+                f1score = f1_score(y_true, y_pred, average="macro",zero_division=0)
                 
                 # Log results
                 log_path = f"{new_log_path}/metrics_kenlm_{proj_number}.txt"
@@ -430,11 +430,11 @@ class kenlm_train:
                     ngram = match.group(1)
                     self.compute_confusion_matrix(y_true,y_pred,new_log_path,proj_number,ngram,each_run)
                 
-                # if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
-                #     with open(log_path,"a") as fp:
-                #         fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
-                # with open(log_path, "a") as log_file:
-                #     log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}\n")
+                if not os.path.exists(log_path) or os.path.getsize(log_path) == 0:
+                    with open(log_path,"a") as fp:
+                        fp.write(f"run,vocab_file,model_name,accuracy,precision,recall,f1score,evaluation_time \n")
+                with open(log_path, "a") as log_file:
+                    log_file.write(f"{each_run},{vocab_name},{model_name},{accuracy},{precision},{recall},{f1score},{evaluation_time:.2f}\n")
 
     def scratch_evaluate_model_kenlm2(self,test_data,vocab_path,arpa_path):
         arpa_names = []
