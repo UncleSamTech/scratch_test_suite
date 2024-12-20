@@ -289,7 +289,7 @@ class bi_lstm_scratch:
         y_true = []
         y_pred = []
         tokenz = None
-        loaded_model = load_model(f"{model}",compile=False)
+        #loaded_model = load_model(f"{model_path}",compile=False)
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
             
@@ -312,7 +312,7 @@ class bi_lstm_scratch:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1]
 
-                predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
+                predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
                 
                 
             
@@ -348,6 +348,70 @@ class bi_lstm_scratch:
         self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
         
         return accuracy,precision,recall,f1score
+    
+
+    def evaluate_bilstm_in_order(self,test_data,maxlen,model,result_path,proj_number,train_time,run):
+        y_true = []
+        y_pred = []
+        tokenz = None
+        #loaded_model = load_model(f"{model_path}",compile=False)
+        with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            tokenz = pickle.load(tk)
+            
+        
+        # Start the evaluation timer
+        start_time = time.time()
+
+        with open(test_data,"r",encoding="utf-8") as f:
+            lines= f.readlines()
+            random.shuffle(lines)
+            
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+                
+                # evaluate each token in order starting from the second token
+                for idx in range(1,len(sentence_tokens)):
+
+                    context = ' '.join(sentence_tokens[:idx])  
+                    true_next_word = sentence_tokens[idx]
+
+                    predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
+                
+                
+            
+                    if predicted_next_word is not None:
+                        y_true.append(true_next_word)
+                
+                        y_pred.append(predicted_next_word)
+
+        if not y_true or not y_pred:
+            print("No valid predictions made.")
+            return None, None, None, None
+        
+        #self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
+        
+        end_time = time.time()
+        time_spent = end_time - start_time
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
+
+        metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
+        if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
+            with open(metrics_file,"a") as fl:
+                fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time\n")
+        with open(metrics_file,"a") as blm:
+            blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
+
+        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
+        
+        return accuracy,precision,recall,f1score
+
 
     
     def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
@@ -517,7 +581,7 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent,run)
+            self.evaluate_bilstm_in_order(test_data,max_seq,model,result_path,proj_number,time_spent,run)
             #model.save(model_file_name)
 
             
@@ -616,7 +680,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf_order/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
@@ -625,5 +689,5 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
-cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",27,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project50_run5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","50","0",5)
+#cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
 #cl_ob.predict_next_token_bilstm("event_whenflagclicked control_forever BodyBlock control_create_clone_of")
