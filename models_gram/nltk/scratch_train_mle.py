@@ -16,6 +16,7 @@ from random import sample
 import seaborn as sns
 import numpy as np
 import pandas as pd
+import re
 
 
 class scratch_train_mle:
@@ -281,6 +282,58 @@ class scratch_train_mle:
         #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
         return accuracy,precision,recall,f1score
     
+
+    def scratch_evaluate_model_nltk_in_order_all(self,test_data,model_path,proj_number,result_path):
+        all_models = sorted([f for f in os.listdir(model_path) if f.endswith(".pkl")])
+
+        y_true = []
+        y_pred = []
+        log_file = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects.txt"
+        #log_file_error = f"{result_path}logs/trained_data_prec_rec_acc_{proj_number}_projects_error.txt"
+
+
+        for each_model in all_models:
+
+            match = re.search(r"_(\d+)\.pkl$", each_model.strip())
+            ngram = match.group(1)
+            for each_run in range(1,6):
+                eval_start_time = time.time()  
+                with open(test_data,"r",encoding="utf-8") as f:
+                    lines= f.readlines()
+                    random.shuffle(lines)
+                    lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
+            
+                    for line in lines:
+                        line = line.strip()
+                        sentence_tokens = line.split()
+
+                        if len(sentence_tokens) < 2:
+                            continue
+                        
+                        for idx in range(1,len(sentence_tokens)):
+                            context = ' '.join(sentence_tokens[:idx])  # Use all words except the last one as context
+                            true_next_word = sentence_tokens[idx]
+                            each_model = each_model.strip()
+                            predicted_next_word = self.predict_next_scratch_token(each_model,context)
+                
+                            y_true.append(true_next_word)
+                            y_pred.append(predicted_next_word)
+                eval_duration = time.time() - eval_start_time
+
+                #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+                accuracy = accuracy_score(y_true, y_pred)
+                precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
+                recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+                f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
+                if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
+                        with open(log_file,"a") as fl:
+                            fl.write(f"ngram,run,accuracy,precision,recall,f1score,training_time,evaluation_time\n")
+
+                with open(log_file, "a") as precs:
+                    precs.write(f"{ngram},{each_run},{accuracy},{precision},{recall},{f1score},{eval_duration}\n")
+        
+
+                self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,ngram,each_run)
 
     def scratch_evaluate_model_nltk_in_order(self,test_data,model_name,result_path,proj_number,ngram,run):
 
@@ -563,6 +616,7 @@ tr_scr = scratch_train_mle()
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results/scratch_trained_model_nltk_10_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results","10")
 tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","scratch_trained_model_nltk_10_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","10")
+#tr_scr.scratch_evaluate_model_nltk_in_order_all("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10/","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
