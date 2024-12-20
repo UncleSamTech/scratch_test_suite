@@ -8,7 +8,7 @@ import random
 import scipy.stats as stats
 import time
 import pandas as pd
-
+import re
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score,confusion_matrix, classification_report
@@ -201,7 +201,7 @@ class kenlm_train:
         start_time = time.time()
 
         # Read and shuffle test data
-        for each_run in range(1, 6):
+        for each_run in range(1, 2):
             with open(test_data, "r", encoding="utf-8") as f:
                 lines = f.readlines()
                 random.shuffle(lines)
