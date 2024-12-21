@@ -369,8 +369,10 @@ class kenlm_train:
 
     def evaluate_all_models_in_folder_in_order(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
         # Get vocab and model files
-        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
-        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+        omit_vocab = ['kenln_order5.vocab','kenln_order6.vocab']
+        omit_arpa = ['kenln_order5.arpa','kenln_order6.arpa']
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab") and f.strip() in omit_vocab])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa") and f.strip() in omit_arpa])
     
         # Match vocab and model files by order number
         vocab_model_pairs = []
