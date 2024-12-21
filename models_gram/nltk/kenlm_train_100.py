@@ -373,7 +373,8 @@ class kenlm_train:
         omit_arpa = ['kenln_order5.arpa','kenln_order6.arpa']
         vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab") and f.strip() in omit_vocab])
         model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa") and f.strip() in omit_arpa])
-    
+        print(vocab_files)
+        print(model_files)
         # Match vocab and model files by order number
         vocab_model_pairs = []
         for vocab in vocab_files:
