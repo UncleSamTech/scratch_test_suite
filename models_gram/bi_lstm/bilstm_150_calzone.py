@@ -268,9 +268,12 @@ class bi_lstm_scratch:
         
         if all_models:
             for model in all_models:
+                
                 match = re.search(r"run(\d+)",model.strip())
+
                 if match:
                     run = match.group(1)
+                    model = os.path.join(result_path,model).strip()
 
                     self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
                 
