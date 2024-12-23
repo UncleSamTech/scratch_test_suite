@@ -152,7 +152,7 @@ class scratch_train_mle:
         # plt.title(f'Confusion Matrix (Top {top_k} Classes)')
         # # Adjust layout to make sure everything fits
         # plt.tight_layout()
-        plt.savefig(f"{result_path}/confusion_matrix_run_an_bilstm_tp_tn_fp_fn{proj_number}_{ngram}_{run}.pdf")
+        plt.savefig(f"{result_path}/confusion_matrix_run_an_nltk_tp_tn_fp_fn{proj_number}_{ngram}_{run}.pdf")
         plt.close()
 
 
