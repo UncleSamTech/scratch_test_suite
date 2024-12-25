@@ -761,47 +761,48 @@ class kenlm_train:
                     sentence_tokens = line.split(" ")
                     if len(sentence_tokens) < 2:
                         continue
+                    
+                    for idx in range(1,len(sentence_tokens)):
+                        context = " ".join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
 
-                    context = " ".join(sentence_tokens[:-1])
-                    true_next_word = sentence_tokens[-1]
+                        # Compute scores for tokens
+                        heap = []
+                        for token in all_vocab:
+                            #clearprint(f"processing token {token}")
+                            token = token.strip()
+                            context = context.strip()
+                            context_score = self.compute_token_score(model_rec, context, token)
+                            if len(heap) < 10:
+                                heapq.heappush(heap, (context_score, token))
+                            elif context_score > heap[0][0]:
+                                heapq.heappushpop(heap, (context_score, token))
 
-                    # Compute scores for tokens
-                    heap = []
-                    for token in all_vocab:
-                        #clearprint(f"processing token {token}")
-                        token = token.strip()
-                        context = context.strip()
-                        context_score = self.compute_token_score(model_rec, context, token)
-                        if len(heap) < 10:
-                            heapq.heappush(heap, (context_score, token))
-                        elif context_score > heap[0][0]:
-                            heapq.heappushpop(heap, (context_score, token))
-
-                    heap.sort(reverse=True, key=lambda x: x[0])
-                    token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
-                    print(f"token ranks {token_ranks}")
-                    # Compute reciprocal rank
-                    true_next_word = true_next_word.strip()
-                    rank = token_ranks.get(true_next_word, 0)
-                    if rank:
-                        current_rank = 1 / rank
-                        total_cumulative_rr += current_rank
-                        print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
-                    total_count += 1
+                        heap.sort(reverse=True, key=lambda x: x[0])
+                        token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+                        print(f"token ranks {token_ranks}")
+                        # Compute reciprocal rank
+                        true_next_word = true_next_word.strip()
+                        rank = token_ranks.get(true_next_word, 0)
+                        if rank:
+                            current_rank = 1 / rank
+                            total_cumulative_rr += current_rank
+                            print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
+                        total_count += 1
                     
 
-            # Calculate total RR and lines for the file
-            time_spent = time.time() - start_time
-            result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}.txt")
+                # Calculate total RR and lines for the file
+                time_spent = time.time() - start_time
+                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}.txt")
 
-            with open(result_file, "a") as rf:
-                rf.write(f"File name : {split_file}\n")
-                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-                rf.write(f"Total Lines: {total_count}\n")
-                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+                with open(result_file, "a") as rf:
+                    rf.write(f"File name : {split_file}\n")
+                    rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                    rf.write(f"Total Lines: {total_count}\n")
+                    rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
                 
 
-            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+                print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
     
     
