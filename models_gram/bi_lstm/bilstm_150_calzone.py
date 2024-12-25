@@ -494,7 +494,7 @@ class bi_lstm_scratch:
                 return output_word
        
 
-    def predict_token(self,context, tokenz, load_mod, maxseqlen):
+    def predict_token(self,context, tokenz, load_mod, maxseqlen,verbose=False):
         token_list = None
         token_value = None
         output_word = ""
@@ -505,7 +505,8 @@ class bi_lstm_scratch:
         #context = context.replace("_","UNDERSCORE")
         token_list = tokenz.texts_to_sequences([context])
         if not token_list or len(token_list[0]) == 0:
-            print("Empty token list, unable to predict token.")
+            if verbose:
+                print("Empty token list, unable to predict token.")
             return None
     
         token_value = token_list[0]
@@ -522,7 +523,8 @@ class bi_lstm_scratch:
         for token, index in tokenz.word_index.items():
             if index == pred_token_index:
                 output_word = token
-                print(output_word)
+                if verbose:
+                    print(output_word)
                 break
         #output_word  = output_word.replace("UNDERSCORE","_")
         return output_word
