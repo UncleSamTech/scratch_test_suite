@@ -260,7 +260,7 @@ class bi_lstm_scratch:
        
         self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
-        
+        print("he")
         #self.train_model_again(model_name,result_path,xs,ys)
 
         #self.plot_graph("loss",result_path)
@@ -680,7 +680,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_train_data_100_projects.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_test_data_20.txt","100")
+cl_ob.consolidate_data_train("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_train_data_500_projects.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/500/","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_test_data_20.txt","500")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
