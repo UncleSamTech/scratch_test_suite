@@ -19,6 +19,7 @@ import pickle
 import time
 from sklearn.utils.class_weight import compute_class_weight
 import seaborn as sns
+import re 
 
 class bi_lstm_scratch:
 
@@ -258,12 +259,22 @@ class bi_lstm_scratch:
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
        
-        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
-        #print(history)
-        
-        #self.train_model_again(model_name,result_path,xs,ys)
+        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run2.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project150_run3.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project150_run4.keras"]
 
-        #self.plot_graph("loss",result_path)
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
+        print(all_models)
+        
+        if all_models:
+            for model in all_models:
+                
+                match = re.search(r"run(\d+)",model.strip())
+
+                if match:
+                    run = match.group(1)
+                    model = os.path.join(result_path,model).strip()
+
+                    self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
@@ -354,7 +365,7 @@ class bi_lstm_scratch:
         y_true = []
         y_pred = []
         tokenz = None
-        #loaded_model = load_model(f"{model_path}",compile=False)
+        loaded_model = load_model(f"{model}",compile=False)
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
             
@@ -379,7 +390,7 @@ class bi_lstm_scratch:
                     context = ' '.join(sentence_tokens[:idx])  
                     true_next_word = sentence_tokens[idx]
 
-                    predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
+                    predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
             
@@ -411,7 +422,6 @@ class bi_lstm_scratch:
         self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
         
         return accuracy,precision,recall,f1score
-
 
     
     def predict_next_token_bilstm(self,context,maxseqlen,model_name,result_path):
