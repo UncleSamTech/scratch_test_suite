@@ -260,22 +260,22 @@ class bi_lstm_scratch:
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
        
-        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
-        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run4.keras"]
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run4.keras"]
 
-        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files.strip() in av])
-        print(all_models)
+        #all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files.strip() in av])
+        #print(all_models)
         
-        if all_models:
-            for model in all_models:
+        # if all_models:
+        #     for model in all_models:
                 
-                match = re.search(r"run(\d+)",model.strip())
+        #         match = re.search(r"run(\d+)",model.strip())
 
-                if match:
-                    run = match.group(1)
-                    model = os.path.join(result_path,model).strip()
+        #         if match:
+        #             run = match.group(1)
+        #             model = os.path.join(result_path,model).strip()
 
-                    self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
+        #             self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
                 
         #print(history)
         
@@ -564,7 +564,7 @@ class bi_lstm_scratch:
 
         # Run model training for 5 runs, with each run with a sampled data
       
-        for run in range(1, 6):
+        for run in range(5, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
