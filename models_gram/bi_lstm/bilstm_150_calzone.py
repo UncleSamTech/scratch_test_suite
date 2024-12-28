@@ -260,7 +260,7 @@ class bi_lstm_scratch:
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
        
-        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run5.keras"]
 
         all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files.strip() in av])
