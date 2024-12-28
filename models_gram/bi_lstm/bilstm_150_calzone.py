@@ -261,27 +261,27 @@ class bi_lstm_scratch:
         
        
         self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
-        #av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run4.keras"]
+        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project150_run5.keras"]
 
-        #all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files.strip() in av])
-        #print(all_models)
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files.strip() in av])
+        print(all_models)
         
-        # if all_models:
-        #     for model in all_models:
+        if all_models:
+            for model in all_models:
                 
-        #         match = re.search(r"run(\d+)",model.strip())
+                match = re.search(r"run(\d+)",model.strip())
 
-        #         if match:
-        #             run = match.group(1)
-        #             model = os.path.join(result_path,model).strip()
+                if match:
+                    run = match.group(1)
+                    model = os.path.join(result_path,model).strip()
 
-        #             self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
+                    self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
                 
-        #print(history)
+        # print(history)
         
-        #self.train_model_again(model_name,result_path,xs,ys)
+        # self.train_model_again(model_name,result_path,xs,ys)
 
-        #self.plot_graph("loss",result_path)
+        # self.plot_graph("loss",result_path)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
