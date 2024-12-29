@@ -189,8 +189,8 @@ class scratch_train_mle:
                 continue
             
             split_file = split_file.strip()
-            if split_file in eval_files:
-                continue
+            # if split_file in eval_files:
+            #     continue
 
             total_cumulative_rr = 0
             total_count = 0
