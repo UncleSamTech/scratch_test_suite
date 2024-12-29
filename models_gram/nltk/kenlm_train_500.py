@@ -7,8 +7,9 @@ import subprocess
 import random
 import scipy.stats as stats
 import time
-import pandas as pd
 import re
+import pandas as pd
+
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score,precision_recall_curve,f1_score,confusion_matrix, classification_report
@@ -760,47 +761,48 @@ class kenlm_train:
                     sentence_tokens = line.split(" ")
                     if len(sentence_tokens) < 2:
                         continue
+                    
+                    for idx in range(1,len(sentence_tokens)):
+                        context = " ".join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
 
-                    context = " ".join(sentence_tokens[:-1])
-                    true_next_word = sentence_tokens[-1]
+                        # Compute scores for tokens
+                        heap = []
+                        for token in all_vocab:
+                            #clearprint(f"processing token {token}")
+                            token = token.strip()
+                            context = context.strip()
+                            context_score = self.compute_token_score(model_rec, context, token)
+                            if len(heap) < 10:
+                                heapq.heappush(heap, (context_score, token))
+                            elif context_score > heap[0][0]:
+                                heapq.heappushpop(heap, (context_score, token))
 
-                    # Compute scores for tokens
-                    heap = []
-                    for token in all_vocab:
-                        #clearprint(f"processing token {token}")
-                        token = token.strip()
-                        context = context.strip()
-                        context_score = self.compute_token_score(model_rec, context, token)
-                        if len(heap) < 10:
-                            heapq.heappush(heap, (context_score, token))
-                        elif context_score > heap[0][0]:
-                            heapq.heappushpop(heap, (context_score, token))
-
-                    heap.sort(reverse=True, key=lambda x: x[0])
-                    token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
-                    print(f"token ranks {token_ranks}")
-                    # Compute reciprocal rank
-                    true_next_word = true_next_word.strip()
-                    rank = token_ranks.get(true_next_word, 0)
-                    if rank:
-                        current_rank = 1 / rank
-                        total_cumulative_rr += current_rank
-                        print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
-                    total_count += 1
+                        heap.sort(reverse=True, key=lambda x: x[0])
+                        token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
+                        print(f"token ranks {token_ranks}")
+                        # Compute reciprocal rank
+                        true_next_word = true_next_word.strip()
+                        rank = token_ranks.get(true_next_word, 0)
+                        if rank:
+                            current_rank = 1 / rank
+                            total_cumulative_rr += current_rank
+                            print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
+                        total_count += 1
                     
 
-            # Calculate total RR and lines for the file
-            time_spent = time.time() - start_time
-            result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}.txt")
+                # Calculate total RR and lines for the file
+                time_spent = time.time() - start_time
+                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}_order.txt")
 
-            with open(result_file, "a") as rf:
-                rf.write(f"File name : {split_file}\n")
-                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-                rf.write(f"Total Lines: {total_count}\n")
-                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+                with open(result_file, "a") as rf:
+                    rf.write(f"File name : {split_file}\n")
+                    rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                    rf.write(f"Total Lines: {total_count}\n")
+                    rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
                 
 
-            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+                print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
     
     
@@ -840,9 +842,9 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa
 
-kn.evaluate_all_models_in_folder_in_order("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects_upd","500","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_500_order")
+#kn.evaluate_all_models_in_folder_in_order("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10_order")
 #kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10","10")
-#kn.evaluate_mrr_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","10")
+kn.evaluate_mrr_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_500/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","500")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects","500")
 
