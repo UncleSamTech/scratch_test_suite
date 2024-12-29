@@ -665,7 +665,7 @@ class bi_lstm_scratch:
                         total_cumulative_rr += current_rank
                 
                     total_count += 1
-                    print(f"processed {total_count} line(s) for sentence {line} with rank {current_rank} and tcr {total_cumulative_rr}")
+                    print(f"processed {total_count} line(s) for sentence {line} with tcr {total_cumulative_rr}")
             
             #     profiler.disable()
 
