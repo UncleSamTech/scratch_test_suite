@@ -990,8 +990,8 @@ class bi_lstm_scratch:
 
         total_cumulative_rr = 0
         total_count = 0
-        profiler = cProfile.Profile()
-        profiler.enable()
+        # profiler = cProfile.Profile()
+        # profiler.enable()
 
         start_time = time.time()
 
@@ -1006,40 +1006,40 @@ class bi_lstm_scratch:
                 sentence_tokens = line.split(" ")
                 if len(sentence_tokens) < 2:
                     continue
+                for idx in range(1,len(sentence_tokens)):
+                    context = " ".join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
 
-                context = " ".join(sentence_tokens[:-1])
-                true_next_word = sentence_tokens[-1]
+                    # Compute scores for tokens
+                    heap = []
+                    for token in vocab:
+                        context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
+                        if len(heap) < 10:
+                            heapq.heappush(heap, (context_score, token))
+                        elif context_score > heap[0][0]:
+                            heapq.heappushpop(heap, (context_score, token))
 
-                # Compute scores for tokens
-                heap = []
-                for token in vocab:
-                    context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
-                    if len(heap) < 10:
-                        heapq.heappush(heap, (context_score, token))
-                    elif context_score > heap[0][0]:
-                        heapq.heappushpop(heap, (context_score, token))
+                    heap.sort(reverse=True, key=lambda x: x[0])
+                    token_ranks = {t: rank + 1 for rank, (_, t) in enumerate(heap)}
 
-                heap.sort(reverse=True, key=lambda x: x[0])
-                token_ranks = {t: rank + 1 for rank, (_, t) in enumerate(heap)}
-
-                # Compute reciprocal rank
-                true_next_word = true_next_word.strip()
-                rank = token_ranks.get(true_next_word, 0)
-                if rank:
-                    current_rank = 1 / rank
-                    total_cumulative_rr += current_rank
+                    # Compute reciprocal rank
+                    true_next_word = true_next_word.strip()
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        current_rank = 1 / rank
+                        total_cumulative_rr += current_rank
                 
-                total_count += 1
-                print(f"processed {total_count} line(s) for sentence {line} with rank {current_rank} and tcr {total_cumulative_rr}")
+                    total_count += 1
+                    print(f"processed {total_count} line(s) for sentence {line} with rank {current_rank} and tcr {total_cumulative_rr}")
             
-            profiler.disable()
+            #     profiler.disable()
 
-            # Save profiling results to a file
-            profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
-            with open(profile_file, "w") as pf:
-                stats = pstats.Stats(profiler, stream=pf)
-                stats.sort_stats('cumulative')
-                stats.print_stats()
+            # # Save profiling results to a file
+            # profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
+            # with open(profile_file, "w") as pf:
+            #     stats = pstats.Stats(profiler, stream=pf)
+            #     stats.sort_stats('cumulative')
+            #     stats.print_stats()
 
             # Calculate total RR and lines for the file
             time_spent = time.time() - start_time
