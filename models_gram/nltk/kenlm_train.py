@@ -788,12 +788,12 @@ class kenlm_train:
                             current_rank = 1 / rank
                             total_cumulative_rr += current_rank
                             print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
-                        total_count += 1
+                    total_count += 1
                     
 
                 # Calculate total RR and lines for the file
                 time_spent = time.time() - start_time
-                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}_order.txt")
+                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}_order_main.txt")
 
                 with open(result_file, "a") as rf:
                     rf.write(f"File name : {split_file}\n")
@@ -853,3 +853,5 @@ kn.evaluate_mrr_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch
 
 #preprocessing my csvfile for kenlm metrics to insert ngram values based on the number in the vocab file
 #awk -F',' 'NR==1 {print $1",ngram,"substr($0,index($0,$2))} NR>1 {split($2,a,"order"); print $1","a[2]+0","substr($0,index($0,$2))}' metrics_kenlm_500.csv > metrics_kenlm_500_pro.csv
+
+#awk '/Total Reciprocal Rank:/ {rr+=$NF} /Total Lines:/ {lines+=$NF} END {print rr/lines > "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/mrr_order.txt"}' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/kenlm_rr_results_10_order.txt

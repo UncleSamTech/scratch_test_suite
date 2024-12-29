@@ -788,12 +788,12 @@ class kenlm_train:
                             current_rank = 1 / rank
                             total_cumulative_rr += current_rank
                             print(f"processed line {line} with reciprocal rank {current_rank} and total cummulative {total_cumulative_rr}")
-                        total_count += 1
+                    total_count += 1
                     
 
                 # Calculate total RR and lines for the file
                 time_spent = time.time() - start_time
-                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}_order.txt")
+                result_file = os.path.join(result_path, f"kenlm_rr_results_{proj_number}_order_main.txt")
 
                 with open(result_file, "a") as rf:
                     rf.write(f"File name : {split_file}\n")
