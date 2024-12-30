@@ -44,7 +44,7 @@ class bi_lstm_scratch:
             random.shuffle(lines)
             # Replace specific characters
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
-            print("see lines:", lines)
+            #print("see lines:", lines)
 
             # Initialize and fit the tokenizer
             self.tokenizer = Tokenizer(oov_token='<oov>')
