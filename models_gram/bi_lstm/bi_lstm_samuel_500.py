@@ -40,7 +40,7 @@ class bi_lstm_scratch:
             random.shuffle(lines)
             # Replace specific characters
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
-            print("see lines:", lines)
+            #print("see lines:", lines)
 
             # Initialize and fit the tokenizer
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -523,20 +523,20 @@ class bi_lstm_scratch:
         print("max length",max_seq)
         
         
-        # gpus = tf.config.experimental.list_physical_devices('GPU')
-        # if gpus:
-        #     print(f"Default GPU device: {gpus[0]}")
-        #     try:
-        #         for gpu in gpus:
-        #             tf.config.experimental.set_memory_growth(gpu, True)
-        #         print(f"Using GPU: {tf.test.gpu_device_name()}")
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
 
-        #     except RuntimeError as e:
-        #         print(f"Error setting up GPU: {e}")
-        #         return
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
 
-        # else:
-        #     print("No GPU available. Running on CPU.")
+        else:
+            print("No GPU available. Running on CPU.")
 
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
