@@ -546,7 +546,7 @@ class bi_lstm_scratch:
 
         # Run model training for 5 runs, with each run with a sampled data
       
-        for run in range(1, 6):
+        for run in range(3, 6):
             print(f"\nStarting run {run}...\n")
             start_time = time.time()
 
