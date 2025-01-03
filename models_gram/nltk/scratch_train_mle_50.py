@@ -212,7 +212,7 @@ class scratch_train_mle:
                     
                     for idx in range(1,len(sentence_tokens)):
                         context = " ".join(sentence_tokens[:idx])
-                        true_next_word = sentence_tokens[idx]
+                        true_next_word = sentence_tokens[idx].strip()
 
                         # Compute scores for tokens
                         heap = []
