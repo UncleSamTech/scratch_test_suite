@@ -584,7 +584,10 @@ class bi_lstm_scratch:
             self.evaluate_bilstm_in_order(test_data,max_seq,model,result_path,proj_number,time_spent,run)
             #model.save(model_file_name)
 
-            
+    def view_model_summary(self,model_path):
+        ld = load_model(model_path)
+        ld.summary()
+
     def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,run,top_k=10):
         labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
         id2label = {i: str(label) for i, label in enumerate(labels)}  # Map indices to labels
@@ -680,7 +683,8 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_train_data_100_projects.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_test_data_20.txt","100")
+#cl_ob.consolidate_data_train("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_train_data_100_projects.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_test_data_20.txt","100")
+cl_ob.view_model_summary("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/main_bilstm_scratch_model_150embedtime1_main_sample_project100_run1.keras")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
