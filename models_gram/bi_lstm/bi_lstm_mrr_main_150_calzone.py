@@ -739,7 +739,7 @@ class bi_lstm_scratch:
                     if total_count % 500 == 0:  # Reduced frequency
                         print(f"Processed {total_count} lines...")
 
-                print(f"tcr at instance {line.strip()} is {total_cumulative_rr}")
+                print(f"tcr at instance {line.strip()} is {total_cumulative_rr} for line {total_count}")
 
         time_spent = time.time() - start_time
         result_file = os.path.join(result_path, f"kenlm_results_file_{os.path.basename(filename)}.txt")
