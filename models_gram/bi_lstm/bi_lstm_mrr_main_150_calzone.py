@@ -680,6 +680,77 @@ class bi_lstm_scratch:
             #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
     
+   
+
+    def evaluate_bilstm_mrr_single_file_final_opti(self, filename, maxlen, model_path, result_path):
+        """
+        Evaluate the MRR for a single file.
+        Save the total reciprocal rank and total lines for each file to a text file.
+        """
+
+        # Load the model once
+        ld = load_model(model_path, compile=False)
+    
+        # Load the tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+    
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+
+        total_cumulative_rr = 0
+        total_count = 0
+
+        start_time = time.time()
+
+        # Process each line in the file
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                for idx in range(1, len(sentence_tokens)):
+                    context = " ".join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx].strip()
+
+                    # Compute scores for tokens
+                    predictions = {}
+                    for token in vocab:
+                        predictions[token] = self.predict_token_score(context, token, tokenz, ld, maxlen)
+                
+                    # Get top 10 tokens based on scores
+                    top_tokens = sorted(predictions.items(), key=lambda x: x[1], reverse=True)[:10]
+
+                    # Calculate token ranks
+                    token_ranks = {t: rank + 1 for rank, (t, _) in enumerate(top_tokens)}
+
+                    # Compute reciprocal rank
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        total_cumulative_rr += 1 / rank
+
+                    total_count += 1
+                    if total_count % 500 == 0:  # Reduced frequency
+                        print(f"Processed {total_count} lines...")
+
+                print(f"tcr at instance {line.strip()} is {total_cumulative_rr}")
+
+        time_spent = time.time() - start_time
+        result_file = os.path.join(result_path, f"kenlm_results_file_{os.path.basename(filename)}.txt")
+
+        with open(result_file, "a") as rf:
+            rf.write(f"File name: {filename}\n")
+            rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+            rf.write(f"Total Lines: {total_count}\n")
+            rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+
     def evaluate_bilstm_mrr_single_file(self, filename, maxlen, model, result_path):
         """
         Evaluate the MRR for a single file.
@@ -1061,7 +1132,7 @@ class bi_lstm_scratch:
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
-cl_ob.evaluate_bilstm_mrr_single_file_final("/home/siwuchuk/thesis_project/testfiles_split/scratch_test_data_chunk_1.txt",43,"/home/siwuchuk/thesis_project/models_150_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project150_run1.keras","/home/siwuchuk/thesis_project/models_150_projects_conf/")
+cl_ob.evaluate_bilstm_mrr_single_file_final_opti("/home/siwuchuk/thesis_project/testfiles_split/scratch_test_data_chunk_1.txt",43,"/home/siwuchuk/thesis_project/models_150_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project150_run1.keras","/home/siwuchuk/thesis_project/models_150_projects_conf/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
