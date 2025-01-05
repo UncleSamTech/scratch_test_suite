@@ -665,7 +665,7 @@ class bi_lstm_scratch:
                     if total_count % 100 == 0:
                         print(f"Processed {total_count} lines...")
             
-            
+                print(f"tcr at instance  {line} is {total_cumulative_rr}")
 
             # Calculate total RR and lines for the file
             time_spent = time.time() - start_time
