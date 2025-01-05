@@ -16,6 +16,7 @@ from random import sample
 import seaborn as sns
 import numpy as np
 import pandas as pd
+from multiprocessing import Pool
 import re
 
 
@@ -248,6 +249,68 @@ class scratch_train_mle:
 
             print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
+
+
+    def compute_scores_parallel(self,args):
+        model_name, token, context = args
+        # Compute score using the model
+        return token, self.compute_score(model_name, token, context)
+
+    def evaluate_mrr_nltk_opt(self, model_name, result_path, split_folder, proj_number):
+        eval_files = ["scratch_test_data_chunk_1.txt", "scratch_test_data_chunk_10.txt"]
+        os.makedirs(result_path, exist_ok=True)
+        all_vocab = self.extract_vocabulary_nltk(model_name) 
+
+        for split_file in sorted(os.listdir(split_folder)):
+            
+            if split_file.strip() in eval_files:
+                continue
+            split_file_path = os.path.join(split_folder, split_file)
+            if not os.path.isfile(split_file_path):
+                continue
+
+            
+        
+            total_cumulative_rr = 0
+            total_count = 0
+
+            start_time = time.time()
+
+            with open(split_file_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    if not line.strip():
+                        continue
+
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
+
+                    for idx in range(1, len(sentence_tokens)):
+                        context = " ".join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx].strip()
+
+                        with Pool(processes=4) as pool:  # Parallel processing
+                            results = pool.map(self.compute_scores_parallel, [(model_name, token, context) for token in all_vocab])
+
+                        # Extract top tokens
+                        heap = heapq.nlargest(10, results, key=lambda x: x[1])
+                        token_ranks = {t: rank + 1 for rank, (t, _) in enumerate(heap)}
+
+                        rank = token_ranks.get(true_next_word, 0)
+                        if rank:
+                            total_cumulative_rr += 1 / rank
+
+                        total_count += 1
+
+            time_spent = time.time() - start_time
+            result_file = os.path.join(result_path, f"nltk_rr_results_{proj_number}_order.txt")
+            with open(result_file, "a") as rf:
+                rf.write(f"File name: {split_file}\n")
+                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                rf.write(f"Total Lines: {total_count}\n")
+                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
 
     
@@ -622,7 +685,7 @@ tr_scr = scratch_train_mle()
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
-tr_scr.evaluate_mrr_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf50/scratch_trained_model_nltk_50_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf50/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","50")
+tr_scr.evaluate_mrr_nltk_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf50/scratch_trained_model_nltk_50_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf50/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","50")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
