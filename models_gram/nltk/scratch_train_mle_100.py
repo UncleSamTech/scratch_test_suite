@@ -263,8 +263,8 @@ class scratch_train_mle:
 
         for split_file in sorted(os.listdir(split_folder)):
             
-            if split_file.strip() in eval_files:
-                continue
+            # if split_file.strip() in eval_files:
+            #     continue
             split_file_path = os.path.join(split_folder, split_file)
             if not os.path.isfile(split_file_path):
                 continue
