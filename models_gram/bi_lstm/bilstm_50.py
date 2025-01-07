@@ -16,6 +16,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from datetime import datetime
 from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_score,confusion_matrix
 import pickle
+import re
 import time
 from sklearn.utils.class_weight import compute_class_weight
 import seaborn as sns
@@ -257,8 +258,26 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
+        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras"]
+
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
+        print(all_models)
+        
+        if all_models:
+            for model in all_models:
+                
+                match = re.search(r"run(\d+)",model.strip())
+
+                if match:
+                    run = match.group(1)
+                    model = os.path.join(result_path,model).strip()
+
+                    self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
+
        
-        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        #self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,time_spent,run)
+        
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -354,7 +373,7 @@ class bi_lstm_scratch:
         y_true = []
         y_pred = []
         tokenz = None
-        #loaded_model = load_model(f"{model_path}",compile=False)
+        loaded_model = load_model(f"{model}",compile=False)
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
             
@@ -379,7 +398,7 @@ class bi_lstm_scratch:
                     context = ' '.join(sentence_tokens[:idx])  
                     true_next_word = sentence_tokens[idx]
 
-                    predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
+                    predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
                 
                 
             
@@ -680,7 +699,7 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf_order/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
