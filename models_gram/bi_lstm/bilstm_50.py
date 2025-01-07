@@ -41,7 +41,7 @@ class bi_lstm_scratch:
             random.shuffle(lines)
             # Replace specific characters
             lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
-            print("see lines:", lines)
+            #print("see lines:", lines)
 
             # Initialize and fit the tokenizer
             self.tokenizer = Tokenizer(oov_token='<oov>')
@@ -258,9 +258,9 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
-        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras"]
+        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project50_run1.keras"]
 
-        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files not in av])
         print(all_models)
         
         if all_models:
