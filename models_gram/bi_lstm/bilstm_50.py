@@ -258,7 +258,7 @@ class bi_lstm_scratch:
         padd_seq,max_len = self.pad_sequ(input_seq)
         xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
-        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project50_run1.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project50_run2.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project50_run3.keras"]
+        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project50_run1.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project50_run2.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project50_run3.keras","main_bilstm_scratch_model_150embedtime1_main_sample_project50_run4.keras"]
 
         all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files not in av])
         print(all_models)
