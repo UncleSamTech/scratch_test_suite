@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import numpy as np
 import random
 import tensorflow as tf
@@ -18,12 +19,10 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score,f1_sco
 import pickle
 import time
 from sklearn.utils.class_weight import compute_class_weight
+import heapq
 from random import sample
 import seaborn as sns
-from concurrent.futures import ProcessPoolExecutor
-import heapq
-import cProfile
-import pstats
+
 
 
 class bi_lstm_scratch:
@@ -45,7 +44,7 @@ class bi_lstm_scratch:
             #shuffle trainset every run
             random.shuffle(lines)
             # Replace specific characters
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
+            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG") for line in lines]
             print("see lines:", lines)
 
             # Initialize and fit the tokenizer
@@ -258,16 +257,14 @@ class bi_lstm_scratch:
         #print(model)
         #return val
 
-    def consolidate_data_train(self,result_path,test_data,proj_number,model_name):
-        #input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        #padd_seq,max_len = self.pad_sequ(input_seq)
-        #xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        #ytrue,ypred = self.evaluate_bilstm(test_data,max_len,model_name,result_path,proj_number,"0")
-        #self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,1)
+    def consolidate_data_train(self,filepath,result_path,test_data,proj_number,model_name):
+        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
+        padd_seq,max_len = self.pad_sequ(input_seq)
+        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         #self.evaluate_bilstm_mrr_single_main2(test_data,39,model_name,result_path,proj_number)
-        self.evaluate_bilstm_mrr_chunked_new(test_data,39,model_name,result_path,proj_number)
+        #self.evaluate_bilstm_mrr_single(test_data,max_len,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras",result_path,proj_number)
        
-        #self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
         #print(history)
         
         #self.train_model_again(model_name,result_path,xs,ys)
@@ -298,8 +295,7 @@ class bi_lstm_scratch:
         y_true = []
         y_pred = []
         tokenz = None
-        model_path = f"{result_path}{model}"
-        loaded_model = load_model(f"{model_path}",compile=False)
+        #loaded_model = load_model(f"{model_path}",compile=False)
         with open(f"{result_path}tokenized_file_50embedtime1.pickle","rb") as tk:
             tokenz = pickle.load(tk)
             
@@ -322,7 +318,7 @@ class bi_lstm_scratch:
                 context = ' '.join(sentence_tokens[:-1])  # Use all words except the last one as context
                 true_next_word = sentence_tokens[-1].lower()
 
-                predicted_next_word = self.predict_token(context,tokenz,loaded_model,maxlen)
+                predicted_next_word = self.predict_token(context,tokenz,model,maxlen)
                 
                 
             
@@ -465,20 +461,20 @@ class bi_lstm_scratch:
         print("max length",max_seq)
         
         
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        if gpus:
-            print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
+        # gpus = tf.config.experimental.list_physical_devices('GPU')
+        # if gpus:
+        #     print(f"Default GPU device: {gpus[0]}")
+        #     try:
+        #         for gpu in gpus:
+        #             tf.config.experimental.set_memory_growth(gpu, True)
+        #         print(f"Using GPU: {tf.test.gpu_device_name()}")
 
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
+        #     except RuntimeError as e:
+        #         print(f"Error setting up GPU: {e}")
+        #         return
 
-        else:
-            print("No GPU available. Running on CPU.")
+        # else:
+        #     print("No GPU available. Running on CPU.")
 
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
@@ -510,7 +506,6 @@ class bi_lstm_scratch:
             # Fit the model
             history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
-            
             # Save the history
             with open(f"{result_path}main_historyrec_150embedtime{run}.pickle", "wb") as hs:
                 pickle.dump(history.history, hs)
@@ -523,43 +518,31 @@ class bi_lstm_scratch:
 
             # Save the model and record training details
             #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
-            #self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
+            self.evaluate_bilstm_mrr_chunked(test_data,max_seq,model,result_path,proj_number,time_spent)
             ytrue,ypred = self.evaluate_bilstm(test_data,max_seq,model,result_path,proj_number,time_spent)
             self.compute_confusion_matrix(ytrue,ypred,result_path,total_words,run)
             #model.save(model_file_name)
 
     def predict_token_score(self, context, token, tokenz, model, maxlen):
+        #token_list = tokenz.texts_to_sequences([context])
         # Early check for out-of-vocabulary token
-        LOW_SCORE =  -1
-        token_index = tokenz.word_index.get(token, LOW_SCORE)
-        if token_index == LOW_SCORE:
-            return LOW_SCORE  # Assign low score for out-of-vocabulary token
+        if token not in tokenz.word_index:
+            return -1  # Assign low score for empty contexts
 
-        # Tokenize context
-        context_sequence = tokenz.texts_to_sequences([context])[0]
-        if not context_sequence or not context_sequence[0]:
-            raise ValueError("Context could not be tokenized correctly.")
-
-        # Append token index to context
-        token_value = context_sequence + [token_index]
-
+        # Tokenize the context and the token
+        context_seq = tokenz.texts_to_sequences([context])[0]
+        token_idx = tokenz.word_index[token]
         # Ensure the input is the correct length
-        # if len(token_value) < maxlen - 1:
-        #     token_value = [0] * (maxlen - 1 - len(token_value)) + token_value
-        # else:
-        #     token_value = token_value[-(maxlen-1):]
-        
-        token_value = pad_sequences([token_value], maxlen=maxlen-1, padding='pre', truncating='pre')[0]
+        if len(context_seq) < maxlen - 1:
+            context_seq = pad_sequences([context_seq], maxlen=maxlen-1, padding="pre")[0]
+        else:
+            context_seq = context_seq[-(maxlen-1):]
 
-        # Prepare input as a list
-        padded_in_seq = [token_value]
-
+         # Convert to a NumPy array (TensorFlow can process this directly)
+        padded_in_seq = np.array([context_seq])
         # Model prediction
-        prediction = model.predict(padded_in_seq, verbose=2)
-        if len(prediction[0]) == 0:
-            raise ValueError("Prediction output is empty.")
-        return prediction[0][-1]  # Score of the token
-
+        prediction = model.predict(padded_in_seq, verbose=0)[0]
+        return prediction[token_idx]  # Score of the token  
 
     def evaluate_bilstm_mrr(self, test_data, maxlen, model, result_path, proj_number, train_time):
         tokenz = None
@@ -618,6 +601,243 @@ class bi_lstm_scratch:
         print(f"MRR: {mrr}")
         return mrr  
             
+
+    def evaluate_bilstm_mrr_single_file_final(self, filename, maxlen, model, result_path):
+        """
+        Evaluate the MRR for a single file.
+        Save the total reciprocal rank and total lines for each file to a text file.
+        """
+
+        ld = load_model(model,compile=False)
+        # Load the tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+    
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+
+        # # Process each file in the split folder
+        # for split_file in sorted(os.listdir(split_folder)):
+        #     split_file_path = os.path.join(split_folder, split_file)
+        #     if not os.path.isfile(split_file_path):
+        #         continue
+
+        total_cumulative_rr = 0
+        total_count = 0
+        # profiler = cProfile.Profile()
+        # profiler.enable()
+
+        start_time = time.time()
+
+            # Process each line in the file
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                # Preprocess the line
+                #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+                for idx in range(1, len(sentence_tokens)):
+                    context = " ".join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    # Compute scores for tokens
+                    top_tokens = []
+                    predictions = {token: self.predict_token_score(context, token, tokenz, ld, maxlen) for token in vocab}
+                    top_tokens = sorted(predictions.items(), key=lambda x: x[1], reverse=True)[:10]
+
+                    # Token ranks
+                    token_ranks = {t: rank + 1 for rank, (t, _) in enumerate(top_tokens)}
+
+                    # Compute reciprocal rank
+                    true_next_word = true_next_word.strip()
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        current_rank = 1 / rank
+                        total_cumulative_rr += current_rank
+
+                    total_count += 1
+                    if total_count % 100 == 0:
+                        print(f"Processed {total_count} lines...")
+            
+                print(f"tcr at instance  {line} is {total_cumulative_rr}")
+
+            # Calculate total RR and lines for the file
+            time_spent = time.time() - start_time
+            result_file = os.path.join(result_path, f"kenlm_results_file_{filename}.txt")
+
+            with open(result_file, "a") as rf:
+                rf.write(f"File name : {filename}\n")
+                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                rf.write(f"Total Lines: {total_count}\n")
+                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+            #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+
+    
+   
+
+    def evaluate_bilstm_mrr_single_file_final_opti(self, filename, maxlen, model_path, result_path):
+        """
+        Evaluate the MRR for a single file.
+        Save the total reciprocal rank and total lines for each file to a text file.
+        """
+
+        # Load the model once
+        ld = load_model(model_path, compile=False)
+    
+        # Load the tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+    
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+
+        total_cumulative_rr = 0
+        total_count = 0
+
+        start_time = time.time()
+
+        # Process each line in the file
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                for idx in range(1, len(sentence_tokens)):
+                    context = " ".join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx].strip()
+
+                    # Compute scores for tokens
+                    predictions = {}
+                    for token in vocab:
+                        predictions[token] = self.predict_token_score(context, token, tokenz, ld, maxlen)
+                
+                    # Get top 10 tokens based on scores
+                    top_tokens = sorted(predictions.items(), key=lambda x: x[1], reverse=True)[:10]
+
+                    # Calculate token ranks
+                    token_ranks = {t: rank + 1 for rank, (t, _) in enumerate(top_tokens)}
+
+                    # Compute reciprocal rank
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        total_cumulative_rr += 1 / rank
+
+                    total_count += 1
+                    if total_count % 500 == 0:  # Reduced frequency
+                        print(f"Processed {total_count} lines...")
+
+                print(f"tcr at instance {line.strip()} is {total_cumulative_rr} for line {total_count}")
+
+        time_spent = time.time() - start_time
+        result_file = os.path.join(result_path, f"kenlm_results_file_{os.path.basename(filename)}.txt")
+
+        with open(result_file, "a") as rf:
+            rf.write(f"File name: {filename}\n")
+            rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+            rf.write(f"Total Lines: {total_count}\n")
+            rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+
+    def evaluate_bilstm_mrr_single_file(self, filename, maxlen, model, result_path):
+        """
+        Evaluate the MRR for a single file.
+        Save the total reciprocal rank and total lines for each file to a text file.
+        """
+
+        ld = load_model(model,compile=False)
+        # Load the tokenizer
+        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        vocab = list(tokenz.word_index.keys())
+    
+        # Ensure result path exists
+        os.makedirs(result_path, exist_ok=True)
+
+        # # Process each file in the split folder
+        # for split_file in sorted(os.listdir(split_folder)):
+        #     split_file_path = os.path.join(split_folder, split_file)
+        #     if not os.path.isfile(split_file_path):
+        #         continue
+
+        total_cumulative_rr = 0
+        total_count = 0
+        # profiler = cProfile.Profile()
+        # profiler.enable()
+
+        start_time = time.time()
+
+            # Process each line in the file
+        with open(filename, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+
+                # Preprocess the line
+                #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+                for idx in range(1,len(sentence_tokens)):
+                    context = " ".join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    # Compute scores for tokens
+                    heap = []
+                    for token in vocab:
+                        context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
+                        if len(heap) < 10:
+                            heapq.heappush(heap, (context_score, token))
+                        elif context_score > heap[0][0]:
+                            heapq.heappushpop(heap, (context_score, token))
+
+                    heap.sort(reverse=True, key=lambda x: x[0])
+                    token_ranks = {t: rank + 1 for rank, (_, t) in enumerate(heap)}
+
+                    # Compute reciprocal rank
+                    true_next_word = true_next_word.strip()
+                    rank = token_ranks.get(true_next_word, 0)
+                    if rank:
+                        current_rank = 1 / rank
+                        total_cumulative_rr += current_rank
+                
+                    total_count += 1
+                    print(f"processed {total_count} line(s) for sentence {line} with tcr {total_cumulative_rr}")
+            
+            #     profiler.disable()
+
+            # # Save profiling results to a file
+            # profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
+            # with open(profile_file, "w") as pf:
+            #     stats = pstats.Stats(profiler, stream=pf)
+            #     stats.sort_stats('cumulative')
+            #     stats.print_stats()
+
+            # Calculate total RR and lines for the file
+            time_spent = time.time() - start_time
+            result_file = os.path.join(result_path, f"kenlm_results_file_{filename}.txt")
+
+            with open(result_file, "a") as rf:
+                rf.write(f"File name : {filename}\n")
+                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
+                rf.write(f"Total Lines: {total_count}\n")
+                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
+
+            #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
+
     def evaluate_bilstm_mrr_single(self, test_data, maxlen, model, result_path, proj_number):
         tokenz = None
         loaded_model = load_model(model,compile=False)
@@ -827,7 +1047,7 @@ class bi_lstm_scratch:
                     continue
 
                 context = " ".join(sentence_tokens[:-1])
-                true_next_word = sentence_tokens[-1]
+                true_next_word = sentence_tokens[-1].lower()
 
                 heap = []
                 for token in vocab:
@@ -837,22 +1057,17 @@ class bi_lstm_scratch:
                     elif context_score > heap[0][0]:
                         heapq.heappushpop(heap, (context_score, token))
 
-                print(f"length of heap for sample {line} is {len(heap)}")
                 heap.sort(reverse=True, key=lambda x: x[0])
                 token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
 
-                true_next_word = true_next_word.strip()
-                rank = token_ranks.get(true_next_word, 0)
+                rank = token_ranks.get(true_next_word.strip(), 0)
                 if rank:
-                    current_rank = 1 / rank
-                    total_cumulative_rr += current_rank
+                    total_cumulative_rr += 1 / rank
                 total_count += 1
 
         # Read and process file in chunks
         with open(test_data, "r", encoding="utf-8") as f:
             for i, line in enumerate(f):
-                if i == 4000:
-                    print(f"4000 lines processed")
                 current_chunk.append(line)
                 if len(current_chunk) >= chunk_size:
                     process_chunk(current_chunk)
@@ -876,258 +1091,7 @@ class bi_lstm_scratch:
 
         return mrr
     
-    
-
-
-    def evaluate_bilstm_mrr_per_file(self, split_folder, maxlen, model, result_path):
-        """
-        Evaluate the MRR for each split file in the provided folder.
-        Save the total reciprocal rank and total lines for each file to a text file.
-        """
-
-        ld = load_model(model,compile=False)
-        # Load the tokenizer
-        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
-            tokenz = pickle.load(tk)
-
-        vocab = list(tokenz.word_index.keys())
-    
-        # Ensure result path exists
-        os.makedirs(result_path, exist_ok=True)
-
-        # Process each file in the split folder
-        for split_file in sorted(os.listdir(split_folder)):
-            split_file_path = os.path.join(split_folder, split_file)
-            if not os.path.isfile(split_file_path):
-                continue
-
-            total_cumulative_rr = 0
-            total_count = 0
-            profiler = cProfile.Profile()
-            profiler.enable()
-
-            start_time = time.time()
-
-            # Process each line in the file
-            with open(split_file_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    if not line.strip():
-                        continue
-
-                    # Preprocess the line
-                    #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
-                    sentence_tokens = line.split(" ")
-                    if len(sentence_tokens) < 2:
-                        continue
-
-                    context = " ".join(sentence_tokens[:-1])
-                    true_next_word = sentence_tokens[-1]
-
-                    # Compute scores for tokens
-                    heap = []
-                    for token in vocab:
-                        context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
-                        if len(heap) < 10:
-                            heapq.heappush(heap, (context_score, token))
-                        elif context_score > heap[0][0]:
-                            heapq.heappushpop(heap, (context_score, token))
-
-                    heap.sort(reverse=True, key=lambda x: x[0])
-                    token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(heap)}
-
-                    # Compute reciprocal rank
-                    true_next_word = true_next_word.strip()
-                    rank = token_ranks.get(true_next_word, 0)
-                    if rank:
-                        current_rank = 1 / rank
-                        total_cumulative_rr += current_rank
-                        print(f"processed line  context {context} with rank {current_rank} and tcr {total_cumulative_rr}")
-                    total_count += 1
-            
-            profiler.disable()
-
-            # Save profiling results to a file
-            profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
-            with open(profile_file, "w") as pf:
-                stats = pstats.Stats(profiler, stream=pf)
-                stats.sort_stats('cumulative')
-                stats.print_stats()
-
-            # Calculate total RR and lines for the file
-            time_spent = time.time() - start_time
-            result_file = os.path.join(result_path, f"{os.path.splitext(split_file)[0]}_results.txt")
-
-            with open(result_file, "a") as rf:
-                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-                rf.write(f"Total Lines: {total_count}\n")
-                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
-
-            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
-
-
-
-    def evaluate_bilstm_mrr_single_file(self, filename, maxlen, model, result_path):
-        """
-        Evaluate the MRR for a single file.
-        Save the total reciprocal rank and total lines for each file to a text file.
-        """
-
-        ld = load_model(model,compile=False)
-        # Load the tokenizer
-        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
-            tokenz = pickle.load(tk)
-
-        vocab = list(tokenz.word_index.keys())
-    
-        # Ensure result path exists
-        os.makedirs(result_path, exist_ok=True)
-
-        # # Process each file in the split folder
-        # for split_file in sorted(os.listdir(split_folder)):
-        #     split_file_path = os.path.join(split_folder, split_file)
-        #     if not os.path.isfile(split_file_path):
-        #         continue
-
-        total_cumulative_rr = 0
-        total_count = 0
-        # profiler = cProfile.Profile()
-        # profiler.enable()
-
-        start_time = time.time()
-
-            # Process each line in the file
-        with open(filename, "r", encoding="utf-8") as f:
-            for line in f:
-                if not line.strip():
-                    continue
-
-                # Preprocess the line
-                #line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
-                sentence_tokens = line.split(" ")
-                if len(sentence_tokens) < 2:
-                    continue
-                for idx in range(1,len(sentence_tokens)):
-                    context = " ".join(sentence_tokens[:idx])
-                    true_next_word = sentence_tokens[idx]
-
-                    # Compute scores for tokens
-                    heap = []
-                    for token in vocab:
-                        context_score = self.predict_token_score(context, token, tokenz, ld, maxlen)
-                        if len(heap) < 10:
-                            heapq.heappush(heap, (context_score, token))
-                        elif context_score > heap[0][0]:
-                            heapq.heappushpop(heap, (context_score, token))
-
-                    heap.sort(reverse=True, key=lambda x: x[0])
-                    token_ranks = {t: rank + 1 for rank, (_, t) in enumerate(heap)}
-
-                    # Compute reciprocal rank
-                    true_next_word = true_next_word.strip()
-                    rank = token_ranks.get(true_next_word, 0)
-                    if rank:
-                        current_rank = 1 / rank
-                        total_cumulative_rr += current_rank
-                
-                    total_count += 1
-                    print(f"processed {total_count} line(s) for sentence {line} with rank {current_rank} and tcr {total_cumulative_rr}")
-            
-            #     profiler.disable()
-
-            # # Save profiling results to a file
-            # profile_file = os.path.join(result_path, f"evalmrrvisib.prof")
-            # with open(profile_file, "w") as pf:
-            #     stats = pstats.Stats(profiler, stream=pf)
-            #     stats.sort_stats('cumulative')
-            #     stats.print_stats()
-
-            # Calculate total RR and lines for the file
-            time_spent = time.time() - start_time
-            result_file = os.path.join(result_path, f"kenlm_results_file_{filename}.txt")
-
-            with open(result_file, "a") as rf:
-                rf.write(f"File name : {filename}\n")
-                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-                rf.write(f"Total Lines: {total_count}\n")
-                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
-
-            #print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
-
-
-    
-    def evaluate_bilstm_mrr_chunked_new(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
-        ld = load_model(model,compile=False)
-        # Load tokenizer
-        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
-            tokenz = pickle.load(tk)
-
-        vocab = list(tokenz.word_index.keys())
-        total_cumulative_rr = 0
-        total_count = 0
-
-        start_time = time.time()
-        trans_table = str.maketrans({"_": "UNDERSCORE", ">": "RIGHTANG", "<": "LEFTANG"})
-
-        def process_chunk(chunk):
-            nonlocal total_cumulative_rr, total_count
-            for line in chunk:
-                line = line.strip().translate(trans_table).lower()
-                if not line or len(line.split()) < 2:
-                    continue
-
-                sentence_tokens = line.split(" ")
-                context, true_next_word = " ".join(sentence_tokens[:-1]), sentence_tokens[-1]
-
-                # Prepare batch input
-                scores = []
-                for token in vocab:
-                    scores.append(self.predict_token_score(context, token, tokenz, ld, maxlen))
-
-                # Rank tokens
-                top_tokens = sorted(zip(scores, vocab), reverse=True)[:10]
-                token_ranks = {token: rank + 1 for rank, (_, token) in enumerate(top_tokens)}
-
-                # Calculate reciprocal rank
-                true_next_word = true_next_word.strip()
-                rank = token_ranks.get(true_next_word, 0)
-                if rank:
-                    total_cumulative_rr += 1 / rank
-                total_count += 1
-
-        # Process test data in chunks
-        with open(test_data, "r", encoding="utf-8") as f:
-            chunk = []
-            for i, line in enumerate(f):
-                chunk.append(line)
-                if len(chunk) >= chunk_size:
-                    process_chunk(chunk)
-                    chunk = []
-                    print(f"Processed {i + 1} lines.")
-
-            if chunk:
-                process_chunk(chunk)
-
-        # Compute MRR
-        if total_count == 0:
-            print("No valid evaluations.")
-            return 0
-
-        mrr = total_cumulative_rr / total_count
-        print(f"Total MRR: {mrr}")
-        time_spent = time.time() - start_time
-
-        # Write metrics
-        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
-        os.makedirs(result_path, exist_ok=True)
-        with open(metrics_file, "a") as blm:
-            if os.path.getsize(metrics_file) == 0:
-                blm.write("MRR,Evaluation_Time\n")
-            blm.write(f"{mrr},{time_spent:.2f}\n")
-
-        return mrr
-
-    
-    def compute_confusion_matrix(self, y_true, y_pred, result_path, total_words, run, top_k=10):
+    def compute_confusion_matrix(self, y_true, y_pred, result_path, run, top_k=10):
         # Compute confusion matrix
         print("\nComputing Confusion Matrix...")
     
@@ -1164,108 +1128,21 @@ class bi_lstm_scratch:
         plt.savefig(f"{result_path}confusion_matrix_run_an2{run}.pdf")
         plt.close()
 
-    def evaluate_bilstm_mrr_chunked_optimized(self, test_data, maxlen, model, result_path, proj_number, chunk_size=4000):
-        with open(os.path.join(result_path, "tokenized_file_50embedtime1.pickle"), "rb") as tk:
-            tokenz = pickle.load(tk)
-
-        vocab = list(tokenz.word_index.keys())
-        total_cumulative_rr = 0
-        total_count = 0
-        start_time = time.time()
-
-        def process_chunk(chunk):
-            nonlocal total_cumulative_rr, total_count
-            for line in chunk:
-                if not line.strip():
-                    continue
-
-                line = line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower()
-                sentence_tokens = line.split(" ")
-                if len(sentence_tokens) < 2:
-                    continue
-
-                context = " ".join(sentence_tokens[:-1])
-                true_next_word = sentence_tokens[-1]
-
-                # Compute heap with optimized nlargest
-                heap = []
-                for token in vocab:
-                    #compute score for each token
-                    context_score = self.predict_token_score(context, token, tokenz, model, maxlen)
-
-                    #keep pushing context score and token to heap till heap size is 10 
-                    if len(heap) < 10:
-                        heapq.heappush(heap, (context_score, token))
-                    #check if the next context score is larger than the smallest element in the heap and replace it since we want to maintain top k
-                    elif context_score > heap[0][0]:
-                        heapq.heappushpop(heap, (context_score, token))
-
-                top_tokens = heapq.nlargest(10, heap, key=lambda x: x[0])
-                token_ranks = {t: rank + 1 for rank, (score, t) in enumerate(top_tokens)}
-
-                rank = token_ranks.get(true_next_word.strip(), 0)
-                if rank:
-                    total_cumulative_rr += 1 / rank
-                total_count += 1
-
-        with ProcessPoolExecutor() as executor:
-            futures = []
-            current_chunk = []
-
-            with open(test_data, "r", encoding="utf-8") as f:
-                for i, line in enumerate(f):
-                    current_chunk.append(line)
-                    if len(current_chunk) >= chunk_size:
-                        futures.append(executor.submit(process_chunk, current_chunk))
-                        current_chunk = []
-
-                if current_chunk:
-                    futures.append(executor.submit(process_chunk, current_chunk))
-
-            for future in futures:
-                future.result()
-
-        mrr = total_cumulative_rr / total_count if total_count > 0 else 0
-        time_spent = time.time() - start_time
-
-        metrics_file = os.path.join(result_path, f"bilstm_mrr_metrics_{proj_number}.txt")
-        os.makedirs(result_path, exist_ok=True)
-        with open(metrics_file, "a") as blm:
-            if os.path.getsize(metrics_file) == 0:
-                blm.write("MRR,Evaluation_Time\n")
-            blm.write(f"{mrr},{time_spent:.2f}\n")
-
-        return mrr
-
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
 #cl_ob.consolidate_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_test_data_10.txt","bilstm_scratch_model_100embedtime2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/bi_lstm/results/results2/")
-
+cl_ob.evaluate_bilstm_mrr_single_file_final_opti("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_1.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.evaluate_bilstm_mrr_single("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/main_bilstm_scratch_model_150embedtime1_main_2.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/","10")
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras")
+#cl_ob.consolidate_data_train("/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_train_data_150_projects.txt","/home/siwuchuk/thesis_project/models_150_projects_mrr/","/home/siwuchuk/thesis_project/scratch_test_suite/datasets/scratch_test_data_20.txt","150","/home/siwuchuk/thesis_project/models_150_projects/tokenized_file_50embedtime1.pickle")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
-#cl_ob.evaluate_bilstm_mrr_per_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_1.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_2.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_3.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_4.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_5.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_6.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_7.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_8.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_9.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_10.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_11.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_11.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_12.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_13.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
-# cl_ob.evaluate_bilstm_mrr_single_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split/scratch_test_data_chunk_14.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/")
+
+
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
