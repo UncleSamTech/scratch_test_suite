@@ -257,14 +257,14 @@ class scratch_train_mle:
         return token, self.compute_score(model_name, token, context)
 
     def evaluate_mrr_nltk_opt(self, model_name, result_path, split_folder, proj_number):
-        eval_files = ["scratch_test_data_chunk_1.txt", "scratch_test_data_chunk_10.txt"]
+        eval_files = ["scratch_test_data_chunk_1.txt", "scratch_test_data_chunk_10.txt","scratch_test_data_chunk_11.txt","scratch_test_data_chunk_12.txt"]
         os.makedirs(result_path, exist_ok=True)
         all_vocab = self.extract_vocabulary_nltk(model_name) 
 
         for split_file in sorted(os.listdir(split_folder)):
             
-            #if split_file.strip() in eval_files:
-                #continue
+            if split_file.strip() in eval_files:
+                continue
             split_file_path = os.path.join(split_folder, split_file)
             if not os.path.isfile(split_file_path):
                 continue
