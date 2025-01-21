@@ -509,7 +509,7 @@ class kenlm_train:
                             predicted_next_word,top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
                             rank,correct_status = self.check_available_rank(top_10_tokens,true_next_word)
                             with open(investig_path,"a") as inv_path_file:
-                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{correct_status}")
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{correct_status} \n")
                             y_true.append(true_next_word)
                             y_pred.append(predicted_next_word)
 
