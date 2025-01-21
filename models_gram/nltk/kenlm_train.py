@@ -450,23 +450,8 @@ class kenlm_train:
         # Get vocab and model files
         vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
         model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
-        ytrue_path = f"{new_log_path}/ytrue.csv"
-        ypred_path = f"{new_log_path}/ypred.csv"
+     
 
-        if not os.path.exists(ytrue_path) or os.path.getsize(ytrue_path) == 0:
-            with open(ytrue_path,"a") as yt:
-                yt.write(f"ytrue \n")
-        
-        if not os.path.exists(ypred_path) or os.path.getsize(ypred_path) == 0:
-            with open(ypred_path,"a") as yp:
-                yp.write(f"ypred \n")
-
-        investig_path = f"{new_log_path}/investigate.csv"
-        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
-            with open(investig_path,"a") as ip:
-                ip.write(f"query,expected,answer,rank,correct \n")
-
-    
         # Match vocab and model files by order number
         vocab_model_pairs = []
         for vocab in vocab_files:
@@ -481,6 +466,7 @@ class kenlm_train:
         for vocab_name, model_name in vocab_model_pairs:
             vocab_path = os.path.join(vocab_folder, vocab_name)
             match =  re.search(r"order(\d+)", vocab_path)
+            ngram = match.group(1)
             model_path = os.path.join(model_folder, model_name)
             print(f"model  {model_path} vocab {vocab_path}")
             # Load the language model
@@ -508,16 +494,16 @@ class kenlm_train:
                             true_next_word = sentence_tokens[idx]
                             predicted_next_word,top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
                             rank = self.check_available_rank(top_10_tokens,true_next_word)
-                            with open(investig_path,"a") as inv_path_file:
-                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0} \n")
-                            y_true.append(true_next_word)
-                            y_pred.append(predicted_next_word)
 
-                            with open(ytrue_path,"a") as ytr:
-                                ytr.write(f"{y_true} \n")
+                            investig_path = f"{new_log_path}/investigate_{ngram}_{proj_number}.csv"
+                            if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                                with open(investig_path,"a") as ip:
+                                    ip.write(f"query,expected,answer,rank,correct,run_number \n")
+                            with open(investig_path,"a") as inv_path_file:
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}, {each_run} \n")
                             
-                            with open(ypred_path,"a") as ypr:
-                                ypr.write(f"{y_pred} \n")
+
+                            
 
 
                 # end_time = time.time()
