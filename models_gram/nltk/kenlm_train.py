@@ -453,11 +453,11 @@ class kenlm_train:
         ytrue_path = f"{new_log_path}/ytrue.csv"
         ypred_path = f"{new_log_path}/ypred.csv"
 
-        if not os.path(ytrue_path) or os.path.getsize(ytrue_path) == 0:
+        if not os.path.exists(ytrue_path) or os.path.getsize(ytrue_path) == 0:
             with open(ytrue_path,"a") as yt:
                 yt.write(f"ytrue \n")
         
-        if not os.path(ypred_path) or os.path.getsize(ypred_path) == 0:
+        if not os.path.exists(ypred_path) or os.path.getsize(ypred_path) == 0:
             with open(ypred_path,"a") as yp:
                 yp.write(f"ypred \n")
 
