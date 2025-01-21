@@ -443,8 +443,8 @@ class kenlm_train:
         for ind,val in enumerate(list_tuples):
             if true_word.strip() == val[0].strip():
                 rank = ind + 1
-                return rank,1
-        return rank,0
+                return rank
+        return rank
 
     def evaluate_all_models_in_folder_in_order_upd(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
         # Get vocab and model files
@@ -507,9 +507,9 @@ class kenlm_train:
                             context = ' '.join(sentence_tokens[:idx])
                             true_next_word = sentence_tokens[idx]
                             predicted_next_word,top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
-                            rank,correct_status = self.check_available_rank(top_10_tokens,true_next_word)
+                            rank = self.check_available_rank(top_10_tokens,true_next_word)
                             with open(investig_path,"a") as inv_path_file:
-                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{correct_status} \n")
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0} \n")
                             y_true.append(true_next_word)
                             y_pred.append(predicted_next_word)
 
