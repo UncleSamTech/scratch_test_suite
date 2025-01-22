@@ -445,6 +445,64 @@ class kenlm_train:
                 rank = ind + 1
                 return rank
         return rank
+    
+    def evaluate_all_models_in_folder_in_order_upd_norun(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
+        # Get vocab and model files
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+     
+
+        # Match vocab and model files by order number
+        vocab_model_pairs = []
+        for vocab in vocab_files:
+            vocab_order = vocab.split("order")[1].split(".")[0]
+            for model in model_files:
+                model_order = model.split("order")[1].split(".")[0]
+                if vocab_order == model_order:
+                    vocab_model_pairs.append((vocab, model))
+                    break
+
+        # Evaluate each vocab-model pair
+        for vocab_name, model_name in vocab_model_pairs:
+            vocab_path = os.path.join(vocab_folder, vocab_name)
+            match =  re.search(r"order(\d+)", vocab_path)
+            ngram = match.group(1)
+            model_path = os.path.join(model_folder, model_name)
+            print(f"model  {model_path} vocab {vocab_path}")
+            # Load the language model
+            model_rec = kenlm.Model(model_path)
+            y_true, y_pred = [], []
+        
+            start_time = time.time()
+            with open(test_data, "r", encoding="utf-8") as f:
+                    lines = f.readlines()
+                    random.shuffle(lines)
+
+                    for line in lines:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        sentence_tokens = line.split()
+                        if len(sentence_tokens) < 2:
+                            continue
+                        
+                        for idx in range(1,len(sentence_tokens)):
+                            context = ' '.join(sentence_tokens[:idx])
+                            true_next_word = sentence_tokens[idx]
+                            predicted_next_word,top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
+                            rank = self.check_available_rank(top_10_tokens,true_next_word)
+
+                            investig_path = f"{new_log_path}/kenlm_investigate_{proj_number}_{ngram}.txt"
+                            if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                                with open(investig_path,"a") as ip:
+                                    ip.write(f"query,expected,answer,rank,correct\n")
+                            with open(investig_path,"a") as inv_path_file:
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+        
+            # # Perform evaluation for each run
+            # for each_run in range(1, 6):
+                
 
     def evaluate_all_models_in_folder_in_order_upd(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
         # Get vocab and model files
@@ -951,7 +1009,7 @@ kn = kenlm_train()
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2 < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa
 
-kn.evaluate_all_models_in_folder_in_order_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10_order/new_metrics2")
+kn.evaluate_all_models_in_folder_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10_order/new_metrics2")
 #kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10","10")
 #kn.evaluate_mrr_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","10")
 #kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
