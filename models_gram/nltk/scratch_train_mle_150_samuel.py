@@ -721,7 +721,7 @@ tr_scr = scratch_train_mle()
 #print("precision parametric wilcoxon for nltk model",precision_wilcoxon)
 #f1_wilcoxon = tr_scr.wilcon_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
 #print("f1 parametric ttest for nltk model",f1_wilcoxon)
-tr_scr.scratch_evaluate_model_nltk_in_order_all_upd_norun("/mnt/siwuchuk/thesis/new/scratch_test_suite/datasets/main_proc/scratch_data_88_projects_model_test_kenlm.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150",150,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150/new_metrics")
+tr_scr.scratch_evaluate_model_nltk_in_order_all_upd_norun("/mnt/siwuchuk/thesis/another/scratch_test_suite/datasets/main_proc/scratch_data_88_projects_model_test_kenlm.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150",150,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150/new_metrics")
 
 #accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24589371980676328])
 #print("accuracy wilcoxon result for nltk model 7 - 11 vs 12 - 16 ", accuracy_wilcoxon_2)
