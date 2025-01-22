@@ -16,7 +16,6 @@ from random import sample
 import seaborn as sns
 import numpy as np
 import pandas as pd
-from multiprocessing import Pool
 import re
 
 
@@ -161,15 +160,43 @@ class scratch_train_mle:
     def predict_next_scratch_token(self,model_name,context_data):
         loaded_model = self.load_trained_model(model_name)
         scratch_next_probaility_tokens = {}
+        
 
         for prospect_token in loaded_model.vocab:
             
             scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
         
         scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
+        
+        
         #print("predicted score ", scratch_next_probaility_tokens)
         #scratch_predicted_next_token = scratch_predicted_next_token
         return scratch_predicted_next_token
+    
+    def predict_next_scratch_token_upd(self,model_name,context_data):
+        loaded_model = self.load_trained_model(model_name)
+        scratch_next_probaility_tokens = {}
+        
+
+        for prospect_token in loaded_model.vocab:
+            
+            scratch_next_probaility_tokens[prospect_token] = loaded_model.score(prospect_token,context_data.split(" "))
+        
+        scratch_predicted_next_token = max(scratch_next_probaility_tokens,key=scratch_next_probaility_tokens.get)
+        top_10_tokens_scores = sorted(scratch_next_probaility_tokens.items(), key=lambda item: item[1], reverse=True)[:10]
+        
+        #print("predicted score ", scratch_next_probaility_tokens)
+        #scratch_predicted_next_token = scratch_predicted_next_token
+        return scratch_predicted_next_token,top_10_tokens_scores
+    
+    def check_available_rank(self,list_tuples,true_word):
+        rank = -1
+
+        for ind,val in enumerate(list_tuples):
+            if true_word.strip() == val[0].strip():
+                rank = ind + 1
+                return rank
+        return rank
     
     def compute_score(self,model_name,token,context_data):
         load_model = self.load_trained_model(model_name)
@@ -213,7 +240,7 @@ class scratch_train_mle:
                     
                     for idx in range(1,len(sentence_tokens)):
                         context = " ".join(sentence_tokens[:idx])
-                        true_next_word = sentence_tokens[idx].strip()
+                        true_next_word = sentence_tokens[idx]
 
                         # Compute scores for tokens
                         heap = []
@@ -249,68 +276,6 @@ class scratch_train_mle:
 
             print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
-
-
-    def compute_scores_parallel(self,args):
-        model_name, token, context = args
-        # Compute score using the model
-        return token, self.compute_score(model_name, token, context)
-
-    def evaluate_mrr_nltk_opt(self, model_name, result_path, split_folder, proj_number):
-        eval_files = ["scratch_test_data_chunk_1.txt"]
-        os.makedirs(result_path, exist_ok=True)
-        all_vocab = self.extract_vocabulary_nltk(model_name) 
-
-        for split_file in sorted(os.listdir(split_folder)):
-            
-            if split_file.strip() in eval_files:
-                continue
-            split_file_path = os.path.join(split_folder, split_file)
-            if not os.path.isfile(split_file_path):
-                continue
-
-            
-        
-            total_cumulative_rr = 0
-            total_count = 0
-
-            start_time = time.time()
-
-            with open(split_file_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    if not line.strip():
-                        continue
-
-                    sentence_tokens = line.split(" ")
-                    if len(sentence_tokens) < 2:
-                        continue
-
-                    for idx in range(1, len(sentence_tokens)):
-                        context = " ".join(sentence_tokens[:idx])
-                        true_next_word = sentence_tokens[idx].strip()
-
-                        with Pool(processes=4) as pool:  # Parallel processing
-                            results = pool.map(self.compute_scores_parallel, [(model_name, token, context) for token in all_vocab])
-
-                        # Extract top tokens
-                        heap = heapq.nlargest(10, results, key=lambda x: x[1])
-                        token_ranks = {t: rank + 1 for rank, (t, _) in enumerate(heap)}
-
-                        rank = token_ranks.get(true_next_word, 0)
-                        if rank:
-                            total_cumulative_rr += 1 / rank
-
-                        total_count += 1
-
-            time_spent = time.time() - start_time
-            result_file = os.path.join(result_path, f"nltk_rr_results_{proj_number}_order.txt")
-            with open(result_file, "a") as rf:
-                rf.write(f"File name: {split_file}\n")
-                rf.write(f"Total Reciprocal Rank: {total_cumulative_rr}\n")
-                rf.write(f"Total Lines: {total_count}\n")
-                rf.write(f"Time Spent: {time_spent:.2f} seconds\n")
-
-            print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
 
     
@@ -399,6 +364,48 @@ class scratch_train_mle:
 
                 self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,ngram,each_run)
 
+
+    def scratch_evaluate_model_nltk_in_order_all_upd_norun(self,test_data,model_path,proj_number,result_path):
+        all_models = sorted([f for f in os.listdir(model_path) if f.endswith(".pkl")])
+
+        
+
+        for each_model in all_models:
+
+            match = re.search(r"_(\d+)\.pkl$", each_model.strip())
+            ngram = match.group(1)
+            eval_start_time = time.time()  
+            with open(test_data,"r",encoding="utf-8") as f:
+                    lines= f.readlines()
+                    random.shuffle(lines)
+                    
+                    for line in lines:
+                        line = line.strip()
+                        sentence_tokens = line.split()
+
+                        if len(sentence_tokens) < 2:
+                            continue
+                        
+                        for idx in range(1,len(sentence_tokens)):
+                            context = ' '.join(sentence_tokens[:idx])  # Use all preceding tokens as context
+                            true_next_word = sentence_tokens[idx]
+                            each_model_path = f"{model_path}/{each_model.strip()}"
+                            predicted_next_word,top_10_tokens = self.predict_next_scratch_token_upd(each_model_path,context)
+                            rank = self.check_available_rank(top_10_tokens,true_next_word.strip())
+                            eval_duration = time.time() - eval_start_time
+                            log_file = f"{result_path}/nltk_investigate_{proj_number}_{ngram}.txt"
+                            if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
+                                with open(log_file,"a") as fl:
+                                    fl.write(f"query,expected,answer,rank,correct\n")
+                            
+                            with open(log_file, "a") as precs:
+                                precs.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+            eval_duration = time.time() - eval_start_time
+            print(f"total duration for evaluating ngram {ngram} is {eval_duration:.2f}")           
+
+                
+
     def scratch_evaluate_model_nltk_in_order(self,test_data,model_name,result_path,proj_number,ngram,run):
 
         y_true = []
@@ -425,6 +432,50 @@ class scratch_train_mle:
                 
                     y_true.append(true_next_word)
                     y_pred.append(predicted_next_word)
+
+
+        #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
+        accuracy = accuracy_score(y_true, y_pred)
+        precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
+        recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
+        f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
+        self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,ngram,run)
+        #print(f"accuracy {accuracy} precisions {precision} recall {recall} f1score {f1score}")
+        return accuracy,precision,recall,f1score
+    
+
+    def scratch_evaluate_model_nltk_in_order_upd(self,test_data,model_name,result_path,proj_number,ngram,run):
+
+        y_true = []
+        y_pred = []
+
+        all_models = [model  for model in os.listdir(result_path) if model.endswith(".pkl")]
+        if all_models:
+            for each_model in all_models:
+
+                with open(test_data,"r",encoding="utf-8") as f:
+                    lines= f.readlines()
+                    random.shuffle(lines)
+                    #lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
+                    
+                    for line in lines:
+                        line = line.strip()
+                        sentence_tokens = line.split()
+
+                        if len(sentence_tokens) < 2:
+                            continue
+
+                        #evaluate all tokens in order
+                        for idx in range(1,len(sentence_tokens)):
+                            context = ' '.join(sentence_tokens[:idx])
+                            true_next_word = sentence_tokens[idx]
+                            proper_model = f"{result_path}/{each_model}"
+
+                            predicted_next_word,top10_tokens = self.predict_next_scratch_token(model_name,context)
+                            rank = self.check_available_rank(top10_tokens)
+                        
+                            y_true.append(true_next_word)
+                            y_pred.append(predicted_next_word)
 
 
         #self.plot_precision_recall_curve(y_true,y_pred,fig_name)
@@ -670,7 +721,7 @@ tr_scr = scratch_train_mle()
 #print("precision parametric wilcoxon for nltk model",precision_wilcoxon)
 #f1_wilcoxon = tr_scr.wilcon_t_test([0.005844424726412303,0.2026847567047111,0.20871290205232712,0.21235029904010772,0.21524884976474543,0.21621503333962466,0.21718121691450387],[0.21718121691450387,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2176643087019435,0.2179863698935699])
 #print("f1 parametric ttest for nltk model",f1_wilcoxon)
-
+tr_scr.scratch_evaluate_model_nltk_in_order_all_upd_norun("/mnt/siwuchuk/thesis/new/scratch_test_suite/datasets/main_proc/scratch_data_120_projects_model_test_kenlm.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/500",500,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/500/new_metrics")
 
 #accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24589371980676328])
 #print("accuracy wilcoxon result for nltk model 7 - 11 vs 12 - 16 ", accuracy_wilcoxon_2)
@@ -685,7 +736,7 @@ tr_scr = scratch_train_mle()
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_100_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","100")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","150")
 #tr_scr.multiple_train_time_metrics([2,3,4,5,6],"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/models_experiment/scratch_trained_model_nltk_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","500")
-tr_scr.evaluate_mrr_nltk_opt("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/500/scratch_trained_model_nltk_500_projects_6.pkl","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/500/","/home/ubuntu/siwuchuk/testfiles_split","500")
+#tr_scr.evaluate_mrr_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10/scratch_trained_model_nltk_10_projects_6.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","10")
 #tr_scr.train_mle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_train_data_90.txt",8,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2")
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_7.pkl")
 #tr_scr.scratch_evaluate_model_nltk("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_test_data_10.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_trained_model_version2_8.pkl") 
