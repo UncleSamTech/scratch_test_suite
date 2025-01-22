@@ -389,7 +389,7 @@ class scratch_train_mle:
                         for idx in range(1,len(sentence_tokens)):
                             context = ' '.join(sentence_tokens[:idx])  # Use all preceding tokens as context
                             true_next_word = sentence_tokens[idx]
-                            each_model = each_model.strip()
+                            each_model = f"{model_path}/{each_model.strip()}"
                             predicted_next_word,top_10_tokens = self.predict_next_scratch_token_upd(each_model,context)
                             rank = self.check_available_rank(top_10_tokens,true_next_word.strip())
                             eval_duration = time.time() - eval_start_time
