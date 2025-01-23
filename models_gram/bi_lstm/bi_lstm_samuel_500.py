@@ -453,7 +453,7 @@ class bi_lstm_scratch:
 
                 
         end_time = time.time() - start_time
-        print(f"duration for bilstm 10 projects sample is {end_time:.}") 
+        print(f"duration for bilstm 10 projects sample is {end_time}") 
         #             if predicted_next_word is not None:
         #                 y_true.append(true_next_word)
                 
