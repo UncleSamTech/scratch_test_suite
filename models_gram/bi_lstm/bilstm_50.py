@@ -452,7 +452,8 @@ class bi_lstm_scratch:
                         inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
                 
-            
+        end_time = time.time() - start_time
+        print(f"duration for bilstm 10 projects sample is {end_time:.}") 
         #             if predicted_next_word is not None:
         #                 y_true.append(true_next_word)
                 
