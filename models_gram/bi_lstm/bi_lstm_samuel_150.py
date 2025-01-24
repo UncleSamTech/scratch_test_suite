@@ -403,6 +403,52 @@ class bi_lstm_scratch:
 
         return predicted_next_token, top_10_tokens_scores
 
+    def predict_token_score_upd2(self, context, tokenz, model, maxlen):
+        """
+        Predicts the next token based on the given context and scores each token in the vocabulary.
+
+        Args:
+            context (str): Input context for prediction.
+            tokenz (Tokenizer): Tokenizer object with vocabulary and word index.
+            model (tf.keras.Model): Trained model for next token prediction.
+            maxlen (int): Maximum length of input sequences for the model.
+
+        Returns:
+            tuple: Predicted next token and a list of the top 10 tokens with their scores.
+        """
+        # Convert the context into a sequence of token indices
+        token_list = tokenz.texts_to_sequences([context])
+        vocab = list(tokenz.word_index.keys())
+        vocab_size = len(vocab)
+        max_prob_tokens = np.zeros(vocab_size)  # Preallocate array for token probabilities
+
+        # Check if the context is empty or invalid
+        if not token_list or len(token_list[0]) == 0:
+            return -1, []  # Return low score and empty top 10 for invalid context
+
+        # Iterate through the entire vocabulary
+        for idx, each_token in enumerate(vocab):
+            # Prepare the input sequence with the current token appended
+            token_value = token_list[0][-maxlen + 1:] + [tokenz.word_index.get(each_token, 0)]
+            padded_in_seq = pad_sequences([token_value], maxlen=maxlen-1, padding="pre")
+            padded_in_seq = tf.convert_to_tensor(padded_in_seq)
+
+            # Get the model's prediction probabilities
+            prediction = model.predict(padded_in_seq, verbose=0)[0]
+            
+            # Store the score for the token
+            max_prob_tokens[idx] = prediction[tokenz.word_index.get(each_token, 0)]
+
+        # Determine the most probable token using np.argmax
+        predicted_index = np.argmax(max_prob_tokens)
+        predicted_next_token = vocab[predicted_index]
+
+        # Extract the top 10 tokens and their scores
+        top_10_indices = np.argsort(max_prob_tokens)[-10:][::-1]
+        top_10_tokens_scores = [(vocab[i], max_prob_tokens[i]) for i in top_10_indices]
+
+        return predicted_next_token, top_10_tokens_scores
+
 
     def check_available_rank(self,list_tuples,true_word):
         rank = -1
@@ -819,7 +865,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
 #cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project50_run1.keras")
-cl_ob.evaluate_bilstm_in_order_upd_norun("/mnt/siwuchuk/thesis/another/scratch_test_suite/datasets/main_proc/scratch_data_88_projects_model_test_kenlm.txt",27,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/150/main_bilstm_scratch_model_150embedtime1_main_sample_project150_run3.keras","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/150/",150,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/150/new_metrics")
+cl_ob.evaluate_bilstm_in_order_upd_norun("/mnt/siwuchuk/thesis/another/scratch_test_suite/datasets/main_proc/scratch_data_88_projects_model_test_kenlm.txt",27,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/150/main_bilstm_scratch_model_150embedtime1_main_sample_project150_run3.keras","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/150/",150,"exit")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
