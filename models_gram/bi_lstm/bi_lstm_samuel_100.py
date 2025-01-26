@@ -256,25 +256,26 @@ class bi_lstm_scratch:
     def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
         input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
         padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+        print(f"maximum length {max_len}")
+        # xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
         
        
-        self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
-        av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras"]
+        # self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
+        # av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras"]
 
-        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files in av])
-        print(all_models)
+        # all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files in av])
+        # print(all_models)
         
-        if all_models:
-            for model in all_models:
+        # if all_models:
+        #     for model in all_models:
                 
-                match = re.search(r"run(\d+)",model.strip())
+        #         match = re.search(r"run(\d+)",model.strip())
 
-                if match:
-                    run = match.group(1)
-                    model = os.path.join(result_path,model).strip()
+        #         if match:
+        #             run = match.group(1)
+        #             model = os.path.join(result_path,model).strip()
 
-                    self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
+        #             self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
 
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
@@ -918,9 +919,10 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_80_00.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_portion/")
 
-cl_ob.view_model_summary("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/500/main_bilstm_scratch_model_150embedtime1_main_sample_project500_run1.keras")
+#cl_ob.view_model_summary("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/500/main_bilstm_scratch_model_150embedtime1_main_sample_project500_run1.keras")
 #cl_ob.evaluate_bilstm_in_order_upd_norun("/mnt/siwuchuk/thesis/another/scratch_test_suite/datasets/main_proc/scratch_data_66_projects_model_test_kenlm.txt",27,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/main_bilstm_scratch_model_150embedtime1_main_sample_project100_run1.keras","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/",100,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/new_metrics")
-#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","10")
+
+cl_ob.consolidate_data_train("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_train_data_100_projects.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/datasets/scratch_test_data_20.txt","100")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
