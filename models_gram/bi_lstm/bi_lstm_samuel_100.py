@@ -403,6 +403,12 @@ class bi_lstm_scratch:
 
         return predicted_next_token, top_10_tokens_scores
 
+    def get_vocab_size(self,tokenizer_path,proj_number):
+        with open(f"{tokenizer_path}tokenized_file_50embedtime1.pickle","rb") as tk:
+            tokenz = pickle.load(tk)
+            vocab_size = len(tokenz.word_index) + 1
+            print(f"vocab size for {proj_number} bilstm is {vocab_size}")
+
 
     def predict_token_score_upd2(self, context, tokenz, model, maxlen):
         """
@@ -920,7 +926,7 @@ cl_ob.evaluate_bilstm_in_order_upd_norun("/mnt/siwuchuk/thesis/another/scratch_t
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
 
-
+cl_ob.get_vocab_size("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/bi_lstm/models/100/",100)
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
