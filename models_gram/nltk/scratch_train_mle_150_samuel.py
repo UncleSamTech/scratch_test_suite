@@ -728,7 +728,7 @@ tr_scr = scratch_train_mle()
 #print("f1 parametric ttest for nltk model",f1_wilcoxon)
 #tr_scr.scratch_evaluate_model_nltk_in_order_all_upd_norun("/mnt/siwuchuk/thesis/another/scratch_test_suite/datasets/main_proc/scratch_data_88_projects_model_test_kenlm.txt","/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150",150,"/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150/new_metrics")
 
-tr_scr.check_vocab_size("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/150/scratch_trained_model_nltk_150_projects_2.pkl")
+tr_scr.check_vocab_size("/home/ubuntu/siwuchuk/thesis/scratch_test_suite/models_gram/nltk/models/500/scratch_trained_model_nltk_500_projects_2.pkl")
 #accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24589371980676328])
 #print("accuracy wilcoxon result for nltk model 7 - 11 vs 12 - 16 ", accuracy_wilcoxon_2)
 #precision_wilcoxon_2 =tr_scr.wilcon_t_test([0.22551918224779507,0.2264853658226743,0.2264853658226743,0.22696845761011392,0.22696845761011392],[0.22721000350383372])
