@@ -176,6 +176,8 @@ class scratch_train_mle:
     def check_vocab_size(self,model_name):
         ld_md = self.load_trained_model(model_name)
         vocab_size = len(ld_md.vocab)
+        for each_token in ld_md.vocab:
+            print(each_token)
         print(vocab_size) 
 
 
@@ -729,10 +731,10 @@ tr_scr = scratch_train_mle()
 #print("f1 parametric ttest for nltk model",f1_wilcoxon)
 #tr_scr.scratch_evaluate_model_nltk_in_order_all_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/new_metrics")
 tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_2.pkl")
-tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_3.pkl")
-tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_4.pkl")
-tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_5.pkl")
-tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_6.pkl")
+#tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_3.pkl")
+#tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_4.pkl")
+#tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_5.pkl")
+#tr_scr.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10_order/scratch_trained_model_nltk_10_projects_6.pkl")
 #accuracy_wilcoxon_2 = tr_scr.wilcon_t_test([0.24396135265700483,0.24492753623188407,0.24492753623188407,0.24541062801932367,0.24541062801932367],[0.24589371980676328])
 #print("accuracy wilcoxon result for nltk model 7 - 11 vs 12 - 16 ", accuracy_wilcoxon_2)
 #precision_wilcoxon_2 =tr_scr.wilcon_t_test([0.22551918224779507,0.2264853658226743,0.2264853658226743,0.22696845761011392,0.22696845761011392],[0.22721000350383372])
