@@ -36,7 +36,7 @@ def retr_hash_match_project(project_name):
     conn,curs = get_connection()
     GET_HASHES = """SELECT hash FROM revisions WHERE project_name = ?;"""
     if conn != None:
-        curs.execute(GET_HASHES,(project_name))
+        curs.execute(GET_HASHES,(project_name,))
         hashes = curs.fetchall()
         hash_list = [each_hash[0] for each_hash in hashes]
     else:
