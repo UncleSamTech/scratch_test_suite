@@ -490,7 +490,7 @@ class bi_lstm_scratch:
 
                     predicted_next_word,top_10_tokens = self.predict_token_score_upd(context,tokenz,loaded_model,maxlen)
                     rank = self.check_available_rank(top_10_tokens,true_next_word)
-                    investig_path = f"{new_path}/bilstm_investigate_{proj_number}.txt"
+                    investig_path = f"{new_path}/bilstm_investigate_{proj_number}_1.txt"
                     if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
                         with open(investig_path,"a") as ip:
                             ip.write(f"query,expected,answer,rank,correct\n")
