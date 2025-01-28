@@ -26,10 +26,10 @@ def get_all_project_names():
     
     return fin_resp
 
-def sample_train_test(data, ratio_test, ratio_train):
+def sample_train_test(data, ratio_train, ratio_test):
     train_project,test_project = train_test_split(data,test_size=ratio_test,train_size=ratio_train,random_state=42)
     print(f"total train set {len(train_project)} and total test set {len(test_project)}")
     return train_project,test_project
 
 
-sample_train_test(get_all_project_names())
+sample_train_test(get_all_project_names(),0.1)
