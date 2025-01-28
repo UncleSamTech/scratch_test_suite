@@ -28,8 +28,8 @@ def get_all_project_names():
 
 def sample_train_test(data):
     train_data,test_data = train_test_split(data,test_size=0.2,train_size=0.1,random_state=42)
-    print(train_data)
-    print(test_data)
+    print(len(train_data))
+    print(len(test_data))
 
 
 sample_train_test(get_all_project_names())
