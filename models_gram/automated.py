@@ -23,7 +23,7 @@ def get_all_project_names():
     else:
         print("connection failed")
     conn.commit()
-
+    print(fin_resp)
     return fin_resp
 
 
