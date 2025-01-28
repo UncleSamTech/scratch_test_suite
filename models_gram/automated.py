@@ -47,13 +47,25 @@ def retr_all_hash_for_proj_set(all_projects):
     all_hash = []
     if all_projects:
         for each_project in all_projects:
-            print(each_project)
             each_project =  each_project.strip()
             res_hash = retr_hash_match_project(each_project)
             all_hash.extend(res_hash)
-    print(all_hash)
     return all_hash
 
+def eliminate_duplicates_test_hashes(train_hashes, test_hashes):
+    # Convert train_hashes to a set for fast lookup
+    train_set = set(train_hashes)
+    
+    # Filter out hashes from test_hashes that are already in train_hashes
+    unique_test_hashes = [hash_val for hash_val in test_hashes if hash_val not in train_set]
+    
+    return unique_test_hashes
+    
 
 train_proj,test_proj = sample_train_test(get_all_project_names(),0.1,0.2)
-retr_all_hash_for_proj_set(train_proj)
+train = retr_all_hash_for_proj_set(train_proj)
+print(f"total train {len(train)}")
+test = retr_all_hash_for_proj_set(test_proj)
+print(f"total test {len(test)}")
+uniq_test = eliminate_duplicates_test_hashes(train,test)
+print(f"total unique test {len(uniq_test)}")
