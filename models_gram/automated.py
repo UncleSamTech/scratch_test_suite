@@ -48,6 +48,7 @@ def retr_all_hash_for_proj_set(all_projects):
     all_hash = []
     if all_projects:
         for each_project in all_projects:
+            print(each_project)
             each_project =  each_project.strip()
             res_hash = retr_hash_match_project(each_project)
             all_hash.extend(res_hash)
