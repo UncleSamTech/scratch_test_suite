@@ -13,13 +13,18 @@ def get_connection():
 
 def get_all_project_names():
     #make connection
+    fin_resp = []
     conn,curs = get_connection()
     RETR_PROJ_QUERY = """SELECT project_name from projects;"""
-    curs.execute(RETR_PROJ_QUERY)
-    all_projects = curs.fetchall()
-    print(all_projects)
+    if conn != None:
+         curs.execute(RETR_PROJ_QUERY)  
+         val = curs.fetchall()
+         fin_resp = [each_cont[0] for each_cont in val]                   
+    else:
+        print("connection failed")
     conn.commit()
-    conn.close()
+
+    return fin_resp
 
 
 get_all_project_names()
