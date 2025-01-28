@@ -41,7 +41,6 @@ def retr_hash_match_project(project_name):
         hash_list = [each_hash[0] for each_hash in hashes]
     else:
         print("connection failed")
-    print(hash_list)
     return hash_list
 
 def retr_all_hash_for_proj_set(all_projects):
@@ -52,7 +51,7 @@ def retr_all_hash_for_proj_set(all_projects):
             each_project =  each_project.strip()
             res_hash = retr_hash_match_project(each_project)
             all_hash.extend(res_hash)
-    
+    print(all_hash)
     return all_hash
 
 
