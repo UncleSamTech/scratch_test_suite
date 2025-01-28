@@ -31,5 +31,29 @@ def sample_train_test(data, ratio_train, ratio_test):
     print(f"total train set {len(train_project)} and total test set {len(test_project)}")
     return train_project,test_project
 
+def retr_hash_match_project(project_name):
+    hash_list = []
+    conn,curs = get_connection()
+    GET_HASHES = """SELECT hash FROM revisions WHERE project_name = ?;"""
+    if conn != None:
+        curs.execute(GET_HASHES,(project_name))
+        hashes = curs.fetchall()
+        hash_list = [each_hash[0] for each_hash in hashes]
+    else:
+        print("connection failed")
+    print(hash_list)
+    return hash_list
 
-sample_train_test(get_all_project_names(),0.1,0.2)
+def retr_all_hash_for_proj_set(all_projects):
+    all_hash = []
+    if all_projects:
+        for each_project in all_projects:
+            each_project =  each_project.strip()
+            res_hash = retr_hash_match_project(each_project)
+            all_hash.extend(res_hash)
+    
+    return all_hash
+
+
+train_proj,test_proj = sample_train_test(get_all_project_names(),0.1,0.2)
+retr_all_hash_for_proj_set(train_proj)
