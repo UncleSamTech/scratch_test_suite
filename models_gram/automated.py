@@ -32,4 +32,4 @@ def sample_train_test(data, ratio_train, ratio_test):
     return train_project,test_project
 
 
-sample_train_test(get_all_project_names(),0.1)
+sample_train_test(get_all_project_names(),0.1,0.2)
