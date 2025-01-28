@@ -23,8 +23,13 @@ def get_all_project_names():
     else:
         print("connection failed")
     conn.commit()
-    print(fin_resp)
+    
     return fin_resp
 
+def sample_train_test(data):
+    train_data,test_data = train_test_split(data,test_size=0.2,train_size=0.1,random_state=42)
+    print(train_data)
+    print(test_data)
 
-get_all_project_names()
+
+sample_train_test(get_all_project_names())
