@@ -401,15 +401,15 @@ def generate_paths(base_path,models,train_hashes,test_hashes):
                 print(f"train_dir {train_dir}")
                 print(f"test_dir {test_dir}")
                 if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-                    shuffled_train_hash = random.sample(train_hashes, len(train_hashes))  # Shuffle train hashes
-                    shuffled_test_hash = random.sample(test_hashes, len(test_hashes))  # Shuffle test hashes
+                    # shuffled_train_hash = random.sample(train_hashes, len(train_hashes))  # Shuffle train hashes
+                    # shuffled_test_hash = random.sample(test_hashes, len(test_hashes))  # Shuffle test hashes
 
                     # Compare shuffled test hashes with shuffled train hashes
-                    unique_test_hashes = eliminate_duplicates_test_hashes(shuffled_train_hash, shuffled_test_hash)
+                    #unique_test_hashes = eliminate_duplicates_test_hashes(shuffled_train_hash, shuffled_test_hash)
 
                     # Generate graphs for shuffled train and unique test hashes
-                    generate_simple_graph_optimized2(train_dir, log_dir, "logs_test", shuffled_train_hash, each_gram, each_run)
-                    generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", unique_test_hashes, each_gram, each_run)
+                    generate_simple_graph_optimized2(train_dir, log_dir, "logs_test", train_hashes, each_gram, each_run)
+                    generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", test_hashes, each_gram, each_run)
 
 
 train_hash = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1))
@@ -419,7 +419,7 @@ generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],
 
 
 
-#generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
 
 # test_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,1)
 # train_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,1)
