@@ -255,9 +255,12 @@ all_connections = []
 def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram,run):
         
         #print(hashes)
-
+        # Ensure paths end with a slash
+        path_name = path_name if path_name.endswith("/") else path_name + "/"
+        log_path = log_path if log_path.endswith("/") else log_path + "/"
         if not hashes:
             return
+
 
         # Pre-process hashes by stripping white spaces
         hashes = [h.strip() for h in hashes if isinstance(h, str)]
@@ -304,11 +307,82 @@ def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram
 
                         # Write the processed value to the output file
                         fp.write(f"{sec_val}\n")
+
+import os
+
+def generate_simple_graph_optimized2(path_name, log_path, log_filename, hashes, ngram, run):
+    if not hashes:
+        return
+
+    # Ensure paths end with a slash
+    path_name = path_name if path_name.endswith("/") else path_name + "/"
+    log_path = log_path if log_path.endswith("/") else log_path + "/"
+
+    # Save the original working directory
+    original_dir = os.getcwd()
+
+    try:
+        # Change to the `path_name` directory for writing hash files
+        os.chdir(path_name)
+
+        # Pre-process hashes by stripping white spaces
+        hashes = [h.strip() for h in hashes if isinstance(h, str)]
+
+        # Change to the `log_path` directory for writing log files
+        os.chdir(log_path)
+
+        # Open the extracted paths log file once
+        with open(f"{log_filename}_{ngram}_{run}.txt", "a") as exp:
+            # Change back to the `path_name` directory for writing hash files
+            os.chdir(path_name)
+
+            for each_hash in hashes:
+                contents = get_all_contents(each_hash)
+
+                if not contents:  # Continue if no contents
+                    continue
+
+                # Attempt to parse the contents
+                try:
+                    contents2 = json.loads(contents)
+                    all_connections = contents2["stats"].get("connections", [])
+                except (KeyError, ValueError):
+                    all_connections = []
+
+                # Skip if there are no connections
+                if not isinstance(all_connections, list) or not all_connections:
+                    continue
+
+                # Open the output file for this hash once
+                with open(f"{each_hash}.txt", "a") as fp:  # No need to include `path_name` in the file path
+                    for each_connection in all_connections:
+                        if not each_connection:
+                            continue
+
+                        try:
+                            val = slice_from_start(each_connection)
+                            sec_val = replace_non_vs_string_with_tokens(val)
+
+                            # Log the old and replaced values
+                            exp.write(f"old val {val} replaced value {sec_val}\n")
+                        except Exception:
+                            sec_val = ''
+
+                        # Continue if the processed value is empty
+                        if not sec_val:
+                            continue
+
+                        # Write the processed value to the output file
+                        fp.write(f"{sec_val}\n")
+
+    finally:
+        # Restore the original working directory
+        os.chdir(original_dir)
             
 
 train_splits = [0.2,0.3,0.5,0.8]
-model_numbers = [30]
-train_proj,test_proj = sample_train_test(get_all_project_names(),0.3,0.2)
+model_numbers = [20]
+train_proj,test_proj = sample_train_test(get_all_project_names(),0.2,0.2)
 train_hashes = retr_all_hash_for_proj_set(train_proj)
 test_hashes = retr_all_hash_for_proj_set(test_proj)
 uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
@@ -328,8 +402,8 @@ for each_model in model_numbers:
             print(f"train_dir {train_dir}")
             print(f"test_dir {test_dir}")
             if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-                generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
-                generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
+                generate_simple_graph_optimized2(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
+                generate_simple_graph_optimized2(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
 
 
 
