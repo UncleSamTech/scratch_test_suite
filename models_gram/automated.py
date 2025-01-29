@@ -419,7 +419,7 @@ def generate_paths(base_path,models,train_hashes,test_hashes):
 
 
 
-generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[30],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.3)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.3)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
 
 # test_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,1)
 # train_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,1)
@@ -434,3 +434,30 @@ generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],
 
 
 #comm -12 <(ls "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_2_2" | sort) <(ls "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_2_2_test" | sort) | xargs -I {} rm "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_2_2_test/{}"
+
+#!/bin/bash
+
+# Base directory
+# BASE_DIR="/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20"
+
+# # Loop through n-gram orders (2 to 6)
+# for ngram in {2..6}; do
+#   # Loop through runs (1 to 5)
+#   for run in {1..5}; do
+#     # Define train and test directories
+#     TRAIN_DIR="$BASE_DIR/path_20_${ngram}_${run}"
+#     TEST_DIR="${TRAIN_DIR}_test"
+
+#     # Check if both directories exist
+#     if [[ -d "$TRAIN_DIR" && -d "$TEST_DIR" ]]; then
+#       echo "Processing: $TRAIN_DIR and $TEST_DIR"
+
+#       # Find duplicate files in test directory and delete them
+#       comm -12 <(ls "$TRAIN_DIR" | sort) <(ls "$TEST_DIR" | sort) | xargs -I {} rm "$TEST_DIR/{}"
+
+#       echo "Deleted duplicates from $TEST_DIR"
+#     else
+#       echo "Skipping: $TRAIN_DIR or $TEST_DIR does not exist."
+#     fi
+#   done
+# done
