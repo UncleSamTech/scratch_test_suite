@@ -109,7 +109,7 @@ def conv_pkl_to_txt_optimized2(pickle_file_path, test_set_path):
             model_number, ngram_number, run_number = map(int, numbers[:3])
 
             pkl_file_path = os.path.join(pickle_file_path, each_file)
-            txt_file_path = os.path.join(test_set_path, f"scratch_train_set_{model_number}_{ngram_number}_{run_number}.txt")
+            txt_file_path = os.path.join(test_set_path, f"scratch_test_set_{model_number}_{ngram_number}_{run_number}.txt")
 
             with open(pkl_file_path, 'rb') as pkl_file:
                 data_train_pkl = pickle.load(pkl_file)
