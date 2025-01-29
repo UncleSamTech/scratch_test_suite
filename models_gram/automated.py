@@ -5,6 +5,7 @@ import sqlite3
 import json
 import random
 from pathlib import Path
+from itertools import product
 
 valid_opcodes = [
             "event_whenflagclicked",
@@ -386,31 +387,33 @@ train_splits = [0.2,0.3,0.5,0.8]
 model_numbers = [20]
 
 
-def generate_paths(base_path,models,train_hashes,test_hashes):
-#
-    for each_model in models:
-        for each_gram in range(2,7):
-            for each_run in range(1,6):
-                train_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}/")
-                test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
-                log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
-                log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
-                train_dir.mkdir(exist_ok=True)
-                test_dir.mkdir(exist_ok=True)
-                log_dir.mkdir(exist_ok=True)
-                log_dir_test.mkdir(exist_ok=True)
-                print(f"train_dir {train_dir}")
-                print(f"test_dir {test_dir}")
-                if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-                    shuffled_train_hash = random.sample(train_hashes, len(train_hashes))  # Shuffle train hashes
-                    shuffled_test_hash = random.sample(test_hashes, len(test_hashes))  # Shuffle test hashes
 
-                    #Compare shuffled test hashes with shuffled train hashes
-                    unique_test_hashes = eliminate_duplicates_test_hashes(shuffled_train_hash, shuffled_test_hash)
+def generate_paths(base_path, models, train_hashes, test_hashes):
+    for each_model, each_gram, each_run in product(models, range(2,7), range(1,6)):  
+        train_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}/")
+        test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
+        log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
+        log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
 
-                    # Generate graphs for shuffled train and unique test hashes
-                    generate_simple_graph_optimized2(train_dir, log_dir, "logs_test", shuffled_train_hash, each_gram, each_run)
-                    generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", unique_test_hashes, each_gram, each_run)
+        # Ensure directories exist
+        for dir in [train_dir, test_dir, log_dir, log_dir_test]:
+            dir.mkdir(exist_ok=True)
+
+        print(f"train_dir {train_dir}")
+        print(f"test_dir {test_dir}")
+
+        # Ensure directories exist before proceeding
+        if all([train_dir.exists(), test_dir.exists(), log_dir.exists(), log_dir_test.exists()]):
+            # Shuffle without duplication concerns
+            shuffled_train_hash = random.sample(set(train_hashes), len(set(train_hashes)))
+            shuffled_test_hash = random.sample(set(test_hashes), len(set(test_hashes)))
+
+            # Ensure test hashes are unique from train hashes
+            unique_test_hashes = eliminate_duplicates_test_hashes(shuffled_train_hash, shuffled_test_hash)
+
+            generate_simple_graph_optimized2(train_dir, log_dir, "logs_test", shuffled_train_hash, each_gram, each_run)
+
+            generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", unique_test_hashes, each_gram, each_run)
 
 
 
