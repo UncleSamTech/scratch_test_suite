@@ -173,9 +173,53 @@ def write_each_train_file_opt_corr(base_file_path, base_new_train_path):
             pickle.dump(file_data, file)
             print(f"Written: {new_file_name}")
 
+def write_each_train_file_opt_mn(base_file_path, base_new_train_path):
+    model_numbers = [10, 20, 30, 50, 80]
+    ngram_range = range(2, 7)
+    run_range = range(1, 6)
+    
+    # Keep track of written content (using a set of hashes to check for duplicates)
+    written_content = set()
+
+    for each_number, ngram, run in product(model_numbers, ngram_range, run_range):
+        each_file_path = f"{base_file_path}/{each_number}/path_{each_number}_{ngram}_{run}"
+        new_file_name = f"{base_new_train_path}/scratch_train_set_{each_number}_{ngram}_{run}.pkl"
+
+        # Check if file exists and skip if the file is already written
+        if os.path.exists(new_file_name):
+            try:
+                with open(new_file_name, 'rb') as existing_file:
+                    existing_data = pickle.load(existing_file)
+
+                # If the content has already been written, skip
+                data_hash = hash(str(existing_data))
+                if data_hash in written_content:
+                    print(f"Skipping duplicate content: {new_file_name}")
+                    continue
+                else:
+                    written_content.add(data_hash)
+            except (pickle.UnpicklingError, EOFError):
+                print(f"Corrupt file detected, overwriting: {new_file_name}")
+
+        # Load new data only if needed
+        file_data = consolidate_data(each_file_path)
+
+        # Check if the content has been written already, if yes, skip
+        data_hash = hash(str(file_data))
+        if data_hash in written_content:
+            print(f"Skipping duplicate content: {new_file_name}")
+            continue
+        else:
+            written_content.add(data_hash)
+
+        # Write the new data
+        with open(new_file_name, 'wb') as file:
+            pickle.dump(file_data, file)
+            print(f"Written: {new_file_name}")
+
 
 #dump_data_in_pickle("scratch_data.pkl","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths")
 #dump_data_in_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/list_path_120_v2/")
 #load_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data_version3.pkl")
-#write_each_train_file_opt_corr("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
-conv_pkl_to_txt_optimized2("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_train")
+write_each_train_file_opt_mn("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
+#conv_pkl_to_txt_optimized2("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_train")
