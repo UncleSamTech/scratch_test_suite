@@ -50,11 +50,11 @@ def conv_pkl_to_txt_optimized(pickle_file_path,train_set_path):
             if len(numbers) >= 3:
                 model_number,ngram_number,run_number = map(int, numbers[:3])
 
-                with open(f"{train_set_path}/{each_file}", 'rb') as pkl_file:
+                with open(f"{pickle_file_path}/{each_file}", 'rb') as pkl_file:
                     data_train_pkl = pickle.load(pkl_file)
                 
                 # Write the data to a text file
-                with open(f"{pickle_file_path}/scratch_train_set_{model_number}_{ngram_number}_{run_number}.txt", 'w') as txt_file:
+                with open(f"{train_set_path}/scratch_train_set_{model_number}_{ngram_number}_{run_number}.txt", 'w') as txt_file:
                     if isinstance(data_train_pkl, list):
                         # Write each element of the list on a new line
                         for ele in data_train_pkl:
@@ -74,4 +74,5 @@ def conv_pkl_to_txt_optimized(pickle_file_path,train_set_path):
 #dump_data_in_pickle("scratch_data.pkl","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths")
 #dump_data_in_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/list_path_120_v2/")
 #load_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data_version3.pkl")
-write_each_train_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
+#write_each_train_file("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
+conv_pkl_to_txt_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_train")

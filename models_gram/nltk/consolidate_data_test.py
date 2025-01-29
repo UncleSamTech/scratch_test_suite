@@ -50,11 +50,11 @@ def conv_pkl_to_txt_optimized(pickle_file_path,test_set_path):
             if len(numbers) >= 3:
                 model_number,ngram_number,run_number = map(int, numbers[:3])
 
-                with open(f"{test_set_path}/{each_file}", 'rb') as pkl_file:
+                with open(f"{pickle_file_path}/{each_file}", 'rb') as pkl_file:
                     data_train_pkl = pickle.load(pkl_file)
                 
                 # Write the data to a text file
-                with open(f"{pickle_file_path}/scratch_test_set_{model_number}_{ngram_number}_{run_number}.txt", 'w') as txt_file:
+                with open(f"{test_set_path}/scratch_test_set_{model_number}_{ngram_number}_{run_number}.txt", 'w') as txt_file:
                     if isinstance(data_train_pkl, list):
                         # Write each element of the list on a new line
                         for ele in data_train_pkl:
