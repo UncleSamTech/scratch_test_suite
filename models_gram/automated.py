@@ -408,8 +408,8 @@ def generate_paths(base_path,models,train_hashes,test_hashes):
                     unique_test_hashes = eliminate_duplicates_test_hashes(shuffled_train_hash, shuffled_test_hash)
 
                     # Generate graphs for shuffled train and unique test hashes
-                    generate_simple_graph_optimized(train_dir, log_dir, "logs_test", shuffled_train_hash, each_gram, each_run)
-                    generate_simple_graph_optimized(test_dir, log_dir_test, "logs_test", unique_test_hashes, each_gram, each_run)
+                    generate_simple_graph_optimized2(train_dir, log_dir, "logs_test", shuffled_train_hash, each_gram, each_run)
+                    generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", unique_test_hashes, each_gram, each_run)
 
 
 train_hash = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1))
