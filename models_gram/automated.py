@@ -307,9 +307,9 @@ def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram
 train_proj,test_proj = sample_train_test(get_all_project_names(),0.1,0.2)
 train_hashes = retr_all_hash_for_proj_set(train_proj)
 test_hashes = retr_all_hash_for_proj_set(test_proj)
-uniq_test = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
+uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
 
-test_path_10_o2_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_2_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",test_hashes,2,1)
+test_path_10_o2_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_2_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,2,1)
 
 train_path_10_o2_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_2_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,2,1)
 # train_path_10_o2_r2= generate_simple_graph_optimized("","","",train_hashes)
