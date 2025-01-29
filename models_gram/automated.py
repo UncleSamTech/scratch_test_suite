@@ -415,7 +415,7 @@ def generate_paths(base_path,models,train_hashes,test_hashes):
 train_hash = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1))
 test_hash = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2))
 uniq_hash = eliminate_duplicates_test_hashes(train_hash,test_hash)
-generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],train_hash,uniq_hash)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],train_hash,uniq_hash)
 
 
 
