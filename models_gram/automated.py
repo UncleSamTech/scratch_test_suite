@@ -321,13 +321,15 @@ for each_model in model_numbers:
             test_dir = Path(f"{base_path}{each_model}/path_{each_model}/{each_gram}_{each_run}_test/")
             log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
             log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
-            train_dir.mkdir(parents=True, exist_ok=True)
-            test_dir.mkdir(parents=True, exist_ok=True)
-            log_dir.mkdir(parents=True,exist_ok=True)
-            log_dir_test.mkdir(parents=True,exist_ok=True)
-            if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-                generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
-                generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
+            train_dir.mkdir(exist_ok=True)
+            test_dir.mkdir(exist_ok=True)
+            log_dir.mkdir(exist_ok=True)
+            log_dir_test.mkdir(exist_ok=True)
+            print(f"train_dir {train_dir}")
+            print(f"test_dir {test_dir}")
+            # if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
+            #     generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
+            #     generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
 
 
 
