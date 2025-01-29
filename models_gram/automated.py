@@ -414,17 +414,8 @@ def replace_non_vs_string_with_tokens_opt(string_val):
     if isinstance(string_val, str) and len(string_val) > 0:
         val2 = string_val.split()
 
-        # Extract all valid prefixes from both lists
-        valid_prefixes = {word.split("_")[0] for word in valid_opcodes + valid_other_field_codes if "_" in word}
-
-        # Detect additional prefixes in the input (words containing "_")
-        detected_prefixes = {word.split("_")[0] for word in val2 if "_" in word}
-
-        # Merge both sets to cover unknown but similar patterns
-        all_prefixes = valid_prefixes.union(detected_prefixes)
-
         new_list = [
-            word if word in valid_opcodes or word in valid_other_field_codes or any(word.startswith(prefix + "_") for prefix in all_prefixes)
+            word if (word in valid_opcodes or word in valid_other_field_codes or "_" in word)
             else "<literal>"
             for word in val2
         ]
@@ -432,6 +423,8 @@ def replace_non_vs_string_with_tokens_opt(string_val):
         return " ".join(new_list)
     else:
         return ""
+
+
 
 
 
