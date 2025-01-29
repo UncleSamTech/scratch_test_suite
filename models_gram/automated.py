@@ -1,6 +1,151 @@
 import os
 from sklearn.model_selection import train_test_split
 import sqlite3
+import json
+
+valid_opcodes = [
+            "event_whenflagclicked",
+            "event_whenkeypressed",
+            "event_whenthisspriteclicked",
+            "event_whenbackdropswitchesto",
+            "event_whengreaterthan",
+            "event_whenbroadcastreceived",
+            "motion_movesteps",
+            "motion_turnright",
+            "motion_turnleft",
+            "motion_goto",
+            "motion_goto_menu",
+            "motion_gotoxy",
+            "motion_glideto",
+            "motion_glideto_menu",
+            "motion_pointindirection",
+            "motion_pointtowards",
+            "motion_pointtowards_menu",
+            "motion_changexby",
+            "motion_setx",
+            "motion_changeyby",
+            "motion_sety",
+            "motion_ifonedgebounce",
+            "motion_setrotationstyle",
+            "motion_xposition",
+            "motion_yposition",
+            "motion_direction",
+            "looks_sayforsecs",
+            "looks_say",
+            "looks_thinkforsecs",
+            "looks_switchcostumeto",
+            "looks_costume",
+            "looks_nextcostume",
+            "looks_switchbackdropto",
+            "looks_backdrops",
+            "looks_nextbackdrop",
+            "looks_changesizeby",
+            "looks_setsizeto",
+            "looks_changeeffectby",
+            "looks_seteffectto",
+            "looks_cleargraphiceffects",
+            "looks_show",
+            "looks_hide",
+            "looks_gotofrontback",
+            "looks_goforwardbackwardlayers",
+            "looks_costumenumbername",
+            "looks_backdropnumbername",
+            "looks_size",
+            "sound_playuntildone",
+            "sound_sounds_menu",
+            "sound_play",
+            "sound_stopallsounds",
+            "sound_changeeffectby",
+            "sound_seteffectto",
+            "sound_cleareffects",
+            "sound_changevolumeby",
+            "sound_setvolumeto",
+            "sound_volume",
+            "event_broadcast",
+            "event_broadcastandwait",
+            "control_wait",
+            "control_repeat",
+            "control_forever",
+            "control_if",
+            "control_if_else",
+            "control_wait_until",
+            "control_repeat_until",
+            "control_stop",
+            "control_start_as_clone",
+            "control_create_clone_of",
+            "control_create_clone_of_menu",
+            "control_delete_this_clone",
+            "sensing_touchingobject",
+            "sensing_touchingobjectmenu",
+            "sensing_touchingcolor",
+            "sensing_coloristouchingcolor",
+            "sensing_distanceto",
+            "sensing_distancetomenu",
+            "sensing_askandwait",
+            "sensing_answer",
+            "sensing_keypressed",
+            "sensing_keyoptions",
+            "sensing_mousedown",
+            "sensing_mousex",
+            "sensing_mousey",
+            "sensing_setdragmode",
+            "sensing_loudness",
+            "sensing_timer",
+            "sensing_resettimer",
+            "sensing_of",
+            "sensing_of_object_menu",
+            "sensing_current",
+            "sensing_dayssince2000",
+            "sensing_username",
+            "operator_add",
+            "operator_subtract",
+            "operator_multiply",
+            "operator_random",
+            "operator_gt",
+            "operator_lt",
+            "operator_equals",
+            "operator_and",
+            "operator_or",
+            "operator_not",
+            "operator_join",
+            "operator_letter_of",
+            "operator_length",
+            "operator_contains",
+            "looks_think",
+            "operator_mod",
+            "operator_round",
+            "operator_mathop",
+            "data_setvariableto",
+            "data_changevariableby",
+            "data_showvariable",
+            "data_hidevariable",
+            "data_addtolist",
+            "data_deleteoflist",
+            "data_deletealloflist",
+            "data_insertatlist",
+            "data_replaceitemoflist",
+            "data_itemoflist",
+            "data_itemnumoflist",
+            "data_lengthoflist",
+            "data_listcontainsitem",
+            "data_showlist",
+            "data_hidelist",
+            "procedures_definition",
+            "procedures_prototype",
+            "argument_reporter_string_number",
+            "argument_reporter_boolean",
+            "procedures_call",
+            "ThenBlock",
+            "BodyBlock",
+            "ThenBranch"
+
+        ]
+
+valid_other_field_codes = ["BACKDROP","DIRECTION","ITEM","OBJECT","STEPS","MESSAGE","CHANGE","OBJECT","SOUND_MENU","VOLUME","TIMES","DISTANCETOMENU","CONDITION"
+                                        "OPERAND1","OPERAND2","KEY_OPTION","NUM","INDEX","KEY_OPTION_SPACE","DEGREES","TOWARDS","SECS","SIZE","QUESTION","DX","COSTUME","OPERAND",
+                                        "BACKDROP_backdrop1","BROADCAST_INPUT","TOUCHINGOBJECTMENU","WHENGREATERTHANMENU_LOUDNESS_VALUE_10","DURATION","KEY_OPTION_down","KEY_OPTION_up",
+                                        "KEY_OPTION_left","KEY_OPTION_right","BROADCAST_OPTION_Game","CONDITION","VALUE","arrow"
+                                        ]
 
 def get_all_hashes_from_projects(db_path):
     pass
@@ -63,11 +208,114 @@ def eliminate_duplicates_test_hashes(train_hashes, test_hashes):
     
     return unique_test_hashes
     
+def get_all_contents(hash):
+        int_val = None
+        conn,curr = get_connection()
+        if conn != None:
+         curr.execute("select distinct(content) from contents where hash = ? ", (hash,))  
+         try:
+            int_val = curr.fetchall()[0][0]
+            #fin_resp = [eac_val for each_cont in val if isinstance(val,list) and len(val) > 0 for eac_val in each_cont if isinstance(each_cont,tuple)]
+            
+         except Exception as e:
+             print(e.with_traceback)
+         
+        return int_val
+
+def replace_non_vs_string_with_tokens(string_val):
+        if isinstance(string_val,str) and len(string_val) > 0:
+            val2 = string_val.split()
+            
+            new_list = ['<literal>' if word not in valid_opcodes and word not in valid_other_field_codes and not word.startswith("BROADCAST_")  else word for word in val2  ]
+            
+            return " ".join(new_list)
+        else:
+            return ""
+
+def slice_from_start(string_val):
+        val = ''
+        if string_val is not None:
+            try:
+                val = " ".join(string_val)
+            except:
+                val = ''
+            keywords = ["event_","control_","procedures_"]
+            if len(val) > 0:
+                start_position = min((val.find(keyword) for keyword in keywords if keyword in val), default=-1)
+                if start_position != -1:
+                    extr_text = val[start_position:]
+            
+                    return extr_text
+                
+all_connections = []
+#all_nodes = []
+
+
+def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram,run):
+        print(hashes)
+
+        if not hashes:
+            return
+
+        # Pre-process hashes by stripping white spaces
+        hashes = [h.strip() for h in hashes if isinstance(h, str)]
+
+        # Open the extracted paths log file once
+        with open(f"{log_path}/{log_filename}_{ngram}_{run}.txt", "a") as exp:
+            for each_hash in hashes:
+                contents = get_all_contents(each_hash)
+            
+                if not contents:  # Continue if no contents
+                    continue
+
+                # Attempt to parse the contents
+                try:
+                    contents2 = json.loads(contents)
+                    all_connections = contents2["stats"].get("connections", [])
+                    #all_nodes = contents2["stats"].get("all_nodes", [])
+                except (KeyError, ValueError):
+                    all_connections = []
+                    #all_nodes = []
+
+                # Skip if there are no connections
+                if not isinstance(all_connections, list) or not all_connections:
+                    continue
+
+                # Open the output file for this hash once
+                with open(f"{path_name}{each_hash}.txt", "a") as fp:
+                    for each_connection in all_connections:
+                        if not each_connection:
+                            continue
+
+                        try:
+                            val = slice_from_start(each_connection)
+                            sec_val = replace_non_vs_string_with_tokens(val)
+
+                            # Log the old and replaced values
+                            exp.write(f"old val {val} replaced value {sec_val}\n")
+                        except Exception:
+                            sec_val = ''
+
+                        # Continue if the processed value is empty
+                        if not sec_val:
+                            continue
+
+                        # Write the processed value to the output file
+                        fp.write(f"{sec_val}\n")
+            
 
 train_proj,test_proj = sample_train_test(get_all_project_names(),0.1,0.2)
-train = retr_all_hash_for_proj_set(train_proj)
-print(f"total train {len(train)}")
-test = retr_all_hash_for_proj_set(test_proj)
-print(f"total test {len(test)}")
-uniq_test = eliminate_duplicates_test_hashes(train,test)
-print(f"total unique test {len(uniq_test)}")
+train_hashes = retr_all_hash_for_proj_set(train_proj)
+test_hashes = retr_all_hash_for_proj_set(test_proj)
+uniq_test = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
+
+test_path_10_o2_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_2_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",test_hashes,2,1)
+
+train_path_10_o2_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_2_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,2,1)
+# train_path_10_o2_r2= generate_simple_graph_optimized("","","",train_hashes)
+# train_path_10_o2_r3= generate_simple_graph_optimized("","","",train_hashes)
+# train_path_10_o2_r4= generate_simple_graph_optimized("","","",train_hashes)
+# train_path_10_o2_r5= generate_simple_graph_optimized("","","",train_hashes)
+
+
+
