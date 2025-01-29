@@ -317,8 +317,8 @@ base_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/"
 for each_model in model_numbers:
     for each_gram in range(2,7):
         for each_run in range(1,6):
-            train_dir = Path(f"{base_path}{each_model}/path_{each_model}/{each_gram}_{each_run}/")
-            test_dir = Path(f"{base_path}{each_model}/path_{each_model}/{each_gram}_{each_run}_test/")
+            train_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}/")
+            test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
             log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
             log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
             train_dir.mkdir(exist_ok=True)
