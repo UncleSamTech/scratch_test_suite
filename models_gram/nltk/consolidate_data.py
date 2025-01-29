@@ -177,5 +177,5 @@ def write_each_train_file_opt_corr(base_file_path, base_new_train_path):
 #dump_data_in_pickle("scratch_data.pkl","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths")
 #dump_data_in_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/list_path_120_v2/")
 #load_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data_version3.pkl")
-write_each_train_file_opt_corr("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
-#conv_pkl_to_txt_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/test_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_test")
+#write_each_train_file_opt_corr("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets")
+conv_pkl_to_txt_optimized2("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_train")
