@@ -2,6 +2,7 @@ import os
 from sklearn.model_selection import train_test_split
 import sqlite3
 import json
+from pathlib import Path
 
 valid_opcodes = [
             "event_whenflagclicked",
@@ -252,6 +253,7 @@ all_connections = []
 
 
 def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram,run):
+        
         print(hashes)
 
         if not hashes:
@@ -304,22 +306,42 @@ def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram
                         fp.write(f"{sec_val}\n")
             
 
-train_proj,test_proj = sample_train_test(get_all_project_names(),0.1,0.2)
+train_splits = [0.2,0.3,0.5,0.8]
+model_numbers = [20]
+train_proj,test_proj = sample_train_test(get_all_project_names(),0.2,0.2)
 train_hashes = retr_all_hash_for_proj_set(train_proj)
 test_hashes = retr_all_hash_for_proj_set(test_proj)
 uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
 
-test_path_10_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,6,1)
-train_path_10_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,6,1)
+base_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/"
+for each_model in model_numbers:
+    for each_gram in range(2,7):
+        for each_run in range(1,6):
+            train_dir = Path(f"{base_path}{each_model}/path_{each_model}/{each_gram}_{each_run}/")
+            test_dir = Path(f"{base_path}{each_model}/path_{each_model}/{each_gram}_{each_run}_test/")
+            log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
+            log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
+            train_dir.mkdir(parents=True, exist_ok=True)
+            test_dir.mkdir(parents=True, exist_ok=True)
+            log_dir.mkdir(parents=True,exist_ok=True)
+            log_dir_test.mkdir(parents=True,exist_ok=True)
+            if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
+                generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
+                generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
 
-test_path_10_o6_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_2_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,6,2)
-train_path_10_o6_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_2/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,6,2)
-test_path_10_o6_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_3_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,6,3)
-train_path_10_o6_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_3/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,6,3)
 
-test_path_10_o6_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_4_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,6,4)
-train_path_10_o6_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_4/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,6,4)
-test_path_10_o6_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_5_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,6,5)
-train_path_10_o6_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_6_5/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,6,5)
+
+
+
+# test_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,1)
+# train_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,1)
+# test_path_20_o6_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_2_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,2)
+# train_path_20_o6_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_2/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,2)
+# test_path_20_o6_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_3_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,3)
+# train_path_20_o6_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_3/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,3)
+# test_path_20_o6_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_4_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,4)
+# train_path_20_o6_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_4/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,4)
+# test_path_20_o6_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_5_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,5)
+# train_path_20_o6_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_5/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,5)
 
 
