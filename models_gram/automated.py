@@ -709,7 +709,7 @@ def generate_paths_opt(base_path, models, ratio_split):
 #generate_paths2(tr_hash,ts_hash,"/Users/samueliwuchukwu/desktop/auto/train","/Users/samueliwuchukwu/desktop/auto/test","/Users/samueliwuchukwu/desktop/auto/log","/Users/samueliwuchukwu/desktop/auto/log_test")
 
 
-#generate_paths_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],0.1)
+generate_paths_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],0.1)
 generate_paths_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],0.2)
 generate_paths_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[30],0.3)
 generate_paths_opt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[50],0.5)
