@@ -1,4 +1,5 @@
 import os
+from xml.etree.ElementPath import find
 from sklearn.model_selection import train_test_split
 import sqlite3
 import json
@@ -178,7 +179,7 @@ def sample_train_test_train(data, ratio_train):
     return train_project
 
 def sample_train_test_test(data, ratio_test):
-    test_project, _ = train_test_split(data, train_size=ratio_test, random_state=None)
+    _,test_project = train_test_split(data, train_size=ratio_test, random_state=None)
     return test_project
 
 def retr_hash_match_project(project_name):
@@ -412,20 +413,35 @@ def generate_paths(base_path,models,train_hashes,test_hashes):
                     generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", test_hashes, each_gram, each_run)
 
 
-# train_hash_80 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8))
-# test_hash_20_80 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2))
-# uniq_hash = eliminate_duplicates_test_hashes(train_hash_80,test_hash_20_80)
-# generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[80],train_hash_80,uniq_hash)
+train_hash_80 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8))
+test_hash_20_80 = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+uniq_hash_1 = eliminate_duplicates_test_hashes(train_hash_80,test_hash_20_80)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[80],train_hash_80,uniq_hash_1)
 
 
-# train_hash_50 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5))
-# test_hash_20_50 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2))
-# uniq_hash = eliminate_duplicates_test_hashes(train_hash_50,test_hash_20_50)
-# generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[50],train_hash_50,uniq_hash)
+train_hash_50 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5))
+test_hash_20_50 = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+uniq_hash_2 = eliminate_duplicates_test_hashes(train_hash_50,test_hash_20_50)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[50],train_hash_50,uniq_hash_2)
+
+train_hash_30 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.3))
+test_hash_20_30 = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+uniq_hash_3 = eliminate_duplicates_test_hashes(train_hash_30,test_hash_20_30)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[30],train_hash_30,uniq_hash_3)
+
+train_hash_20 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2))
+test_hash_20_20 = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+uniq_hash_4 = eliminate_duplicates_test_hashes(train_hash_20,test_hash_20_20)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],train_hash_20,uniq_hash_4)
+
+train_hash_10 = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.1))
+test_hash_20_10 = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+uniq_hash_5 = eliminate_duplicates_test_hashes(train_hash_10,test_hash_20_10)
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[10],train_hash_10,uniq_hash_5)
 
 
-generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[50],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
-generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[80],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
+# generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[50],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.5)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
+# generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[80],retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8)),eliminate_duplicates_test_hashes(retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.8)),retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))))
 
 # test_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,1)
 # train_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,1)
@@ -469,4 +485,9 @@ generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[80],
 #   done
 # done
 
-#for n in {2..6}; do for r in {1..5}; do TRAIN="/media/crouton/siwuchuk/newdir/vscode_repos_files/method/30/path_30_${n}_${r}"; TEST="${TRAIN}_test"; [[ -d "$TRAIN" && -d "$TEST" ]] && comm -12 <(ls "$TRAIN" | sort) <(ls "$TEST" | sort) | xargs -I {} rm "$TEST/{}"; done; done
+#for n in {2..6}; do for r in {1..5}; do TRAIN="/media/crouton/siwuchuk/newdir/vscode_repos_files/method/80/path_80_${n}_${r}"; TEST="${TRAIN}_test"; [[ -d "$TRAIN" && -d "$TEST" ]] && comm -12 <(ls "$TRAIN" | sort) <(ls "$TEST" | sort) | xargs -I {} rm "$TEST/{}"; done; done
+# find /media/crouton/siwuchuk/newdir/vscode_repos_files/method/10 -mindepth 1 -delete
+# find /media/crouton/siwuchuk/newdir/vscode_repos_files/method/20 -mindepth 1 -delete
+# find /media/crouton/siwuchuk/newdir/vscode_repos_files/method/30 -mindepth 1 -delete
+# find /media/crouton/siwuchuk/newdir/vscode_repos_files/method/50 -mindepth 1 -delete
+# find /media/crouton/siwuchuk/newdir/vscode_repos_files/method/80 -mindepth 1 -delete
