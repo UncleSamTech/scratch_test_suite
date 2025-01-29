@@ -172,12 +172,13 @@ def get_all_project_names():
     
     return fin_resp
 
-def sample_train_test(data, ratio_train, ratio_test):
-    train_project,_ = train_test_split(data, train_size=ratio_train, random_state=None)
-    test_project, _ = train_test_split(data, train_size=ratio_test, random_state=None)
+def sample_train_test_train(data, ratio_train):
+    train_project,_ = train_test_split(data, train_size=ratio_train, random_state=None)   
+    return train_project
 
-    print(f"total train set {len(train_project)} and total test set {len(test_project)}")
-    return train_project,test_project
+def sample_train_test_test(data, ratio_test):
+    test_project, _ = train_test_split(data, train_size=ratio_test, random_state=None)
+    return test_project
 
 def retr_hash_match_project(project_name):
     hash_list = []
@@ -381,32 +382,33 @@ def generate_simple_graph_optimized2(path_name, log_path, log_filename, hashes, 
 
 train_splits = [0.2,0.3,0.5,0.8]
 model_numbers = [20]
-train_proj,test_proj = sample_train_test(get_all_project_names(),0.2,0.2)
-train_hashes = retr_all_hash_for_proj_set(train_proj)
-test_hashes = retr_all_hash_for_proj_set(test_proj)
-uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
 
-base_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/"
-for each_model in model_numbers:
-    for each_gram in range(2,7):
-        for each_run in range(1,6):
-            train_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}/")
-            test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
-            log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
-            log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
-            train_dir.mkdir(exist_ok=True)
-            test_dir.mkdir(exist_ok=True)
-            log_dir.mkdir(exist_ok=True)
-            log_dir_test.mkdir(exist_ok=True)
-            print(f"train_dir {train_dir}")
-            print(f"test_dir {test_dir}")
-            if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-                generate_simple_graph_optimized2(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
-                generate_simple_graph_optimized2(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
 
+def generate_paths(base_path,models,train_hashes,test_hashes):
+#
+    for each_model in models:
+        for each_gram in range(2,7):
+            for each_run in range(1,6):
+                train_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}/")
+                test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
+                log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
+                log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
+                train_dir.mkdir(exist_ok=True)
+                test_dir.mkdir(exist_ok=True)
+                log_dir.mkdir(exist_ok=True)
+                log_dir_test.mkdir(exist_ok=True)
+                print(f"train_dir {train_dir}")
+                print(f"test_dir {test_dir}")
+                if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
+
+                    generate_simple_graph_optimized2(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
+                    generate_simple_graph_optimized2(test_dir,log_dir_test,"logs_test",test_hashes,each_gram,each_run)
 
 
 
+train_hash = retr_all_hash_for_proj_set(sample_train_test_train(get_all_project_names(),0.2))
+test_hash = retr_all_hash_for_proj_set(sample_train_test_test(get_all_project_names(),0.2))
+generate_paths("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/",[20],train_hash,eliminate_duplicates_test_hashes(train_hash,test_hash))
 
 # test_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs_test","logs_test",uniq_test_hashes,6,1)
 # train_path_20_o6_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_6_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/20/path_20_logs","logs",train_hashes,6,1)
