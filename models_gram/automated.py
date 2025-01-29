@@ -356,6 +356,8 @@ def get_train_hash_unique_test_hash(data, train_ratio):
     # Identify unique test hashes that are not in the train set
     uniq_test_hashes = test_hashes - train_hashes
 
+    print(f"Train hashes: {len(train_hashes)}, Unique Test hashes: {len(uniq_test_hashes)}")
+
     return list(train_hashes), list(uniq_test_hashes)
 
 
@@ -687,6 +689,9 @@ def generate_paths_opt(base_path, models, ratio_split):
         test_dir = Path(f"{base_path}{each_model}/path_{each_model}_{each_gram}_{each_run}_test/")
         log_dir = Path(f"{base_path}{each_model}/path_{each_model}_logs")
         log_dir_test = Path(f"{base_path}{each_model}/path_{each_model}_logs_test")
+        print(f"Files before: {len(list(train_dir.glob('*')))} in {train_dir}")
+        print(f"Files before: {len(list(test_dir.glob('*')))} in {test_dir}")
+
 
         
         train_hashes, test_hashes = get_train_hash_unique_test_hash(all_projects,ratio_split)
@@ -705,6 +710,8 @@ def generate_paths_opt(base_path, models, ratio_split):
             generate_simple_graph_optimized2(test_dir, log_dir_test, "logs_test", test_hashes, each_gram, each_run)
 
 
+        print(f"Files after: {len(list(train_dir.glob('*')))} in {train_dir}")
+        print(f"Files after: {len(list(test_dir.glob('*')))} in {test_dir}")
 
 #generate_paths2(tr_hash,ts_hash,"/Users/samueliwuchukwu/desktop/auto/train","/Users/samueliwuchukwu/desktop/auto/test","/Users/samueliwuchukwu/desktop/auto/log","/Users/samueliwuchukwu/desktop/auto/log_test")
 
