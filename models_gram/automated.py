@@ -309,17 +309,17 @@ train_hashes = retr_all_hash_for_proj_set(train_proj)
 test_hashes = retr_all_hash_for_proj_set(test_proj)
 uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
 
-test_path_10_o4_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,4,1)
-train_path_10_o4_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,4,1)
+test_path_10_o5_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_1_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,5,1)
+train_path_10_o5_r1= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_1/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,5,1)
 
-test_path_10_o4_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_2_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,4,2)
-train_path_10_o4_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_2/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,4,2)
-test_path_10_o4_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_3_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,4,3)
-train_path_10_o4_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_3/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,4,3)
+test_path_10_o5_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_2_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,5,2)
+train_path_10_o5_r2= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_2/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,5,2)
+test_path_10_o5_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_3_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,5,3)
+train_path_10_o5_r3= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_3/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,5,3)
 
-test_path_10_o4_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_4_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,4,4)
-train_path_10_o4_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_4/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,4,4)
-test_path_10_o4_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_5_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,4,5)
-train_path_10_o4_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_4_5/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,4,5)
+test_path_10_o5_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_4_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,5,4)
+train_path_10_o5_r4= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_4/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,5,4)
+test_path_10_o5_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_5_test/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs_test","logs_test",uniq_test_hashes,5,5)
+train_path_10_o5_r5= generate_simple_graph_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_5_5/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/10/path_10_logs","logs",train_hashes,5,5)
 
 
