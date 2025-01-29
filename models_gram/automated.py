@@ -308,15 +308,14 @@ def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram
                         # Write the processed value to the output file
                         fp.write(f"{sec_val}\n")
 
-import os
 
 def generate_simple_graph_optimized2(path_name, log_path, log_filename, hashes, ngram, run):
     if not hashes:
         return
 
-    # Ensure paths end with a slash
-    path_name = path_name if path_name.endswith("/") else path_name + "/"
-    log_path = log_path if log_path.endswith("/") else log_path + "/"
+    # Convert PosixPath to string and ensure paths end with a slash
+    path_name = str(path_name) if str(path_name).endswith("/") else str(path_name) + "/"
+    log_path = str(log_path) if str(log_path).endswith("/") else str(log_path) + "/"
 
     # Save the original working directory
     original_dir = os.getcwd()
