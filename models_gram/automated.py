@@ -307,8 +307,8 @@ def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram
             
 
 train_splits = [0.2,0.3,0.5,0.8]
-model_numbers = [20]
-train_proj,test_proj = sample_train_test(get_all_project_names(),0.2,0.2)
+model_numbers = [30]
+train_proj,test_proj = sample_train_test(get_all_project_names(),0.3,0.2)
 train_hashes = retr_all_hash_for_proj_set(train_proj)
 test_hashes = retr_all_hash_for_proj_set(test_proj)
 uniq_test_hashes = eliminate_duplicates_test_hashes(train_hashes,test_hashes)
