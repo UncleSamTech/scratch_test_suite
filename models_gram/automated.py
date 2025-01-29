@@ -254,7 +254,7 @@ all_connections = []
 
 def generate_simple_graph_optimized(path_name,log_path,log_filename,hashes,ngram,run):
         
-        print(hashes)
+        #print(hashes)
 
         if not hashes:
             return
@@ -327,9 +327,9 @@ for each_model in model_numbers:
             log_dir_test.mkdir(exist_ok=True)
             print(f"train_dir {train_dir}")
             print(f"test_dir {test_dir}")
-            # if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
-            #     generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
-            #     generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
+            if train_dir.exists() and test_dir.exists() and log_dir.exists() and log_dir_test.exists():
+                generate_simple_graph_optimized(train_dir,log_dir,"logs_test",train_hashes,each_gram,each_run)
+                generate_simple_graph_optimized(test_dir,log_dir_test,"logs_test",uniq_test_hashes,each_gram,each_run)
 
 
 
