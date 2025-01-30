@@ -813,21 +813,19 @@ class scratch_train_mle:
         time_log_file = f"{log_path}/time_logs/time_{model_number}.txt"
         header_check = not os.path.exists(time_log_file) or os.path.getsize(time_log_file) == 0
 
+        if header_check:
+                with open(time_log_file, "w") as tm_file:
+                    tm_file.write(f"train_data,test_data,train_time,eval_time\n")
+
         # Ensure the log directory exists
         os.makedirs(os.path.dirname(time_log_file), exist_ok=True)
 
         # Ensure the model_path directory exists
         os.makedirs(model_path, exist_ok=True)
 
-        for each_gram, run in product(range(2, 7), range(1, 5)):
+        for each_gram, run in product(range(2, 7), range(1, 6)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
-            test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt"
-
-            
-
-            if header_check:
-                with open(time_log_file, "w") as tm_file:
-                    tm_file.write(f"model_name,train_time,eval_time\n")
+            test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt" 
 
             try:
                 train_start_time = time.time()
@@ -842,7 +840,7 @@ class scratch_train_mle:
                 eval_time_duration = time.time() - eval_start_time
                 
                 with open(time_log_file, "a") as tp:
-                    tp.write(f"{model_name},{train_time_duration},{eval_time_duration}\n")
+                    tp.write(f"{train_data},{test_data},{train_time_duration},{eval_time_duration}\n")
 
             except Exception as e:
                 print(f"Error: {e}")
