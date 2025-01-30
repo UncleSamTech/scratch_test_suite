@@ -798,35 +798,45 @@ class scratch_train_mle:
     
         return final_result
 
-    
-    def multiple_train_time_metrics_new(self, train_path,test_path,log_path,model_path,model_number):
+
+
+    def multiple_train_time_metrics_new(self, train_path, test_path, log_path, model_path, model_number):
         time_log_file = f"{log_path}/time_logs/time_{model_number}.txt"
         header_check = not os.path.exists(time_log_file) or os.path.getsize(time_log_file) == 0
-        for each_gram,run in product(range(2,7), range(1,5)):
+
+        # Ensure the log directory exists
+        os.makedirs(os.path.dirname(time_log_file), exist_ok=True)
+
+        # Ensure the model_path directory exists
+        os.makedirs(model_path, exist_ok=True)
+
+        for each_gram, run in product(range(2, 7), range(1, 5)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt"
-            
+
             model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}"
+
             if header_check:
-                with open(time_log_file,"w") as tm_file:
+                with open(time_log_file, "w") as tm_file:
                     tm_file.write(f"model_name,train_time,eval_time\n")
 
             try:
                 train_start_time = time.time()
                 
-                self.train_mle_new(train_data,each_gram,model_name)
+                # Ensure model_path exists before saving the .pkl file
+                self.train_mle_new(train_data, each_gram, model_name)
                 train_time_duration = time.time() - train_start_time
 
                 eval_start_time = time.time()
-                self.scratch_evaluate_model_nltk_in_order_all_new(test_data,f"{model_name}.pkl",log_path)
+                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, f"{model_name}.pkl", log_path)
                 eval_time_duration = time.time() - eval_start_time
-                with open(time_log_file,"a") as tp:
+                
+                with open(time_log_file, "a") as tp:
                     tp.write(f"{model_name},{train_time_duration},{eval_time_duration}\n")
 
-
             except Exception as e:
-                print(f"error as a result of {e}")
-            
+                print(f"Error: {e}")
+
 
 
     
