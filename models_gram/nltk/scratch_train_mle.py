@@ -814,7 +814,7 @@ class scratch_train_mle:
         header_check = not os.path.exists(time_log_file) or os.path.getsize(time_log_file) == 0
 
         if header_check:
-                with open(time_log_file, "w") as tm_file:
+                with open(time_log_file, "a") as tm_file:
                     tm_file.write(f"train_data,test_data,train_time,eval_time\n")
 
         # Ensure the log directory exists
