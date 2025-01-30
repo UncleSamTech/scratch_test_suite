@@ -7,14 +7,17 @@ data = []
 def consolidate_data(connections_path):
     if os.path.isdir(connections_path):
         for scratch_connection_files in os.listdir(connections_path):
+            print(f"Processing file: {scratch_connection_files}")  # Log file name
             with open(os.path.join(connections_path,scratch_connection_files),'r',encoding='utf-8') as scratch_connections:
                 lines = scratch_connections.readlines()
+                print(f"Lines in {scratch_connection_files}: {len(lines)}")  # Log number of lines
                 for line in lines:
                     line = line.strip()
                     if len(line) > 0:
                         data.append(line)
                     else:
                         continue
+    print(f"Total lines processed: {len(data)}")
     return data
 
 def dump_data_in_pickle(filename,file_path):
@@ -217,7 +220,7 @@ def write_each_train_file_opt_mn(base_file_path, base_new_train_path):
             pickle.dump(file_data, file)
             print(f"Written: {new_file_name}")
 
-def write_each_train_file_to_txt(base_file_path, base_new_train_path):
+def write_each_test_file_to_txt(base_file_path, base_new_train_path):
     model_numbers = [10, 20, 30, 50, 80]
     ngram_range = range(2, 7)
     run_range = range(1, 6)
@@ -225,9 +228,12 @@ def write_each_train_file_to_txt(base_file_path, base_new_train_path):
     # Keep track of written content (using a set of hashes to check for duplicates)
     written_content = set()
 
+
     for each_number, ngram, run in product(model_numbers, ngram_range, run_range):
         each_file_path = f"{base_file_path}/{each_number}/path_{each_number}_{ngram}_{run}_test"
         new_file_name = f"{base_new_train_path}/scratch_test_set_{each_number}_{ngram}_{run}.txt"
+        print(f"Number of lines before for model {each_number}, ngram {ngram}, run {run}: {len(file_data)}")
+
 
         # Check if file already exists and skip if content is the same
         if os.path.exists(new_file_name):
@@ -266,5 +272,5 @@ def write_each_train_file_to_txt(base_file_path, base_new_train_path):
 #dump_data_in_pickle("scratch_data.pkl","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/files/sb3_parsed/extracted_paths")
 #dump_data_in_pickle("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/list_path_120_v2/")
 #load_data("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram/scratch_data_version3.pkl")
-write_each_train_file_to_txt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/test_sets")
+write_each_test_file_to_txt("/media/crouton/siwuchuk/newdir/vscode_repos_files/method","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/test_sets")
 #conv_pkl_to_txt_optimized2("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/train_sets","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/datasets_train")
