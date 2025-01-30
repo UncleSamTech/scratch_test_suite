@@ -57,9 +57,9 @@ class scratch_train_mle:
 
             scratch_model = MLE(n)
             scratch_model.fit(train_data_val, padded_sents)
-            formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}"
+            
 
-            with open(f"{formed_model}.pkl", "wb") as fd:
+            with open(f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl", "wb") as fd:
                 pickle.dump(scratch_model, fd)
 
         except Exception as e:
@@ -470,6 +470,7 @@ class scratch_train_mle:
 
 
         log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
+        formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
         file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
 
         with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
@@ -485,7 +486,7 @@ class scratch_train_mle:
                     context = ' '.join(sentence_tokens[:idx])
                     true_next_word = sentence_tokens[idx]
 
-                    formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+                    
 
                     predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
                     rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
