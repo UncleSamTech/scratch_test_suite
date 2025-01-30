@@ -232,7 +232,7 @@ def write_each_test_file_to_txt(base_file_path, base_new_train_path):
     for each_number, ngram, run in product(model_numbers, ngram_range, run_range):
         each_file_path = f"{base_file_path}/{each_number}/path_{each_number}_{ngram}_{run}_test"
         new_file_name = f"{base_new_train_path}/scratch_test_set_{each_number}_{ngram}_{run}.txt"
-        print(f"Number of lines before for model {each_number}, ngram {ngram}, run {run}: {len(file_data)}")
+        
 
 
         # Check if file already exists and skip if content is the same
@@ -253,7 +253,7 @@ def write_each_test_file_to_txt(base_file_path, base_new_train_path):
 
         # Load new data only if needed
         file_data = consolidate_data(each_file_path)
-
+        print(f"Number of lines before for model {each_number}, ngram {ngram}, run {run}: {len(file_data)}")
         # Check if the content has been written already, if yes, skip
         data_hash = hash(str(file_data))
         if data_hash in written_content:
