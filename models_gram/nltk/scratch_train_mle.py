@@ -58,7 +58,7 @@ class scratch_train_mle:
             self.scratch_model = MLE(n)
             self.scratch_model.fit(train_data_val, padded_sents)
 
-            with open({model_name}, "wb") as fd:
+            with open(f"{model_name}.pkl", "wb") as fd:
                 pickle.dump(self.scratch_model, fd)
 
         except Exception as e:
@@ -805,7 +805,7 @@ class scratch_train_mle:
         for each_gram,run in product(range(2,7), range(1,5)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt"
-            model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}.pkl"
+            
             
             if header_check:
                 with open(time_log_file,"w") as tm_file:
@@ -813,11 +813,12 @@ class scratch_train_mle:
 
             try:
                 train_start_time = time.time()
-                self.train_mle(train_data,each_gram,model_name)
+                model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}"
+                self.train_mle_new(train_data,each_gram,model_name)
                 train_time_duration = time.time() - train_start_time
 
                 eval_start_time = time.time()
-                self.scratch_evaluate_model_nltk_in_order_all_new(test_data,model_name,log_path)
+                self.scratch_evaluate_model_nltk_in_order_all_new(test_data,f"{model_name}.pkl",log_path)
                 eval_time_duration = time.time() - eval_start_time
                 with open(time_log_file,"a") as tp:
                     tp.write(f"{model_name},{train_time_duration},{eval_time_duration}\n")
