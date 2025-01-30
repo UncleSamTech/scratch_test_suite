@@ -57,7 +57,8 @@ class scratch_train_mle:
 
             scratch_model = MLE(n)
             scratch_model.fit(train_data_val, padded_sents)
-            
+            formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}"
+            print(formed_model)
 
             with open(f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl", "wb") as fd:
                 pickle.dump(scratch_model, fd)
@@ -841,7 +842,7 @@ class scratch_train_mle:
 
     
 tr_scr = scratch_train_mle()
-tr_scr.multiple_train_time_metrics_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/10",10,"nltk_")
+tr_scr.multiple_train_time_metrics_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/10","10","nltk_")
 #accuracy = tr_scr.paired_t_test([0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407],[0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328])
 #print("accuracy parametric t-test result for nltk model ", accuracy)
 #precision =tr_scr.paired_t_test([0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743],[0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372])
