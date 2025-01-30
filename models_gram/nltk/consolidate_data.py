@@ -247,7 +247,7 @@ def write_each_train_file_to_txt(base_file_path, base_new_train_path):
 
         # Load new data only if needed
         file_data = consolidate_data(each_file_path)
-
+        print(f"Number of lines before for model {each_number}, ngram {ngram}, run {run}: {len(file_data)}")
         # Check if the content has been written already, if yes, skip
         data_hash = hash(str(file_data))
         if data_hash in written_content:
