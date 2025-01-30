@@ -50,25 +50,24 @@ class scratch_train_mle:
 
     def train_mle_new(self, train_data, n, model_name, model_path, model_number, run):
         try:
-            # Read the train data
             with open(train_data, "r", encoding="utf-8") as f:
+                print("File opened successfully")  # Debugging
                 tokenized_scratch_data = (word_tokenize(line.strip()) for line in f if line.strip())
 
-            # Prepare the training data
+            # Ensure file is still open
+            print("File is closed:", f.closed)  # Debugging to check file status after 'with' block
+
             train_data_val, padded_sents = padded_everygram_pipeline(n, tokenized_scratch_data)
 
-            # Train the model
             scratch_model = MLE(n)
             scratch_model.fit(train_data_val, padded_sents)
 
-            # Construct the file name for saving
             formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}"
             print("Formed model file name:", formed_model)  # Debugging
 
             # Ensure the directory exists
             os.makedirs(model_path, exist_ok=True)
 
-            # Save the trained model
             model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
             print(f"Saving model to {model_file}")  # Debugging
 
@@ -77,6 +76,7 @@ class scratch_train_mle:
 
         except Exception as e:
             print("Error:", e)
+
 
 
 
