@@ -34,45 +34,33 @@ class bi_lstm_scratch:
         self.model = keras.Sequential()
 
     
-    def tokenize_data_inp_seq(self, file_name, result_path):
+    def tokenize_data_inp_seq(self, file_name, result_path,run):
         with open(file_name, "r", encoding="utf-8") as rf:
             lines = rf.readlines()
-            #shuffle trainset every run
-            random.shuffle(lines)
-            # Replace specific characters
-            lines = [line.replace("_", "UNDERSCORE").replace(">", "RIGHTANG").replace("<", "LEFTANG").lower() for line in lines]
-            #print("see lines:", lines)
-
+      
             # Initialize and fit the tokenizer
             self.tokenizer = Tokenizer(oov_token='<oov>')
             self.tokenizer.fit_on_texts(lines)
 
             # Save the tokenizer
-            with open(f"{result_path}tokenized_file_50embedtime1.pickle", "wb") as tk:
+            with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "wb") as tk:
                 pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
             # Define total_words based on the tokenizer
-            self.total_words = len(self.tokenizer.word_index) + 1  # +1 to account for <oov>
+            self.total_words = len(self.tokenizer.word_index) + 1  
             
             print(f"Total words (vocabulary size): {self.total_words}")
 
             # Generate token sequences (ngrams)
             self.encompass = []
-            max_index = 0  # Track max token index to verify alignment with `total_words`
             for each_line in lines:
                 each_line = each_line.strip()
                 self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
-                #max_index = max(max_index, max(self.token_list, default=0))  # Update max_index
+                
                 for i in range(1, len(self.token_list)):
                     ngram_seq = self.token_list[:i + 1]
                     self.encompass.append(ngram_seq)
 
-            # Verify that total_words aligns with max index in token_list
-            # if max_index >= self.total_words:
-            #     print(f"Adjusting total_words to cover max token index: {max_index}")
-            #     self.total_words = max_index + 1  # Update total_words if needed
-
-            #print(f"First stage complete with encompass: {self.encompass}, total_words: {self.total_words}")
             return self.encompass, self.total_words, self.tokenizer
     
   
@@ -253,30 +241,18 @@ class bi_lstm_scratch:
         #print(model)
         #return val
 
-    def consolidate_data_train(self,filepath,result_path,test_data,proj_number):
-        input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(filepath,result_path)
-        padd_seq,max_len = self.pad_sequ(input_seq)
-        xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
-        print(f"maximum length {max_len}")
+    def consolidate_data_train(self,train_path,result_path,test_path,model_number,logs_path):
+        for each_run in range(1,6):
+            train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+            test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
+            input_seq,total_words,tokenizer = self.tokenize_data_inp_seq(train_data,result_path,each_run)
+            padd_seq,max_len = self.pad_sequ(input_seq)
+            xs,ys,labels = self.prep_seq_labels(padd_seq,total_words)
+            print(f"maximum length {max_len}")
         
        
-        # self.train_model_five_runs(total_words,max_len,xs,ys,result_path,test_data,proj_number)
-        # av = ["main_bilstm_scratch_model_150embedtime1_main_sample_project10_run5.keras"]
-
-        # all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras") and files in av])
-        # print(all_models)
-        
-        # if all_models:
-        #     for model in all_models:
-                
-        #         match = re.search(r"run(\d+)",model.strip())
-
-        #         if match:
-        #             run = match.group(1)
-        #             model = os.path.join(result_path,model).strip()
-
-        #             self.evaluate_bilstm_in_order(test_data,max_len,model,result_path,proj_number,"0",run)
-
+            self.train_model_five_runs_opt(total_words,max_len,xs,ys,result_path,test_data,model_number,each_run,logs_path)
+            
     def predict_word(self,seed_text,model,next_words_count,max_seq_len,tokenize_var):
         
         for _ in range(next_words_count):
@@ -501,35 +477,39 @@ class bi_lstm_scratch:
                         inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
                 
+    def evaluate_bilstm_in_order_upd_norun_opt(self,test_data,maxlen,model,result_path,proj_number,run,logs_path):
+        tokenz = None
+        #loaded_model = load_model(f"{model}",compile=False)
+        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle","rb") as tk:
+            tokenz = pickle.load(tk)
             
-        #             if predicted_next_word is not None:
-        #                 y_true.append(true_next_word)
+    
+
+        with open(test_data,"r",encoding="utf-8") as f:
+            lines= f.readlines()
+            random.shuffle(lines)
+            
+        
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
                 
-        #                 y_pred.append(predicted_next_word)
+                # evaluate each token in order starting from the second token
+                for idx in range(1,len(sentence_tokens)):
 
-        # if not y_true or not y_pred:
-        #     print("No valid predictions made.")
-        #     return None, None, None, None
-        
-        # #self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
-        
-        # end_time = time.time()
-        # time_spent = end_time - start_time
-        # accuracy = accuracy_score(y_true, y_pred)
-        # precision = precision_score(y_true, y_pred, average='macro',zero_division=0)
-        # recall = recall_score(y_true, y_pred, average='macro',zero_division=0)
-        # f1score = f1_score(y_true,y_pred,average="macro",zero_division=0)
+                    context = ' '.join(sentence_tokens[:idx])  
+                    true_next_word = sentence_tokens[idx]
 
-        # metrics_file = f"{result_path}bilstmmetrics_150embedtime1_{proj_number}_projects.txt"
-        # if not os.path.exists(metrics_file) or os.path.getsize(metrics_file) == 0:
-        #     with open(metrics_file,"a") as fl:
-        #         fl.write(f"accuracy,precision,recall,f1score,training_time,evaluation_time\n")
-        # with open(metrics_file,"a") as blm:
-        #     blm.write(f"{accuracy},{precision},{recall},{f1score},{train_time},{time_spent:.2f}\n")
-
-        # self.compute_confusion_matrix(y_true,y_pred,result_path,proj_number,run)
-        
-        # return accuracy,precision,recall,f1score
+                    predicted_next_word,top_10_tokens = self.predict_token_score_upd(context,tokenz,model,maxlen)
+                    rank = self.check_available_rank(top_10_tokens,true_next_word)
+                    investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+                    if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                        with open(investig_path,"a") as ip:
+                            ip.write(f"query,expected,answer,rank,correct\n")
+                    with open(investig_path,"a") as inv_path_file:
+                        inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
 
 
@@ -778,6 +758,65 @@ class bi_lstm_scratch:
             self.evaluate_bilstm_in_order(test_data,max_seq,model,result_path,proj_number,time_spent,run)
             #model.save(model_file_name)
 
+    def train_model_five_runs_opt(self, total_words, max_seq, xs, ys, result_path,test_data,proj_number,runs,logs_path):
+        print(tf.__version__)
+        print("max length",max_seq)
+        
+        
+        gpus = tf.config.experimental.list_physical_devices('GPU')
+        if gpus:
+            print(f"Default GPU device: {gpus[0]}")
+            try:
+                for gpu in gpus:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                print(f"Using GPU: {tf.test.gpu_device_name()}")
+
+            except RuntimeError as e:
+                print(f"Error setting up GPU: {e}")
+                return
+
+        else:
+            print("No GPU available. Running on CPU.")
+
+        
+        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+        
+
+        
+    
+        model = Sequential([
+                Embedding(total_words, 100, input_shape=(max_seq - 1,)),
+                Bidirectional(LSTM(150)),
+                Dense(total_words, activation='softmax')
+                ])
+        adam = Adam(learning_rate=0.01)
+        model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+            
+
+            
+        # Fit the model
+        history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+
+        # Save the history
+        with open(f"{result_path}main_historyrec_150embedtime_6_{runs}.pickle", "wb") as hs:
+            pickle.dump(history.history, hs)
+            
+        #save the model for every run
+        file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras"
+            
+        if os.path.exists(file_name):
+            os.remove(file_name)
+        model.save(file_name)
+
+        
+        
+
+        # Save the model and record training details
+        #model_file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_{run}.keras"
+        self.evaluate_bilstm_in_order_upd_norun_opt(test_data,max_seq,model,result_path,proj_number,runs,logs_path)
+        #model.save(model_file_name)
+
             
     def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,run,top_k=10):
         labels = np.unique(np.concatenate((y_true, y_pred)))  # Get unique labels
@@ -876,7 +915,9 @@ cl_ob = bi_lstm_scratch()
 
 #cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project50_run1.keras")
 #cl_ob.evaluate_bilstm_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/new_metrics")
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
+#cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
+
+cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/logs")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
