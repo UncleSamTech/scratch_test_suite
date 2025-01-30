@@ -48,7 +48,7 @@ class scratch_train_mle:
 
 
 
-    def train_mle_new(self, train_data, n, model_name):
+    def train_mle_new(self, train_data, n, model_name,model_path,model_number,run):
         try:
             with open(train_data, "r", encoding="utf-8") as f:
                 tokenized_scratch_data = (word_tokenize(line.strip()) for line in f if line.strip())
@@ -57,8 +57,9 @@ class scratch_train_mle:
 
             scratch_model = MLE(n)
             scratch_model.fit(train_data_val, padded_sents)
+            formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}"
 
-            with open(f"{model_name}.pkl", "wb") as fd:
+            with open(f"{formed_model}.pkl", "wb") as fd:
                 pickle.dump(scratch_model, fd)
 
         except Exception as e:
@@ -465,15 +466,10 @@ class scratch_train_mle:
 
 
 
-    def scratch_evaluate_model_nltk_in_order_all_new(self, test_data, model_name, result_path):
-        match = re.search(r"nltk_(\d+)_(\d+)_(\d+)", model_name)
-        if not match:
-            print("Invalid model name format")
-            return
-        
-        model_number, ngram_order, run = map(int, match.groups())
+    def scratch_evaluate_model_nltk_in_order_all_new(self, test_data, model_name, result_path,model_path,run,n,model_number):
 
-        log_file = f"{result_path}/nltk_investigate_{model_number}_{ngram_order}_{run}_logs.txt"
+
+        log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
         file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
 
         with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
@@ -489,7 +485,9 @@ class scratch_train_mle:
                     context = ' '.join(sentence_tokens[:idx])
                     true_next_word = sentence_tokens[idx]
 
-                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(model_name, context)
+                    formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+
+                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
                     rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
 
                     precs.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
@@ -800,7 +798,7 @@ class scratch_train_mle:
 
 
 
-    def multiple_train_time_metrics_new(self, train_path, test_path, log_path, model_path, model_number):
+    def multiple_train_time_metrics_new(self, train_path, test_path, log_path, model_path, model_number,model_name):
         time_log_file = f"{log_path}/time_logs/time_{model_number}.txt"
         header_check = not os.path.exists(time_log_file) or os.path.getsize(time_log_file) == 0
 
@@ -814,7 +812,7 @@ class scratch_train_mle:
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt"
 
-            model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}"
+            
 
             if header_check:
                 with open(time_log_file, "w") as tm_file:
@@ -824,11 +822,12 @@ class scratch_train_mle:
                 train_start_time = time.time()
                 
                 # Ensure model_path exists before saving the .pkl file
-                self.train_mle_new(train_data, each_gram, model_name)
+                self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
                 train_time_duration = time.time() - train_start_time
 
                 eval_start_time = time.time()
-                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, f"{model_name}.pkl", log_path)
+                
+                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
                 eval_time_duration = time.time() - eval_start_time
                 
                 with open(time_log_file, "a") as tp:
@@ -841,7 +840,7 @@ class scratch_train_mle:
 
     
 tr_scr = scratch_train_mle()
-tr_scr.multiple_train_time_metrics_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/10",10)
+tr_scr.multiple_train_time_metrics_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/10",10,"nltk_")
 #accuracy = tr_scr.paired_t_test([0.025120772946859903,0.2314009661835749,0.23719806763285023,0.2400966183574879,0.2429951690821256,0.24396135265700483,0.24492753623188407],[0.24492753623188407,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24541062801932367,0.24589371980676328])
 #print("accuracy parametric t-test result for nltk model ", accuracy)
 #precision =tr_scr.paired_t_test([0.0033068915888476084,0.20619551075021053,0.2124757039869255,0.22165444794827815,0.22455299867291584,0.22551918224779507,0.2264853658226743],[0.2264853658226743,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22696845761011392,0.22721000350383372])
