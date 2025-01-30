@@ -51,21 +51,16 @@ class scratch_train_mle:
     def train_mle_new(self, train_data, n, model_name, model_path, model_number, run):
         try:
             with open(train_data, "r", encoding="utf-8") as f:
-                print("File opened successfully")  # Debugging
                 lines = [line.strip() for line in f if line.strip()]
             
             tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
 
-            # Ensure file is still open
-            print("File is closed:", f.closed)  # Debugging to check file status after 'with' block
+            
 
             train_data_val, padded_sents = padded_everygram_pipeline(n, tokenized_scratch_data)
 
             scratch_model = MLE(n)
             scratch_model.fit(train_data_val, padded_sents)
-
-            formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}"
-            print("Formed model file name:", formed_model)  # Debugging
 
             # Ensure the directory exists
             os.makedirs(model_path, exist_ok=True)
@@ -843,7 +838,7 @@ class scratch_train_mle:
 
                 eval_start_time = time.time()
                 
-                #self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
+                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
                 eval_time_duration = time.time() - eval_start_time
                 
                 with open(time_log_file, "a") as tp:
