@@ -986,7 +986,12 @@ kn = kenlm_train()
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")
 
-kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/10")
+kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/20","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/20")
+kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/30","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/30")
+kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/50","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/50")
+kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/80","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/80")
+
+
 
 #/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
 #print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
