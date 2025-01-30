@@ -55,11 +55,11 @@ class scratch_train_mle:
 
             train_data_val, padded_sents = padded_everygram_pipeline(n, tokenized_scratch_data)
 
-            self.scratch_model = MLE(n)
-            self.scratch_model.fit(train_data_val, padded_sents)
+            scratch_model = MLE(n)
+            scratch_model.fit(train_data_val, padded_sents)
 
             with open(f"{model_name}.pkl", "wb") as fd:
-                pickle.dump(self.scratch_model, fd)
+                pickle.dump(scratch_model, fd)
 
         except Exception as e:
             print("Error:", e)
@@ -806,14 +806,14 @@ class scratch_train_mle:
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt"
             
-            
+            model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}"
             if header_check:
                 with open(time_log_file,"w") as tm_file:
                     tm_file.write(f"model_name,train_time,eval_time\n")
 
             try:
                 train_start_time = time.time()
-                model_name = f"{model_path}/nltk_{model_number}_{each_gram}_{run}"
+                
                 self.train_mle_new(train_data,each_gram,model_name)
                 train_time_duration = time.time() - train_start_time
 
