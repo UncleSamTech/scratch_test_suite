@@ -52,7 +52,9 @@ class scratch_train_mle:
         try:
             with open(train_data, "r", encoding="utf-8") as f:
                 print("File opened successfully")  # Debugging
-                tokenized_scratch_data = (word_tokenize(line.strip()) for line in f if line.strip())
+                lines = [line.strip() for line in f if line.strip()]
+            
+            tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
 
             # Ensure file is still open
             print("File is closed:", f.closed)  # Debugging to check file status after 'with' block
