@@ -500,8 +500,74 @@ class kenlm_train:
                                 inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
         
-            # # Perform evaluation for each run
-            # for each_run in range(1, 6):
+    
+  
+
+    def evaluate_all_models_in_folder_in_order_with_runs(self, testdir, vocab_folder, model_folder,new_log_path):
+        # Get vocab and model files
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+        
+        # Match vocab and model files by model number, ngram order, and run number
+        vocab_model_pairs = []
+        vocab_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.vocab")
+        model_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.arpa")
+
+        for vocab in vocab_files:
+            vocab_match = vocab_pattern.match(vocab)
+            if not vocab_match:
+                continue
+            model_number, ngram_order, run_number = vocab_match.groups()
+
+            for model in model_files:
+                model_match = model_pattern.match(model)
+                if model_match and model_match.groups() == (model_number, ngram_order, run_number):
+                    vocab_model_pairs.append((vocab, model, model_number, ngram_order, run_number))
+                    break
+
+        # Evaluate each vocab-model pair
+        for vocab_name, model_name, model_number, ngram_order, run_number in vocab_model_pairs:
+            vocab_path = os.path.join(vocab_folder, vocab_name)
+            model_path = os.path.join(model_folder, model_name)
+            
+            print(f"Evaluating model {model_path} with vocab {vocab_path}")
+
+            # Generate the corresponding test data file path
+            test_data = os.path.join(testdir, f"scratch_test_set_{model_number}_{ngram_order}_{run_number}_proc.txt")
+        
+            # Load the language model
+            model_rec = kenlm.Model(model_path)
+            
+            
+            start_time = time.time()
+            with open(test_data, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                
+
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    sentence_tokens = line.split()
+                    if len(sentence_tokens) < 2:
+                        continue
+                    
+                    for idx in range(1, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
+                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                        # Save results to log file
+                        investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                            with open(investig_path, "a") as ip:
+                                ip.write("query,expected,answer,rank,correct\n")
+                        with open(investig_path, "a") as inv_path_file:
+                            inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+            
+            diff = time.time() - start_time
+            print(f"time taken is for {model_path} is {diff}")
                 
 
     def evaluate_all_models_in_folder_in_order_upd(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
@@ -983,13 +1049,15 @@ class kenlm_train:
 
 kn = kenlm_train()
 
+kn.evaluate_all_models_in_folder_in_order_with_runs("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/10","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/logs/10")
+
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")
 
-kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/20","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/20")
-kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/30","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/30")
-kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/50","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/50")
-kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/80","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/80")
+# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/20","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/20")
+# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/30","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/30")
+# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/50","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/50")
+# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/80","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/80")
 
 
 
