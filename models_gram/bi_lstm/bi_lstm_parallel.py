@@ -21,6 +21,7 @@ from sklearn.utils.class_weight import compute_class_weight
 import seaborn as sns
 import re 
 import psutil
+import multiprocessing
 
 class bi_lstm_scratch:
 
@@ -906,7 +907,72 @@ class bi_lstm_scratch:
         # # Adjust layout to make sure everything fits
         # plt.tight_layout()
         plt.savefig(f"{result_path}confusion_matrix_run_an_bilstm_{proj_number}_{run}.pdf")
-        plt.close()        
+        plt.close()  
+
+    def run_consolidate_train_run(self, train_path, result_path, test_path, model_number, logs_path, each_run, core):
+        """
+        Sets CPU affinity for this process to the chosen core and performs one run of training.
+        """
+        # Set the CPU affinity so this process runs on the designated core.
+        proc = psutil.Process(os.getpid())
+        proc.cpu_affinity([core])
+        print(f"[PID {os.getpid()}] Running run {each_run} on core {core}")
+
+        # Construct file paths.
+        train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+        test_data  = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
+
+        # Run your sequence of operations.
+        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq(train_data, result_path, each_run)
+        padd_seq, max_len = self.pad_sequ(input_seq)
+        xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        print(f"Maximum length for run {each_run}: {max_len}")
+
+        self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+ 
+
+    def get_available_cores(threshold=20):
+        """
+        Returns a list of CPU core indices whose usage is below the given threshold.
+        The function checks per-core usage over a 1-second interval.
+        """
+        # Get per-core usage over a 1-second sampling interval.
+        usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
+        available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
+        print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
+        return available
+    
+    def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
+        """
+        Spawns a separate process for each run (1 to 5) of training.
+        Each process is assigned a CPU core with less than 20% utilization.
+        """
+        processes = []
+        for each_run in range(1, 6):
+            # Get the list of cores with less than 20% CPU usage.
+            available_cores = self.get_available_cores(threshold=20)
+            while not available_cores:
+                print("No cores below 20% usage! Waiting for a free core...")
+                time.sleep(1)
+                available_cores = self.get_available_cores(threshold=20)
+
+            # Choose the first available core.
+            chosen_core = available_cores[0]
+            print(f"Assigning run {each_run} to core {chosen_core}")
+
+            # Start a new process for this run.
+            p = multiprocessing.Process(
+                target=self.run_consolidate_train_run,
+                args=(train_path, result_path, test_path, model_number, logs_path, each_run, chosen_core)
+            )
+            p.start()
+            processes.append(p)
+
+        # Wait for all processes to finish.
+        for p in processes:
+            p.join()
+
+
 
 cl_ob = bi_lstm_scratch()
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt")
@@ -918,7 +984,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.evaluate_bilstm_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/new_metrics")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 
-cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/logs")
+cl_ob.consolidate_data_train_parallel("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/10/logs")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
