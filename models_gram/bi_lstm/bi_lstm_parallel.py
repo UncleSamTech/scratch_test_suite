@@ -931,7 +931,7 @@ class bi_lstm_scratch:
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
  
 
-    def get_available_cores(threshold=20):
+    def get_available_cores(self,threshold=20):
         """
         Returns a list of CPU core indices whose usage is below the given threshold.
         The function checks per-core usage over a 1-second interval.
