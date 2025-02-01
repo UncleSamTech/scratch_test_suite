@@ -861,40 +861,55 @@ class scratch_train_mle:
         return used_cores
 
     # Function to run the script on an available core
-    def run_on_core(train_path, test_path, log_path, model_path, model_number, model_name, core):
+    def run_on_core(self,train_path, test_path, log_path, model_path, model_number, model_name, core):
         """ Runs the training function on a specific CPU core. """
         p = psutil.Process()  # Get current process
         p.cpu_affinity([core])  # Assign process to specific core
-        tr_scr = scratch_train_mle()
-        tr_scr.multiple_train_time_metrics_new(train_path, test_path, log_path, model_path, model_number, model_name)
+        
+        self.multiple_train_time_metrics_new(train_path, test_path, log_path, model_path, model_number, model_name)
+
+    
+    def pause_a_process(self,processid):
+        try:
+            process = psutil.Process(processid)
+            process.suspend()
+            print(f"Process {processid} has being suspended")
+        except psutil.NoSuchProcess:
+            print(f"No process with PID {processid} found")
+        except psutil.AccessDenied:
+            print(f"Access denied. Could not suspend process {processid}.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 
 # Define datasets to be processed on separate cores
 datasets = [
-    ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20",
+    ("/mnt/siwuchuk/thesis/another/kenlm/output_train",
+     "/mnt/siwuchuk/thesis/another/kenlm/output_test",
+     "/mnt/siwuchuk/thesis/another/nltk/logs/20",
+     "/mnt/siwuchuk/thesis/another/nltk/models/20",
      "20", "nltk_"),
 
-    ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/30",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/30",
+    ("/mnt/siwuchuk/thesis/another/kenlm/output_train",
+     "/mnt/siwuchuk/thesis/another/kenlm/output_test",
+     "/mnt/siwuchuk/thesis/another/nltk/logs/30",
+     "/mnt/siwuchuk/thesis/another/nltk/models/30",
      "30", "nltk_"),
 
-    ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/50",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/50",
+    ("/mnt/siwuchuk/thesis/another/kenlm/output_train",
+     "/mnt/siwuchuk/thesis/another/kenlm/output_test",
+     "/mnt/siwuchuk/thesis/another/nltk/logs/50",
+     "/mnt/siwuchuk/thesis/another/nltk/models/50",
      "50", "nltk_"),
 
-    ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/80",
-     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/80",
+    ("/mnt/siwuchuk/thesis/another/kenlm/output_train",
+     "/mnt/siwuchuk/thesis/another/kenlm/output_test",
+     "/mnt/siwuchuk/thesis/another/nltk/logs/80",
+     "/mnt/siwuchuk/thesis/another/nltk/models/80",
      "80", "nltk_"),
 ]
+
+print(datasets[0][0])
 
 # Function to launch a separate process
 def run_on_core():
@@ -907,6 +922,7 @@ def run_on_core():
     available_cores = list(all_cores - used_cores)  # Get free cores
 
     if not available_cores:
+        #tr_scr.pause_a_process(12)
         print("No available CPU cores! Waiting for free cores...")
         while not available_cores:
             time.sleep(1)  # Wait for a core to free up
