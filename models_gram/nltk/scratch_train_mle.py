@@ -859,6 +859,17 @@ class scratch_train_mle:
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 continue
         return used_cores
+    
+    def get_available_cores(self,threshold=50):
+        """
+        Returns a list of CPU cores (by index) with current usage below the threshold.
+        The function checks usage over a 1-second interval.
+        """
+        # psutil.cpu_percent(interval=1, percpu=True) waits 1 sec and returns per-core usage
+        usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
+        available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
+        print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
+        return available
 
     # Function to run the script on an available core
     def run_on_core(train_path, test_path, log_path, model_path, model_number, model_name, core):
