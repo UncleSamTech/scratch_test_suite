@@ -17,6 +17,11 @@ def predict_next_token_kenlm_upd(model, context,vocab_name):
                     candidate_word = candidate_word.strip()
                     context_with_candidate = context + " " + candidate_word
                     next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+        
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+        top_10_tokens_scores = sorted(next_token_probabilities.items(), key=lambda item: item[1], reverse=True)[:10]
+        #returns predicted next token and list of top 10 tokens and scores
+        return predicted_next_token,top_10_tokens_scores
 
 
 def check_available_rank(list_tuples,true_word):
@@ -88,7 +93,7 @@ def evaluate_all_models_in_folder_in_order_with_runs(testdir, vocab_folder, mode
 
     # Check CPU utilization and find underutilized cores
     cpu_percent = psutil.cpu_percent(interval=1, percpu=True)
-    underutilized_cores = [i for i, percent in enumerate(cpu_percent) if percent < 10]
+    underutilized_cores = [i for i, percent in enumerate(cpu_percent) if percent < 5]
 
     # Distribute workload across underutilized cores
     processes = []
