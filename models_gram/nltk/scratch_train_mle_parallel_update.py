@@ -828,7 +828,7 @@ class scratch_train_mle:
         excluded_20_train = [f"{train_path}/scratch_train_set_20_2_1_proc.txt",f"{train_path}/scratch_train_set_20_2_2_proc.txt",f"{train_path}/scratch_train_set_20_2_3_proc.txt",f"{train_path}/scratch_train_set_20_2_4_proc.txt",f"{train_path}/scratch_train_set_20_2_5_proc.txt",f"{train_path}/scratch_train_set_20_3_1_proc.txt",f"{train_path}/scratch_train_set_20_3_2_proc.txt",f"{train_path}/scratch_train_set_20_3_3_proc.txt",f"{train_path}/scratch_train_set_20_3_4_proc.txt"]
         excluded_30_train = [f"{train_path}/scratch_train_set_30_2_1_proc.txt",f"{train_path}/scratch_train_set_30_2_2_proc.txt",f"{train_path}/scratch_train_set_30_2_3_proc.txt",f"{train_path}/scratch_train_set_30_2_4_proc.txt",f"{train_path}/scratch_train_set_30_2_5_proc.txt"]
         excluded_50_train = [f"{train_path}/scratch_train_set_50_2_1_proc.txt",f"{train_path}/scratch_train_set_50_2_2_proc.txt",f"{train_path}/scratch_train_set_50_2_3_proc.txt",f"{train_path}/scratch_train_set_50_2_4_proc.txt"]
-        excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_data}/scratch_train_set_80_2_3_proc.txt"]
+        excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_path}/scratch_train_set_80_2_3_proc.txt"]
 
         for each_gram, run in product(range(2, 7), range(1, 6)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
