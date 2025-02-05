@@ -882,7 +882,7 @@ class scratch_train_mle:
                 continue
         return used_cores
     
-    def get_available_cores(self,threshold=50):
+    def get_available_cores(self,threshold=15):
         """
         Returns a list of CPU cores (by index) with current usage below the threshold.
         The function checks usage over a 1-second interval.
