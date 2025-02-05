@@ -16,7 +16,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score,precis
 import heapq
 from random import sample
 import seaborn as sns
-
+import psutil
+import multiprocessing
 class kenlm_train:
 
     def __init__(self):
@@ -1049,7 +1050,7 @@ class kenlm_train:
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20","/home/siwuchuk/thesis_project/kenlm/arpa_files/20","/home/siwuchuk/thesis_project/kenlm/logs/20")
+kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/80","/home/siwuchuk/thesis_project/kenlm/arpa_files/80","/home/siwuchuk/thesis_project/kenlm/logs/80")
 
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")

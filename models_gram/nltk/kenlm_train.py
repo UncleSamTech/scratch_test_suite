@@ -505,8 +505,11 @@ class kenlm_train:
 
     def evaluate_all_models_in_folder_in_order_with_runs(self, testdir, vocab_folder, model_folder,new_log_path):
         # Get vocab and model files
-        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
-        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+
+        om_voc = ['kenln_10_6_2.vocab','kenln_10_6_3.vocab','kenln_10_6_4.vocab','kenln_10_6_5.vocab']
+        om_arp = ['kenln_10_6_2.arpa','kenln_10_6_3.arpa','kenln_10_6_4.arpa','kenln_10_6_5.arpa']
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab") and f in om_voc])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa") and f in om_arp])
         
         # Match vocab and model files by model number, ngram order, and run number
         vocab_model_pairs = []

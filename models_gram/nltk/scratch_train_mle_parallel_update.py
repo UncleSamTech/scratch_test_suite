@@ -824,19 +824,41 @@ class scratch_train_mle:
 
         # Ensure the model_path directory exists
         os.makedirs(model_path, exist_ok=True)
+        
+        excluded_20_train = [f"{train_path}/scratch_train_set_20_2_1_proc.txt",f"{train_path}/scratch_train_set_20_2_2_proc.txt",f"{train_path}/scratch_train_set_20_2_3_proc.txt",f"{train_path}/scratch_train_set_20_2_4_proc.txt",f"{train_path}/scratch_train_set_20_2_5_proc.txt",f"{train_path}/scratch_train_set_20_3_1_proc.txt",f"{train_path}/scratch_train_set_20_3_2_proc.txt",f"{train_path}/scratch_train_set_20_3_3_proc.txt",f"{train_path}/scratch_train_set_20_3_4_proc.txt"]
+        excluded_30_train = [f"{train_path}/scratch_train_set_30_2_1_proc.txt",f"{train_path}/scratch_train_set_30_2_2_proc.txt",f"{train_path}/scratch_train_set_30_2_3_proc.txt",f"{train_path}/scratch_train_set_30_2_4_proc.txt",f"{train_path}/scratch_train_set_30_2_5_proc.txt"]
+        excluded_50_train = [f"{train_path}/scratch_train_set_50_2_1_proc.txt",f"{train_path}/scratch_train_set_50_2_2_proc.txt",f"{train_path}/scratch_train_set_50_2_3_proc.txt",f"{train_path}/scratch_train_set_50_2_4_proc.txt"]
+        excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_data}/scratch_train_set_80_2_3_proc.txt"]
 
         for each_gram, run in product(range(2, 7), range(1, 6)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt" 
+            
+            if model_number == "20" and len(excluded_20_train) == 9 and train_data in excluded_20_train:
+                continue
+
+
+            if model_number == "30" and len(excluded_30_train) == 5 and train_data in excluded_30_train:
+                continue
+
+            if model_number == "50" and len(excluded_50_train) == 4 and train_data in excluded_50_train:
+                continue
+
+            if model_number == "80" and len(excluded_80_train) == 3 and train_data in excluded_80_train:
+                continue
+            
+
 
             try:
                 train_start_time = time.time()
+                print(f"training {train_data}")
                 
                 # Ensure model_path exists before saving the .pkl file
                 self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
                 train_time_duration = time.time() - train_start_time
 
                 eval_start_time = time.time()
+                print(f"evaluating {test_data}")
                 
                 self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
                 eval_time_duration = time.time() - eval_start_time
