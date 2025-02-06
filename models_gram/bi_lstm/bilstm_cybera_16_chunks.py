@@ -139,4 +139,5 @@ class BiLSTMCybera:
 
 # Example usage
 cl_ob = BiLSTMCybera()
-cl_ob.consolidate_data_train_parallel("/mnt/train", "/mnt/models/bilstm/", "/mnt/test", 30, "/mnt/logs/")
+sample = ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/30/", "/mnt/siwuchuk/vscode/output_test", 30, "/mnt/siwuchuk/vscode/models/bilstm/logs/30")
+cl_ob.consolidate_data_train_parallel(*sample)
