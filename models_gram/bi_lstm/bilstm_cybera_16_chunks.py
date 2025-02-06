@@ -195,20 +195,23 @@ class bilstm_cybera:
     
 
     
-    def pad_sequ(input_seq, chunk_size=500000):
-        max_seq_len = max(len(x) for x in input_seq)
+    def pad_sequ(self,input_seq, chunk_size=500000):
+        if not isinstance(input_seq, list) or not all(isinstance(x, list) for x in input_seq):
+            raise TypeError("input_seq must be a list of lists")
+        
+        max_seq_len = max(len(x) for x in input_seq) if input_seq else 0
+        num_samples = len(input_seq)
         
         # Use float32 to reduce memory usage
-        padded_in_seq = np.zeros((len(input_seq), max_seq_len), dtype=np.float32)
+        padded_in_seq = np.zeros((num_samples, max_seq_len), dtype=np.float32)
         
         # Process in chunks to avoid memory overload
-        for i in range(0, len(input_seq), chunk_size):
+        for i in range(0, num_samples, chunk_size):
             chunk = input_seq[i : i + chunk_size]
             for j, seq in enumerate(chunk):
                 padded_in_seq[i + j, -len(seq):] = seq  # Pad sequences at the end
         
         return padded_in_seq, max_seq_len
-
         
 
     # def pad_sequ(self, input_seq):
