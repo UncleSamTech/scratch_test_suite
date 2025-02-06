@@ -21,6 +21,7 @@ from sklearn.utils.class_weight import compute_class_weight
 import seaborn as sns
 import re
 import psutil
+from tensorflow.keras.layers import Input
 import multiprocessing
 
 class bilstm_cybera:
@@ -75,9 +76,10 @@ class bilstm_cybera:
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
 
         model = Sequential([
-            Embedding(total_words, 100, input_shape=(max_seq - 1,)),
-            Bidirectional(LSTM(150)),
-            Dense(total_words, activation='softmax')
+        Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
+        Embedding(total_words, 100),
+        Bidirectional(LSTM(150)),
+        Dense(total_words, activation='softmax')
         ])
         adam = Adam(learning_rate=0.01)
         model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
