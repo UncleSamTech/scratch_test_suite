@@ -192,18 +192,36 @@ class bilstm_cybera:
         print(f"Total words (vocabulary size): {self.total_words}")
 
         return self.encompass, self.total_words, self.tokenizer
+    
 
-    def pad_sequ(self, input_seq):
-        max_seq_len = max([len(x) for x in input_seq])
+    
+    def pad_sequ(input_seq, chunk_size=500000):
+        max_seq_len = max(len(x) for x in input_seq)
         
-        # Create a memory-mapped array
-        padded_in_seq = np.memmap('padded_array.dat', dtype=np.float64, mode='w+', shape=(len(input_seq), max_seq_len))
+        # Use float32 to reduce memory usage
+        padded_in_seq = np.zeros((len(input_seq), max_seq_len), dtype=np.float32)
         
-        # Fill the memory-mapped array with padded sequences
-        for i, seq in enumerate(input_seq):
-            padded_in_seq[i, -len(seq):] = seq  # Pad sequences at the end
+        # Process in chunks to avoid memory overload
+        for i in range(0, len(input_seq), chunk_size):
+            chunk = input_seq[i : i + chunk_size]
+            for j, seq in enumerate(chunk):
+                padded_in_seq[i + j, -len(seq):] = seq  # Pad sequences at the end
         
         return padded_in_seq, max_seq_len
+
+        
+
+    # def pad_sequ(self, input_seq):
+    #     max_seq_len = max([len(x) for x in input_seq])
+        
+    #     # Create a memory-mapped array
+    #     padded_in_seq = np.memmap('padded_array.dat', dtype=np.float64, mode='w+', shape=(len(input_seq), max_seq_len))
+        
+    #     # Fill the memory-mapped array with padded sequences
+    #     for i, seq in enumerate(input_seq):
+    #         padded_in_seq[i, -len(seq):] = seq  # Pad sequences at the end
+        
+    #     return padded_in_seq, max_seq_len
 
     def prep_seq_labels(self, padded_seq, total_words):
         xs, labels = padded_seq[:, :-1], padded_seq[:, -1]
