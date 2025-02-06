@@ -931,7 +931,7 @@ class bi_lstm_scratch:
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
  
 
-    def get_available_cores(self,threshold=20):
+    def get_available_cores(self,threshold=10):
         """
         Returns a list of CPU core indices whose usage is below the given threshold.
         The function checks per-core usage over a 1-second interval.
@@ -950,11 +950,11 @@ class bi_lstm_scratch:
         processes = []
         for each_run in range(1, 6):
             # Get the list of cores with less than 20% CPU usage.
-            available_cores = self.get_available_cores(threshold=20)
+            available_cores = self.get_available_cores(threshold=10)
             while not available_cores:
-                print("No cores below 20% usage! Waiting for a free core...")
+                print("No cores below 10% usage! Waiting for a free core...")
                 time.sleep(1)
-                available_cores = self.get_available_cores(threshold=20)
+                available_cores = self.get_available_cores(threshold=10)
 
             # Choose the first available core.
             chosen_core = available_cores[0]
@@ -984,7 +984,7 @@ cl_ob = bi_lstm_scratch()
 #cl_ob.evaluate_bilstm_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/new_metrics")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 
-cl_ob.consolidate_data_train_parallel("/mnt/siwuchuk/vscode/output_train","/mnt/siwuchuk/vscode/models/20/","/mnt/siwuchuk/vscode/output_test",10,"/mnt/siwuchuk/vscode/logs/20")
+cl_ob.consolidate_data_train_parallel("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",20,"/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/logs")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_100_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_100/")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_150_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_150/")
