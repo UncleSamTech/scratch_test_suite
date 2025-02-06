@@ -123,8 +123,9 @@ class BiLSTMCybera:
         proc.cpu_affinity(cores)
         print(f"Running run {each_run} on cores {cores}")
 
-        train_data = f"{train_path}/train_{model_number}_{each_run}.txt"
-        test_data = f"{test_path}/test_{model_number}_{each_run}.txt"
+        # Construct file paths.
+        train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+        test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
         input_seq, total_words, tokenizer = self.tokenize_data_inp_seq(train_data, result_path, each_run)
         padd_seq, max_len = self.pad_sequ(input_seq)
