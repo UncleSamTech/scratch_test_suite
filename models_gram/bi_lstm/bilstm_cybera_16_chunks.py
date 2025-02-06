@@ -195,7 +195,7 @@ class bilstm_cybera:
     
 
     
-    def pad_sequ(self,input_seq, chunk_size=500000):
+    def pad_sequ(self,input_seq, chunk_size=50000):
         if not isinstance(input_seq, list) or not all(isinstance(x, list) for x in input_seq):
             raise TypeError("input_seq must be a list of lists")
         
