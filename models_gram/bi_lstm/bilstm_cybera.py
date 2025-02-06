@@ -84,7 +84,7 @@ class bilstm_cybera:
         model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
         # Fit the model
-        history = model.fit(xs, ys, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+        history = model.fit(xs, ys, epochs=50, batch_size=32, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
         # Save the history
         with open(f"{result_path}main_historyrec_150embedtime_6_{runs}.pickle", "wb") as hs:
@@ -164,33 +164,39 @@ class bilstm_cybera:
                 return rank
         return rank
 
-    def tokenize_data_inp_seq(self, file_name, result_path, run):
+    def tokenize_data_inp_seq(self, file_name, result_path, run, chunk_size=100000):
+        self.tokenizer = Tokenizer(oov_token='<oov>')
+        self.encompass = []
+
         with open(file_name, "r", encoding="utf-8") as rf:
-            lines = rf.readlines()
+            while True:
+                lines = rf.readlines(chunk_size)
+                if not lines:
+                    break
 
-            self.tokenizer = Tokenizer(oov_token='<oov>')
-            self.tokenizer.fit_on_texts(lines)
+                # Fit the tokenizer on the chunk
+                self.tokenizer.fit_on_texts(lines)
 
-            with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "wb") as tk:
-                pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
+                # Process each line in the chunk
+                for each_line in lines:
+                    each_line = each_line.strip()
+                    self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
+                    for i in range(1, len(self.token_list)):
+                        ngram_seq = self.token_list[:i + 1]
+                        self.encompass.append(ngram_seq)
 
-            self.total_words = len(self.tokenizer.word_index) + 1
-            print(f"Total words (vocabulary size): {self.total_words}")
+        # Save the tokenizer
+        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "wb") as tk:
+            pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
-            self.encompass = []
-            for each_line in lines:
-                each_line = each_line.strip()
-                self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
+        self.total_words = len(self.tokenizer.word_index) + 1
+        print(f"Total words (vocabulary size): {self.total_words}")
 
-                for i in range(1, len(self.token_list)):
-                    ngram_seq = self.token_list[:i + 1]
-                    self.encompass.append(ngram_seq)
-
-            return self.encompass, self.total_words, self.tokenizer
+        return self.encompass, self.total_words, self.tokenizer
 
     def pad_sequ(self, input_seq):
         max_seq_len = max([len(x) for x in input_seq])
-        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'))
+        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'), dtype=np.float32)
         return padded_in_seq, max_seq_len
 
     def prep_seq_labels(self, padded_seq, total_words):
@@ -252,10 +258,8 @@ samples = [
     # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/10/", "/mnt/siwuchuk/vscode/output_test", 10, "/mnt/siwuchuk/vscode/models/bilstm/logs/10"),
     # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/20/", "/mnt/siwuchuk/vscode/output_test", 20, "/mnt/siwuchuk/vscode/models/bilstm/logs/20"),
     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/30/", "/mnt/siwuchuk/vscode/output_test", 30, "/mnt/siwuchuk/vscode/models/bilstm/logs/30"),
-    ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/50/", "/mnt/siwuchuk/vscode/output_test", 50, "/mnt/siwuchuk/vscode/models/bilstm/logs/50"),
-    ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
+    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/50/", "/mnt/siwuchuk/vscode/output_test", 50, "/mnt/siwuchuk/vscode/models/bilstm/logs/50"),
+    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
 ]
 
-# Run each sample in parallel
-for sample in samples:
-    cl_ob.consolidate_data_train_parallel(*sample)
+#
