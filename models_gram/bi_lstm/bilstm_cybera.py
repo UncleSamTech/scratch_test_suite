@@ -196,7 +196,7 @@ class bilstm_cybera:
 
     def pad_sequ(self, input_seq):
         max_seq_len = max([len(x) for x in input_seq])
-        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'), dtype=np.float32)
+        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'))
         return padded_in_seq, max_seq_len
 
     def prep_seq_labels(self, padded_seq, total_words):
