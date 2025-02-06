@@ -26,19 +26,19 @@ import multiprocessing
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
         """
-        Spawns a separate process for each sample (dataset) and assigns 3 CPU cores per sample.
+        Spawns a separate process for each sample (dataset) and assigns 5 CPU cores per sample.
         Each core must have less than 10% utilization.
         """
         processes = []
         for each_run in range(1, 6):  # Assuming 5 runs per sample
-            # Get 3 available cores with less than 10% CPU usage.
-            available_cores = self.get_available_cores(threshold=10, num_cores=3)
-            while len(available_cores) < 3:
+            # Get 5 available cores with less than 10% CPU usage.
+            available_cores = self.get_available_cores(threshold=10, num_cores=5)
+            while len(available_cores) < 5:
                 print("Not enough cores below 10% usage! Waiting for free cores...")
                 time.sleep(1)
-                available_cores = self.get_available_cores(threshold=10, num_cores=3)
+                available_cores = self.get_available_cores(threshold=10, num_cores=5)
 
-            # Assign the 3 cores to this run.
+            # Assign the 5 cores to this run.
             print(f"Assigning run {each_run} to cores {available_cores}")
 
             # Start a new process for this run.
@@ -228,7 +228,7 @@ class bilstm_cybera:
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
-    def get_available_cores(self, threshold=10, num_cores=3):
+    def get_available_cores(self, threshold=10, num_cores=5):
         """
         Returns a list of CPU core indices whose usage is below the given threshold.
         """
@@ -249,8 +249,8 @@ cl_ob = bilstm_cybera()
 
 # Run multiple samples in parallel
 samples = [
-    ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/10/", "/mnt/siwuchuk/vscode/output_test", 10, "/mnt/siwuchuk/vscode/models/bilstm/logs/10"),
-    ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/20/", "/mnt/siwuchuk/vscode/output_test", 20, "/mnt/siwuchuk/vscode/models/bilstm/logs/20"),
+    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/10/", "/mnt/siwuchuk/vscode/output_test", 10, "/mnt/siwuchuk/vscode/models/bilstm/logs/10"),
+    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/20/", "/mnt/siwuchuk/vscode/output_test", 20, "/mnt/siwuchuk/vscode/models/bilstm/logs/20"),
     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/30/", "/mnt/siwuchuk/vscode/output_test", 30, "/mnt/siwuchuk/vscode/models/bilstm/logs/30"),
     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/50/", "/mnt/siwuchuk/vscode/output_test", 50, "/mnt/siwuchuk/vscode/models/bilstm/logs/50"),
     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
