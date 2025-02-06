@@ -256,10 +256,10 @@ cl_ob = bilstm_cybera()
 # Run multiple samples in parallel
 samples = [
     # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/10/", "/mnt/siwuchuk/vscode/output_test", 10, "/mnt/siwuchuk/vscode/models/bilstm/logs/10"),
-    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/20/", "/mnt/siwuchuk/vscode/output_test", 20, "/mnt/siwuchuk/vscode/models/bilstm/logs/20"),
+    #("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/20/", "/mnt/siwuchuk/vscode/output_test", 20, "/mnt/siwuchuk/vscode/models/bilstm/logs/20"),
     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/30/", "/mnt/siwuchuk/vscode/output_test", 30, "/mnt/siwuchuk/vscode/models/bilstm/logs/30"),
-    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/50/", "/mnt/siwuchuk/vscode/output_test", 50, "/mnt/siwuchuk/vscode/models/bilstm/logs/50"),
-    # ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
+     ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/50/", "/mnt/siwuchuk/vscode/output_test", 50, "/mnt/siwuchuk/vscode/models/bilstm/logs/50"),
+    ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
 ]
 
 #
