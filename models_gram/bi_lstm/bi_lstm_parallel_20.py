@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import numpy as np
 import random
 import tensorflow as tf
@@ -765,20 +766,20 @@ class bi_lstm_scratch:
         print("max length",max_seq)
         
         
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        if gpus:
-            print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
+        # gpus = tf.config.experimental.list_physical_devices('GPU')
+        # if gpus:
+        #     print(f"Default GPU device: {gpus[0]}")
+        #     try:
+        #         for gpu in gpus:
+        #             tf.config.experimental.set_memory_growth(gpu, True)
+        #         print(f"Using GPU: {tf.test.gpu_device_name()}")
 
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
+        #     except RuntimeError as e:
+        #         print(f"Error setting up GPU: {e}")
+        #         return
 
-        else:
-            print("No GPU available. Running on CPU.")
+        # else:
+        #     print("No GPU available. Running on CPU.")
 
         
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
@@ -949,7 +950,7 @@ class bi_lstm_scratch:
         """
         processes = []
         for each_run in range(1, 6):
-            # Get the list of cores with less than 20% CPU usage.
+            # Get the list of cores with less than 10% CPU usage.
             available_cores = self.get_available_cores(threshold=10)
             while not available_cores:
                 print("No cores below 10% usage! Waiting for a free core...")
