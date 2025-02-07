@@ -35,12 +35,18 @@ class bilstm_cybera:
         """
         processes = []
         available_cores = self.get_available_cores()  
+        while not available_cores:
+                print("No cores below 10% usage! Waiting for a free core...")
+                time.sleep(1)
+                available_cores = self.get_available_cores()
         core_index = 0  # Track which core to assign next
 
         for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
-            chosen_core = available_cores[core_index % len(available_cores) if  core_index > 0 else 0]
+            chosen_core = available_cores[core_index % len(available_cores)] 
             core_index += 1
+
+          
 
             print(f"Assigning run {each_run} to core {chosen_core}")
 
@@ -249,7 +255,7 @@ class bilstm_cybera:
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
-    def get_available_cores(self, threshold=10, num_cores=1):
+    def get_available_cores(self, threshold=20, num_cores=1):
         """
         Returns a list of CPU core indices whose usage is below the given threshold.
         """
