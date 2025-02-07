@@ -36,7 +36,7 @@ class bilstm_cybera:
         processes = []
         available_cores = self.get_available_cores()  
         while not available_cores:
-                print("No cores below 10% usage! Waiting for a free core...")
+                print("No cores below 20% usage! Waiting for a free core...")
                 time.sleep(1)
                 available_cores = self.get_available_cores()
         core_index = 0  # Track which core to assign next
