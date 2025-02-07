@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 import random
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
