@@ -2,8 +2,9 @@ import pandas as pd
 import os
 import numpy as np
 import random
-#os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"  # Disable GPU
 import tensorflow as tf
+tf.config.set_visible_devices([], 'GPU')  # Force TensorFlow to use CPU
 from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional
