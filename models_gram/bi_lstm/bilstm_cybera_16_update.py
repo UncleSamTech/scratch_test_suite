@@ -61,41 +61,29 @@ class bilstm_cybera:
         print(tf.__version__)
         print("max length", max_seq)
 
-        gpus = tf.config.experimental.list_physical_devices('GPU')
-        if gpus:
-            print(f"Default GPU device: {gpus[0]}")
-            try:
-                for gpu in gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-                print(f"Using GPU: {tf.test.gpu_device_name()}")
-
-            except RuntimeError as e:
-                print(f"Error setting up GPU: {e}")
-                return
-
-        else:
-            print("No GPU available. Running on CPU.")
-
         # Force TensorFlow to use CPU
         tf.config.set_visible_devices([], 'GPU')
 
         # Check if it's using CPU
         print("Is TensorFlow using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
 
-        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
-        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
-
+        # Reduce model complexity to save memory
         model = Sequential([
-        Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
-        Embedding(total_words, 100),
-        Bidirectional(LSTM(150)),
-        Dense(total_words, activation='softmax')
+            Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
+            Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
+            Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+            Dense(total_words, activation='softmax')
         ])
         adam = Adam(learning_rate=0.01)
         model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
+        # Use a data generator to reduce memory usage
+        train_generator = self.DataGenerator(xs, ys, batch_size=16)
+        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
         # Fit the model
-        history = model.fit(xs, ys, epochs=50, batch_size=16, verbose=1, callbacks=[lr_scheduler, early_stopping])
+        history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
         # Save the history
         with open(f"{result_path}main_historyrec_150embedtime_6_{runs}.pickle", "wb") as hs:
@@ -110,6 +98,23 @@ class bilstm_cybera:
 
         # Evaluate the model
         self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
+
+    class DataGenerator(tf.keras.utils.Sequence):
+        """
+        Data generator to load data in smaller chunks and reduce memory usage.
+        """
+        def __init__(self, xs, ys, batch_size):
+            self.xs = xs
+            self.ys = ys
+            self.batch_size = batch_size
+
+        def __len__(self):
+            return int(np.ceil(len(self.xs) / self.batch_size))
+
+        def __getitem__(self, idx):
+            batch_x = self.xs[idx * self.batch_size:(idx + 1) * self.batch_size]
+            batch_y = self.ys[idx * self.batch_size:(idx + 1) * self.batch_size]
+            return batch_x, batch_y
 
     def evaluate_bilstm_in_order_upd_norun_opt(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
