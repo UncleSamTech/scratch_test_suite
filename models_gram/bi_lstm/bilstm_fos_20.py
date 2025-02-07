@@ -39,7 +39,7 @@ class bilstm_cybera:
 
         for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
-            chosen_core = available_cores[core_index % len(available_cores)]
+            chosen_core = available_cores[core_index % len(available_cores) if  core_index > 0 else 0]
             core_index += 1
 
             print(f"Assigning run {each_run} to core {chosen_core}")
