@@ -73,6 +73,12 @@ class bilstm_cybera:
         # else:
         #     print("No GPU available. Running on CPU.")
 
+        # Force TensorFlow to use CPU
+        tf.config.set_visible_devices([], 'GPU')
+
+        # Check if it's using CPU
+        print("Is TensorFlow using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
+
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
 
