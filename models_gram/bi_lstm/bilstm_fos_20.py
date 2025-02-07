@@ -31,15 +31,16 @@ import multiprocessing
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
         """
-        Spawns a separate process for each run and assigns processes to the two available CPU cores.
+        Spawns a separate process for each run and assigns 1 CPU core per run.
+        Spreads 5 runs across all 4 cores.
         """
         processes = []
-        available_cores = self.get_available_cores()  
+        all_cores = list(range(4))  # Assuming 4 cores are available
         core_index = 0  # Track which core to assign next
 
         for each_run in range(1, 6):  # 5 runs
-            # Assign 1 core per run, cycling through the available cores
-            chosen_core = available_cores[core_index % len(available_cores)]
+            # Assign 1 core per run
+            chosen_core = all_cores[core_index % 4]  # Cycle through all 4 cores
             core_index += 1
 
             print(f"Assigning run {each_run} to core {chosen_core}")
@@ -268,6 +269,6 @@ class bilstm_cybera:
 # Example usage
 cl_ob = bilstm_cybera()
 
-# Run one dataset with 5 runs spread across the two available cores
-sample = ("/mnt/siwuchuk/thesis/another/kenlm/output_train","/mnt/siwuchuk/thesis/another/bilstm/models/10/","/mnt/siwuchuk/thesis/another/kenlm/output_test",10,"/mnt/siwuchuk/thesis/another/bilstm/logs/10")
+# Run one dataset with 5 runs spread across 4 cores
+sample = ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",20,"/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/logs")
 cl_ob.consolidate_data_train_parallel(*sample)
