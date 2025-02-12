@@ -1049,7 +1049,7 @@ class kenlm_train:
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/mnt/siwuchuk/thesis/another/kenlm/vocab_files/50","/mnt/siwuchuk/thesis/another/kenlm/arpa_files/50","/mnt/siwuchuk/thesis/another/kenlm/logs/50")
+kn.evaluate_all_models_in_folder_in_order_with_runs("/mnt/siwuchuk/thesis/another/kenlm/output_test","/mnt/siwuchuk/thesis/another/kenlm/vocab_files/50","/mnt/siwuchuk/thesis/another/kenlm/arpa_files/50","/mnt/siwuchuk/thesis/another/kenlm/logs/50")
 
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")

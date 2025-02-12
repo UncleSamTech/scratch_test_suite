@@ -272,3 +272,4 @@ cl_ob = bilstm_cybera()
 # Run one dataset with 5 runs spread across 16 cores
 sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
 cl_ob.consolidate_data_train_parallel(*sample)
+
