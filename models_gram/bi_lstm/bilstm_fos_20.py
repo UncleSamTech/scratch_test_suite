@@ -39,14 +39,13 @@ class bilstm_cybera:
                 print("No cores below 20% usage! Waiting for a free core...")
                 time.sleep(1)
                 available_cores = self.get_available_cores()
+
         core_index = 0  # Track which core to assign next
 
         for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
             chosen_core = available_cores[core_index % len(available_cores)] 
             core_index += 1
-
-          
 
             print(f"Assigning run {each_run} to core {chosen_core}")
 
@@ -343,7 +342,8 @@ class bilstm_cybera:
         usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
         available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
         print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
-        return available[:num_cores]
+        #return available[:num_cores]
+        return available
 
     def pin_process_to_cores(self, cores):
         """
