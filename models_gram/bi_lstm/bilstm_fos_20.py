@@ -41,7 +41,7 @@ class bilstm_cybera:
                 available_cores = self.get_available_cores()
         core_index = 0  # Track which core to assign next
 
-        for each_run in range(5, 6):  # 5 runs
+        for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
             chosen_core = available_cores[core_index % len(available_cores)] 
             core_index += 1
@@ -61,6 +61,54 @@ class bilstm_cybera:
         # Wait for all processes to finish.
         for p in processes:
             p.join()
+
+    
+    def eval_five_runs_opt(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
+        print(all_models)
+        # print(tf.__version__)
+        # print("max length", max_seq)
+
+        # # Force TensorFlow to use CPU
+        # tf.config.set_visible_devices([], 'GPU')
+
+        # # Check if it's using CPU
+        # print("Is TensorFlow using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
+
+        # # Reduce model complexity to save memory
+        # model = Sequential([
+        #     Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
+        #     Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
+        #     Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+        #     Dense(total_words, activation='softmax')
+        # ])
+        # adam = Adam(learning_rate=0.01)
+        # model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+
+        # # Use a data generator to reduce memory usage
+        # train_generator = self.DataGenerator(xs, ys, batch_size=16)
+        # lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        # early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
+        # # Fit the model
+        # history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+
+        # # Save the history
+        # with open(f"{result_path}main_historyrec_150embedtime_6_{runs}.pickle", "wb") as hs:
+        #     pickle.dump(history.history, hs)
+
+        # # Save the model for every run
+        # file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras"
+
+        # if os.path.exists(file_name):
+        #     os.remove(file_name)
+        # model.save(file_name)
+
+        # Evaluate the model
+        for model in all_models:
+            complete_model = f"{result_path}{model}"
+            self.evaluate_bilstm_in_order_upd_norun_opt_new(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
+
 
     def train_model_five_runs_opt(self, total_words, max_seq, xs, ys, result_path, test_data, proj_number, runs, logs_path):
         print(tf.__version__)
@@ -150,6 +198,38 @@ class bilstm_cybera:
                     with open(investig_path, "a") as inv_path_file:
                         inv_path_file.write(
                             f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+    def evaluate_bilstm_in_order_upd_norun_opt_new(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
+        tokenz = None
+        loaded_model = load_model(f"{model}",compile=False)
+        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            random.shuffle(lines)
+
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                # Evaluate each token in order starting from the second token
+                for idx in range(1, len(sentence_tokens)):
+                    context = ' '.join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    predicted_next_word, top_10_tokens = self.predict_token_score_upd(context, tokenz, loaded_model, maxlen)
+                    rank = self.check_available_rank(top_10_tokens, true_next_word)
+                    investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+                    if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                        with open(investig_path, "a") as ip:
+                            ip.write(f"query,expected,answer,rank,correct\n")
+                    with open(investig_path, "a") as inv_path_file:
+                        inv_path_file.write(
+                            f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
 
     def predict_token_score_upd(self, context, tokenz, model, maxlen):
         """
@@ -252,8 +332,9 @@ class bilstm_cybera:
         padd_seq, max_len = self.pad_sequ(input_seq)
         xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         print(f"Maximum length for run {each_run}: {max_len}")
+        self.eval_five_runs_opt(max_len,result_path,test_data,model_number,each_run,logs_path)
 
-        self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
     def get_available_cores(self, threshold=20, num_cores=1):
         """
