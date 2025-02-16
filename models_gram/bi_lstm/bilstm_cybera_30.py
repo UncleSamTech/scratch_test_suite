@@ -35,12 +35,17 @@ class bilstm_cybera:
         Spreads 5 runs across all 16 cores.
         """
         processes = []
-        all_cores = list(range(16))  # Assuming 16 cores are available
+        all_cores = self.get_available_cores() # Assuming 16 cores are available
         core_index = 0  # Track which core to assign next
 
-        for each_run in range(1, 6):  # 5 runs
+        while not all_cores:
+                print("No cores below 10% usage! Waiting for a free core...")
+                time.sleep(1)
+                all_cores = self.get_available_cores()
+                
+        for each_run in range(1, 4):  # 5 runs
             # Assign 1 core per run
-            chosen_core = all_cores[core_index % 16]  # Cycle through all 16 cores
+            chosen_core = all_cores[core_index % len(all_cores)]  # Cycle through all 16 cores
             core_index += 1
 
             print(f"Assigning run {each_run} to core {chosen_core}")
@@ -257,7 +262,7 @@ class bilstm_cybera:
         usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
         available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
         print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
-        return available[:num_cores]
+        return available
 
     def pin_process_to_cores(self, cores):
         """
