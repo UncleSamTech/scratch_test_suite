@@ -43,7 +43,7 @@ class bilstm_cybera:
                 time.sleep(1)
                 all_cores = self.get_available_cores()
 
-        for each_run in range(1, 5):  # 5 runs
+        for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run
             chosen_core = all_cores[core_index % len(all_cores)]  # Cycle through all 16 cores
             core_index += 1
