@@ -918,7 +918,7 @@ cl_ob = bi_lstm_scratch()
 # cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/main_bilstm_scratch_model_150embedtime1_main_sample_project20_6_2.keras")
 # cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/main_bilstm_scratch_model_150embedtime1_main_sample_project20_6_3.keras")
 # cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/main_bilstm_scratch_model_150embedtime1_main_sample_project20_6_4.keras")
-cl_ob.view_model_summary("/mnt/siwuchuk/vscode/models/bilstm/model/30/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_5.keras")
+cl_ob.view_model_summary("/home/siwuchuk/thesis_project/models/bilstm/model/50/main_bilstm_scratch_model_150embedtime1_main_sample_project50_6_4.keras")
 #cl_ob.evaluate_bilstm_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt",39,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/main_bilstm_scratch_model_150embedtime1_main_sample_project10_run4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/",10,"/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_projects_conf/new_metrics")
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_50_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_50_projects_conf/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","50")
 
@@ -929,7 +929,7 @@ cl_ob.view_model_summary("/mnt/siwuchuk/vscode/models/bilstm/model/30/main_bilst
 #cl_ob.consolidate_data_train("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_500_projects.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_500/")
 
 for i in range(1,6):
-    cl_ob.get_vocab_size("/mnt/siwuchuk/vscode/models/bilstm/model/30/",30,i)
+    cl_ob.get_vocab_size("/home/siwuchuk/thesis_project/models/bilstm/model/50/",50,i)
 #cl_ob.consolidate_data("/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_train_data_90.txt","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/nltk/res_models/scratch_test_data_10.txt","bilstm_scratch_model_50embedtime1.keras","/Users/samueliwuchukwu/Documents/thesis_project/scratch_test_suite/models_gram/bi_lstm/results_local/")
 #cl_ob.plot_graph("loss")
 #cl_ob.evaluate_bilstm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt",39,"main_bilstm_scratch_model_150embedtime1_main_4.keras","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/bilstm/models_10_v2/")
