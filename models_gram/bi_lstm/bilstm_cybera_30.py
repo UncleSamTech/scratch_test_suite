@@ -42,9 +42,11 @@ class bilstm_cybera:
                 print("No cores below 10% usage! Waiting for a free core...")
                 time.sleep(1)
                 all_cores = self.get_available_cores()
-
+        skipped_run = [3,5]
         for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run
+            if each_run in skipped_run:
+                continue
             chosen_core = all_cores[core_index % len(all_cores)]  # Cycle through all 16 cores
             core_index += 1
 
@@ -102,7 +104,7 @@ class bilstm_cybera:
         model.save(file_name)
 
         # Evaluate the model
-        self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
+        #self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
 
     class DataGenerator(tf.keras.utils.Sequence):
         """

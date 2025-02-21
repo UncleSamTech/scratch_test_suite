@@ -37,7 +37,7 @@ class bilstm_cybera:
         available_cores = self.get_available_cores()  
         core_index = 0  # Track which core to assign next
 
-        for each_run in range(1, 6):  # 5 runs
+        for each_run in range(5, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
             chosen_core = available_cores[core_index % len(available_cores)]
             core_index += 1
@@ -264,6 +264,9 @@ class bilstm_cybera:
         """
         p = psutil.Process(os.getpid())
         p.cpu_affinity(cores)
+
+    
+    
 
 # Example usage
 cl_ob = bilstm_cybera()
