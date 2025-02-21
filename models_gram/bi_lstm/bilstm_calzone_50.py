@@ -38,7 +38,10 @@ class bilstm_cybera:
         all_cores = list(range(16))  # Assuming 16 cores are available
         core_index = 0  # Track which core to assign next
 
+        skipped_runs = [4]
         for each_run in range(1, 6):  # 5 runs
+            if each_run in skipped_runs:
+                continue
             # Assign 1 core per run
             chosen_core = all_cores[core_index % 16]  # Cycle through all 16 cores
             core_index += 1
@@ -97,7 +100,7 @@ class bilstm_cybera:
         model.save(file_name)
 
         # Evaluate the model
-        self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
+        #self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
 
     class DataGenerator(tf.keras.utils.Sequence):
         """
