@@ -96,7 +96,7 @@ class bilstm_cybera:
         model.save(file_name)
 
         # Evaluate the model
-        self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
+        #self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
 
     class DataGenerator(tf.keras.utils.Sequence):
         """
