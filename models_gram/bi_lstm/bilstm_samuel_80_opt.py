@@ -1,4 +1,3 @@
-import pandas as pd
 import os
 import numpy as np
 import random
@@ -10,14 +9,10 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import pickle
-import time
-import seaborn as sns
-import re
 import psutil
 import multiprocessing
-import gc
+from scipy.sparse import csr_matrix
 
 # Disable GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
@@ -29,7 +24,7 @@ class bilstm_cybera:
         Spawns a separate process for each run and assigns processes to the available CPU cores.
         """
         processes = []
-        available_cores = self.get_available_cores()  
+        available_cores = self.get_available_cores()
         core_index = 0  # Track which core to assign next
 
         for each_run in range(1, 2):  # 5 runs
@@ -175,7 +170,7 @@ class bilstm_cybera:
         return rank
 
     def tokenize_data_inp_seq(self, file_name, result_path, run, chunk_size=100000):
-        self.tokenizer = Tokenizer(oov_token='<oov>')
+        self.tokenizer = Tokenizer(num_words=50000, oov_token='<oov>')  # Limit vocabulary
         self.encompass = []
 
         with open(file_name, "r", encoding="utf-8") as rf:
@@ -205,7 +200,7 @@ class bilstm_cybera:
         return self.encompass, self.total_words, self.tokenizer
 
     def pad_sequ(self, input_seq):
-        max_seq_len = max([len(x) for x in input_seq])
+        max_seq_len = 200  # Truncate sequences to 200 tokens
         padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'), dtype=np.float32)  # Use float32
         return padded_in_seq, max_seq_len
 
