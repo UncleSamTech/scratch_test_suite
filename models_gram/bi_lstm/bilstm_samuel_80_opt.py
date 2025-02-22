@@ -12,6 +12,7 @@ from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 import pickle
 import psutil
 import multiprocessing
+import gc
 from scipy.sparse import csr_matrix
 
 # Disable GPU
