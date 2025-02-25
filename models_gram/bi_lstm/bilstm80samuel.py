@@ -66,11 +66,11 @@ class bilstm_cybera:
         history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
         # Save training history
-        with open(os.path.join(result_path, f"main_historyrec_32embedtime_6_{runs}.pickle"), "wb") as hs:
+        with open(os.path.join(result_path, f"main_historyrec_50embedtime_6_{runs}.pickle"), "wb") as hs:
             pickle.dump(history.history, hs)
 
         # Save model
-        file_name = os.path.join(result_path, f"main_bilstm_scratch_model_32embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
+        file_name = os.path.join(result_path, f"main_bilstm_scratch_model_50embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         model.save(file_name)
 
         # Clear memory
@@ -103,7 +103,7 @@ class bilstm_cybera:
 
     def evaluate_bilstm_in_order_upd_norun_opt(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
-        with open(os.path.join(result_path, f"tokenized_file_32embedtime1_{run}.pickle"), "rb") as tk:
+        with open(os.path.join(result_path, f"tokenized_file_50embedtime1_{run}.pickle"), "rb") as tk:
             tokenz = pickle.load(tk)
 
         with open(test_data, "r", encoding="utf-8") as f:
@@ -172,7 +172,7 @@ class bilstm_cybera:
                 yield chunk_seqs  # Yield chunks instead of storing all in memory
 
         # Save tokenizer after processing all chunks
-        with open(os.path.join(result_path, f"tokenized_file_32embedtime1_{run}.pickle"), "wb") as tk:
+        with open(os.path.join(result_path, f"tokenized_file_50embedtime1_{run}.pickle"), "wb") as tk:
             pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
         self.total_words = len(self.tokenizer.word_index) + 1
@@ -204,7 +204,7 @@ class bilstm_cybera:
         max_len = 0
         for chunk_seqs in input_seq_gen:
             padd_seq, chunk_max_len = self.pad_sequ(chunk_seqs)
-            xs, labels = self.prep_seq_labels(padd_seq, self.total_words)
+            xs, labels = self.prep_seq_labels(padd_seq, 908)
             all_xs.append(xs)
             all_ys.append(labels)
             max_len = max(max_len, chunk_max_len)
@@ -216,7 +216,7 @@ class bilstm_cybera:
         ys = np.concatenate(all_ys, axis=0)
         print(f"Maximum length for run {each_run}: {max_len}")
 
-        self.train_model_five_runs_opt(self.total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        self.train_model_five_runs_opt(908, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
         # Clear memory
         del xs, ys, all_xs, all_ys
