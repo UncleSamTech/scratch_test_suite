@@ -24,6 +24,10 @@ import multiprocessing
 import gc
 
 class bilstm_cybera:
+
+    def __init__(self):
+        self.total_words = 0
+
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
         """
         Spawns a separate process for each run, assigning processes to available CPU cores.
@@ -171,8 +175,9 @@ class bilstm_cybera:
         with open(f"{result_path}tokenized_file_32embedtime1_{run}.pickle", "wb") as tk:
             pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
-        self.total_words = min(len(self.tokenizer.word_index) + 1, 10000)  # Cap vocab size
+        self.total_words = len(self.tokenizer.word_index) + 1
         print(f"Total words (vocabulary size): {self.total_words}")
+        
 
     def pad_sequ(self, input_seq):
         max_seq_len = max([len(x) for x in input_seq])
@@ -200,7 +205,7 @@ class bilstm_cybera:
         max_len = 0
         for chunk_seqs in input_seq_gen:
             padd_seq, chunk_max_len = self.pad_sequ(chunk_seqs)
-            xs, labels = self.prep_seq_labels(padd_seq, self.total_words)
+            xs, labels = self.prep_seq_labels(padd_seq, 47)
             all_xs.append(xs)
             all_ys.append(labels)
             max_len = max(max_len, chunk_max_len)
@@ -212,7 +217,7 @@ class bilstm_cybera:
         ys = np.concatenate(all_ys, axis=0)
         print(f"Maximum length for run {each_run}: {max_len}")
 
-        self.train_model_five_runs_opt(self.total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        self.train_model_five_runs_opt(47, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
         # Clear memory
         del xs, ys, all_xs, all_ys
