@@ -205,7 +205,7 @@ class bilstm_cybera:
         max_len = 0
         for chunk_seqs in input_seq_gen:
             padd_seq, chunk_max_len = self.pad_sequ(chunk_seqs)
-            xs, labels = self.prep_seq_labels(padd_seq, 47)
+            xs, labels = self.prep_seq_labels(padd_seq, 1000)
             all_xs.append(xs)
             all_ys.append(labels)
             max_len = max(max_len, chunk_max_len)
