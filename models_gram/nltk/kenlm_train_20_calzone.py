@@ -529,6 +529,7 @@ class kenlm_train:
         for vocab_name, model_name, model_number, ngram_order, run_number in vocab_model_pairs:
             vocab_path = os.path.join(vocab_folder, vocab_name)
             model_path = os.path.join(model_folder, model_name)
+            #excluded_20_train = [f"{train_path}/scratch_train_set_20_2_1_proc.txt",f"{train_path}/scratch_train_set_20_2_2_proc.txt",f"{train_path}/scratch_train_set_20_2_3_proc.txt",f"{train_path}/scratch_train_set_20_2_4_proc.txt",f"{train_path}/scratch_train_set_20_2_5_proc.txt",f"{train_path}/scratch_train_set_20_3_1_proc.txt",f"{train_path}/scratch_train_set_20_3_2_proc.txt",f"{train_path}/scratch_train_set_20_3_3_proc.txt",f"{train_path}/scratch_train_set_20_3_4_proc.txt"]
             
             print(f"Evaluating model {model_path} with vocab {vocab_path}")
 
@@ -1049,7 +1050,7 @@ class kenlm_train:
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20","/home/siwuchuk/thesis_project/kenlm/arpa_files/20","/home/siwuchuk/thesis_project/kenlm/logs/20")
+kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
 
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")
