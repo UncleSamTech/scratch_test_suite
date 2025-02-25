@@ -205,7 +205,7 @@ class bilstm_cybera:
         max_len = 0
         for chunk_seqs in input_seq_gen:
             padd_seq, chunk_max_len = self.pad_sequ(chunk_seqs)
-            xs, labels = self.prep_seq_labels(padd_seq, 1000)
+            xs, labels = self.prep_seq_labels(padd_seq, 908)
             all_xs.append(xs)
             all_ys.append(labels)
             max_len = max(max_len, chunk_max_len)
@@ -217,7 +217,7 @@ class bilstm_cybera:
         ys = np.concatenate(all_ys, axis=0)
         print(f"Maximum length for run {each_run}: {max_len}")
 
-        self.train_model_five_runs_opt(47, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        self.train_model_five_runs_opt(908, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
         # Clear memory
         del xs, ys, all_xs, all_ys
