@@ -16,6 +16,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score,precis
 import heapq
 from random import sample
 import seaborn as sns
+import psutil
+from multiprocessing import Pool, cpu_count
 
 class kenlm_train:
 
@@ -844,122 +846,7 @@ class kenlm_train:
         predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
         return predicted_next_token,each_vocab
     
-    def plot_precision_recall_curve(self,plot_name):
-
-        Accuracy = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798]
-        Precision = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737]
-        Recall = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798]
-        F1 = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169]
-        Ngrams = [2,3,4,5,6]
-
-        Accuracy2 = [0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004]
-        Precision2 = [0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7419880416193364]
-        Recall2 = [0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004]
-        F1_2 = [0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5352446315786005]
-        Ngrams2 = [7,8,9,10,11]
-        
-        Accuracy3 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        Precision3 = [0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916]
-        Recall3 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        F1_3 = [0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815]
-        Ngrams3 = [12,13,14,15,16]
-
-        Accuracy4 = [0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        Precision4 = [0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
-        Recall4 = [0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        F1_4 = [0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815]
-        Ngrams4 = [17,18,19,20]
-
-        Accuracy_all = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,
-                        0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004,
-                        0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,
-                        0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        Precision_all = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,
-                         0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7419880416193364,
-                         0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916,
-                         0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
-        Recall_all = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,
-                      0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5743961352657004,
-                      0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,
-                      0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        F1_all  = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,
-                   0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5352446315786005,
-                   0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815,
-                   0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815
-                   ]
-        
-        accurracy_score_2_10 = [0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217
-                               ,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        precision_2_10 = [0.358121314258974,0.33285318756910176,0.589214697331858,0.5936961737776529,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
-        recall_2_10 = [0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        f1_score_2_10 = [0.03620538803538,0.051215288426201,0.1410810665330756,0.1521354021873837,0.1519912821686130,0.151991282168613,0.151991282168613,0.1519912821686130,0.151991282168613]
-
-        accuracy_score_11_19 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328
-                                ,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,
-                                0.16819198698393328]
-        precision_11_19 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
-        recall_11_19 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        f1_score_11_19 = [0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861]
-
-        #accurracy_score_12_16 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        #precision_12_16 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
-        #recall_12_16 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        #f1_score_12_16 = [0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613]
-
-        #accurracy_score_17_20 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        #precision_17_20 = [0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781]
-        #recall_17_20 = [0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328]
-        #f1_score_17_20 = [0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613]
-        main_accuracy = [0.5163701599641202,0.46838092390491853,0.4444183414134079,0.4541357879674519,0.44591333319095317,0.4443115562864404,0.4369860965764688,0.40779104286354995,0.3887619332379386]
-        main_precision = [0.7604222887232679,0.7406965196347256,0.7550783228901023,0.7296587264633992,0.7297606037154738,0.7297170540839317,0.7295136930570918,0.7286296210329786,0.733519014367716]
-        main_recall = [0.5163701599641202,0.46838092390491853,0.4444183414134079,0.4541357879674519,0.44591333319095317,0.4443115562864404,0.4369860965764688,0.40779104286354995,0.3887619332379386]
-        main_f1_score = [0.5125859302212626,0.49460469224057596,0.4833296250062442,0.4888788547708773, 0.4840548194069682,0.48309593108594684,0.47866884739599813,0.4602679270147011,0.4480608614341063]
-        main_ngram_2_10 = list(range(2,11))
-
-        accuracy_plot_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
-        recall_2_8 = [0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004]
-        accuracy_plot_9_15 = [0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        recall_9_15 = [0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609]
-        precision_2_8 = [0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364]
-        precision_9_15 = [0.7419880416193364,0.7419880416193364,0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916]
-        f1_2_8 = [0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005]
-        f1_9_15 = [0.5352446315786005,0.5352446315786005,0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815]
-        
-        ngrams2_8 = list(range(2,9))
-        ngrams9_15 = list(range(9,16))
-
-        Ngrams_all = list(range(2,21))
-        ngrams_2_10 = list(range(2,11))
-        ngrams_11_19 = list(range(11,20))
-        #[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
-
-        #fig = plt.figure()
-        #axes = fig.add_axes([0,0,1,1])
-        #axes.plot(Ngrams_all,Accuracy_all,label = "Accuracy")
-        #axes.plot(Ngrams_all,Precision_all,label = "Precision")
-        #axes.plot(Ngrams_all,Recall_all,label="Recall")
-        #axes.plot(Ngrams_all,F1_all,label="F1")
-        #axes.legend(loc ="center right")
-
-        
-        plt.plot(main_ngram_2_10, main_precision, label = "Precision")
-        plt.plot(main_ngram_2_10, main_recall, label = "Recall")
-        plt.plot(main_ngram_2_10, main_f1_score, label = "F1")
-        plt.plot(main_ngram_2_10, main_accuracy, label = "Accuracy")
-        
-        
-        plt.xlabel('Ngram-order')
-        plt.ylabel('Model-Scores')
-        plt.title('Kenlm Evaluation Metrics vs N-Gram Orders 2 - 10 on whole datasets')
-        plt.legend()
-        #plt.xlim(0,21)
-        #plt.ylim(0,0.79)
-        #plt.show()
-        #plt.xlim(min(Ngrams3), max(Ngrams3))
-        #plt.ylim(min(min(Accuracy3), min(Precision3), min(Recall3), min(F1_3)), max(max(Accuracy3), max(Precision3), max(Recall3), max(F1_3)))
-
-        plt.savefig(f'{plot_name}_main_metrics.pdf')
-
+    
     def paired_t_test(self,nltk_2_10,nltk_11_19):
         if isinstance(nltk_2_10,list) and len(nltk_2_10) > 0 and isinstance(nltk_11_19,list) and len(nltk_11_19) > 0:
             test_val = stats.ttest_rel(nltk_2_10,nltk_11_19)
@@ -1045,81 +932,94 @@ class kenlm_train:
 
                 print(f"Processed {split_file}: RR = {total_cumulative_rr}, Lines = {total_count}")
 
+
+
+
+    def evaluate_model(self,args):
+        vocab_path, model_path, test_data, new_log_path, model_number, ngram_order, run_number = args
+        print(f"Evaluating model {model_path} with vocab {vocab_path}")
+
+        # Load the language model
+        model_rec = kenlm.Model(model_path)
+        
+        start_time = time.time()
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+            
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+                sentence_tokens = line.split()
+                if len(sentence_tokens) < 2:
+                    continue
+                
+                for idx in range(1, len(sentence_tokens)):
+                    context = ' '.join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+                    predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
+                    rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                    # Save results to log file
+                    investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                    if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                        with open(investig_path, "a") as ip:
+                            ip.write("query,expected,answer,rank,correct\n")
+                    with open(investig_path, "a") as inv_path_file:
+                        inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+        
+        diff = time.time() - start_time
+        print(f"time taken for {model_path} is {diff}")
+        
+
+    def evaluate_all_models_in_folder_in_order_with_runs_upd(self, testdir, vocab_folder, model_folder, new_log_path):
+        # Get vocab and model files
+        vocab_files = sorted([f for f in os.listdir(vocab_folder) if f.endswith(".vocab")])
+        model_files = sorted([f for f in os.listdir(model_folder) if f.endswith(".arpa")])
+        
+        # Match vocab and model files by model number, ngram order, and run number
+        vocab_model_pairs = []
+        vocab_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.vocab")
+        model_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.arpa")
+
+        for vocab in vocab_files:
+            vocab_match = vocab_pattern.match(vocab)
+            if not vocab_match:
+                continue
+            model_number, ngram_order, run_number = vocab_match.groups()
+
+            for model in model_files:
+                model_match = model_pattern.match(model)
+                if model_match and model_match.groups() == (model_number, ngram_order, run_number):
+                    vocab_model_pairs.append((vocab, model, model_number, ngram_order, run_number))
+                    break
+
+        # Prepare arguments for parallel processing
+        args_list = []
+        for vocab_name, model_name, model_number, ngram_order, run_number in vocab_model_pairs:
+            vocab_path = os.path.join(vocab_folder, vocab_name)
+            model_path = os.path.join(model_folder, model_name)
+            test_data = os.path.join(testdir, f"scratch_test_set_{model_number}_{ngram_order}_{run_number}_proc.txt")
+            args_list.append((vocab_path, model_path, test_data, new_log_path, model_number, ngram_order, run_number))
+
+        # Determine the number of available CPU cores with less than 10% utilization
+        available_cores = []
+        for core in range(cpu_count()):
+            if psutil.cpu_percent(interval=0.1, percpu=True)[core] < 10:
+                available_cores.append(core)
+            if len(available_cores) >= 16:
+                break
+
+        # Use multiprocessing to distribute the workload
+        with Pool(len(available_cores)) as pool:
+            pool.map(self.evaluate_model, args_list)
+
+    # Note: Ensure that `self.predict_next_token_kenlm_upd` and `self.check_available_rank` are defined and accessible within the `evaluate_model` function.
     
     
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
-
-
-# kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")
-
-# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/20","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/20")
-# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/30","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/30")
-# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/50","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/50")
-# kn.create_vocab_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/80","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/80")
-
-
-
-#/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/main_arpa
-#print(kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa"))
-#model_evaluated = kn.test_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas_upd/kenlm_order2_model.arpa")
-#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_50_projects/kenln_order6.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_50_projects/kenln_order6.arpa")
-#kn.plot_precision_recall_curve("kenlm_evaluation_metrics_plot_order_2_10_whole_datasets")
-#kn.plot_precision_recall_curve("kenlm_prec_rec_curv_order")
-#accuracy = kn.paired_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004,0.5743961352657004,0.5743961352657004],[0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609,0.5739130434782609])
-#print("accuracy parametric ttest on kenln",accuracy)
-#precision = kn.paired_t_test([0.7615713716522035,0.7592280310176857,0.7622305260526447,0.7582152779712141,0.7420772403226737,0.7420327232576317,0.7419880416193364,0.7419880416193364,0.7419880416193364],[0.7419880416193364,0.7418981809590166,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7419431944934916,0.7418981809590166,0.7419431944934916,0.7419431944934916])
-#print("precision parametric ttest result on kenln",precision)
-#f1 = kn.paired_t_test([0.5098150651292701,0.5294639842492523,0.5345024599207917,0.5397726754613954,0.5357713241774169,0.5355082179384458,0.5352446315786005,0.5352446315786005,0.5352446315786005],[0.5352446315786005,0.5347160132298798,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5349805637824815,0.5347160132298798,0.5349805637824815,0.5349805637824815])
-#print("f1 parametric ttest result on kenlm",f1)
-#print(kn.access_train_data_kenlm("scratch_test_suite/models_gram/nltk/scratch_train_data_90.txt","/mnt/c/Users/USER/Documents/model_train/online/kenlm/build")) 
-
-
-#accuracy_wilconsin = kn.wilcon_t_test([0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328],[0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328])
-#recall_wilconsin = kn.wilcon_t_test([0.056335163717714055,0.07443563148261134,0.15578604840349808,0.16900549115314217,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328],[0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328,0.16819198698393328])
-#accuracy_wilconsin = kn.wilcon_t_test([0.5507246376811594,0.5685990338164251,0.5681159420289855,0.5777777777777777,0.5753623188405798,0.5748792270531401,0.5743961352657004],[0.5743961352657004,0.5743961352657004,0.5743961352657004,0.5734299516908212,0.5739130434782609,0.5739130434782609,0.5739130434782609])
-#print("recall wilconxon test for kenlm ", recall_wilconsin)
-
-#precision_wilconsin = kn.wilcon_t_test([0.358121314258974,0.33285318756910176,0.589214697331858,0.5936961737776529,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781],[0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781,0.5952517614878781])
-#print("precision wilconxon test for kenlm ", precision_wilconsin)
-
-#f1_wilconxon = kn.wilcon_t_test([0.03620538803538,0.051215288426201,0.1410810665330756,0.1521354021873837,0.1519912821686130,0.151991282168613,0.151991282168613,0.1519912821686130,0.151991282168613],[0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861,0.151991282168613,0.15199128216861])
-#print("f1 wilconxon test for kenlm ", f1_wilconxon)
-#/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 7  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order7.arpa       
-#cmake -DKENLM_MAX_ORDER=10 ..
-#/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 20  --discount_fallback < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/scratch_train_data_90.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/models_gram/kelmn/arpas3/kenlmn_upd_order20.arpa
-#/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_test_suite/online/kenlm/build/bin/lmplz -o 2  < /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa
-
-#kn.evaluate_all_models_in_folder_in_order_upd_norun("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd","10","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10_order/new_metrics2")
-
-# kn.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order2.vocab",500)
-# kn.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order3.vocab",500)
-# kn.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order4.vocab",500)
-# kn.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order5.vocab",500)
-# kn.check_vocab_size("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects_upd/kenln_order6.vocab",500)
-
-#kn.scratch_evaluate_model_kenlm_time_metrics("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20_kenlm.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10","10")
-#kn.evaluate_mrr_kenlm("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_10_projects_upd/kenln_order2.vocab","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_10_projects_upd/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/log_path_10/","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/testfiles_split","10")
-#kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_150_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_150_projects","150")
-#kn.evaluate_all_models_in_folder("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/test_data/scratch_test_data_20.txt","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab_500_projects","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files_500_projects","500")
-
-#preprocess datasets by replacing _, > and < with UNDERSCORE,RIGHTANG AND LEFTANG and then converting them to lowercase
-#sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_data/scratch_train_data_10_projects_kenlm.txt
-
-#preprocessing my csvfile for kenlm metrics to insert ngram values based on the number in the vocab file
-#awk -F',' 'NR==1 {print $1",ngram,"substr($0,index($0,$2))} NR>1 {split($2,a,"order"); print $1","a[2]+0","substr($0,index($0,$2))}' metrics_kenlm_500.csv > metrics_kenlm_500_pro.csv
-
-#awk '/Total Reciprocal Rank:/ {rr+=$NF} /Total Lines:/ {lines+=$NF} END {print rr/lines > "/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10/nltk_mrr_order10.txt"}' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/nltk/results_conf10/nltk_rr_results_10_order.txt
-
-
-# sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_22_projects_model_test_kenlm.txt
-# sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_44_projects_model_test.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_44_projects_model_test_kenlm.txt
-# sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_66_projects_model_test.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_66_projects_model_test_kenlm.txt
-# sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_88_projects_model_test.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_88_projects_model_test_kenlm.txt
-# sed -e 's/>/RIGHTANG/g' -e 's/</LEFTANG/g' -e 's/_/UNDERSCORE/g' /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test.txt | tr '[:upper:]' '[:lower:]' > /media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/test_models/scratch_data_120_projects_model_test_kenlm.txt
-
-
+kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
 
 
