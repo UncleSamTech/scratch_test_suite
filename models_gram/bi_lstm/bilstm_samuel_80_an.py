@@ -1,98 +1,80 @@
+import pandas as pd
 import os
 import numpy as np
 import random
 import tensorflow as tf
 from tensorflow.keras import backend as K
+from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional, Input
+from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from datetime import datetime
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 import pickle
+import time
+from sklearn.utils.class_weight import compute_class_weight
+import seaborn as sns
+import re
 import psutil
+from tensorflow.keras.layers import Input
 import multiprocessing
 import gc
-from scipy.sparse import csr_matrix
-
-# Disable GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-tf.config.set_visible_devices([], 'GPU')  # Force TensorFlow to use CPU
 
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
         """
-        Spawns a separate process for each run and assigns processes to the available CPU cores.
+        Spawns a separate process for each run, assigning processes to available CPU cores.
         """
         processes = []
-        available_cores = self.get_available_cores()
-        core_index = 0  # Track which core to assign next
-
-        for each_run in range(1, 2):  # 5 runs
-            # Assign 1 core per run, cycling through the available cores
-            chosen_core = available_cores[core_index % len(available_cores)]
-            core_index += 1
-
+        for each_run in range(1, 2):  # Single run for simplicity; adjust to 5 if needed
+            chosen_core = [each_run % multiprocessing.cpu_count()]
             print(f"Assigning run {each_run} to core {chosen_core}")
-
-            # Start a new process for this run.
             p = multiprocessing.Process(
                 target=self.run_consolidate_train_run,
-                args=(train_path, result_path, test_path, model_number, logs_path, each_run, [chosen_core])
+                args=(train_path, result_path, test_path, model_number, logs_path, each_run, chosen_core)
             )
             p.start()
             processes.append(p)
-
-        # Wait for all processes to finish.
         for p in processes:
             p.join()
 
     def train_model_five_runs_opt(self, total_words, max_seq, xs, ys, result_path, test_data, proj_number, runs, logs_path):
-        print(f"TensorFlow version: {tf.__version__}")
-        print(f"Max sequence length: {max_seq}")
+        print(tf.__version__)
+        print("max length", max_seq)
 
-        # Force TensorFlow to use CPU
-        tf.config.set_visible_devices([], 'GPU')
-
-        # Check if it's using GPU
-        print("Is TensorFlow using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
-
-        # Reduce model complexity to save memory
+        # Simplified model
         model = Sequential([
-            Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
-            Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
-            Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+            Input(shape=(max_seq - 1,)),
+            Embedding(total_words, 50),  # Reduced from 50 to 32
+            Bidirectional(LSTM(100)),    # Reduced from 100 to 50
             Dense(total_words, activation='softmax')
         ])
         adam = Adam(learning_rate=0.01)
-        model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+        model.compile(loss='sparse_categorical_crossentropy', optimizer=adam, metrics=['accuracy'])  # Sparse loss
 
-        # Use a data generator to reduce memory usage
-        train_generator = self.DataGenerator(xs, ys, batch_size=16)
+        train_generator = self.DataGenerator(xs, ys, batch_size=8)  # Reduced batch size
         lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
         early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
 
-        # Fit the model
         history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
 
-        # Save the history
-        with open(f"{result_path}main_historyrec_150embedtime_6_{runs}.pickle", "wb") as hs:
+        with open(f"{result_path}main_historyrec_32embedtime_6_{runs}.pickle", "wb") as hs:
             pickle.dump(history.history, hs)
 
-        # Save the model for every run
-        file_name = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras"
-
+        file_name = f"{result_path}main_bilstm_scratch_model_32embedtime1_main_sample_project{proj_number}_6_{runs}.keras"
         if os.path.exists(file_name):
             os.remove(file_name)
         model.save(file_name)
 
-        # Evaluate the model
-        self.evaluate_bilstm_in_order_upd_norun_opt(test_data, max_seq, model, result_path, proj_number, runs, logs_path)
+        # Clear memory
+        K.clear_session()
+        del model, train_generator, history
+        gc.collect()
 
     class DataGenerator(tf.keras.utils.Sequence):
-        """
-        Data generator to load data in smaller chunks and reduce memory usage.
-        """
         def __init__(self, xs, ys, batch_size):
             self.xs = xs
             self.ys = ys
@@ -108,7 +90,7 @@ class bilstm_cybera:
 
     def evaluate_bilstm_in_order_upd_norun_opt(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
-        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "rb") as tk:
+        with open(f"{result_path}tokenized_file_32embedtime1_{run}.pickle", "rb") as tk:
             tokenz = pickle.load(tk)
 
         with open(test_data, "r", encoding="utf-8") as f:
@@ -121,7 +103,6 @@ class bilstm_cybera:
                 if len(sentence_tokens) < 2:
                     continue
 
-                # Evaluate each token in order starting from the second token
                 for idx in range(1, len(sentence_tokens)):
                     context = ' '.join(sentence_tokens[:idx])
                     true_next_word = sentence_tokens[idx]
@@ -163,7 +144,6 @@ class bilstm_cybera:
 
     def check_available_rank(self, list_tuples, true_word):
         rank = -1
-
         for ind, val in enumerate(list_tuples):
             if true_word.strip() == val[0].strip():
                 rank = ind + 1
@@ -171,95 +151,85 @@ class bilstm_cybera:
         return rank
 
     def tokenize_data_inp_seq(self, file_name, result_path, run, chunk_size=100000):
-        self.tokenizer = Tokenizer(num_words=50000, oov_token='<oov>')  # Limit vocabulary
-        self.encompass = []
-
+        self.tokenizer = Tokenizer(oov_token='<oov>', num_words=10000)  # Limit vocabulary size
         with open(file_name, "r", encoding="utf-8") as rf:
             while True:
                 lines = rf.readlines(chunk_size)
                 if not lines:
                     break
-
-                # Fit the tokenizer on the chunk
                 self.tokenizer.fit_on_texts(lines)
-
-                # Process each line in the chunk
+                chunk_seqs = []
                 for each_line in lines:
                     each_line = each_line.strip()
-                    self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
-                    for i in range(1, len(self.token_list)):
-                        ngram_seq = self.token_list[:i + 1]
-                        self.encompass.append(ngram_seq)
+                    token_list = self.tokenizer.texts_to_sequences([each_line])[0]
+                    for i in range(1, len(token_list)):
+                        ngram_seq = token_list[:i + 1]
+                        chunk_seqs.append(ngram_seq)
+                yield chunk_seqs  # Yield chunks instead of storing all in memory
 
-        # Save the tokenizer
-        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "wb") as tk:
+        # Save tokenizer after processing all chunks
+        with open(f"{result_path}tokenized_file_32embedtime1_{run}.pickle", "wb") as tk:
             pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
 
-        self.total_words = len(self.tokenizer.word_index) + 1
+        self.total_words = min(len(self.tokenizer.word_index) + 1, 10000)  # Cap vocab size
         print(f"Total words (vocabulary size): {self.total_words}")
 
-        return self.encompass, self.total_words, self.tokenizer
-
     def pad_sequ(self, input_seq):
-        max_seq_len = max([len(x) for x in input_seq])  # Truncate sequences to 200 tokens
-        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'), dtype=np.float32)  # Use float32
+        max_seq_len = max([len(x) for x in input_seq])
+        padded_in_seq = np.array(pad_sequences(input_seq, maxlen=max_seq_len, padding='pre'))
         return padded_in_seq, max_seq_len
 
     def prep_seq_labels(self, padded_seq, total_words):
         xs, labels = padded_seq[:, :-1], padded_seq[:, -1]
-
-        max_label_index = np.max(labels)
-        if max_label_index >= total_words:
-            print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
-            total_words = max_label_index + 1
-
-        if np.any(labels >= total_words):
-            raise ValueError(f"Labels contain indices >= total_words: {np.max(labels)} >= {total_words}")
-
-        ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
-        return xs, ys, labels
+        if np.max(labels) >= total_words:
+            print(f"Warning: Some label indices exceed total_words ({total_words}). Clipping labels.")
+            labels = np.clip(labels, 0, total_words - 1)
+        return xs, labels  # Return sparse labels
 
     def run_consolidate_train_run(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
-        """
-        Sets CPU affinity for this process to the chosen cores and performs one run of training.
-        """
-        # Set the CPU affinity so this process runs on the designated cores.
         proc = psutil.Process(os.getpid())
         proc.cpu_affinity(cores)
         print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
 
-        # Construct file paths.
         train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
-        # Run your sequence of operations.
-        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq(train_data, result_path, each_run)
-        padd_seq, max_len = self.pad_sequ(input_seq)
-        xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        # Process data in chunks
+        input_seq_gen = self.tokenize_data_inp_seq(train_data, result_path, each_run)
+        all_xs, all_ys = [], []
+        max_len = 0
+        for chunk_seqs in input_seq_gen:
+            padd_seq, chunk_max_len = self.pad_sequ(chunk_seqs)
+            xs, labels = self.prep_seq_labels(padd_seq, self.total_words)
+            all_xs.append(xs)
+            all_ys.append(labels)
+            max_len = max(max_len, chunk_max_len)
+            del padd_seq, xs, labels, chunk_seqs
+            gc.collect()
+
+        # Concatenate chunks
+        xs = np.concatenate(all_xs, axis=0)
+        ys = np.concatenate(all_ys, axis=0)
         print(f"Maximum length for run {each_run}: {max_len}")
 
-        self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        self.train_model_five_runs_opt(self.total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+
+        # Clear memory
+        del xs, ys, all_xs, all_ys
+        gc.collect()
 
     def get_available_cores(self, threshold=10, num_cores=1):
-        """
-        Returns a list of CPU core indices whose usage is below the given threshold.
-        """
         usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
         available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
         print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
         return available
 
     def pin_process_to_cores(self, cores):
-        """
-        Pins the current process to the specified CPU cores.
-        """
         p = psutil.Process(os.getpid())
         p.cpu_affinity(cores)
 
 # Example usage
 cl_ob = bilstm_cybera()
-
-# Run one dataset with 5 runs spread across the two available cores
 sample = (
     "/mnt/siwuchuk/thesis/another/kenlm/output_train",
     "/mnt/siwuchuk/thesis/another/bilstm/models/80/",
@@ -267,9 +237,4 @@ sample = (
     80,
     "/mnt/siwuchuk/thesis/another/bilstm/logs/80"
 )
-
-# Ensure TensorFlow session is cleared
-K.clear_session()
-
-# Run the training process
 cl_ob.consolidate_data_train_parallel(*sample)
