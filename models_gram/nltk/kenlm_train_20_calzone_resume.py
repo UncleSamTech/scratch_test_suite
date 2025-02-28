@@ -990,7 +990,7 @@ class kenlm_train:
         print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
 
         # Open files for reading and appending
-        with open(test_file_path, 'r') as test_file, open(log_file_path, 'a') as log_file:
+        with open(test_file_path, 'r') as test_file:
             # Skip lines until the resume point, +1 to accomodate the header
             for _ in range(line_num + 1):
                 next(test_file)
@@ -1099,6 +1099,7 @@ class kenlm_train:
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
+#kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
+kn.evaluate_test_file_from_resume("/home/siwuchuk/thesis_project/kenlm/output_test/scratch_test_set_20_4_1_proc.txt","/home/siwuchuk/thesis_project/kenlm/logs/20/kenlm_investigate_20_4_2_logs.txt","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/kenln_20_4_1.vocab","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/kenln_20_4_1.arpa",20,4,1)
 
 
