@@ -991,8 +991,8 @@ class kenlm_train:
 
         # Open files for reading and appending
         with open(test_file_path, 'r') as test_file:
-            # Skip lines until the resume point, +1 to accomodate the header
-            for _ in range(line_num + 1):
+            # Skip lines until the resume point
+            for _ in range(line_num):
                 next(test_file)
             
             # Process the remaining lines
@@ -1024,7 +1024,9 @@ class kenlm_train:
     def count_log_entries(self,log_file_path):
         """Count the number of lines in the log file."""
         with open(log_file_path, 'r') as log_file:
-            return sum(1 for line in log_file)
+            total = sum(1 for line in log_file)
+            #to exclude the header line
+            return  total - 1
         
     def count_expected_log_entries(self,test_file_path):
         """Count the total number of log entries that would be generated for the test file."""
