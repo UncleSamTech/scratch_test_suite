@@ -1104,6 +1104,6 @@ class kenlm_train:
 kn = kenlm_train()
 
 #kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
-kn.evaluate_test_file_from_resume("/home/siwuchuk/thesis_project/kenlm/output_test/scratch_test_set_20_4_1_proc.txt","/home/siwuchuk/thesis_project/kenlm/logs/20/kenlm_investigate_20_4_2_logs.txt","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/kenln_20_4_1.vocab","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/kenln_20_4_1.arpa",20,4,1)
+kn.evaluate_test_file_from_resume("/home/siwuchuk/thesis_project/kenlm/output_test/scratch_test_set_20_4_1_proc.txt","/home/siwuchuk/thesis_project/kenlm/logs/20/kenlm_investigate_20_4_1_logs.txt","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/kenln_20_4_1.vocab","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/kenln_20_4_1.arpa",20,4,1)
 
 
