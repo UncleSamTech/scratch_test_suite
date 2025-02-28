@@ -179,7 +179,7 @@ class bilstm_cybera:
                 return rank
         return rank
 
-    def tokenize_data_inp_seq(self, file_name, result_path, run, chunk_size=100000):
+    def tokenize_data_inp_seq(self, file_name, result_path, run, chunk_size=10000):
         self.tokenizer = Tokenizer(oov_token='<oov>')
         self.encompass = []
 
