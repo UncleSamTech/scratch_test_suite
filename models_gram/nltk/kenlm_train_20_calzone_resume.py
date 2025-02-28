@@ -975,7 +975,7 @@ class kenlm_train:
     def evaluate_test_file_from_resume(self,test_file_path, log_file_path, vocab_path,model_path,model_number,ngram_order,run_number):
         """Evaluate the test file, resuming from the last evaluated point."""
         # Count the number of log entries already generated
-        log_entry_count = self.count_log_entries(log_file_path)
+        log_entry_count = self.count_log_entries(f"{log_file_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt")
         # Load the language model
         model_rec = kenlm.Model(model_path)
         
@@ -1104,6 +1104,6 @@ class kenlm_train:
 kn = kenlm_train()
 
 #kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/home/siwuchuk/thesis_project/kenlm/output_test","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/tmp","/home/siwuchuk/thesis_project/kenlm/logs/20")
-kn.evaluate_test_file_from_resume("/home/siwuchuk/thesis_project/kenlm/output_test/scratch_test_set_20_4_1_proc.txt","/home/siwuchuk/thesis_project/kenlm/logs/20/kenlm_investigate_20_4_1_logs.txt","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/kenln_20_4_1.vocab","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/kenln_20_4_1.arpa",20,4,1)
+kn.evaluate_test_file_from_resume("/home/siwuchuk/thesis_project/kenlm/output_test/scratch_test_set_20_4_1_proc.txt","/home/siwuchuk/thesis_project/kenlm/logs/20","/home/siwuchuk/thesis_project/kenlm/vocab_files/20/kenln_20_4_1.vocab","/home/siwuchuk/thesis_project/kenlm/arpa_files/20/kenln_20_4_1.arpa",20,4,1)
 
 
