@@ -210,7 +210,7 @@ class bilstm_cybera:
         return self.encompass, self.total_words, self.tokenizer
     
 
-    def tokenize_data_inp_seq_opt(self, file_name, result_path, run, chunk_size=10000):
+    def tokenize_data_inp_seq_opt(self, file_name, result_path, run, chunk_size=1000):
         """
         Tokenizes the input data in chunks to reduce memory usage.
         """
@@ -318,7 +318,7 @@ class bilstm_cybera:
         # Run your sequence of operations.
         input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
         padd_seq, max_len = self.pad_sequ(input_seq)
-        xs, ys, labels = self.prep_seq_labels_in_chunks(padd_seq, total_words,chunk_size=1000)
+        xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         print(f"Maximum length for run {each_run}: {max_len}")
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
