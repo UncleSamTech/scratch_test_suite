@@ -1026,6 +1026,7 @@ class kenlm_train:
         with open(log_file_path, 'r') as log_file:
             total = sum(1 for line in log_file)
             #to exclude the header line
+            print(f"total logs so far is {total}")
             return  total - 1
         
     def count_expected_log_entries(self,test_file_path):
@@ -1051,6 +1052,7 @@ class kenlm_train:
                         token_pos = log_entry_count - current_log_entries
                         return line_num, token_pos
                     current_log_entries += tokens_after_first
+                print(f"total lines in test file is {current_log_entries} ")
         return None  # If no resume point is found
 
     def evaluate_all_models_in_folder_in_order_with_runs_upd(self, testdir, vocab_folder, model_folder, new_log_path):
