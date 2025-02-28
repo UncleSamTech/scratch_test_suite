@@ -216,6 +216,43 @@ class bilstm_cybera:
         print(f"Total words (vocabulary size): {self.total_words}")
 
         return self.encompass, self.total_words, self.tokenizer
+    
+    def tokenize_data_inp_seq_opt(self, file_name, result_path, run, chunk_size=50000):
+        """
+        Tokenizes the input data in chunks to reduce memory usage.
+        """
+        self.tokenizer = Tokenizer(oov_token='<oov>')
+        self.encompass = []
+
+        # Use a generator to read the file in chunks
+        def read_chunks(file_name, chunk_size):
+            with open(file_name, "r", encoding="utf-8") as rf:
+                while True:
+                    lines = rf.readlines(chunk_size)
+                    if not lines:
+                        break
+                    yield lines
+
+        # Fit the tokenizer and process data in chunks
+        for lines in read_chunks(file_name, chunk_size):
+            self.tokenizer.fit_on_texts(lines)
+            for each_line in lines:
+                each_line = each_line.strip()
+                self.token_list = self.tokenizer.texts_to_sequences([each_line])[0]
+                for i in range(1, len(self.token_list)):
+                    ngram_seq = self.token_list[:i + 1]
+                    self.encompass.append(ngram_seq)
+
+        # Save the tokenizer
+        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "wb") as tk:
+            pickle.dump(self.tokenizer, tk, protocol=pickle.HIGHEST_PROTOCOL)
+
+        self.total_words = len(self.tokenizer.word_index) + 1
+        print(f"Total words (vocabulary size): {self.total_words}")
+
+
+        return self.encompass, self.total_words, self.tokenizer
+
 
     def pad_sequ(self, input_seq):
         max_seq_len = max([len(x) for x in input_seq])
@@ -250,7 +287,7 @@ class bilstm_cybera:
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
         # Run your sequence of operations.
-        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq(train_data, result_path, each_run)
+        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
         padd_seq, max_len = self.pad_sequ(input_seq)
         xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         print(f"Maximum length for run {each_run}: {max_len}")
