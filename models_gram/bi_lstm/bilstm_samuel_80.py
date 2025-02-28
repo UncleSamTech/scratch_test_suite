@@ -266,6 +266,41 @@ class bilstm_cybera:
 
         ys = tf.keras.utils.to_categorical(labels, num_classes=total_words)
         return xs, ys, labels
+    
+
+
+    def prep_seq_labels_in_chunks(self, padded_seq, total_words, chunk_size=1000):
+        xs_list, ys_list, labels_list = [], [], []
+
+        # Process the data in chunks
+        for i in range(0, len(padded_seq), chunk_size):
+            chunk = padded_seq[i:i + chunk_size]
+            xs_chunk, labels_chunk = chunk[:, :-1], chunk[:, -1]
+
+            # Adjust total_words if necessary
+            max_label_index = np.max(labels_chunk)
+            if max_label_index >= total_words:
+                print(f"Adjusting total_words from {total_words} to {max_label_index + 1} based on labels.")
+                total_words = max_label_index + 1
+
+            # Check for invalid labels
+            if np.any(labels_chunk >= total_words):
+                raise ValueError(f"Labels contain indices >= total_words: {np.max(labels_chunk)} >= {total_words}")
+
+            # Convert labels to categorical
+            ys_chunk = tf.keras.utils.to_categorical(labels_chunk, num_classes=total_words)
+
+            # Append the chunk results to the lists
+            xs_list.append(xs_chunk)
+            ys_list.append(ys_chunk)
+            labels_list.append(labels_chunk)
+
+        # Concatenate the chunks into final arrays
+        xs = np.concatenate(xs_list, axis=0)
+        ys = np.concatenate(ys_list, axis=0)
+        labels = np.concatenate(labels_list, axis=0)
+
+        return xs, ys, labels
 
     def run_consolidate_train_run(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
@@ -283,7 +318,7 @@ class bilstm_cybera:
         # Run your sequence of operations.
         input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
         padd_seq, max_len = self.pad_sequ(input_seq)
-        xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        xs, ys, labels = self.prep_seq_labels_in_chunks(padd_seq, total_words,chunk_size=1000)
         print(f"Maximum length for run {each_run}: {max_len}")
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
