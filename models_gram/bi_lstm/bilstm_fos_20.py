@@ -61,6 +61,40 @@ class bilstm_cybera:
         for p in processes:
             p.join()
 
+    def count_log_entries(self,log_file_path):
+        """Count the number of lines in the log file."""
+        with open(log_file_path, 'r') as log_file:
+            total = sum(1 for line in log_file)
+            #to exclude the header line
+            print(f"total logs so far is {total}")
+            return  total - 1
+        
+    def count_expected_log_entries(self,test_file_path):
+        """Count the total number of log entries that would be generated for the test file."""
+        expected_entries = 0
+        with open(test_file_path, 'r') as test_file:
+            for line in test_file:
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    expected_entries += len(tokens) - 1  # Tokens after the first token
+        return expected_entries
+    
+    def find_resume_point(self,test_file_path, log_entry_count):
+        """Find the line and token position in the test file to resume evaluation."""
+        with open(test_file_path, 'r') as test_file:
+            current_log_entries = 0
+            for line_num, line in enumerate(test_file):
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    tokens_after_first = len(tokens) - 1
+                    if current_log_entries + tokens_after_first >= log_entry_count:
+                        # Resume point is in this line
+                        token_pos = log_entry_count - current_log_entries
+                        return line_num, token_pos
+                    current_log_entries += tokens_after_first
+            print(f"total lines in test file is {current_log_entries} ")
+        return None  # If no resume point is found
+
     
     def eval_five_runs_opt(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
         all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
@@ -201,26 +235,41 @@ class bilstm_cybera:
     def evaluate_bilstm_in_order_upd_norun_opt_new(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
         loaded_model = load_model(f"{model}",compile=False)
+        # Count the number of log entries already generated
+        log_entry_count = self.count_log_entries(f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt")
+
+        resume_point = self.find_resume_point(test_data, log_entry_count)
+
         with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "rb") as tk:
             tokenz = pickle.load(tk)
 
-        with open(test_data, "r", encoding="utf-8") as f:
-            lines = f.readlines()
-            random.shuffle(lines)
 
-            for line in lines:
-                line = line.strip()
-                sentence_tokens = line.split(" ")
-                if len(sentence_tokens) < 2:
-                    continue
+        if resume_point is None:
+            print("Evaluation completed")
+            return
+                
+        line_num, token_pos = resume_point
+        print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
 
-                # Evaluate each token in order starting from the second token
-                for idx in range(1, len(sentence_tokens)):
-                    context = ' '.join(sentence_tokens[:idx])
-                    true_next_word = sentence_tokens[idx]
+                
 
-                    predicted_next_word, top_10_tokens = self.predict_token_score_upd(context, tokenz, loaded_model, maxlen)
-                    rank = self.check_available_rank(top_10_tokens, true_next_word)
+        # Open files for reading and appending
+        with open(test_data, 'r') as test_file:
+            # Skip lines until the resume point
+            for _ in range(line_num):
+                next(test_file)
+
+            for line in test_file:
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
+                    # Skip tokens until the resume point
+                    for i in range(token_pos, len(tokens) - 1):
+                        context = ' '.join(tokens[:i])
+                        true_next_word = tokens[i]
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd(context, tokenz, loaded_model, maxlen)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                                       
+                    token_pos = 1  # Reset token position after the first line
                     investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
                     if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
                         with open(investig_path, "a") as ip:
