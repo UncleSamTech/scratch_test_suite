@@ -269,15 +269,15 @@ class bilstm_cybera:
                         predicted_next_word, top_10_tokens = self.predict_token_score_upd(context, tokenz, loaded_model, maxlen)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
                                        
-                    token_pos = 1  # Reset token position after the first line
-                    investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
-                    if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
-                        with open(investig_path, "a") as ip:
-                            ip.write(f"query,expected,answer,rank,correct\n")
-                    with open(investig_path, "a") as inv_path_file:
-                        inv_path_file.write(
-                            f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+                    
+                        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+                        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                            with open(investig_path, "a") as ip:
+                                ip.write(f"query,expected,answer,rank,correct\n")
+                        with open(investig_path, "a") as inv_path_file:
+                            inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
+                    token_pos = 1  # Reset token position after the first line
 
     def predict_token_score_upd(self, context, tokenz, model, maxlen):
         """
