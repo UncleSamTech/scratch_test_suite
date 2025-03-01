@@ -273,3 +273,6 @@ K.clear_session()
 
 # Run the training process
 cl_ob.consolidate_data_train_parallel(*sample)
+
+#count the number of lines in the training data and split into two using the count then create two splits
+#lines=$(wc -l < scratch_train_set_80_6_5_proc.txt) && split -l $((lines / 2)) scratch_train_set_80_6_5_proc.txt scratch_train_set_80_6_5_proc_ && mv scratch_train_set_80_6_5_proc_aa scratch_train_set_80_6_5_proc_1.txt && mv scratch_train_set_80_6_5_proc_ab scratch_train_set_80_6_5_proc_2.txt

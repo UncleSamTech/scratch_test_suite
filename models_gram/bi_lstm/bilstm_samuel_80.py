@@ -46,7 +46,7 @@ class bilstm_cybera:
 
             # Start a new process for this run.
             p = multiprocessing.Process(
-                target=self.run_consolidate_train_run,
+                target=self.run_consolidate_train_run_cons,
                 args=(train_path, result_path, test_path, model_number, logs_path, each_run, [chosen_core])
             )
             p.start()
@@ -65,6 +65,7 @@ class bilstm_cybera:
 
         # Check if it's using CPU
         print("Is TensorFlow using GPU?", len(tf.config.list_physical_devices('GPU')) > 0)
+
 
         # Reduce model complexity to save memory
         model = Sequential([
@@ -312,7 +313,7 @@ class bilstm_cybera:
         print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
 
         # Construct file paths.
-        train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+        train_data = f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_{each_run}.txt"
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
         # Run your sequence of operations.
@@ -323,6 +324,59 @@ class bilstm_cybera:
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
+
+    def run_consolidate_train_run_cons(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
+        """
+        Sets CPU affinity for this process to the chosen cores and performs one run of training.
+        """
+        # Set the CPU affinity so this process runs on the designated cores.
+        proc = psutil.Process(os.getpid())
+        proc.cpu_affinity(cores)
+        print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
+
+        # Construct file paths for both datasets.
+        train_data_1 = f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt"
+        train_data_2 = f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt"
+        test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
+
+        # Train on the first dataset.
+        print(f"Training on dataset 1 for run {each_run}...")
+        input_seq_1, total_words_1, tokenizer_1 = self.tokenize_data_inp_seq_opt(train_data_1, result_path, each_run)
+        padd_seq_1, max_len_1 = self.pad_sequ(input_seq_1)
+        xs_1, ys_1, labels_1 = self.prep_seq_labels(padd_seq_1, total_words_1)
+        self.train_model_five_runs_opt(total_words_1, max_len_1, xs_1, ys_1, result_path, test_data, model_number, each_run, logs_path)
+
+        # Load the model trained on the first dataset.
+        model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+        if os.path.exists(model_file):
+            print(f"Loading model from {model_file} for incremental training on dataset 2...")
+            model = load_model(model_file)
+        else:
+            raise FileNotFoundError(f"Model file {model_file} not found.")
+
+        # Train on the second dataset.
+        print(f"Training on dataset 2 for run {each_run}...")
+        input_seq_2, total_words_2, tokenizer_2 = self.tokenize_data_inp_seq_opt(train_data_2, result_path, each_run)
+        padd_seq_2, max_len_2 = self.pad_sequ(input_seq_2)
+        xs_2, ys_2, labels_2 = self.prep_seq_labels(padd_seq_2, total_words_2)
+
+        # Use a data generator to reduce memory usage.
+        train_generator = self.DataGenerator(xs_2, ys_2, batch_size=16)
+        lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
+        # Fit the model on the second dataset.
+        history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+
+        # Save the updated model.
+        model.save(model_file)
+        print(f"Model saved after training on dataset 2 for run {each_run}.")
+
+        # Save the history for the second dataset.
+        with open(f"{result_path}main_historyrec_150embedtime_6_{each_run}_dataset2.pickle", "wb") as hs:
+            pickle.dump(history.history, hs)
+
+    
     def get_available_cores(self, threshold=10, num_cores=1):
         """
         Returns a list of CPU core indices whose usage is below the given threshold.
@@ -346,5 +400,6 @@ class bilstm_cybera:
 cl_ob = bilstm_cybera()
 
 # Run one dataset with 5 runs spread across the two available cores
-sample = ("/mnt/siwuchuk/thesis/another/kenlm/output_train","/mnt/siwuchuk/thesis/another/bilstm/models/80/","/mnt/siwuchuk/thesis/another/kenlm/output_test",80,"/mnt/siwuchuk/thesis/another/bilstm/logs/80")
+sample = ("/mnt/siwuchuk/thesis/another/kenlm/output_train/tmp_80","/mnt/siwuchuk/thesis/another/bilstm/models/80/","/mnt/siwuchuk/thesis/another/kenlm/output_test",80,"/mnt/siwuchuk/thesis/another/bilstm/logs/80")
 cl_ob.consolidate_data_train_parallel(*sample)
+
