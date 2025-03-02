@@ -348,7 +348,7 @@ class bilstm_cybera:
         # Train on each dataset split incrementally.
         for i, train_data in enumerate(train_data_files):
             model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
-            print(f"Training on dataset split {i + 1} for run {each_run}...")
+            print(f"Training on dataset split {train_data} for run {each_run}...")
 
             # Tokenize and prepare the data for the current split.
             input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
