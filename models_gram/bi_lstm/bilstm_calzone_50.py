@@ -39,7 +39,7 @@ class bilstm_cybera:
         core_index = 0  # Track which core to assign next
 
         skipped_runs = [4]
-        for each_run in range(1, 6):  # 5 runs
+        for each_run in range(1, 2):  # 5 runs
             if each_run in skipped_runs:
                 continue
             # Assign 1 core per run
@@ -50,7 +50,7 @@ class bilstm_cybera:
 
             # Start a new process for this run.
             p = multiprocessing.Process(
-                target=self.run_consolidate_train_run,
+                target=self.run_consolidate_train_run_upd,
                 args=(train_path, result_path, test_path, model_number, logs_path, each_run, [chosen_core])
             )
             p.start()
@@ -59,6 +59,77 @@ class bilstm_cybera:
         # Wait for all processes to finish.
         for p in processes:
             p.join()
+
+
+    def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
+        """
+        Sets CPU affinity for this process to the chosen cores and performs one run of training.
+        """
+        # Set the CPU affinity so this process runs on the designated cores.
+        proc = psutil.Process(os.getpid())
+        proc.cpu_affinity(cores)
+        print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
+
+        # Construct file paths for all four datasets.
+        train_data_files = [
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_4.txt"
+        ]
+        test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
+
+        # Initialize the model variable.
+        model = None
+        
+        # Train on each dataset split incrementally.
+        for i, train_data in enumerate(train_data_files):
+            model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+            print(f"Training on dataset split {train_data} for run {each_run}...")
+
+            # Tokenize and prepare the data for the current split.
+            input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
+            padd_seq, max_len = self.pad_sequ(input_seq)
+            xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+
+            # If this is not the first split, load the previously saved model.
+            if i > 0:
+                model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+                if os.path.exists(model_file):
+                    print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
+                    model = load_model(model_file)
+                else:
+                    raise FileNotFoundError(f"Model file {model_file} not found.")
+
+            #If this is the first split, create a new model.
+            if model is None:
+                print("Creating a new model for the first split...")
+                model = Sequential([
+                    Input(shape=(max_len - 1,)),  # Explicitly define the input shape
+                    Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
+                    Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+                    Dense(total_words, activation='softmax')
+                ])
+                adam = Adam(learning_rate=0.01)
+                model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+
+            # Use a data generator to reduce memory usage.
+            train_generator = self.DataGenerator(xs, ys, batch_size=16)
+            lr_scheduler = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1)
+            early_stopping = EarlyStopping(monitor='loss', patience=10, restore_best_weights=True)
+
+            # Fit the model on the current split.
+            history = model.fit(train_generator, epochs=50, verbose=1, callbacks=[lr_scheduler, early_stopping])
+
+            # Save the model after training on the current split.
+            model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+            model.save(model_file)
+            print(f"Model saved after training on split {i + 1} for run {each_run}.")
+
+            # Save the history for the current split.
+            with open(f"{result_path}main_historyrec_150embedtime_6_{each_run}_split_{i + 1}.pickle", "wb") as hs:
+                pickle.dump(history.history, hs)
+
 
     def train_model_five_runs_opt(self, total_words, max_seq, xs, ys, result_path, test_data, proj_number, runs, logs_path):
         print(tf.__version__)
@@ -276,3 +347,6 @@ cl_ob = bilstm_cybera()
 sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
 cl_ob.consolidate_data_train_parallel(*sample)
 
+#split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" --filter='sh -c "{ cat > scratch_train_set_50_6_1_proc_$FILE.txt; }"' scratch_train_set_50_6_1_proc.txt && mv scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_1.txt
+#split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_ && mv scratch_train_set_50_6_1_proc_1.txt scratch_train_set_50_6_1_proc.txt && rm scratch_train_set_50_6_1_proc_1.txt
+#split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_5_proc.txt scratch_train_set_50_6_5_proc_
