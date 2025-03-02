@@ -46,7 +46,7 @@ class bilstm_cybera:
 
             # Start a new process for this run.
             p = multiprocessing.Process(
-                target=self.run_consolidate_train_run_cons,
+                target=self.run_consolidate_train_run_upd,
                 args=(train_path, result_path, test_path, model_number, logs_path, each_run, [chosen_core])
             )
             p.start()
@@ -324,7 +324,7 @@ class bilstm_cybera:
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
-    def run_consolidate_train_run(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
+    def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
         Sets CPU affinity for this process to the chosen cores and performs one run of training.
         """
