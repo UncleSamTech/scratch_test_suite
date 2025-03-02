@@ -303,6 +303,58 @@ class bilstm_cybera:
         top_10_tokens_scores = sorted(max_prob_tokens.items(), key=lambda item: item[1], reverse=True)[:10]
 
         return predicted_next_token, top_10_tokens_scores
+    
+    def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
+        """
+        Predicts the next token based on the given context and scores each token in the vocabulary.
+        Optimized to reduce redundant computations and improve efficiency.
+        """
+        # Tokenize the context
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            return -1, []
+
+        # Prepare the base sequence (context without the last token)
+        base_sequence = token_list[0][-maxlen + 1:]
+
+        # Precompute all token indices
+        vocab = list(tokenz.word_index.keys())
+        token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+
+        # Create a batch of sequences for all tokens
+        padded_sequences = [
+            base_sequence + [token_index] for token_index in token_indices
+        ]
+        padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+        padded_sequences = tf.convert_to_tensor(padded_sequences)
+
+        # Perform batch prediction
+        predictions = model.predict(padded_sequences, verbose=0)
+
+        # Extract probabilities for each token
+        max_prob_tokens = {
+            token: predictions[i][token_index]
+            for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+        }
+
+        # Find the predicted next token
+        predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
+
+        # Find the top-10 tokens without sorting the entire vocabulary
+        top_10_tokens_scores = []
+        for token, prob in max_prob_tokens.items():
+            if len(top_10_tokens_scores) < 10:
+                top_10_tokens_scores.append((token, prob))
+            else:
+                # Replace the smallest probability in the top-10
+                min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
+                if prob > top_10_tokens_scores[min_prob_index][1]:
+                    top_10_tokens_scores[min_prob_index] = (token, prob)
+
+        # Sort the top-10 tokens by probability (descending)
+        top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+
+        return predicted_next_token, top_10_tokens_scores
 
     def check_available_rank(self, list_tuples, true_word):
         rank = -1
