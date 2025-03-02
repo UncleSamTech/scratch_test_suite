@@ -44,8 +44,8 @@ def evaluate_test_file(test_file_path, log_file_path, output_file_path):
 
     # Open files for reading and appending
     with open(test_file_path, 'r') as test_file, open(log_file_path, 'a') as log_file, open(output_file_path, 'a') as output_file:
-        # Skip lines until the resume point
-        for _ in range(line_num):
+        # Skip lines until the resume point, +1 to accomodate the header
+        for _ in range(line_num + 1):
             next(test_file)
         
         # Process the remaining lines
