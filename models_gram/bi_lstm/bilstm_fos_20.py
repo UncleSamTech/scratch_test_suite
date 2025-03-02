@@ -266,7 +266,7 @@ class bilstm_cybera:
                     for i in range(token_pos, len(tokens) - 1):
                         context = ' '.join(tokens[:i])
                         true_next_word = tokens[i]
-                        predicted_next_word, top_10_tokens = self.predict_token_score_upd(context, tokenz, loaded_model, maxlen)
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, loaded_model, maxlen)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
                                        
                     
