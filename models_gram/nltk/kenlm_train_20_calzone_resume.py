@@ -825,6 +825,44 @@ class kenlm_train:
         #returns predicted next token and list of top 10 tokens and scores
         return predicted_next_token,top_10_tokens_scores
     
+    def predict_next_token_kenlm_upd_opt(self, model, context, vocab_name):
+        """
+        Predicts the next token based on the given context using a KenLM model.
+        Optimized for performance by reducing file reads, batching, and efficient top-10 selection.
+        """
+        # Read the vocabulary file once (if not already cached)
+        if not hasattr(self, 'vocabulary'):
+            with open(vocab_name, "r", encoding="utf8") as vocab_f:
+                self.vocabulary = [line.strip() for line in vocab_f.readlines()]
+
+        # Precompute the context with a trailing space
+        context_with_space = context + " "
+
+        # Score all candidate words in a single pass
+        next_token_probabilities = {}
+        for candidate_word in self.vocabulary:
+            context_with_candidate = context_with_space + candidate_word
+            next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+
+        # Find the predicted next token
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+
+        # Find the top-10 tokens without sorting the entire vocabulary
+        top_10_tokens_scores = []
+        for token, prob in next_token_probabilities.items():
+            if len(top_10_tokens_scores) < 10:
+                top_10_tokens_scores.append((token, prob))
+            else:
+                # Replace the smallest probability in the top-10
+                min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
+                if prob > top_10_tokens_scores[min_prob_index][1]:
+                    top_10_tokens_scores[min_prob_index] = (token, prob)
+
+        # Sort the top-10 tokens by probability (descending)
+        top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+
+        return predicted_next_token, top_10_tokens_scores
+        
     def predict_next_token_kenlm2(self,model, context,vocab_path):
         vocab_names = []
         for i in os.listdir(vocab_path):
@@ -1003,7 +1041,7 @@ class kenlm_train:
                     for i in range(token_pos, len(tokens) - 1):
                         context = ' '.join(tokens[:i])
                         true_next_word = tokens[i]
-                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
+                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
 
                         
