@@ -116,8 +116,8 @@ def check_available_rank(list_tuples,true_word):
                 return rank
         return rank
 
-def evaluate_test_file_from_resume_upd(args):
-        vocab_path, model_path, test_data, new_log_path, model_number, ngram_order, run_number = args
+def evaluate_test_file_from_resume_upd(vocab_path, model_path, test_data, new_log_path, model_number, ngram_order, run_number):
+         
         """
         Evaluate the test file, resuming from the last evaluated point for the matching log file.
         """
@@ -178,12 +178,12 @@ def evaluate_test_file_from_resume_upd(args):
         diff = time.time() - start_time
         print(f"Time taken for {model_path} and log file {log_file_path} is {diff} seconds.")
 
-def count_log_entries(self,log_file_path):
+def count_log_entries(log_file_path):
         """Count the number of lines in the log file."""
         with open(log_file_path, 'r') as log_file:
             return sum(1 for line in log_file)
         
-def count_expected_log_entries(self,test_file_path):
+def count_expected_log_entries(test_file_path):
         """Count the total number of log entries that would be generated for the test file."""
         expected_entries = 0
         with open(test_file_path, 'r') as test_file:
@@ -193,7 +193,7 @@ def count_expected_log_entries(self,test_file_path):
                     expected_entries += len(tokens) - 1  # Tokens after the first token
         return expected_entries
     
-def find_resume_point(self,test_file_path, log_entry_count):
+def find_resume_point(test_file_path, log_entry_count):
         """Find the line and token position in the test file to resume evaluation."""
         with open(test_file_path, 'r') as test_file:
             current_log_entries = 0
