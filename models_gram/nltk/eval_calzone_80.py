@@ -69,43 +69,43 @@ def evaluate_model(vocab_path, model_path, test_data, new_log_path, model_number
     diff = time.time() - start_time
     print(f"time taken is for {model_path} is {diff}")
 
+vocabulary_cache = None
+
 def predict_next_token_kenlm_upd_opt(model, context, vocab_name):
-        """
-        Predicts the next token based on the given context using a KenLM model.
-        Optimized for performance by reducing file reads, batching, and efficient top-10 selection.
-        """
-        # Read the vocabulary file once (if not already cached)
-        if not hasattr('vocabulary'):
-            with open(vocab_name, "r", encoding="utf8") as vocab_f:
-                vocabulary = [line.strip() for line in vocab_f.readlines()]
+    global vocabulary_cache
 
-        # Precompute the context with a trailing space
-        context_with_space = context + " "
+    # Read the vocabulary file once (if not already cached)
+    if vocabulary_cache is None:
+        with open(vocab_name, "r", encoding="utf8") as vocab_f:
+            vocabulary_cache = [line.strip() for line in vocab_f.readlines()]
 
-        # Score all candidate words in a single pass
-        next_token_probabilities = {}
-        for candidate_word in vocabulary:
-            context_with_candidate = context_with_space + candidate_word
-            next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+    # Precompute the context with a trailing space
+    context_with_space = context + " "
 
-        # Find the predicted next token
-        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+    # Score all candidate words in a single pass
+    next_token_probabilities = {}
+    for candidate_word in vocabulary_cache:
+        context_with_candidate = context_with_space + candidate_word
+        next_token_probabilities[candidate_word] = model.score(context_with_candidate)
 
-        # Find the top-10 tokens without sorting the entire vocabulary
-        top_10_tokens_scores = []
-        for token, prob in next_token_probabilities.items():
-            if len(top_10_tokens_scores) < 10:
-                top_10_tokens_scores.append((token, prob))
-            else:
-                # Replace the smallest probability in the top-10
-                min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
-                if prob > top_10_tokens_scores[min_prob_index][1]:
-                    top_10_tokens_scores[min_prob_index] = (token, prob)
+    # Find the predicted next token
+    predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
 
-        # Sort the top-10 tokens by probability (descending)
-        top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+    # Find the top-10 tokens without sorting the entire vocabulary
+    top_10_tokens_scores = []
+    for token, prob in next_token_probabilities.items():
+        if len(top_10_tokens_scores) < 10:
+            top_10_tokens_scores.append((token, prob))
+        else:
+            # Replace the smallest probability in the top-10
+            min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
+            if prob > top_10_tokens_scores[min_prob_index][1]:
+                top_10_tokens_scores[min_prob_index] = (token, prob)
 
-        return predicted_next_token, top_10_tokens_scores
+    # Sort the top-10 tokens by probability (descending)
+    top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+
+    return predicted_next_token, top_10_tokens_scores
 
 def check_available_rank(list_tuples,true_word):
         rank = -1
