@@ -1043,17 +1043,17 @@ class kenlm_train:
                         true_next_word = tokens[i]
                         predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        # Save results to log file
+                        investig_path = f"{log_file_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                            with open(investig_path, "a") as ip:
+                                ip.write("query,expected,answer,rank,correct\n")
+                        with open(investig_path, "a") as inv_path_file:
+                            inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
                         
                     token_pos = 1  # Reset token position after the first line
-                    # Save results to log file
-                    investig_path = f"{log_file_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
-                    if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
-                        with open(investig_path, "a") as ip:
-                            ip.write("query,expected,answer,rank,correct\n")
-                    with open(investig_path, "a") as inv_path_file:
-                        inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
-        
+                            
         diff = time.time() - start_time
         print(f"time taken for {model_path} is {diff}")
 
