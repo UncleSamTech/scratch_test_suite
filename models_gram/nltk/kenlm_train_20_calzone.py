@@ -1068,6 +1068,7 @@ class kenlm_train:
         """
         # Load the language model
         model_rec = kenlm.Model(model_path)
+        
 
         # Extract the base name of the test file
         test_file_name = os.path.basename(test_data)
@@ -1078,50 +1079,75 @@ class kenlm_train:
 
         # Check if the log file exists
         if not os.path.exists(log_file_path):
-            print(f"No matching log file found for test file {test_file_name}.")
-            return
-
-        print(f"Processing log file: {log_file_path}")
-
-        # Count the number of log entries already generated
-        log_entry_count = self.count_log_entries(log_file_path)
-
-        # Find the resume point in the test file
-        resume_point = self.find_resume_point(test_data, log_entry_count)
-        if resume_point is None:
-            print(f"Evaluation is already complete for log file {log_file_path}.")
-            return
-
-        line_num, token_pos = resume_point
-        print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
-
-        start_time = time.time()
-
-        # Open files for reading and appending
-        with open(test_data, 'r', encoding="utf-8") as test_file:
-            # Skip lines until the resume point, +1 to accommodate the header
-            for _ in range(line_num + 1):
-                next(test_file)
-
-            # Process the remaining lines
-            for line in test_file:
-                tokens = line.strip().split()
-                if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
-                    # Skip tokens until the resume point
-                    for i in range(token_pos, len(tokens) - 1):
-                        context = ' '.join(tokens[:i])
-                        true_next_word = tokens[i]
+            print(f"No matching log file found for test file {test_file_name}. evaluating now")
+            with open(test_data, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    sentence_tokens = line.split()
+                    if len(sentence_tokens) < 2:
+                        continue
+                    
+                    for idx in range(1, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
                         predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
 
                         # Save results to log file
-                        with open(log_file_path, "a") as inv_path_file:
+                        investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                            with open(investig_path, "a") as ip:
+                                ip.write("query,expected,answer,rank,correct\n")
+                        with open(investig_path, "a") as inv_path_file:
                             inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
-                    token_pos = 1  # Reset token position after the first line
+        else:  
 
-        diff = time.time() - start_time
-        print(f"Time taken for {model_path} and log file {log_file_path} is {diff} seconds.")
+            print(f"Processing log file: {log_file_path}")
+
+            # Count the number of log entries already generated
+            log_entry_count = self.count_log_entries(log_file_path)
+
+            # Find the resume point in the test file
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print(f"Evaluation is already complete for log file {log_file_path}.")
+                return
+
+            line_num, token_pos = resume_point
+            print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+
+            start_time = time.time()
+
+            # Open files for reading and appending
+            with open(test_data, 'r', encoding="utf-8") as test_file:
+                # Skip lines until the resume point, +1 to accommodate the header
+                for _ in range(line_num + 1):
+                    next(test_file)
+
+                # Process the remaining lines
+                for line in test_file:
+                    tokens = line.strip().split()
+                    if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
+                        # Skip tokens until the resume point
+                        for i in range(token_pos, len(tokens) - 1):
+                            context = ' '.join(tokens[:i])
+                            true_next_word = tokens[i]
+                            predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
+                            rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                            # Save results to log file
+                            with open(log_file_path, "a") as inv_path_file:
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+                        token_pos = 1  # Reset token position after the first line
+
+            diff = time.time() - start_time
+            print(f"Time taken for {model_path} and log file {log_file_path} is {diff} seconds.")
 
     def count_log_entries(self,log_file_path):
         """Count the number of lines in the log file."""
