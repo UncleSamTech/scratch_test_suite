@@ -72,10 +72,10 @@ class bilstm_cybera:
 
         # Construct file paths for all four datasets.
         train_data_files = [
-            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
-            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
-            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
-            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_4.txt"
+            f"{train_path}/{model_number}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
+            f"{train_path}/{model_number}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
+            f"{train_path}/{model_number}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
+            f"{train_path}/{model_number}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_4.txt"
         ]
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
