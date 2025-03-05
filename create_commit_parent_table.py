@@ -15,7 +15,7 @@ df_comm_par.to_sql("Commit_Parentss", connection, if_exists='replace', index=Fal
 connection.commit()
 
 # Step 5: Create an index on the "Commit_SHA" column
-c.execute('''CREATE INDEX "ix_Commit_Parents_index" ON "Commit_Parentss" ("Commit_SHA");''')
+c.execute('''CREATE INDEX "ix_Commit_Parentss_index" ON "Commit_Parentss" ("Commit_SHA");''')
 
 # Step 6: Commit the changes again
 connection.commit()
