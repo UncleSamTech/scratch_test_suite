@@ -54,7 +54,7 @@ class bilstm_cybera:
 
             # Start a new process for this run.
             p = multiprocessing.Process(
-                target=self.run_consolidate_train_run_upd,
+                target=self.run_consolidate_train_run,
                 args=(train_path, result_path, test_path, model_number, logs_path, each_run, [chosen_core])
             )
             p.start()
