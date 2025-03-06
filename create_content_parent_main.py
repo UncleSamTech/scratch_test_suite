@@ -58,7 +58,7 @@ def is_valid_encoding(byte_string,encoding='utf-8'):
 def get_parents_from_database(c):
     
     cursor = conn.cursor()
-    cursor.execute("SELECT Parent_SHA FROM Commit_Parents WHERE Commit_SHA = (?)", (c,))
+    cursor.execute("SELECT Parent_SHA FROM Commit_Parentss WHERE Commit_SHA = (?)", (c,))
     all_parents_of_c = cursor.fetchall()
     cursor.close()
     all_parents_of_c = set([x[0] for x in all_parents_of_c])
@@ -182,7 +182,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                 if len(commits_which_modified_file_f) > 1: 
                     get_valid_parents_recursive(c, parents_of_c, commits_which_modified_file_f, visited_parents)
             
-                write_content_parents(project_name,f,c,parents_of_c)
+                write_content_parents_opt(project_name,f,c,parents_of_c)
                 # if len(parents_of_c) == 0:
                 #     with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv", "a") as outfile:
                 #         outfile.write("{}_COMMA_{}_COMMA_{}_COMMA_{}\n".format(project_name, f, c, c))
@@ -197,7 +197,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
 
 def write_content_parents(project_name, f, c, parents_of_c):
     # Path to the output file
-    output_file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv"
+    output_file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd_2.csv"
     
     # Initialize a set to track unique lines, starting with the current file contents
     written_lines = set()
@@ -226,6 +226,41 @@ def write_content_parents(project_name, f, c, parents_of_c):
                 with open(output_file_path, "a") as outfile:
                     outfile.write(line + "\n")
                 written_lines.add(line)
+
+def write_content_parents_opt(project_name, f, c, parents_of_c):
+    # Path to the output file
+    output_file_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd_2.csv"
+    
+    # Initialize a set to track unique lines
+    written_lines = set()
+
+    # Read existing lines in the file and add them to the set
+    try:
+        with open(output_file_path, "r") as infile:
+            written_lines.update(line.strip() for line in infile)
+    except FileNotFoundError:
+        # If the file doesn't exist yet, start with an empty set
+        pass
+
+    # Prepare lines to be written based on parents_of_c
+    lines_to_write = []
+    if not parents_of_c:
+        line = f"{project_name}_COMMA_{f}_COMMA_{c}_COMMA_{c}"
+        if line not in written_lines:
+            lines_to_write.append(line)
+            written_lines.add(line)
+    else:
+        for parent in parents_of_c:
+            line = f"{project_name}_COMMA_{f}_COMMA_{c}_COMMA_{parent}"
+            if line not in written_lines:
+                lines_to_write.append(line)
+                written_lines.add(line)
+
+    # Write all new lines to the file at once
+    if lines_to_write:
+        with open(output_file_path, "a") as outfile:
+            outfile.write("\n".join(lines_to_write) + "\n")
+
 
 def main2(project_path: str):
     proj_names = []
@@ -389,8 +424,8 @@ def insert_into_content_parent_table_optimized(file_path):
     finally:
         conn.close()
 
-#main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv")
+main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+#insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv")
 
 
 
