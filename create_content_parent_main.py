@@ -424,8 +424,8 @@ def insert_into_content_parent_table_optimized(file_path):
     finally:
         conn.close()
 
-main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
-#insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd.csv")
+#main2_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/sb3projects_mirrored_extracted")
+insert_into_content_parent_table_optimized("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/content_parents/content_parents_optimized_upd_2.csv")
 
 
 
