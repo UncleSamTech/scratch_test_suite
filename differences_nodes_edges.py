@@ -76,7 +76,7 @@ def get_content_parents_of_c(project_name, file_name, c):
         return None  
 
     try:
-        curr.execute("SELECT Content_Parent_SHA FROM Content_Parents WHERE Project_Name = ? AND File = ? AND Commit_SHA = ?", (project_name, file_name, c))
+        curr.execute("SELECT Content_Parent_SHA FROM Content_Parentss WHERE Project_Name = ? AND File = ? AND Commit_SHA = ?", (project_name, file_name, c))
         all_parents_of_c = curr.fetchall()
         all_parents_of_c = set([x[0] for x in all_parents_of_c])
         return all_parents_of_c
@@ -265,7 +265,7 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                         diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
 
                 print(f"project_name {project_name} filename {file_name} commit {c} diff node count {diff_node_count} diff edge count {diff_edge_count}")
-                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files.csv", "a") as outfile:
+                with open("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_2_upd.csv", "a") as outfile:
                     outfile.write("{},{},{},{},{}\n".format(project_name, file_name, c, str(diff_node_count), str(diff_edge_count)))
 
                     
