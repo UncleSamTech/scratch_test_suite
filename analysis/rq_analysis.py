@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_unique.csv")
+#df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_unique.csv")
+df = pd.read_csv("/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_upd_3.csv")
 df.replace([float('inf'), -float('inf')], pd.NA, inplace=True)
 df = df.dropna()
 
@@ -32,19 +33,19 @@ plt.xlabel('Difference in Nodes Per Revision of a Scratch3 File')
 plt.ylabel('Number of Total Revisions (Log Scale)')
 plt.title('Histogram of Difference in Nodes Per Revision of a Scratch3 File')
 #plt.show()
-#plt.savefig("diff_nodes_per_revision_distribution.pdf")
+plt.savefig("diff_nodes_per_revision_distribution_upd.pdf")
 
 
-edges_jittered = edges + jitter_edges
-plt.hist(edges_jittered, color='lightblue', ec='black', bins=20)
-plt.yscale('log')
-plt.ticklabel_format(axis='x', style='plain')
-plt.xlabel('Difference in Edges Per Revision of a Scratch3 File')
-plt.ylabel('Number of Total Revisions (Log Scale)')
-plt.title('Histogram of Difference in Edges Per Revision of a Scratch3 File')
-#plt.show()
-plt.savefig("diff_edges_per_revision_distribution.pdf")
+# edges_jittered = edges + jitter_edges
+# plt.hist(edges_jittered, color='lightblue', ec='black', bins=20)
+# plt.yscale('log')
+# plt.ticklabel_format(axis='x', style='plain')
+# plt.xlabel('Difference in Edges Per Revision of a Scratch3 File')
+# plt.ylabel('Number of Total Revisions (Log Scale)')
+# plt.title('Histogram of Difference in Edges Per Revision of a Scratch3 File')
+# #plt.show()
+# plt.savefig("diff_edges_per_revision_distribution_upd.pdf")
 
-# median value
-print(df["Diff_Nodes"].sort_values().median())
-print(df["Diff_Edges"].sort_values().median())
+# # median value
+# print(df["Diff_Nodes"].sort_values().median())
+# print(df["Diff_Edges"].sort_values().median())
