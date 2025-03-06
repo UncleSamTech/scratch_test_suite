@@ -399,7 +399,7 @@ def insert_into_content_parent_table_optimized(file_path):
         return
     
     insert_into_content_parent = """
-        INSERT INTO Content_Parents (Project_Name, File, Commit_SHA, Content_Parent_SHA) 
+        INSERT INTO Content_Parentss (Project_Name, File, Commit_SHA, Content_Parent_SHA) 
         VALUES (?, ?, ?, ?);
     """
     

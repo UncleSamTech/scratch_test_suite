@@ -208,7 +208,7 @@ def move_table_commit_parents(commit_parents_path,cons_path):
 def create_content_parent(db_path):
   conn = sqlite3.connect(db_path)
   curs = conn.cursor()
-  create_state = """CREATE TABLE "Content_Parents" ("Project_Name" TEXT,"File" TEXT,"Commit_SHA" TEXT,"Content_Parent_SHA" TEXT);"""
+  create_state = """CREATE TABLE "Content_Parentss" ("Project_Name" TEXT,"File" TEXT,"Commit_SHA" TEXT,"Content_Parent_SHA" TEXT);"""
   curs.execute(create_state)
   conn.commit()
   conn.close()
