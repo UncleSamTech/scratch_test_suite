@@ -145,7 +145,6 @@ def get_node_and_edge_count(project_name, file_name, c):
 
 #     return node_count, edge_count
 
-
 def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
     proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True)
     proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True)
@@ -271,6 +270,101 @@ def get_revisions_and_run_parser(cwd, project_name, main_branch, debug=False):
                     
 
         return 1
+
+
+
+def get_revisions_and_run_parser_opt(cwd, project_name, main_branch, debug=False):
+    # Output file path
+    OUTPUT_FILE = "/media/crouton/siwuchuk/newdir/vscode_repos_files/thesis_record/differences_nodes_edges/differences_nodes_edges_sb3_files_upd_3.csv"
+    
+    # Track unique records
+    unique_records = set()
+
+    # Get all commit SHAs
+    try:
+        proc1 = subprocess.run(['git --no-pager log --pretty=tformat:"%H" {} --no-merges'.format(main_branch)], stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+        proc2 = subprocess.run(['xargs -I{} git ls-tree -r --name-only {}'], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+        proc3 = subprocess.run(['grep -i "\\.sb3$"'], input=proc2.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+        proc4 = subprocess.run(['sort -u'], input=proc3.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+        filenames = proc4.stdout.decode().strip().split('\n')
+        filenames = [f for f in filenames if f]  # Remove empty lines
+    except subprocess.CalledProcessError as e:
+        print(f"Error running git commands: {e}")
+        return
+
+    if len(filenames) > 1:
+        for f in filenames:
+            try:
+                proc1 = subprocess.run(['git --no-pager log -z --numstat --follow --pretty=tformat:"{}¬%H" -- "{}"'.format(f, f)], stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+                proc2 = subprocess.run(["cut -f3"], input=proc1.stdout, stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+                proc3 = correct_code_replace(proc2.stdout)
+                proc4 = subprocess.run(['xargs -0 echo'], input=proc3, stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+                filename_shas = proc4.stdout.decode().strip().split('\n')
+                filename_shas = [x for x in filename_shas if x]
+
+                proc1 = subprocess.run(['git --no-pager log --all --pretty=tformat:"%H" -- "{}"'.format(f)], stdout=subprocess.PIPE, cwd=cwd, shell=True, check=True)
+                all_shas = proc1.stdout.decode().strip().split('\n')
+                all_shas = [x for x in all_shas if x]
+                all_sha_names = {x: None for x in all_shas}
+
+                for fn in filename_shas:
+                    separator_count = fn.strip().count('-')
+                    split_line = fn.strip('-').split('-')
+
+                    if separator_count == 2:
+                        c = split_line[-1]
+                        if is_sha1(c):
+                            all_sha_names[c] = split_line[0]
+                    elif fn.startswith('-'):
+                        c = split_line[-1]
+                        if is_sha1(c):
+                            all_sha_names[c] = split_line[0]
+                    elif separator_count == 3:
+                        c = split_line[-1]
+                        if is_sha1(c):
+                            all_sha_names[c] = split_line[0]
+                    elif separator_count == 1:
+                        continue
+                    else:
+                        raise ValueError('Unknown case for file')
+
+                # Fill in the gaps
+                prev_fn = f
+                for c in all_sha_names:
+                    if all_sha_names[c] is None:
+                        all_sha_names[c] = prev_fn
+                    prev_fn = all_sha_names[c]
+
+                commits_which_modified_file_f = set(all_sha_names.keys())
+
+                for c in commits_which_modified_file_f:
+                    file_name = f.replace(",", "_COMMA_")
+                    node_count_of_f_at_c, edge_count_of_f_at_c = get_node_and_edge_count(project_name, file_name, c)
+                    content_parents_of_c = get_content_parents_of_c(project_name, file_name, c)
+
+                    diff_node_count = 0
+                    diff_edge_count = 0
+                    for parent in content_parents_of_c:
+                        if parent == c:
+                            diff_node_count = node_count_of_f_at_c
+                            diff_edge_count = edge_count_of_f_at_c
+                        else:
+                            node_count_of_f_at_parent, edge_count_of_f_at_parent = get_node_and_edge_count(project_name, file_name, parent)
+                            diff_node_count += (node_count_of_f_at_c - node_count_of_f_at_parent)
+                            diff_edge_count += (edge_count_of_f_at_c - edge_count_of_f_at_parent)
+
+                    record = f"{project_name},{file_name},{c},{diff_node_count},{diff_edge_count}"
+                    if record not in unique_records:
+                        unique_records.add(record)
+                        with open(OUTPUT_FILE, "a") as outfile:
+                            outfile.write(record + "\n")
+
+            except subprocess.CalledProcessError as e:
+                print(f"Error processing file {f}: {e}")
+                continue
+
+    return 1   
+
     
 # def get_revisions_and_run_parser_optimized(cwd, project_name, main_branch, debug=False):
 #     try:
@@ -424,7 +518,7 @@ def main2_optimized(project_path: str):
             # Check if main_branch and repo are valid
             if main_branch and repo:
                 # Run the parser if the branch name is valid
-                get_revisions_and_run_parser(repo, proj_name, main_branch)
+                get_revisions_and_run_parser_opt(repo, proj_name, main_branch)
             else:
                 print(f"Skipped project: {proj_name}")
 
