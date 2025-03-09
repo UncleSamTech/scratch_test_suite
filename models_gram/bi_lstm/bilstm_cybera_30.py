@@ -394,6 +394,7 @@ class bilstm_cybera:
 
     def evaluate_bilstm_in_order_upd_norun_opt_new_2(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         # Load pre-trained model
+        
         loaded_model = load_model(model, compile=False)
 
         # Load tokenized data once
@@ -422,7 +423,7 @@ class bilstm_cybera:
                         context = ' '.join(sentence_tokens[:idx])
                         true_next_word = sentence_tokens[idx]
 
-                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, model, maxlen)
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, loaded_model, maxlen)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
                         
                         with open(investig_path, "a") as inv_path_file:
