@@ -290,10 +290,10 @@ class bilstm_cybera:
         # Run your sequence of operations.
         input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
         padd_seq, max_len = self.pad_sequ(input_seq)
-        xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         print(f"Maximum length for run {each_run}: {max_len}")
-
-        self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+        self.eval_five_runs_opt_main(max_len,result_path,test_data,model_number,each_run,logs_path)
+        #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
         all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
