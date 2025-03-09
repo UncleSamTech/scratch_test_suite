@@ -28,6 +28,7 @@ import psutil
 from tensorflow.keras.layers import Input
 import multiprocessing
 import itertools
+import gc
 
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
@@ -284,15 +285,15 @@ class bilstm_cybera:
         print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
 
         # Construct file paths.
-        train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+        #train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
-        # Run your sequence of operations.
-        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
-        padd_seq, max_len = self.pad_sequ(input_seq)
-        # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
-        print(f"Maximum length for run {each_run}: {max_len}")
-        self.eval_five_runs_opt_main(max_len,result_path,test_data,model_number,each_run,logs_path)
+        # # Run your sequence of operations.
+        # input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
+        # padd_seq, max_len = self.pad_sequ(input_seq)
+        # # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        # print(f"Maximum length for run {each_run}: {max_len}")
+        self.eval_five_runs_opt_main(47,result_path,test_data,model_number,each_run,logs_path)
         #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
@@ -302,9 +303,7 @@ class bilstm_cybera:
         for model in all_models:
             complete_model = f"{result_path}{model}"
             self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
-            del loaded_model
-            import gc
-            gc.collect()
+            
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
         """
@@ -465,7 +464,9 @@ class bilstm_cybera:
                             )
 
                         token_pos = 1  # Reset token position after processing first resumed line
-
+        
+        del loaded_model
+        gc.collect()
 
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
