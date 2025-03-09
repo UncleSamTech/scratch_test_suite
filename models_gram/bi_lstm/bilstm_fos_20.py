@@ -28,6 +28,7 @@ import psutil
 from tensorflow.keras.layers import Input
 import multiprocessing
 import itertools
+import gc
 
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
@@ -145,15 +146,9 @@ class bilstm_cybera:
 
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
-        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
-        print(all_models)
-        
-        for model in all_models:
-            complete_model = f"{result_path}{model}"
-            self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
-            del loaded_model
-            import gc
-            gc.collect()
+        spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
+        self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+            
 
     def train_model_five_runs_opt(self, total_words, max_seq, xs, ys, result_path, test_data, proj_number, runs, logs_path):
         print(tf.__version__)
@@ -296,7 +291,9 @@ class bilstm_cybera:
                         )
 
                     token_pos = 1  # Reset token position after processing first resumed line
-
+        
+        del loaded_model
+        gc.collect()
 
     def evaluate_bilstm_in_order_upd_norun_opt_new(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None

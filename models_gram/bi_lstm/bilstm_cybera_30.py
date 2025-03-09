@@ -297,13 +297,11 @@ class bilstm_cybera:
         #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
-        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
         
         
-        for model in all_models:
-            complete_model = f"{result_path}{model}"
-            print(complete_model)
-            self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
+        spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
+      
+        self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
