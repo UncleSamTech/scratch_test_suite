@@ -298,10 +298,11 @@ class bilstm_cybera:
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
         all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
-        print(all_models)
+        
         
         for model in all_models:
             complete_model = f"{result_path}{model}"
+            print(complete_model)
             self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
             
 
