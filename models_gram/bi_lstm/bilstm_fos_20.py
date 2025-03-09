@@ -242,59 +242,82 @@ class bilstm_cybera:
   
     def evaluate_bilstm_in_order_upd_norun_opt_new_2(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         # Load pre-trained model
+        
         loaded_model = load_model(model, compile=False)
-
-        # Log file path
-        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
-
-        # Count the number of existing log entries
-        log_entry_count = self.count_log_entries(investig_path)
-
-        # Find resume point
-        resume_point = self.find_resume_point(test_data, log_entry_count)
-        if resume_point is None:
-            print("Evaluation completed")
-            return
-
-        line_num, token_pos = resume_point
-        print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
 
         # Load tokenized data once
         with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "rb") as tk:
             tokenz = pickle.load(tk)
 
-        # Ensure log file has headers if empty
+        # Log file path
+        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
         if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+            print(f"creating log file {investig_path}")
             with open(investig_path, "w") as log_file:
                 log_file.write("query,expected,answer,rank,correct\n")
+            
+            with open(test_data, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                random.shuffle(lines)
 
-        # Process test data
-        with open(test_data, 'r') as test_file, open(investig_path, "a") as inv_path_file:
-            # Skip lines until the resume point
-            skipped_lines = itertools.islice(test_file, line_num, None)
+                for line in lines:
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
 
-            for line in skipped_lines:
-                tokens = line.strip().split()
-                if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
-                    for i in range(token_pos, len(tokens) - 1):
-                        context = ' '.join(tokens[:i])
-                        true_next_word = tokens[i]
+                    # Evaluate each token in order starting from the second token
+                    for idx in range(1, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
 
-                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(
-                            context, tokenz, loaded_model, maxlen
-                        )
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, loaded_model, maxlen)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        
+                        with open(investig_path, "a") as inv_path_file:
+                            inv_path_file.write(
+                                f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
 
-                        # Write log entry
-                        inv_path_file.write(
-                            f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
-                        )
+        else:
+            # Count the number of existing log entries
+            log_entry_count = self.count_log_entries(investig_path)
 
-                    token_pos = 1  # Reset token position after processing first resumed line
+            # Find resume point
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print("Evaluation completed")
+                return
+
+            line_num, token_pos = resume_point
+            print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+
+            # Process test data
+            with open(test_data, 'r') as test_file, open(investig_path, "a") as inv_path_file:
+                # Skip lines until the resume point
+                skipped_lines = itertools.islice(test_file, line_num, None)
+
+                for line in skipped_lines:
+                    tokens = line.strip().split()
+                    if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
+                        for i in range(token_pos, len(tokens) - 1):
+                            context = ' '.join(tokens[:i])
+                            true_next_word = tokens[i]
+
+                            predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(
+                                context, tokenz, loaded_model, maxlen
+                            )
+                            rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                            # Write log entry
+                            inv_path_file.write(
+                                f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
+                            )
+
+                        token_pos = 1  # Reset token position after processing first resumed line
         
         del loaded_model
         gc.collect()
-
+        
     def evaluate_bilstm_in_order_upd_norun_opt_new(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
         loaded_model = load_model(f"{model}",compile=False)
