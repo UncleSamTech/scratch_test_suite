@@ -43,11 +43,11 @@ class bilstm_cybera:
                 print("No cores below 10% usage! Waiting for a free core...")
                 time.sleep(1)
                 all_cores = self.get_available_cores()
-        skipped_run = [3,5]
-        for each_run in range(4, 5):  # 5 runs
+        #skipped_run = [3,5]
+        for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run
-            if each_run in skipped_run:
-                continue
+            # if each_run in skipped_run:
+            #     continue
             chosen_core = all_cores[core_index % len(all_cores)]  # Cycle through all 16 cores
             core_index += 1
 
