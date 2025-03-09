@@ -27,6 +27,7 @@ import re
 import psutil
 from tensorflow.keras.layers import Input
 import multiprocessing
+import itertools
 
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
@@ -293,6 +294,176 @@ class bilstm_cybera:
         print(f"Maximum length for run {each_run}: {max_len}")
 
         self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
+
+    def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
+        all_models = sorted([files for files in os.listdir(result_path) if files.endswith(".keras")])
+        print(all_models)
+        
+        for model in all_models:
+            complete_model = f"{result_path}{model}"
+            self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, complete_model, result_path, proj_number, runs, logs_path)
+            del loaded_model
+            import gc
+            gc.collect()
+
+    def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
+        """
+        Predicts the next token based on the given context and scores each token in the vocabulary.
+        Optimized to reduce redundant computations and improve efficiency.
+        """
+        # Tokenize the context
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            return -1, []
+
+        # Prepare the base sequence (context without the last token)
+        base_sequence = token_list[0][-maxlen + 1:]
+
+        # Precompute all token indices
+        vocab = list(tokenz.word_index.keys())
+        token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+
+        # Create a batch of sequences for all tokens
+        padded_sequences = [
+            base_sequence + [token_index] for token_index in token_indices
+        ]
+        padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+        padded_sequences = tf.convert_to_tensor(padded_sequences)
+
+        # Perform batch prediction
+        predictions = model.predict(padded_sequences, verbose=0)
+
+        # Extract probabilities for each token
+        max_prob_tokens = {
+            token: predictions[i][token_index]
+            for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+        }
+
+        # Find the predicted next token
+        predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
+
+        # Find the top-10 tokens without sorting the entire vocabulary
+        top_10_tokens_scores = []
+        for token, prob in max_prob_tokens.items():
+            if len(top_10_tokens_scores) < 10:
+                top_10_tokens_scores.append((token, prob))
+            else:
+                # Replace the smallest probability in the top-10
+                min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
+                if prob > top_10_tokens_scores[min_prob_index][1]:
+                    top_10_tokens_scores[min_prob_index] = (token, prob)
+
+        # Sort the top-10 tokens by probability (descending)
+        top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+
+        return predicted_next_token, top_10_tokens_scores
+
+    def count_log_entries(self,log_file_path):
+        """Count the number of lines in the log file."""
+        with open(log_file_path, 'r') as log_file:
+            total = sum(1 for line in log_file)
+            #to exclude the header line
+            print(f"total logs so far is {total}")
+            return  total - 1
+
+    def count_expected_log_entries(self,test_file_path):
+        """Count the total number of log entries that would be generated for the test file."""
+        expected_entries = 0
+        with open(test_file_path, 'r') as test_file:
+            for line in test_file:
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    expected_entries += len(tokens) - 1  # Tokens after the first token
+        return expected_entries
+    
+    def find_resume_point(self,test_file_path, log_entry_count):
+        """Find the line and token position in the test file to resume evaluation."""
+        with open(test_file_path, 'r') as test_file:
+            current_log_entries = 0
+            for line_num, line in enumerate(test_file):
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    tokens_after_first = len(tokens) - 1
+                    if current_log_entries + tokens_after_first >= log_entry_count:
+                        # Resume point is in this line
+                        token_pos = log_entry_count - current_log_entries
+                        return line_num, token_pos
+                    current_log_entries += tokens_after_first
+            print(f"total lines in test file is {current_log_entries} ")
+        return None  # If no resume point is found
+
+    def evaluate_bilstm_in_order_upd_norun_opt_new_2(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
+        # Load pre-trained model
+        loaded_model = load_model(model, compile=False)
+
+        # Load tokenized data once
+        with open(f"{result_path}tokenized_file_50embedtime1_{run}.pickle", "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        # Log file path
+        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+            with open(investig_path, "w") as log_file:
+                log_file.write("query,expected,answer,rank,correct\n")
+            
+            with open(test_data, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                random.shuffle(lines)
+
+                for line in lines:
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
+
+                    # Evaluate each token in order starting from the second token
+                    for idx in range(1, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
+
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, model, maxlen)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        
+                        with open(investig_path, "a") as inv_path_file:
+                            inv_path_file.write(
+                                f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+        else:
+            # Count the number of existing log entries
+            log_entry_count = self.count_log_entries(investig_path)
+
+            # Find resume point
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print("Evaluation completed")
+                return
+
+            line_num, token_pos = resume_point
+            print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+
+            # Process test data
+            with open(test_data, 'r') as test_file, open(investig_path, "a") as inv_path_file:
+                # Skip lines until the resume point
+                skipped_lines = itertools.islice(test_file, line_num, None)
+
+                for line in skipped_lines:
+                    tokens = line.strip().split()
+                    if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
+                        for i in range(token_pos, len(tokens) - 1):
+                            context = ' '.join(tokens[:i])
+                            true_next_word = tokens[i]
+
+                            predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(
+                                context, tokenz, loaded_model, maxlen
+                            )
+                            rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                            # Write log entry
+                            inv_path_file.write(
+                                f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
+                            )
+
+                        token_pos = 1  # Reset token position after processing first resumed line
 
 
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
