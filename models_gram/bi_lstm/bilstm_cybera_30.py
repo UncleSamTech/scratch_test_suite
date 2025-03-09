@@ -403,6 +403,7 @@ class bilstm_cybera:
         # Log file path
         investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
         if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+            print(f"creating log file {investig_path}")
             with open(investig_path, "w") as log_file:
                 log_file.write("query,expected,answer,rank,correct\n")
             
