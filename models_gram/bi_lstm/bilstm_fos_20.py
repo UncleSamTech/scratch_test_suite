@@ -147,6 +147,7 @@ class bilstm_cybera:
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
+        print(f"model is {spec_model}")
         self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
@@ -317,7 +318,7 @@ class bilstm_cybera:
         
         del loaded_model
         gc.collect()
-        
+
     def evaluate_bilstm_in_order_upd_norun_opt_new(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         tokenz = None
         loaded_model = load_model(f"{model}",compile=False)
