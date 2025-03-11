@@ -167,11 +167,11 @@ class scratch_train_mle:
             #print(self.loaded_scratch_model.vocab.lookup("move"))
             return loaded_scratch_model
         
-    def load_trained_model_new(self, model_name, model_path, model_number, n, run):
+    def load_trained_model_new(self, model_name):
         try:
             # Load the combined model and vocabulary
-            model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
-            with open(model_file, "rb") as f:
+            
+            with open(model_name, "rb") as f:
                 model_and_vocab = pickle.load(f)
 
             # Extract the model and vocabulary
