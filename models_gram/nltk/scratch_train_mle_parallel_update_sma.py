@@ -157,13 +157,14 @@ class scratch_train_mle:
            
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
-            self.loaded_scratch_model = pickle.load(f)
+            loaded_scratch_model = pickle.load(f)
+            print(type(loaded_scratch_model))
             #print(type(self.loaded_scratch_model))
             #print(self.loaded_scratch_model.vocab)
             #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
             #print(self.loaded_scratch_model.score("event_whenflagclicked"))
             #print(self.loaded_scratch_model.vocab.lookup("move"))
-        return self.loaded_scratch_model
+            return loaded_scratch_model
     
 
     def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,ngram,run,top_k=10):
