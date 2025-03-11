@@ -1,6 +1,6 @@
 import os
 import pickle
-from nltk.lm import MLE
+from nltk.lm import MLE,Vocabulary
 from nltk.lm.preprocessing import padded_everygram_pipeline
 from nltk import word_tokenize
 import nltk
@@ -21,7 +21,7 @@ from itertools import product
 import multiprocessing
 import psutil
 import time
-from nltk.lm.vocab import Vocabulary
+
 
 class scratch_train_mle:
 
