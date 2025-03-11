@@ -950,7 +950,7 @@ class scratch_train_mle:
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
         loaded_model = self.load_trained_model(model_name)
-        print("Model vocabulary:", loaded_model.vocab)
+        print("Model vocabulary:", len(loaded_model.vocab))
         # print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
         # context_tokens = context_data.split()  # Avoid repeated splits
