@@ -21,6 +21,7 @@ from itertools import product
 import multiprocessing
 import psutil
 import time
+from nltk.lm.vocab import Vocabulary
 
 class scratch_train_mle:
 
@@ -76,6 +77,46 @@ class scratch_train_mle:
         except Exception as e:
             print("Error:", e)
 
+
+
+    def train_mle_new_upd(self, train_data, n, model_name, model_path, model_number, run):
+        try:
+            # Load and preprocess the training data
+            with open(train_data, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f if line.strip()]
+            
+            # Tokenize the data
+            tokenized_scratch_data = [word_tokenize(line) for line in lines if line.strip()]
+
+            # Create n-grams and padded sentences
+            train_data_val, padded_sents = padded_everygram_pipeline(n, tokenized_scratch_data)
+
+            # Create a vocabulary object
+            vocab = Vocabulary(padded_sents, unk_cutoff=1)  # Adjust `unk_cutoff` as needed
+
+            # Train the model
+            scratch_model = MLE(n)
+            scratch_model.fit(train_data_val, vocab)  # Pass the vocabulary here
+
+            # Ensure the directory exists
+            os.makedirs(model_path, exist_ok=True)
+
+            # Save the model
+            model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+            print(f"Saving model to {model_file}")  # Debugging
+
+            with open(model_file, "wb") as fd:
+                pickle.dump(scratch_model, fd)
+
+            # Save the vocabulary separately
+            vocab_file = f"{model_path}/{model_name}{model_number}_{n}_{run}_vocab.pkl"
+            with open(vocab_file, "wb") as fd:
+                pickle.dump(vocab, fd)
+
+        except Exception as e:
+            print(f"Error in train_mle_new: {e}")
+            import traceback
+            traceback.print_exc()  # Print the full traceback for debugging
 
 
 
@@ -973,9 +1014,9 @@ class scratch_train_mle:
         # return scratch_predicted_next_token, top_10_tokens_scores
 
 tr_scr = scratch_train_mle()
-tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk_","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20",1,2,20)
+#tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk_","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20",1,2,20)
 
-
+tr_scr.train_mle_new_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc.txt",2,"nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",20,1)
 # def main():
 #     tr_scr = scratch_train_mle()
 #     # List of datasets, each is a tuple of arguments for multiple_train_time_metrics_new.
