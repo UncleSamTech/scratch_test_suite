@@ -265,6 +265,8 @@ class bilstm_cybera:
         p = psutil.Process(os.getpid())
         p.cpu_affinity(cores)
 
+
+    
     
     
 
