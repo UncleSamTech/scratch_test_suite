@@ -79,6 +79,8 @@ class scratch_train_mle:
 
 
 
+
+
     def train_mle_new_upd(self, train_data, n, model_name, model_path, model_number, run):
         try:
             # Load and preprocess the training data
@@ -101,24 +103,46 @@ class scratch_train_mle:
             # Ensure the directory exists
             os.makedirs(model_path, exist_ok=True)
 
-            # Save the model
+            # Combine the model and vocabulary into a single dictionary
+            model_and_vocab = {
+                "model": scratch_model,
+                "vocab": vocab
+            }
+
+            # Save the combined model and vocabulary
             model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
-            print(f"Saving model to {model_file}")  # Debugging
+            print(f"Saving model and vocabulary to {model_file}")  # Debugging
 
             with open(model_file, "wb") as fd:
-                pickle.dump(scratch_model, fd)
-
-            # Save the vocabulary separately
-            vocab_file = f"{model_path}/{model_name}{model_number}_{n}_{run}_vocab.pkl"
-            with open(vocab_file, "wb") as fd:
-                pickle.dump(vocab, fd)
+                pickle.dump(model_and_vocab, fd)
 
         except Exception as e:
-            print(f"Error in train_mle_new: {e}")
+            print(f"Error in train_mle_new_upd: {e}")
             import traceback
             traceback.print_exc()  # Print the full traceback for debugging
 
 
+    def load_trained_model_upd(self, model_name, model_path, model_number, n, run):
+        try:
+            # Load the combined model and vocabulary
+            model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+            with open(model_file, "rb") as f:
+                model_and_vocab = pickle.load(f)
+
+            # Extract the model and vocabulary
+            scratch_model = model_and_vocab["model"]
+            vocab = model_and_vocab["vocab"]
+
+            # Assign the vocabulary to the model (if needed)
+            scratch_model.vocab = vocab
+
+            return scratch_model
+
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            import traceback
+            traceback.print_exc()  # Print the full traceback for debugging
+            return None
 
     def extract_vocabulary_nltk(self,model_name):
         # Load the trained MLE model from the pickle file
