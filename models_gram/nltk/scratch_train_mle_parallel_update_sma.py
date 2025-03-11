@@ -166,6 +166,28 @@ class scratch_train_mle:
             #print(self.loaded_scratch_model.score("event_whenflagclicked"))
             #print(self.loaded_scratch_model.vocab.lookup("move"))
             return loaded_scratch_model
+        
+    def load_trained_model_new(self, model_name, model_path, model_number, n, run):
+        try:
+            # Load the combined model and vocabulary
+            model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+            with open(model_file, "rb") as f:
+                model_and_vocab = pickle.load(f)
+
+            # Extract the model and vocabulary
+            scratch_model = model_and_vocab["model"]
+            vocab = model_and_vocab["vocab"]
+
+            # Assign the vocabulary to the model
+            scratch_model.vocab = vocab
+
+            return scratch_model
+
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            import traceback
+            traceback.print_exc()  # Print the full traceback for debugging
+            return None
     
 
     def compute_confusion_matrix(self, y_true, y_pred, result_path, proj_number,ngram,run,top_k=10):
@@ -1016,7 +1038,7 @@ class scratch_train_mle:
 
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
-        loaded_model = self.load_trained_model(model_name)
+        loaded_model = self.load_trained_model_new(model_name)
         print("Model vocabulary:", loaded_model)
         # print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
