@@ -989,7 +989,7 @@ class scratch_train_mle:
 
 
         log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
-        formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+        formed_model = f"{model_path}/{model_name}"
         file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
 
         with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
@@ -1038,9 +1038,9 @@ class scratch_train_mle:
         # return scratch_predicted_next_token, top_10_tokens_scores
 
 tr_scr = scratch_train_mle()
-#tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk_","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20",1,2,20)
+tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
 
-tr_scr.train_mle_new_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc.txt",2,"nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",20,1)
+#tr_scr.train_mle_new_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc.txt",2,"nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",20,1)
 # def main():
 #     tr_scr = scratch_train_mle()
 #     # List of datasets, each is a tuple of arguments for multiple_train_time_metrics_new.
