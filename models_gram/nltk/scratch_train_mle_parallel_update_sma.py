@@ -953,21 +953,21 @@ class scratch_train_mle:
         print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
         context_tokens = context_data.split()  # Avoid repeated splits
-        print(f"Context tokens: {context_tokens}")  # Debugging: Check if context tokens are correct
+        #print(f"Context tokens: {context_tokens}")  # Debugging: Check if context tokens are correct
         
         scratch_next_probaility_tokens = {
             token: loaded_model.score(token, context_tokens)
             for token in loaded_model.vocab
         }
-        print(f"Token probabilities: {scratch_next_probaility_tokens}")  # Debugging: Check token probabilities
+        #print(f"Token probabilities: {scratch_next_probaility_tokens}")  # Debugging: Check token probabilities
         
         # Get the top predicted token
         scratch_predicted_next_token = max(scratch_next_probaility_tokens, key=scratch_next_probaility_tokens.get)
-        print(f"Predicted next token: {scratch_predicted_next_token}")  # Debugging: Check predicted token
+        #print(f"Predicted next token: {scratch_predicted_next_token}")  # Debugging: Check predicted token
         
         # Get the top 10 tokens (sorted only once)
         top_10_tokens_scores = sorted(scratch_next_probaility_tokens.items(), key=lambda x: x[1], reverse=True)[:10]
-        print(f"Top 10 tokens: {top_10_tokens_scores}")  # Debugging: Check top 10 tokens
+        #print(f"Top 10 tokens: {top_10_tokens_scores}")  # Debugging: Check top 10 tokens
         
         return scratch_predicted_next_token, top_10_tokens_scores
 
