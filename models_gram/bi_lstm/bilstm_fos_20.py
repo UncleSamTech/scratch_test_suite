@@ -298,23 +298,28 @@ class bilstm_cybera:
                 skipped_lines = itertools.islice(test_file, line_num, None)
 
                 for line in skipped_lines:
-                    tokens = line.strip().split()
-                    if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
-                        for i in range(token_pos, len(tokens) - 1):
-                            context = ' '.join(tokens[:i])
-                            true_next_word = tokens[i]
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
 
-                            predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(
+                    
+                     
+                    for i in range(token_pos, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:i])
+                        true_next_word = sentence_tokens[i]
+
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(
                                 context, tokenz, loaded_model, maxlen
                             )
-                            rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
 
-                            # Write log entry
-                            inv_path_file.write(
+                        # Write log entry
+                        inv_path_file.write(
                                 f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
                             )
 
-                        token_pos = 1  # Reset token position after processing first resumed line
+                    token_pos = 1  # Reset token position after processing first resumed line
         
         del loaded_model
         gc.collect()
