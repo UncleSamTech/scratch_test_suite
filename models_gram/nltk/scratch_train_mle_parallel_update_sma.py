@@ -62,6 +62,8 @@ class scratch_train_mle:
                 train_data_val, padded_sents = padded_everygram_pipeline(n, tok)
                 print(f"train data : {train_data_val}")
                 print(f"padded val : {padded_sents}")
+                print("type of train data: ", type(train_data_val))
+                print("type of padded_sents: ", type(padded_sents))
 
             
             # tokenized_word = [word_tokenize(line.strip()) for line in lines]
