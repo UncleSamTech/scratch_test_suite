@@ -177,7 +177,8 @@ class scratch_train_mle:
             # Extract the model and vocabulary
             list_keys = model_and_vocab.keys() if isinstance(model_and_vocab,dict) else None
             print(list_keys)
-            print(model_and_vocab['vocab'])
+            voc = model_and_vocab['vocab']
+            print(type(voc))
             # scratch_model = model_and_vocab["model"]
             # vocab = model_and_vocab["vocab"]
 
