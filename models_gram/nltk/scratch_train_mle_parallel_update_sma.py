@@ -161,11 +161,11 @@ class scratch_train_mle:
             
 
             print(type(loaded_scratch_model))
-            print(loaded_scratch_model.vocab)
-            #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
-            print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
-            print(loaded_scratch_model.vocab.lookup("move"))
-            return loaded_scratch_model
+            # print(loaded_scratch_model.vocab)
+            # #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
+            # print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
+            # print(loaded_scratch_model.vocab.lookup("move"))
+            # return loaded_scratch_model
         
     def load_trained_model_new(self, model_name):
         try:
@@ -1069,7 +1069,7 @@ class scratch_train_mle:
         # return scratch_predicted_next_token, top_10_tokens_scores
 
 tr_scr = scratch_train_mle()
-tr_scr.load_trained_model_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp/nltk20_2_1.pkl")
+tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/nltk_20_2_1.pkl")
 
 #tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
 
