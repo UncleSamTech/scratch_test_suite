@@ -161,6 +161,8 @@ class scratch_train_mle:
             
 
             print(type(loaded_scratch_model.vocab))
+            val = list(loaded_scratch_model.vocab)
+            print(val[:5])
            
             #print(f"checking tokens : {val}")
             cont = ("eventunderscorewhenflagclicked").split()
