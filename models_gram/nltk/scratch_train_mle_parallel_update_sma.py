@@ -164,7 +164,7 @@ class scratch_train_mle:
            
             #print(f"checking tokens : {val}")
             cont = ("eventunderscorewhenflagclicked")
-            print(type(cont))
+            print("context type ", type(cont))
             print(f"model score : {loaded_scratch_model.score('looksunderscoresayforsecs',cont)}")
             #print(loaded_scratch_model.vocab.counts)
             # for token,count in loaded_scratch_model.vocab.items():
