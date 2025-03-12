@@ -50,14 +50,19 @@ class scratch_train_mle:
             print("error as a result of ", es)
 
 
-    def train_mle_newtest(self, train_data):
+    def train_mle_newtest(self, train_data,n):
         try:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
 
             for line in lines:
                 tok = word_tokenize(line.strip())
-                print("tokenized word ", (tok))
+                
+
+                train_data_val, padded_sents = padded_everygram_pipeline(n, tok)
+                print(f"train data : {train_data_val}")
+                print(f"padded val : {padded_sents}")
+
             
             # tokenized_word = [word_tokenize(line.strip()) for line in lines]
             
@@ -1117,7 +1122,7 @@ class scratch_train_mle:
 
 tr_scr = scratch_train_mle()
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/nltk_20_2_1.pkl")
-tr_scr.train_mle_newtest("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc_5.txt")
+tr_scr.train_mle_newtest("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc_5.txt",2)
 
 #tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
 
