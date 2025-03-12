@@ -50,11 +50,45 @@ class scratch_train_mle:
             print("error as a result of ", es)
 
 
+    def train_mle_newtest(self, train_data, n, model_name, model_path, model_number, run):
+        try:
+            with open(train_data, "r", encoding="utf-8") as f:
+                lines = [line.strip() for line in f if line.strip()]
+
+            for line in lines:
+                tok = word_tokenize(line.strip())
+                print(tok)
+            
+            # tokenized_word = [word_tokenize(line.strip()) for line in lines]
+            
+            # tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
+
+            
+
+            # train_data_val, padded_sents = padded_everygram_pipeline(n, tokenized_scratch_data)
+
+            # scratch_model = MLE(n)
+            # scratch_model.fit(train_data_val, padded_sents)
+
+            # # Ensure the directory exists
+            # os.makedirs(model_path, exist_ok=True)
+
+            # model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+            # print(f"Saving model to {model_file}")  # Debugging
+
+            # with open(model_file, "wb") as fd:
+            #     pickle.dump(scratch_model, fd)
+
+        except Exception as e:
+            print("Error:", e)
+
 
     def train_mle_new(self, train_data, n, model_name, model_path, model_number, run):
         try:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
+            
+            tokenized_word = [word_tokenize(line.strip()) for line in lines]
             
             tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
 
@@ -1083,6 +1117,7 @@ class scratch_train_mle:
 
 tr_scr = scratch_train_mle()
 tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/nltk_20_2_1.pkl")
+tr_scr.train_mle_newtest("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc_5.txt",2)
 
 #tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
 
