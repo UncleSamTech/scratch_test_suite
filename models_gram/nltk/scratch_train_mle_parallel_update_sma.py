@@ -50,14 +50,14 @@ class scratch_train_mle:
             print("error as a result of ", es)
 
 
-    def train_mle_newtest(self, train_data, n, model_name, model_path, model_number, run):
+    def train_mle_newtest(self, train_data):
         try:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
 
             for line in lines:
                 tok = word_tokenize(line.strip())
-                print(tok)
+                print("tokenized word ",tok)
             
             # tokenized_word = [word_tokenize(line.strip()) for line in lines]
             
