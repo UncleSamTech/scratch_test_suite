@@ -164,6 +164,7 @@ class scratch_train_mle:
            
             #print(f"checking tokens : {val}")
             print(f"model score : {loaded_scratch_model.score('motionunderscoremovesteps',tuple('eventunderscorewhenflagclicked'))}")
+            print(loaded_scratch_model.vocab.counts)
             for token,count in loaded_scratch_model.vocab.items():
                 print(f"token {token} count {count}")
             # print(all_voc)
