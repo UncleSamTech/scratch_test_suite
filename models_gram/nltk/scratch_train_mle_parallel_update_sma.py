@@ -160,7 +160,7 @@ class scratch_train_mle:
             loaded_scratch_model = pickle.load(f)
             
 
-            print(type(loaded_scratch_model))
+            print(type(loaded_scratch_model.vocab))
             # print(loaded_scratch_model.vocab)
             # #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
             # print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
