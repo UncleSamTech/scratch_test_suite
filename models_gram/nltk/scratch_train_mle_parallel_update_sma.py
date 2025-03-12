@@ -158,13 +158,13 @@ class scratch_train_mle:
     def load_trained_model(self,model_name) :
         with open(model_name,"rb") as f:
             loaded_scratch_model = pickle.load(f)
-            print(type(loaded_scratch_model))
+            
 
-            #print(type(self.loaded_scratch_model))
-            #print(self.loaded_scratch_model.vocab)
-            #print(self.loaded_scratch_model.counts("event_whenflagclicked"))
-            #print(self.loaded_scratch_model.score("event_whenflagclicked"))
-            #print(self.loaded_scratch_model.vocab.lookup("move"))
+            print(type(loaded_scratch_model))
+            print(loaded_scratch_model.vocab)
+            print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
+            print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
+            print(loaded_scratch_model.vocab.lookup("move"))
             return loaded_scratch_model
         
     def load_trained_model_new(self, model_name):
@@ -1038,8 +1038,8 @@ class scratch_train_mle:
 
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
-        loaded_model = self.load_trained_model_new(model_name)
-        print("Model vocabulary:", loaded_model)
+        loaded_model = self.load_trained_model(model_name)
+        return loaded_model
         # print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
         # context_tokens = context_data.split()  # Avoid repeated splits
