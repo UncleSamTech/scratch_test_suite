@@ -237,7 +237,7 @@ class scratch_train_mle:
 
         scratch_next_probaility_tokens = {
             token: loaded_model.score(token, context_tokens)
-            for token in loaded_model.vocab
+            for token in loaded_model.vocab.counts.keys()
         }
 
         # Get the top predicted token
@@ -919,6 +919,34 @@ class scratch_train_mle:
             print(f"Access denied. Could not suspend process {processid}.")
         except Exception as e:
             print(f"An error occurred: {e}")
+    
+    def scratch_evaluate_model_small(self, test_data, model_name, result_path,model_path,run,n,model_number):
+
+
+        log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
+        formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+        file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+
+        with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
+            if file_needs_header:
+                precs.write("query,expected,answer,rank,correct\n")
+
+            for line in f:
+                sentence_tokens = line.strip().split()
+                if len(sentence_tokens) < 2:
+                    continue  # Skip empty or single-word lines
+
+                for idx in range(1, len(sentence_tokens)):
+                    context = ' '.join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    
+
+                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
+                    rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
+
+                    precs.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+
 
 
 
