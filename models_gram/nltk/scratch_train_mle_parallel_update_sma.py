@@ -57,7 +57,7 @@ class scratch_train_mle:
 
             for line in lines:
                 tok = word_tokenize(line.strip())
-                print("tokenized word "(tok))
+                print("tokenized word ", (tok))
             
             # tokenized_word = [word_tokenize(line.strip()) for line in lines]
             
