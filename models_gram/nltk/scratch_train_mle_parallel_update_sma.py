@@ -1064,7 +1064,7 @@ class scratch_train_mle:
         # return scratch_predicted_next_token, top_10_tokens_scores
 
 tr_scr = scratch_train_mle()
-tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp/nltk20_2_1.pkl")
+tr_scr.load_trained_model_new("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp/nltk20_2_1.pkl")
 
 #tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
 
