@@ -161,6 +161,9 @@ class scratch_train_mle:
             
 
             print(type(loaded_scratch_model.vocab))
+            voc = loaded_scratch_model.vocab
+            all_voc = list(voc.counts.keys())
+            print(all_voc)
             # print(loaded_scratch_model.vocab)
             # #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
             # print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
