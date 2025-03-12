@@ -162,7 +162,7 @@ class scratch_train_mle:
 
             print(type(loaded_scratch_model))
             print(loaded_scratch_model.vocab)
-            print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
+            #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
             print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
             print(loaded_scratch_model.vocab.lookup("move"))
             return loaded_scratch_model
