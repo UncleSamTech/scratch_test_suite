@@ -175,13 +175,15 @@ class scratch_train_mle:
                 model_and_vocab = pickle.load(f)
 
             # Extract the model and vocabulary
-            scratch_model = model_and_vocab["model"]
-            vocab = model_and_vocab["vocab"]
+            list_keys = model_and_vocab.keys() if isinstance(model_and_vocab,dict) else None
+            print(list_keys)
+            # scratch_model = model_and_vocab["model"]
+            # vocab = model_and_vocab["vocab"]
 
-            # Assign the vocabulary to the model
-            scratch_model.vocab = vocab
+            # # Assign the vocabulary to the model
+            # scratch_model.vocab = vocab
 
-            return scratch_model
+            #return scratch_model
 
         except Exception as e:
             print(f"Error loading model: {e}")
@@ -1038,7 +1040,7 @@ class scratch_train_mle:
 
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
-        loaded_model = self.load_trained_model(model_name)
+        loaded_model = self.load_trained_model_new(model_name)
         return loaded_model
         # print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
