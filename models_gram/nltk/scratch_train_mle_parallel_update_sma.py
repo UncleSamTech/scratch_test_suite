@@ -179,6 +179,9 @@ class scratch_train_mle:
             print(list_keys)
             voc = model_and_vocab['vocab']
             print(type(voc))
+            all_words = voc.counts
+            print(all_words)
+            print("eventunderscorewhenflagclicked" in voc)
             # scratch_model = model_and_vocab["model"]
             # vocab = model_and_vocab["vocab"]
 
