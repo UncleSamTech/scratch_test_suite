@@ -1098,33 +1098,33 @@ class scratch_train_mle:
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
         loaded_model = self.load_trained_model_new(model_name)
-        return loaded_model
-        # print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
-        # context_tokens = context_data.split()  # Avoid repeated splits
-        # #print(f"Context tokens: {context_tokens}")  # Debugging: Check if context tokens are correct
+        print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
-        # scratch_next_probaility_tokens = {
-        #     token: loaded_model.score(token, context_tokens)
-        #     for token in loaded_model.vocab
-        # }
-        # #print(f"Token probabilities: {scratch_next_probaility_tokens}")  # Debugging: Check token probabilities
+        context_tokens = context_data.split()  # Avoid repeated splits
+        #print(f"Context tokens: {context_tokens}")  # Debugging: Check if context tokens are correct
         
-        # # Get the top predicted token
-        # scratch_predicted_next_token = max(scratch_next_probaility_tokens, key=scratch_next_probaility_tokens.get)
-        # #print(f"Predicted next token: {scratch_predicted_next_token}")  # Debugging: Check predicted token
+        scratch_next_probaility_tokens = {
+            token: loaded_model.score(token, context_tokens)
+            for token in loaded_model.vocab
+        }
+        #print(f"Token probabilities: {scratch_next_probaility_tokens}")  # Debugging: Check token probabilities
         
-        # # Get the top 10 tokens (sorted only once)
-        # top_10_tokens_scores = sorted(scratch_next_probaility_tokens.items(), key=lambda x: x[1], reverse=True)[:10]
-        # #print(f"Top 10 tokens: {top_10_tokens_scores}")  # Debugging: Check top 10 tokens
+        # Get the top predicted token
+        scratch_predicted_next_token = max(scratch_next_probaility_tokens, key=scratch_next_probaility_tokens.get)
+        #print(f"Predicted next token: {scratch_predicted_next_token}")  # Debugging: Check predicted token
         
-        # return scratch_predicted_next_token, top_10_tokens_scores
+        # Get the top 10 tokens (sorted only once)
+        top_10_tokens_scores = sorted(scratch_next_probaility_tokens.items(), key=lambda x: x[1], reverse=True)[:10]
+        #print(f"Top 10 tokens: {top_10_tokens_scores}")  # Debugging: Check top 10 tokens
+        
+        return scratch_predicted_next_token, top_10_tokens_scores
 
 tr_scr = scratch_train_mle()
 #tr_scr.load_trained_model("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/nltk_20_2_1.pkl")
 tr_scr.train_mle_newtest("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc_5.txt",2)
 
-#tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_100.txt","nltk20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",1,2,20)
+tr_scr.scratch_evaluate_model_small("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample/scratch_test_set_20_2_1_proc_3.txt","nltk_20_2_1.pkl","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20/res","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/20",1,2,20)
 
 #tr_scr.train_mle_new_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp/scratch_train_set_20_2_1_proc.txt",2,"nltk","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20/samp",20,1)
 # def main():
