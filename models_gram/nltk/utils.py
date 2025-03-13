@@ -1,6 +1,7 @@
 import os
 from nltk import word_tokenize
 import pickle
+import kenlm
 #from nltk.lm import MLE,Vocabulary
 
 def gener_list_list(data):
@@ -50,7 +51,31 @@ def predict_next_scratch_token_upd_opt_small(model_name, context_data):
         
         return scratch_predicted_next_token, top_10_tokens_scores
 
+def predict_next_token_kenlm_upd(model, context,vocab_name):
+        mod = kenlm.Model(model)
+        
+        next_token_probabilities = {}
+        
+        
+        with open(vocab_name, "r", encoding="utf8") as vocab_f:
+                vocabulary = vocab_f.readlines()
+                for candidate_word in vocabulary:
+                    candidate_word = candidate_word.strip()
+                    context_with_candidate = context + " " + candidate_word
+                    next_token_probabilities[candidate_word] = mod.score(context_with_candidate)
+                    
+
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+        
+        top_10_tokens_scores = sorted(next_token_probabilities.items(), key=lambda item: item[1], reverse=True)[:10]
+
+        print(f"predicted next token {predicted_next_token}, top 10 tokens {top_10_tokens_scores}")
+        #returns predicted next token and list of top 10 tokens and scores
+        return predicted_next_token,top_10_tokens_scores
+
 #check_available_rank([("looksunderscoreswitchbackdropto",0.50),("backdrop",0.25),("looksunderscoreswitchbackdropto",0.15),("leftangliteralrightang",0.10)],"backdrop")
 
 #gener_list_list(["eventunderscorewhenflagclicked", "eventunderscorewhenflagclicked looksunderscoreswitchbackdropto","eventunderscorewhenflagclicked looksunderscoreswitchbackdropto backdrop leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang leftangliteralrightang"])
-predict_next_scratch_token_upd_opt_small("/Users/samueliwuchukwu/desktop/analysis/models/nltk/nltk_10_2_1.pkl","eventunderscorewhenkeypressed")
+#predict_next_scratch_token_upd_opt_small("/Users/samueliwuchukwu/desktop/analysis/models/nltk/nltk_10_2_1.pkl","eventunderscorewhenkeypressed")
+#predict_next_token_kenlm_upd("/Users/samueliwuchukwu/desktop/analysis/models/kenlm/kenln_10_2_1.arpa","eventunderscorewhenflagclicked controlunderscoreif condition","/Users/samueliwuchukwu/desktop/analysis/models/kenlm/kenln_10_2_1.vocab")
+predict_next_token_kenlm_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/10/kenln_10_2_1.arpa","eventunderscorewhenflagclicked controlunderscoreif condition","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/10/kenln_10_2_1.vocab")
