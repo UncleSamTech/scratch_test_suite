@@ -3,8 +3,10 @@ from nltk import word_tokenize
 import pickle
 import kenlm
 import tensorflow as tf
+import heapq
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import load_model
+import time
 #from nltk.lm import MLE,Vocabulary
 
 def gener_list_list(data):
@@ -81,7 +83,7 @@ def predict_token_score_upd_opt(context, model_file, maxlen,tokenizer_file):
         Predicts the next token based on the given context and scores each token in the vocabulary.
         Optimized to reduce redundant computations and improve efficiency.
         """
-
+        start= time.time()
         # Load tokenized data once
         with open(tokenizer_file, "rb") as tk:
             tokenz = pickle.load(tk)
@@ -132,9 +134,68 @@ def predict_token_score_upd_opt(context, model_file, maxlen,tokenizer_file):
 
         # Sort the top-10 tokens by probability (descending)
         top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
-        print(f"true token {predicted_next_token}\n top 10 tokens : {top_10_tokens_scores}")
-
+        #print(f"true token {predicted_next_token}\n top 10 tokens : {top_10_tokens_scores}")
+        end = time.time() - start
+        print(f"time : {end}")
+        print(f"pred token {predicted_next_token}, top 10 tokens : {top_10_tokens_scores}")
         return predicted_next_token, top_10_tokens_scores
+
+
+
+
+
+def predict_token_score_upd_opt2(context, model_file, maxlen,tokenizer_file):
+    start= time.time()
+    """
+    Predicts the next token based on the given context and scores each token in the vocabulary.
+    Optimized to reduce redundant computations and improve efficiency.
+    """
+    
+    # Load tokenized data once
+    with open(tokenizer_file, "rb") as tk:
+        tokenz = pickle.load(tk)
+        
+    loaded_model = load_model(model_file, compile=False)
+    # Tokenize the context
+    token_list = tokenz.texts_to_sequences([context])
+    if not token_list or len(token_list[0]) == 0:
+        return -1, []
+
+    # Prepare the base sequence (context without the last token)
+    base_sequence = token_list[0][-maxlen + 1:]
+
+    # Precompute all token indices
+    vocab = list(tokenz.word_index.keys())
+    token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+
+    # Create a batch of sequences for all tokens
+    padded_sequences = [
+        base_sequence + [token_index] for token_index in token_indices
+    ]
+    padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+    padded_sequences = tf.convert_to_tensor(padded_sequences)
+
+    # Perform batch prediction
+    predictions = loaded_model(padded_sequences, training=False)  # Use model.call() for raw logits
+
+    # Extract probabilities for each token
+    max_prob_tokens = {
+        token: predictions[i][token_index].numpy()
+        for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+    }
+
+    # Find the predicted next token
+    predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
+
+    # Use a min-heap to find the top-10 tokens efficiently
+    top_10_tokens_scores = heapq.nlargest(
+        10, max_prob_tokens.items(), key=lambda x: x[1]
+    )
+
+    end = time.time() - start
+    print(f"time : {end}")
+    print(f"pred token {predicted_next_token}, top 10 tokens : {top_10_tokens_scores}")
+    return predicted_next_token, top_10_tokens_scores
 
 
 #check_available_rank([("looksunderscoreswitchbackdropto",0.50),("backdrop",0.25),("looksunderscoreswitchbackdropto",0.15),("leftangliteralrightang",0.10)],"backdrop")
@@ -145,3 +206,4 @@ def predict_token_score_upd_opt(context, model_file, maxlen,tokenizer_file):
 #predict_next_token_kenlm_upd("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/arpa_files/10/kenln_10_2_1.arpa","eventunderscorewhenflagclicked controlunderscoreif condition","/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/kenlm/vocab_files/10/kenln_10_2_1.vocab")
 
 predict_token_score_upd_opt("eventunderscorewhenflagclicked controlunderscoreifunderscoreelse","/Users/samueliwuchukwu/desktop/analysis/models/bilstm/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_1.keras",47,"/Users/samueliwuchukwu/desktop/analysis/models/bilstm/tokenized_file_50embedtime1_1.pickle")
+predict_token_score_upd_opt2("eventunderscorewhenflagclicked controlunderscoreifunderscoreelse","/Users/samueliwuchukwu/desktop/analysis/models/bilstm/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_1.keras",47,"/Users/samueliwuchukwu/desktop/analysis/models/bilstm/tokenized_file_50embedtime1_1.pickle")
