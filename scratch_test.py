@@ -2,6 +2,7 @@ import unittest
 from unzip_scratch import unzip_scratch
 import json
 import sys
+import numpy as np
 import os
 from scratch_parser import scratch_parser
 #from extract_scratch_revision import correct_code_replace,count_seperator
@@ -1955,6 +1956,19 @@ class TestScratchParser(unittest.TestCase):
         self.assertEqual((expected_top_10_tokens3,"keyunderscoreoptionunderscorespace"),(actual_top_10_tokens3,true_word3))
         #eventunderscorewhenflagclicked,dataunderscoresetvariableto,controlunderscoreforever,7,0
         #eventunderscorewhenkeypressed,keyunderscoreoptionunderscorespace,keyunderscoreoptionunderscorespace,1,1
+
+        #eventunderscorewhenflagclicked controlunderscoreif condition,leftangliteralrightang,leftangliteralrightang,1,1
+
+    def test_kenlm_prediction(self):
+        expected_top_10_tokens = [('leftangliteralrightang', -3.0121865272521973), ('operatorunderscoreequals', -3.1128804683685303), ('leftangliteralrightang leftangliteralrightang', -3.1172075271606445), ('operatorunderscoreequals operand2', -3.128559112548828), ('sensingunderscoretouchingobject', -3.5366644859313965), ('leftangliteralrightang </s>', -3.657977819442749), ('</s>', -3.7518889904022217), ('operatorunderscoreequals </s>', -3.758671760559082), ('sensingunderscoretouchingobject </s>', -4.182456016540527), ('operatorunderscorelt', -4.601415157318115)]
+        true_word,actutal_top_10_tokens =  utils.predict_next_token_kenlm_upd("/Users/samueliwuchukwu/desktop/analysis/models/kenlm/kenln_10_2_1.arpa","eventunderscorewhenflagclicked controlunderscoreif condition","/Users/samueliwuchukwu/desktop/analysis/models/kenlm/kenln_10_2_1.vocab")
+        self.assertEqual((expected_top_10_tokens,"leftangliteralrightang"),(actutal_top_10_tokens,true_word))
+
+    
+    def test_bilstm_prediction(self):
+        expected_top_10_tokens = [('leftangliteralrightang', np.float32(0.99548596)), ('motionunderscorechangeyby', np.float32(0.040549174)), ('motionunderscoregotoxy', np.float32(0.034026645)), ('dataunderscoresetvariableto', np.float32(0.03261766)), ('eventunderscorewhenthisspriteclicked', np.float32(0.03133271)), ('motionunderscoreglideto', np.float32(0.020487009)), ('motionunderscoremovesteps', np.float32(0.019666454)), ('looksunderscoreswitchcostumeto', np.float32(0.016624141)), ('value', np.float32(0.0150941005)), ('condition', np.float32(0.01280514))]
+        true_word,actual_top_ten_token = utils.predict_token_score_upd_opt("eventunderscorewhenflagclicked controlunderscoreifunderscoreelse","/Users/samueliwuchukwu/desktop/analysis/models/bilstm/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_1.keras",47,"/Users/samueliwuchukwu/desktop/analysis/models/bilstm/tokenized_file_50embedtime1_1.pickle")
+        self.assertEqual((expected_top_10_tokens,"leftangliteralrightang"),(actual_top_ten_token,true_word))
 
 if __name__ == '__main__':
     unittest.main()
