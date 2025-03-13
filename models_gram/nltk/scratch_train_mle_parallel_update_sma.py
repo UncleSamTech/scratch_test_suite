@@ -55,7 +55,7 @@ class scratch_train_mle:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
 
-            val = (word_tokenize(line.strip()) for line in lines)
+            val = self.gener_list_list(lines)
                 
             print(val)
                 #train_data_val, padded_sents = padded_everygram_pipeline(n, list([tok]))
@@ -91,9 +91,9 @@ class scratch_train_mle:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
             
-            tokenized_word = [word_tokenize(line.strip()) for line in lines]
             
-            tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
+            
+            tokenized_scratch_data = [list(word_tokenize(line.strip())) for line in lines if line.strip()]
 
             
 
@@ -116,6 +116,8 @@ class scratch_train_mle:
 
 
 
+    def gener_list_list(self,data):
+        return [list(word_tokenize(line.strip())) for line in data if line.strip()]
 
 
     def train_mle_new_upd(self, train_data, n, model_name, model_path, model_number, run):
