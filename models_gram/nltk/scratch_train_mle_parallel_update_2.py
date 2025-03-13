@@ -833,7 +833,7 @@ class scratch_train_mle:
         # excluded_50_train = [f"{train_path}/scratch_train_set_50_2_1_proc.txt",f"{train_path}/scratch_train_set_50_2_2_proc.txt",f"{train_path}/scratch_train_set_50_2_3_proc.txt",f"{train_path}/scratch_train_set_50_2_4_proc.txt"]
         # excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_path}/scratch_train_set_80_2_3_proc.txt"]
 
-        for each_gram, run in product(range(2, 7), range(1, 6)):
+        for each_gram, run in product(range(2, 3), range(1, 2)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt" 
             if not train_data or not test_data:
