@@ -55,12 +55,9 @@ class scratch_train_mle:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
 
-            for line in lines:
-                tok = word_tokenize(line.strip())
-                list_list = [list(tok)]
-                print(f"{list_list}")
+            val = [list(word_tokenize(line.strip())) for line in lines]
                 
-
+            print(val)
                 #train_data_val, padded_sents = padded_everygram_pipeline(n, list([tok]))
                 
 
