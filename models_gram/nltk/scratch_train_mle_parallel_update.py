@@ -959,29 +959,35 @@ def main():
     # List of datasets, each is a tuple of arguments for multiple_train_time_metrics_new.
     # Define datasets to be processed on separate cores
     datasets = [
-        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample",
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/10",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/10",
+        "10", "nltk_"),
+
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
         "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/20",
         "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/20",
-        "20", "nltk_")
+        "20", "nltk_"),
 
-        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/30",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/30",
-        # "30", "nltk_"),
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/30",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/30",
+        "30", "nltk_"),
 
-        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/50",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/50",
-        # "50", "nltk_"),
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/50",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/50",
+        "50", "nltk_"),
 
-        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/80",
-        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/80",
-        # "80", "nltk_"),
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/80",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/80",
+        "80", "nltk_"),
     ]
     processes = []
 
