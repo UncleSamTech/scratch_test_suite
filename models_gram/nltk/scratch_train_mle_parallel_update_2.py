@@ -21,6 +21,8 @@ from itertools import product
 import multiprocessing
 import psutil
 import time
+import itertools
+import gc
 
 class scratch_train_mle:
 
@@ -68,10 +70,13 @@ class scratch_train_mle:
             os.makedirs(model_path, exist_ok=True)
 
             model_file = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
-            print(f"Saving model to {model_file}")  # Debugging
+            if not os.path.exists(model_file):
+                print(f"Saving model to {model_file}")  # Debugging
 
-            with open(model_file, "wb") as fd:
-                pickle.dump(scratch_model, fd)
+                with open(model_file, "wb") as fd:
+                    pickle.dump(scratch_model, fd)
+            else:
+                print(f"model {model_file} already trained")
 
         except Exception as e:
 
@@ -478,6 +483,39 @@ class scratch_train_mle:
             print(f"total duration for evaluating ngram {ngram} is {eval_duration:.2f}")           
 
                 
+    def count_log_entries(self,log_file_path):
+        """Count the number of lines in the log file."""
+        with open(log_file_path, 'r') as log_file:
+            total = sum(1 for line in log_file)
+            #to exclude the header line
+            print(f"total logs so far is {total}")
+            return  total - 1
+        
+    def count_expected_log_entries(self,test_file_path):
+        """Count the total number of log entries that would be generated for the test file."""
+        expected_entries = 0
+        with open(test_file_path, 'r') as test_file:
+            for line in test_file:
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    expected_entries += len(tokens) - 1  # Tokens after the first token
+        return expected_entries
+    
+    def find_resume_point(self,test_file_path, log_entry_count):
+        """Find the line and token position in the test file to resume evaluation."""
+        with open(test_file_path, 'r') as test_file:
+            current_log_entries = 0
+            for line_num, line in enumerate(test_file):
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    tokens_after_first = len(tokens) - 1
+                    if current_log_entries + tokens_after_first >= log_entry_count:
+                        # Resume point is in this line
+                        token_pos = log_entry_count - current_log_entries
+                        return line_num, token_pos
+                    current_log_entries += tokens_after_first
+            print(f"total lines in test file is {current_log_entries} ")
+        return None  # If no resume point is found
 
 
 
@@ -487,28 +525,69 @@ class scratch_train_mle:
         log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
         formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
         file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+        if file_needs_header:
+            precs.write("query,expected,answer,rank,correct\n")
 
-        with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
-            if file_needs_header:
-                precs.write("query,expected,answer,rank,correct\n")
+            with open(test_data, "r", encoding="utf-8") as f, open(log_file, "a") as precs:
+                
 
-            for line in f:
-                sentence_tokens = line.strip().split()
-                if len(sentence_tokens) < 2:
-                    continue  # Skip empty or single-word lines
+                for line in f:
+                    sentence_tokens = line.strip().split()
+                    if len(sentence_tokens) < 2:
+                        continue  # Skip empty or single-word lines
 
-                for idx in range(1, len(sentence_tokens)):
-                    context = ' '.join(sentence_tokens[:idx])
-                    true_next_word = sentence_tokens[idx]
-
-                    
-
-                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
-                    rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
-
-                    precs.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+                    for idx in range(1, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
 
                         
+
+                        predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
+                        rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
+
+                        precs.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+
+        else:
+            # Count the number of existing log entries
+            log_entry_count = self.count_log_entries(log_file)
+
+            # Find resume point
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print("Evaluation completed")
+                return
+
+            line_num, token_pos = resume_point
+            print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+
+            with open(test_data, 'r') as test_file, open(log_file, "a") as inv_path_file:
+                # Skip lines until the resume point
+                skipped_lines = itertools.islice(test_file, line_num, None)
+
+                for line in skipped_lines:
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
+
+                    
+                     
+                    for i in range(token_pos, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:i])
+                        true_next_word = sentence_tokens[i]
+
+                        predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
+                        rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
+
+                        inv_path_file.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+
+                        
+
+                    token_pos = 1  # Reset token position after processing first resumed line
+        
+        del formed_model
+        gc.collect()
+           
                   
 
 
