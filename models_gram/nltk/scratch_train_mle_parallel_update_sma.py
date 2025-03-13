@@ -93,7 +93,7 @@ class scratch_train_mle:
             
             
             
-            tokenized_scratch_data = [list(word_tokenize(line.strip())) for line in lines if line.strip()]
+            tokenized_scratch_data = self.gener_list_list(lines)
 
             
 

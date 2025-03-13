@@ -55,7 +55,7 @@ class scratch_train_mle:
             with open(train_data, "r", encoding="utf-8") as f:
                 lines = [line.strip() for line in f if line.strip()]
             
-            tokenized_scratch_data = (word_tokenize(line.strip()) for line in lines if line.strip())
+            tokenized_scratch_data = self.gener_list_list(lines)
 
             
 
@@ -74,8 +74,11 @@ class scratch_train_mle:
                 pickle.dump(scratch_model, fd)
 
         except Exception as e:
+
             print("Error:", e)
 
+    def gener_list_list(self,data):
+        return [list(word_tokenize(line.strip())) for line in data if line.strip()]
 
 
 
@@ -237,7 +240,7 @@ class scratch_train_mle:
 
         scratch_next_probaility_tokens = {
             token: loaded_model.score(token, context_tokens)
-            for token in loaded_model.vocab.counts.keys()
+            for token in loaded_model.vocab
         }
 
         # Get the top predicted token
@@ -825,27 +828,27 @@ class scratch_train_mle:
         # Ensure the model_path directory exists
         os.makedirs(model_path, exist_ok=True)
         
-        excluded_20_train = [f"{train_path}/scratch_train_set_20_2_1_proc.txt",f"{train_path}/scratch_train_set_20_2_2_proc.txt",f"{train_path}/scratch_train_set_20_2_3_proc.txt",f"{train_path}/scratch_train_set_20_2_4_proc.txt",f"{train_path}/scratch_train_set_20_2_5_proc.txt",f"{train_path}/scratch_train_set_20_3_1_proc.txt",f"{train_path}/scratch_train_set_20_3_2_proc.txt",f"{train_path}/scratch_train_set_20_3_3_proc.txt",f"{train_path}/scratch_train_set_20_3_4_proc.txt"]
-        excluded_30_train = [f"{train_path}/scratch_train_set_30_2_1_proc.txt",f"{train_path}/scratch_train_set_30_2_2_proc.txt",f"{train_path}/scratch_train_set_30_2_3_proc.txt",f"{train_path}/scratch_train_set_30_2_4_proc.txt",f"{train_path}/scratch_train_set_30_2_5_proc.txt"]
-        excluded_50_train = [f"{train_path}/scratch_train_set_50_2_1_proc.txt",f"{train_path}/scratch_train_set_50_2_2_proc.txt",f"{train_path}/scratch_train_set_50_2_3_proc.txt",f"{train_path}/scratch_train_set_50_2_4_proc.txt"]
-        excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_path}/scratch_train_set_80_2_3_proc.txt"]
+        # excluded_20_train = [f"{train_path}/scratch_train_set_20_2_1_proc.txt",f"{train_path}/scratch_train_set_20_2_2_proc.txt",f"{train_path}/scratch_train_set_20_2_3_proc.txt",f"{train_path}/scratch_train_set_20_2_4_proc.txt",f"{train_path}/scratch_train_set_20_2_5_proc.txt",f"{train_path}/scratch_train_set_20_3_1_proc.txt",f"{train_path}/scratch_train_set_20_3_2_proc.txt",f"{train_path}/scratch_train_set_20_3_3_proc.txt",f"{train_path}/scratch_train_set_20_3_4_proc.txt"]
+        # excluded_30_train = [f"{train_path}/scratch_train_set_30_2_1_proc.txt",f"{train_path}/scratch_train_set_30_2_2_proc.txt",f"{train_path}/scratch_train_set_30_2_3_proc.txt",f"{train_path}/scratch_train_set_30_2_4_proc.txt",f"{train_path}/scratch_train_set_30_2_5_proc.txt"]
+        # excluded_50_train = [f"{train_path}/scratch_train_set_50_2_1_proc.txt",f"{train_path}/scratch_train_set_50_2_2_proc.txt",f"{train_path}/scratch_train_set_50_2_3_proc.txt",f"{train_path}/scratch_train_set_50_2_4_proc.txt"]
+        # excluded_80_train = [f"{train_path}/scratch_train_set_80_2_1_proc.txt",f"{train_path}/scratch_train_set_80_2_2_proc.txt",f"{train_path}/scratch_train_set_80_2_3_proc.txt"]
 
         for each_gram, run in product(range(2, 7), range(1, 6)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt" 
             
-            if model_number == "20" and len(excluded_20_train) == 9 and train_data in excluded_20_train:
-                continue
+        #     if model_number == "20" and len(excluded_20_train) == 9 and train_data in excluded_20_train:
+        #         continue
 
 
-            if model_number == "30" and len(excluded_30_train) == 5 and train_data in excluded_30_train:
-                continue
+        #     if model_number == "30" and len(excluded_30_train) == 5 and train_data in excluded_30_train:
+        #         continue
 
-            if model_number == "50" and len(excluded_50_train) == 4 and train_data in excluded_50_train:
-                continue
+        #     if model_number == "50" and len(excluded_50_train) == 4 and train_data in excluded_50_train:
+        #         continue
 
-            if model_number == "80" and len(excluded_80_train) == 3 and train_data in excluded_80_train:
-                continue
+        #     if model_number == "80" and len(excluded_80_train) == 3 and train_data in excluded_80_train:
+        #         continue
             
 
 
@@ -857,14 +860,14 @@ class scratch_train_mle:
                 self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
                 train_time_duration = time.time() - train_start_time
 
-                eval_start_time = time.time()
-                print(f"evaluating {test_data}")
+                # eval_start_time = time.time()
+                # print(f"evaluating {test_data}")
                 
-                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
-                eval_time_duration = time.time() - eval_start_time
+                # self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
+                # eval_time_duration = time.time() - eval_start_time
                 
-                with open(time_log_file, "a") as tp:
-                    tp.write(f"{train_data},{test_data},{train_time_duration},{eval_time_duration}\n")
+                # with open(time_log_file, "a") as tp:
+                #     tp.write(f"{train_data},{test_data},{train_time_duration},{eval_time_duration}\n")
 
             except Exception as e:
                 print(f"Error: {e}")
@@ -956,29 +959,29 @@ def main():
     # List of datasets, each is a tuple of arguments for multiple_train_time_metrics_new.
     # Define datasets to be processed on separate cores
     datasets = [
-        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/20",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/20",
-        "20", "nltk_"),
+        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train/samp",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/sample",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/20",
+        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/20",
+        "20", "nltk_")
 
-        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/30",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/30",
-        "30", "nltk_"),
+        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/30",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/30",
+        # "30", "nltk_"),
 
-        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/50",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/50",
-        "50", "nltk_"),
+        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/50",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/50",
+        # "50", "nltk_"),
 
-        ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs/80",
-        "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models/80",
-        "80", "nltk_"),
+        # ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/80",
+        # "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/80",
+        # "80", "nltk_"),
     ]
     processes = []
 
