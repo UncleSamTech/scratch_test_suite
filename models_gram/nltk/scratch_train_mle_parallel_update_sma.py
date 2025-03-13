@@ -199,25 +199,25 @@ class scratch_train_mle:
             loaded_scratch_model = pickle.load(f)
             
 
-            print(type(loaded_scratch_model.vocab))
-            val = list(loaded_scratch_model.vocab)
-            print(val[:5])
+            # print(type(loaded_scratch_model.vocab))
+            # val = list(loaded_scratch_model.vocab)
+            # print(val[:5])
            
-            #print(f"checking tokens : {val}")
-            cont = ("eventunderscorewhenflagclicked").split()
-            print("context type ", type(cont))
-            print(tuple(cont))
-            print(f"model score : {loaded_scratch_model.score('looksunderscoresayforsecs',tuple(cont))}")
-            sing = ("eventunderscorewhenflagclicked",)
-            print(loaded_scratch_model.counts[sing])
-            # for token,count in loaded_scratch_model.vocab.items():
-            #     print(f"token {token} count {count}")
-            # print(all_voc)
-            # print(loaded_scratch_model.vocab)
-            # #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
-            # print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
-            # print(loaded_scratch_model.vocab.lookup("move"))
-            # return loaded_scratch_model
+            # #print(f"checking tokens : {val}")
+            # cont = ("eventunderscorewhenflagclicked").split()
+            # print("context type ", type(cont))
+            # print(tuple(cont))
+            # print(f"model score : {loaded_scratch_model.score('looksunderscoresayforsecs',tuple(cont))}")
+            # sing = ("eventunderscorewhenflagclicked",)
+            # print(loaded_scratch_model.counts[sing])
+            # # for token,count in loaded_scratch_model.vocab.items():
+            # #     print(f"token {token} count {count}")
+            # # print(all_voc)
+            # # print(loaded_scratch_model.vocab)
+            # # #print(loaded_scratch_model.counts("eventunderscorewhenflagclicked"))
+            # # print(loaded_scratch_model.score("eventunderscorewhenflagclicked"))
+            # # print(loaded_scratch_model.vocab.lookup("move"))
+            return loaded_scratch_model
         
     def load_trained_model_new(self, model_name):
         try:
@@ -1097,7 +1097,7 @@ class scratch_train_mle:
 
 
     def predict_next_scratch_token_upd_opt_small(self, model_name, context_data):
-        loaded_model = self.load_trained_model_new(model_name)
+        loaded_model = self.load_trained_model(model_name)
         
         print(f"Model loaded: {loaded_model}")  # Debugging: Check if model is loaded correctly
         
