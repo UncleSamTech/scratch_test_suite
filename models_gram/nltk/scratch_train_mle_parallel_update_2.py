@@ -836,6 +836,8 @@ class scratch_train_mle:
         for each_gram, run in product(range(2, 7), range(1, 6)):
             train_data = f"{train_path}/scratch_train_set_{model_number}_{each_gram}_{run}_proc.txt"
             test_data = f"{test_path}/scratch_test_set_{model_number}_{each_gram}_{run}_proc.txt" 
+            if not train_data or not test_data:
+                continue
             
         #     if model_number == "20" and len(excluded_20_train) == 9 and train_data in excluded_20_train:
         #         continue
