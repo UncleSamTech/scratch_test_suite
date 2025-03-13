@@ -29,6 +29,7 @@ from tensorflow.keras.layers import Input
 import multiprocessing
 import itertools
 import gc
+import heapq
 
 class bilstm_cybera:
     def consolidate_data_train_parallel(self, train_path, result_path, test_path, model_number, logs_path):
@@ -355,6 +356,51 @@ class bilstm_cybera:
         top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
 
         return predicted_next_token, top_10_tokens_scores
+    
+
+
+    def predict_token_score_upd_opt2(self, context, tokenz, model, maxlen):
+        """
+        Predicts the next token based on the given context and scores each token in the vocabulary.
+        Optimized to reduce redundant computations and improve efficiency.
+        """
+        # Tokenize the context
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            return -1, []
+
+        # Prepare the base sequence (context without the last token)
+        base_sequence = token_list[0][-maxlen + 1:]
+
+        # Precompute all token indices
+        vocab = list(tokenz.word_index.keys())
+        token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+
+        # Create a batch of sequences for all tokens
+        padded_sequences = [
+            base_sequence + [token_index] for token_index in token_indices
+        ]
+        padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+        padded_sequences = tf.convert_to_tensor(padded_sequences)
+
+        # Perform batch prediction
+        predictions = model(padded_sequences, training=False)  # Use model.call() for raw logits
+
+        # Extract probabilities for each token
+        max_prob_tokens = {
+            token: predictions[i][token_index].numpy()
+            for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+        }
+
+        # Find the predicted next token
+        predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
+
+        # Use a min-heap to find the top-10 tokens efficiently
+        top_10_tokens_scores = heapq.nlargest(
+            10, max_prob_tokens.items(), key=lambda x: x[1]
+        )
+
+        return predicted_next_token, top_10_tokens_scores
 
     def count_log_entries(self,log_file_path):
         """Count the number of lines in the log file."""
@@ -421,7 +467,7 @@ class bilstm_cybera:
                         context = ' '.join(sentence_tokens[:idx])
                         true_next_word = sentence_tokens[idx]
 
-                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt(context, tokenz, loaded_model, maxlen)
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt2(context, tokenz, loaded_model, maxlen)
                         rank = self.check_available_rank(top_10_tokens, true_next_word)
                         
                         with open(investig_path, "a") as inv_path_file:

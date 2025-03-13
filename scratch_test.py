@@ -1967,7 +1967,7 @@ class TestScratchParser(unittest.TestCase):
     
     def test_bilstm_prediction(self):
         expected_top_10_tokens = [('leftangliteralrightang', np.float32(0.99548596)), ('motionunderscorechangeyby', np.float32(0.040549174)), ('motionunderscoregotoxy', np.float32(0.034026645)), ('dataunderscoresetvariableto', np.float32(0.03261766)), ('eventunderscorewhenthisspriteclicked', np.float32(0.03133271)), ('motionunderscoreglideto', np.float32(0.020487009)), ('motionunderscoremovesteps', np.float32(0.019666454)), ('looksunderscoreswitchcostumeto', np.float32(0.016624141)), ('value', np.float32(0.0150941005)), ('condition', np.float32(0.01280514))]
-        true_word,actual_top_ten_token = utils.predict_token_score_upd_opt("eventunderscorewhenflagclicked controlunderscoreifunderscoreelse","/Users/samueliwuchukwu/desktop/analysis/models/bilstm/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_1.keras",47,"/Users/samueliwuchukwu/desktop/analysis/models/bilstm/tokenized_file_50embedtime1_1.pickle")
+        true_word,actual_top_ten_token = utils.predict_token_score_upd_opt2("eventunderscorewhenflagclicked controlunderscoreifunderscoreelse","/Users/samueliwuchukwu/desktop/analysis/models/bilstm/main_bilstm_scratch_model_150embedtime1_main_sample_project30_6_1.keras",47,"/Users/samueliwuchukwu/desktop/analysis/models/bilstm/tokenized_file_50embedtime1_1.pickle")
         self.assertEqual((expected_top_10_tokens,"leftangliteralrightang"),(actual_top_ten_token,true_word))
 
 if __name__ == '__main__':
