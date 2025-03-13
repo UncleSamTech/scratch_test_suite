@@ -1940,6 +1940,22 @@ class TestScratchParser(unittest.TestCase):
         self.assertEqual(1,actual3)
         self.assertEqual(2,actual4)
 
+    def test_nltk_prediction(self):
+        expected_top_10_tokens =  [('looksunderscoreswitchbackdropto', 0.2), ('dataunderscoresetvariableto', 0.2), ('motionunderscoregoto', 0.2), ('motionunderscoresety', 0.2), ('</s>', 0.1), ('controlunderscoreforever', 0.1), ('<s>', 0.0), ('eventunderscorewhenflagclicked', 0.0), ('backdrop', 0.0), ('leftangliteralrightang', 0.0)]
+        expected_top_10_tokens2 = [('leftangliteralrightang', 0.8095238095238095), ('</s>', 0.19047619047619047), ('<s>', 0.0), ('eventunderscorewhenflagclicked', 0.0), ('looksunderscoreswitchbackdropto', 0.0), ('backdrop', 0.0), ('dataunderscoresetvariableto', 0.0), ('value', 0.0), ('motionunderscoregoto', 0.0), ('to', 0.0)]
+        expected_top_10_tokens3 = [('keyunderscoreoptionunderscorespace', 0.3458646616541353), ('keyunderscoreoptionunderscoreup', 0.15789473684210525), ('keyunderscoreoptionunderscoredown', 0.15789473684210525), ('keyunderscoreoptionunderscoreright', 0.15789473684210525), ('keyunderscoreoptionunderscoreleft', 0.15789473684210525), ('keyunderscoreoptionunderscores', 0.011278195488721804), ('keyunderscoreoptionunderscorel', 0.011278195488721804), ('<s>', 0.0), ('eventunderscorewhenflagclicked', 0.0), ('</s>', 0.0)]
+
+        
+        true_word,actual_top_10_tokes = utils.predict_next_scratch_token_upd_opt_small("/Users/samueliwuchukwu/desktop/analysis/models/nltk/nltk_test.pkl","eventunderscorewhenflagclicked")
+        self.assertEqual((expected_top_10_tokens,"looksunderscoreswitchbackdropto"),(actual_top_10_tokes,true_word))
+        true_word2,actual_top_10_tokens2 = utils.predict_next_scratch_token_upd_opt_small("/Users/samueliwuchukwu/desktop/analysis/models/nltk/nltk_test.pkl","leftangliteralrightang")
+        true_word3,actual_top_10_tokens3 = utils.predict_next_scratch_token_upd_opt_small("/Users/samueliwuchukwu/desktop/analysis/models/nltk/nltk_10_2_1.pkl","eventunderscorewhenkeypressed")
+        print(true_word3)
+        self.assertEqual((expected_top_10_tokens2,"leftangliteralrightang"),(actual_top_10_tokens2,true_word2))
+        self.assertEqual((expected_top_10_tokens3,"keyunderscoreoptionunderscorespace"),(actual_top_10_tokens3,true_word3))
+        #eventunderscorewhenflagclicked,dataunderscoresetvariableto,controlunderscoreforever,7,0
+        #eventunderscorewhenkeypressed,keyunderscoreoptionunderscorespace,keyunderscoreoptionunderscorespace,1,1
+
 if __name__ == '__main__':
     unittest.main()
     
