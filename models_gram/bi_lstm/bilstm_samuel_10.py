@@ -294,7 +294,7 @@ class bilstm_cybera:
         padd_seq, max_len = self.pad_sequ(input_seq)
         # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         print(f"Maximum length for run {each_run}: {max_len}")
-        #self.eval_five_runs_opt_main(47,result_path,test_data,model_number,each_run,logs_path)
+        self.eval_five_runs_opt_main(47,result_path,test_data,model_number,each_run,logs_path)
         #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
     def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
