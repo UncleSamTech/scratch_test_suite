@@ -37,7 +37,7 @@ class bilstm_cybera:
         available_cores = self.get_available_cores()  
         core_index = 0  # Track which core to assign next
 
-        for each_run in range(2, 6):  # 5 runs
+        for each_run in range(2, 3):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
             chosen_core = available_cores[core_index % len(available_cores)]
             core_index += 1
