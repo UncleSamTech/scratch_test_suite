@@ -356,25 +356,25 @@ class bilstm_cybera:
             xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
 
             # If this is not the first split, load the previously saved model.
-            if os.path.exists(model_file):
-                #model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
-                #if os.path.exists(model_file):
-                print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
-                model = load_model(model_file)
-            else:
-                raise FileNotFoundError(f"Model file {model_file} not found.")
+            if i > 0:
+                model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+                if os.path.exists(model_file):
+                    print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
+                    model = load_model(model_file)
+                else:
+                    raise FileNotFoundError(f"Model file {model_file} not found.")
 
             # If this is the first split, create a new model.
-            # if model is None:
-            #     print("Creating a new model for the first split...")
-            #     model = Sequential([
-            #         Input(shape=(max_len - 1,)),  # Explicitly define the input shape
-            #         Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
-            #         Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
-            #         Dense(total_words, activation='softmax')
-            #     ])
-            #     adam = Adam(learning_rate=0.01)
-            #     model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+            if model is None:
+                print("Creating a new model for the first split...")
+                model = Sequential([
+                    Input(shape=(max_len - 1,)),  # Explicitly define the input shape
+                    Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
+                    Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+                    Dense(total_words, activation='softmax')
+                ])
+                adam = Adam(learning_rate=0.01)
+                model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
             # Use a data generator to reduce memory usage.
             train_generator = self.DataGenerator(xs, ys, batch_size=16)
