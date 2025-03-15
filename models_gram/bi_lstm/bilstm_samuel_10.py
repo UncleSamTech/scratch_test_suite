@@ -46,7 +46,7 @@ class bilstm_cybera:
                 time.sleep(1)
                 all_cores = self.get_available_cores()
         #skipped_run = [3,5]
-        for each_run in range(1, 2):  # 5 runs
+        for each_run in range(1, 6):  # 5 runs
             # Assign 1 core per run
             # if each_run in skipped_run:
             #     continue
