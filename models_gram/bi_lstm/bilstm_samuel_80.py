@@ -356,7 +356,7 @@ class bilstm_cybera:
             xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
 
             # If this is not the first split, load the previously saved model.
-            if not os.path.exists(model_file):
+            if os.path.exists(model_file):
                 # model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
                 # if os.path.exists(model_file):
                 print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
