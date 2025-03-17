@@ -38,8 +38,8 @@ class bilstm_cybera:
         all_cores = list(range(16))  # Assuming 16 cores are available
         core_index = 0  # Track which core to assign next
 
-        skipped_runs = [4]
-        for each_run in range(1, 2):  # 5 runs
+        skipped_runs = [1,4]
+        for each_run in range(2, 6):  # 5 runs
             if each_run in skipped_runs:
                 continue
             # Assign 1 core per run
