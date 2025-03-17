@@ -518,6 +518,62 @@ class scratch_train_mle:
         return None  # If no resume point is found
 
 
+ 
+    def scratch_evaluate_model_nltk_in_order_all_new(self, test_data, model_name, result_path, model_path, run, n, model_number):
+        log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
+        formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+
+        # Check if the log file needs a header
+        file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+
+        # Open the log file in append mode
+        with open(log_file, "a", encoding="utf-8") as log_f:
+            if file_needs_header:
+                log_f.write("query,expected,answer,rank,correct\n")
+
+            # Open the test data file
+            with open(test_data, "r", encoding="utf-8") as test_f:
+                # Determine the resume point if the file doesn't need a header
+                if not file_needs_header:
+                    log_entry_count = self.count_log_entries(log_file)
+                    resume_point = self.find_resume_point(test_data, log_entry_count)
+                    if resume_point is None:
+                        print("Evaluation completed")
+                        return
+
+                    line_num, token_pos = resume_point
+                    print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+                    skipped_lines = itertools.islice(test_f, line_num, None)
+                else:
+                    skipped_lines = test_f
+                    token_pos = 1  # Start from the first token if no resume point
+
+                # Process each line in the test data
+                for line in skipped_lines:
+                    line = line.strip()
+                    sentence_tokens = line.split()
+                    if len(sentence_tokens) < 2:
+                        continue  # Skip empty or single-word lines
+
+                    # Process each token in the sentence
+                    for i in range(token_pos, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:i])
+                        true_next_word = sentence_tokens[i]
+
+                        # Predict the next word and get the rank
+                        predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
+                        rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
+
+                        # Write the result to the log file
+                        log_f.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+
+                    token_pos = 1  # Reset token position after processing the first resumed line
+
+        # Clean up
+        del formed_model
+        gc.collect()
+
+
 
     def scratch_evaluate_model_nltk_in_order_all_new(self, test_data, model_name, result_path,model_path,run,n,model_number):
 
@@ -566,7 +622,7 @@ class scratch_train_mle:
 
                 for line in skipped_lines:
                     line = line.strip()
-                    sentence_tokens = line.split(" ")
+                    sentence_tokens = line.split()
                     if len(sentence_tokens) < 2:
                         continue
 
