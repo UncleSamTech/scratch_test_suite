@@ -551,24 +551,147 @@ class kenlm_train:
                     sentence_tokens = line.split()
                     if len(sentence_tokens) < 2:
                         continue
-                    
-                    for idx in range(1, len(sentence_tokens)):
-                        context = ' '.join(sentence_tokens[:idx])
-                        true_next_word = sentence_tokens[idx]
-                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd(model_rec, context, vocab_path)
-                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                    investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                    if not os.path.exists(investig_path):
+                        with open(investig_path, "a") as ip:
+                                ip.write("query,expected,answer,rank,correct\n")
+
+                        for idx in range(1, len(sentence_tokens)):
+                            context = ' '.join(sentence_tokens[:idx])
+                            true_next_word = sentence_tokens[idx]
+                            predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
+                            rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                            with open(investig_path, "a") as inv_path_file:
+                                inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+
+                    else:
+                        log_count = self.count_log_entries(investig_path)
+                        resume_point = self.find_resume_point(test_data, log_count)
+                        if resume_point is None:
+                            print("Evaluation is already complete.")
+                            return
+                        
+                        line_num, token_pos = resume_point
+                        print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+                        with open(test_data, 'r') as test_file:
+                            # Skip lines until the resume point
+                            for _ in range(line_num):
+                                next(test_file)
+                            
+                            # Process the remaining lines
+                            for line in test_file:
+                                tokens = line.strip().split()
+                                if len(tokens) >= 2:  # Only evaluate lines with 2 or more tokens
+                                    # Skip tokens until the resume point
+                                    for i in range(token_pos, len(tokens) - 1):
+                                        context = ' '.join(tokens[:i])
+                                        true_next_word = tokens[i]
+                                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
+                                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                                        # Save results to log file
+                                        #investig_path = f"{log_file_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+                                        # if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                                        #     with open(investig_path, "a") as ip:
+                                        #         ip.write("query,expected,answer,rank,correct\n")
+                                        with open(investig_path, "a") as inv_path_file:
+                                            inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+
+                                        
+                                    token_pos = 1  # Reset token position after the first line
+
 
                         # Save results to log file
-                        investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
-                        if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
-                            with open(investig_path, "a") as ip:
-                                ip.write("query,expected,answer,rank,correct\n")
-                        with open(investig_path, "a") as inv_path_file:
-                            inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+                        
+                        # if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                        #     with open(investig_path, "a") as ip:
+                        #         ip.write("query,expected,answer,rank,correct\n")
+                        # with open(investig_path, "a") as inv_path_file:
+                        #     inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
             
             diff = time.time() - start_time
             print(f"time taken is for {model_path} is {diff}")
                 
+
+
+
+    def evaluate_all_models_in_folder_in_order_with_runs_upd(self, testdir, vocab_folder, model_folder, new_log_path):
+        # Get vocab and model files
+        vocab_files = sorted(f for f in os.listdir(vocab_folder) if f.endswith(".vocab"))
+        model_files = sorted(f for f in os.listdir(model_folder) if f.endswith(".arpa"))
+
+        # Compile regex patterns once
+        vocab_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.vocab")
+        model_pattern = re.compile(r"kenln_(\d+)_(\d+)_(\d+)\.arpa")
+
+        # Match vocab and model files by model number, ngram order, and run number
+        vocab_model_pairs = []
+        for vocab in vocab_files:
+            vocab_match = vocab_pattern.match(vocab)
+            if not vocab_match:
+                continue
+            model_number, ngram_order, run_number = vocab_match.groups()
+
+            model_match = next((m for m in model_files if model_pattern.match(m) and model_pattern.match(m).groups() == (model_number, ngram_order, run_number)), None)
+            if model_match:
+                vocab_model_pairs.append((vocab, model_match, model_number, ngram_order, run_number))
+
+        # Evaluate each vocab-model pair
+        for vocab_name, model_name, model_number, ngram_order, run_number in vocab_model_pairs:
+            vocab_path = os.path.join(vocab_folder, vocab_name)
+            model_path = os.path.join(model_folder, model_name)
+            
+            print(f"Evaluating model {model_path} with vocab {vocab_path}")
+
+            test_data = os.path.join(testdir, f"scratch_test_set_{model_number}_{ngram_order}_{run_number}_proc.txt")
+            investig_path = f"{new_log_path}/kenlm_investigate_{model_number}_{ngram_order}_{run_number}_logs.txt"
+
+            # Load the language model once
+            model_rec = kenlm.Model(model_path)
+
+            # Check if the log file exists and determine the resume point
+            if os.path.exists(investig_path):
+                log_count = self.count_log_entries(investig_path)
+                resume_point = self.find_resume_point(test_data, log_count)
+                if resume_point is None:
+                    print("Evaluation is already complete.")
+                    continue
+                line_num, token_pos = resume_point
+                print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+            else:
+                line_num, token_pos = 0, 0
+                with open(investig_path, "w") as ip:
+                    ip.write("query,expected,answer,rank,correct\n")
+
+            start_time = time.time()
+            with open(test_data, "r", encoding="utf-8") as f, open(investig_path, "a") as inv_path_file:
+                # Skip lines until the resume point
+                for _ in range(line_num):
+                    next(f)
+                
+                # Process the remaining lines
+                for line in f:
+                    tokens = line.strip().split()
+                    if len(tokens) < 2:
+                        continue
+                    
+                    # Skip tokens until the resume point
+                    for i in range(token_pos, len(tokens) - 1):
+                        context = ' '.join(tokens[:i])
+                        true_next_word = tokens[i]
+                        predicted_next_word, top_10_tokens = self.predict_next_token_kenlm_upd_opt(model_rec, context, vocab_path)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        inv_path_file.write(f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n")
+                    
+                    token_pos = 0  # Reset token position after the first line
+
+            diff = time.time() - start_time
+            print(f"Time taken for {model_path} is {diff}")
+
+    # Example usage of parallel processing (if applicable)
+    # with Pool() as pool:
+    #     pool.map(evaluate_all_models_in_folder_in_order_with_runs, args_list)
 
     def evaluate_all_models_in_folder_in_order_upd(self, test_data, vocab_folder, model_folder,proj_number,new_log_path):
         # Get vocab and model files
@@ -803,6 +926,81 @@ class kenlm_train:
 
         predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
         return predicted_next_token
+    
+
+
+    def count_log_entries(self,log_file_path):
+        """Count the number of lines in the log file."""
+        with open(log_file_path, 'r') as log_file:
+            total = sum(1 for line in log_file)
+            #to exclude the header line
+            print(f"total logs so far is {total}")
+            return  total - 1
+        
+    def count_expected_log_entries(self,test_file_path):
+        """Count the total number of log entries that would be generated for the test file."""
+        expected_entries = 0
+        with open(test_file_path, 'r') as test_file:
+            for line in test_file:
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    expected_entries += len(tokens) - 1  # Tokens after the first token
+        return expected_entries
+    
+    def find_resume_point(self,test_file_path, log_entry_count):
+        """Find the line and token position in the test file to resume evaluation."""
+        with open(test_file_path, 'r') as test_file:
+            current_log_entries = 0
+            for line_num, line in enumerate(test_file):
+                tokens = line.strip().split()
+                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
+                    tokens_after_first = len(tokens) - 1
+                    if current_log_entries + tokens_after_first >= log_entry_count:
+                        # Resume point is in this line
+                        token_pos = log_entry_count - current_log_entries
+                        return line_num, token_pos
+                    current_log_entries += tokens_after_first
+            print(f"total lines in test file is {current_log_entries} ")
+        return None  # If no resume point is found
+
+
+    def predict_next_token_kenlm_upd_opt(self, model, context, vocab_name):
+        """
+        Predicts the next token based on the given context using a KenLM model.
+        Optimized for performance by reducing file reads, batching, and efficient top-10 selection.
+        """
+        # Read the vocabulary file once (if not already cached)
+        if not hasattr(self, 'vocabulary'):
+            with open(vocab_name, "r", encoding="utf8") as vocab_f:
+                self.vocabulary = [line.strip() for line in vocab_f.readlines()]
+
+        # Precompute the context with a trailing space
+        context_with_space = context + " "
+
+        # Score all candidate words in a single pass
+        next_token_probabilities = {}
+        for candidate_word in self.vocabulary:
+            context_with_candidate = context_with_space + candidate_word
+            next_token_probabilities[candidate_word] = model.score(context_with_candidate)
+
+        # Find the predicted next token
+        predicted_next_token = max(next_token_probabilities, key=next_token_probabilities.get)
+
+        # Find the top-10 tokens without sorting the entire vocabulary
+        top_10_tokens_scores = []
+        for token, prob in next_token_probabilities.items():
+            if len(top_10_tokens_scores) < 10:
+                top_10_tokens_scores.append((token, prob))
+            else:
+                # Replace the smallest probability in the top-10
+                min_prob_index = min(range(10), key=lambda i: top_10_tokens_scores[i][1])
+                if prob > top_10_tokens_scores[min_prob_index][1]:
+                    top_10_tokens_scores[min_prob_index] = (token, prob)
+
+        # Sort the top-10 tokens by probability (descending)
+        top_10_tokens_scores.sort(key=lambda x: x[1], reverse=True)
+
+        return predicted_next_token, top_10_tokens_scores
     
     def predict_next_token_kenlm_upd(self,model, context,vocab_name):
         
@@ -1049,7 +1247,7 @@ class kenlm_train:
 
 kn = kenlm_train()
 
-kn.evaluate_all_models_in_folder_in_order_with_runs("/mnt/siwuchuk/thesis/another/kenlm/output_test","/mnt/siwuchuk/thesis/another/kenlm/vocab_files/50","/mnt/siwuchuk/thesis/another/kenlm/arpa_files/50","/mnt/siwuchuk/thesis/another/kenlm/logs/50")
+kn.evaluate_all_models_in_folder_in_order_with_runs_upd("/mnt/siwuchuk/thesis/another/kenlm/output_test","/mnt/siwuchuk/thesis/another/kenlm/vocab_files/50","/mnt/siwuchuk/thesis/another/kenlm/arpa_files/50","/mnt/siwuchuk/thesis/another/kenlm/logs/50")
 
 
 # kn.create_vocab("/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/arpa_files/kenln_order2.arpa","/media/crouton/siwuchuk/newdir/vscode_repos_files/scratch_models_ngram3/thesis_models/train_models/train_results/kenlm/vocab")
