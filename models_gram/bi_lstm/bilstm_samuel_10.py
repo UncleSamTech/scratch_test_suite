@@ -286,14 +286,14 @@ class bilstm_cybera:
         print(f"[PID {os.getpid()}] Running run {each_run} on cores {cores}")
 
         # Construct file paths.
-        train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
+        #train_data = f"{train_path}/scratch_train_set_{model_number}_6_{each_run}_proc.txt"
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
 
         # # Run your sequence of operations.
-        input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
-        padd_seq, max_len = self.pad_sequ(input_seq)
-        # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
-        print(f"Maximum length for run {each_run}: {max_len}")
+        # input_seq, total_words, tokenizer = self.tokenize_data_inp_seq_opt(train_data, result_path, each_run)
+        # padd_seq, max_len = self.pad_sequ(input_seq)
+        # # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
+        # print(f"Maximum length for run {each_run}: {max_len}")
         self.eval_five_runs_opt_main(47,result_path,test_data,model_number,each_run,logs_path)
         #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
@@ -302,7 +302,7 @@ class bilstm_cybera:
         
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         print(f"model is {spec_model}")
-        self.evaluate_bilstm_in_order_upd_norun_opt_new_2(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+        self.evaluate_bilstm_in_order_upd_norun_opt_new_updated(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
@@ -517,6 +517,69 @@ class bilstm_cybera:
         del loaded_model
         gc.collect()
 
+
+
+    def evaluate_bilstm_in_order_upd_norun_opt_new_updated(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
+        # Load pre-trained model
+        loaded_model = load_model(model, compile=False)
+
+        # Load tokenized data once
+        tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+        with open(tokenized_file_path, "rb") as tk:
+            tokenz = pickle.load(tk)
+
+        # Log file path
+        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+        log_file_exists = os.path.exists(investig_path) and os.path.getsize(investig_path) > 0
+
+        if not log_file_exists:
+            print(f"Creating log file {investig_path}")
+            with open(investig_path, "w") as log_file:
+                log_file.write("query,expected,answer,rank,correct\n")
+
+        # Read all lines from test data
+        with open(test_data, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+
+        # Determine the resume point if log file exists
+        if log_file_exists:
+            log_entry_count = self.count_log_entries(investig_path)
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print("Evaluation completed")
+                return
+            line_num, token_pos = resume_point
+            print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+            lines = lines[line_num:]
+        else:
+            token_pos = 1
+
+        # Process test data
+        with open(investig_path, "a") as inv_path_file:
+            for line in lines:
+                line = line.strip()
+                sentence_tokens = line.split(" ")
+                if len(sentence_tokens) < 2:
+                    continue
+
+                # Evaluate each token in order starting from the second token
+                for idx in range(token_pos, len(sentence_tokens)):
+                    context = ' '.join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt2(context, tokenz, loaded_model, maxlen)
+                    rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                    inv_path_file.write(
+                        f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
+                    )
+
+                token_pos = 1  # Reset token position after processing first resumed line
+
+        # Clean up
+        del loaded_model
+        gc.collect()
+
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
         Sets CPU affinity for this process to the chosen cores and performs one run of training.
@@ -609,6 +672,6 @@ cl_ob = bilstm_cybera()
 # # Run one dataset with 5 runs spread across 16 cores
 # sample = ("/mnt/siwuchuk/vscode/output_train", "/mnt/siwuchuk/vscode/models/bilstm/model/30/", "/mnt/siwuchuk/vscode/output_test", 30, "/mnt/siwuchuk/vscode/models/bilstm/logs/30")
 # cl_ob.consolidate_data_train_parallel(*sample)
-# Run one dataset with 5 runs spread across the two available cores
+
 sample = ("/mnt/siwuchuk/thesis/another/kenlm/output_train","/mnt/siwuchuk/thesis/another/bilstm/models/10/","/mnt/siwuchuk/thesis/another/kenlm/output_test",10,"/mnt/siwuchuk/thesis/another/bilstm/logs/10")
 cl_ob.consolidate_data_train_parallel(*sample)
