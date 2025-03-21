@@ -21,6 +21,7 @@ import re
 import psutil
 from tensorflow.keras.layers import Input
 import multiprocessing
+from tensorflow.keras.models import load_model
 import gc
 
 class bilstm_cybera:
@@ -233,13 +234,20 @@ class bilstm_cybera:
         p = psutil.Process(os.getpid())
         p.cpu_affinity(cores)
 
-# Example usage
+    
+    def view_model_summary(self,model_path):
+        ld = load_model(model_path)
+        ld.summary()
+
+# # Example usage
 cl_ob = bilstm_cybera()
-sample = (
-    "/mnt/siwuchuk/thesis/another/kenlm/output_train",
-    "/mnt/siwuchuk/thesis/another/bilstm/models/80/",
-    "/mnt/siwuchuk/thesis/another/kenlm/output_test",
-    80,
-    "/mnt/siwuchuk/thesis/another/bilstm/logs/80"
-)
-cl_ob.consolidate_data_train_parallel(*sample)
+cl_ob.view_model_summary("/mnt/siwuchuk/thesis/another/bilstm/models/80/main_bilstm_scratch_model_150embedtime1_main_sample_project80_6_1.keras")
+# sample = (
+#     "/mnt/siwuchuk/thesis/another/kenlm/output_train",
+#     "/mnt/siwuchuk/thesis/another/bilstm/models/80/",
+#     "/mnt/siwuchuk/thesis/another/kenlm/output_test",
+#     80,
+#     "/mnt/siwuchuk/thesis/another/bilstm/logs/80"
+# )
+# cl_ob.consolidate_data_train_parallel(*sample)
+
