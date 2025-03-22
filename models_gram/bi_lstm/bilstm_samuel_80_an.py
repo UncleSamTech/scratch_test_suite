@@ -241,7 +241,7 @@ class bilstm_cybera:
 
 # # Example usage
 cl_ob = bilstm_cybera()
-cl_ob.view_model_summary("/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_2.keras")
+cl_ob.view_model_summary("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/bilstm/20/main_bilstm_scratch_model_150embedtime1_main_sample_project20_6_2.keras")
 # sample = (
 #     "/mnt/siwuchuk/thesis/another/kenlm/output_train",
 #     "/mnt/siwuchuk/thesis/another/bilstm/models/80/",
