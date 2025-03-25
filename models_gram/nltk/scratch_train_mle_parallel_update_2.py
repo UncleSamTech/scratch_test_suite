@@ -645,7 +645,73 @@ class scratch_train_mle:
         gc.collect()
            
                   
+    def scratch_evaluate_model_nltk_in_order_all_new_opt(self, test_data, model_name, result_path, model_path, run, n, model_number):
+        log_file = f"{result_path}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
+        formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
+        
+        # Determine if we need to write header
+        file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+        
+        # Get resume point if needed
+        resume_point = None
+        if not file_needs_header:
+            log_entry_count = self.count_log_entries(log_file)
+            resume_point = self.find_resume_point(test_data, log_entry_count)
+            if resume_point is None:
+                print("Evaluation completed")
+                return
 
+        # Open both files just once
+        with open(test_data, "r", encoding="utf-8") as test_file, \
+            open(log_file, "a", encoding="utf-8") as output_file:
+            
+            # Write header if needed
+            if file_needs_header:
+                output_file.write("query,expected,answer,rank,correct\n")
+            
+            # Initialize processing state
+            current_line = 0
+            processing_from_start = file_needs_header or resume_point is None
+
+            # Skip to resume line if needed
+            if resume_point:
+                current_line, current_token_pos = resume_point
+                print(f"Resuming evaluation from line {current_line + 1}, token position {current_token_pos + 1}.")
+                # Skip to the resume line
+                for _ in range(current_line):
+                    next(test_file)
+            
+            # Process all lines from current position
+            for line in test_file:
+                line = line.strip()
+                sentence_tokens = line.split()
+                if len(sentence_tokens) < 2:
+                    current_line += 1
+                    continue
+
+                # Determine start position for tokens:
+                # - When starting fresh, skip first token (position 1)
+                # - When resuming, use the saved token position
+                token_start = 1 if processing_from_start and current_line == 0 else (
+                    resume_point[1] if resume_point and current_line == resume_point[0] else 1
+                )
+
+                for idx in range(token_start, len(sentence_tokens)):
+                    context = ' '.join(sentence_tokens[:idx])
+                    true_next_word = sentence_tokens[idx]
+
+                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(formed_model, context)
+                    rank = self.check_available_rank_opt(top_10_tokens, true_next_word)
+
+                    output_file.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
+                
+                current_line += 1
+                # After first line processed, always start from token position 1 for subsequent lines
+                processing_from_start = False
+
+        # Clean up
+        del formed_model
+        gc.collect()
 
     def scratch_evaluate_model_nltk_in_order(self,test_data,model_name,result_path,proj_number,ngram,run):
 
@@ -992,15 +1058,23 @@ class scratch_train_mle:
             try:
                 train_start_time = time.time()
                 print(f"training {train_data}")
+
+                model_file = f"{model_path}/{model_name}{model_number}_{each_gram}_{run}.pkl"
+                if not os.path.exists(model_file):
+                    self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
+                    train_time_duration = time.time() - train_start_time
+                
+                else:
+                    print(f"model {model_file} already trained")
+                    
                 
                 # Ensure model_path exists before saving the .pkl file
-                self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
-                train_time_duration = time.time() - train_start_time
+                
 
                 eval_start_time = time.time()
                 print(f"evaluating {test_data}")
                 
-                self.scratch_evaluate_model_nltk_in_order_all_new(test_data, model_name, log_path,model_path,run,each_gram,model_number)
+                self.scratch_evaluate_model_nltk_in_order_all_new_opt(test_data, model_name, log_path,model_path,run,each_gram,model_number)
                 eval_time_duration = time.time() - eval_start_time
                 
                 with open(time_log_file, "a") as tp:
