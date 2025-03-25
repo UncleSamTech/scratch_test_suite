@@ -53,8 +53,8 @@ class bilstm_cybera:
         # Simplified model
         model = Sequential([
             Input(shape=(max_seq - 1,)),
-            Embedding(total_words, 50),  # Reduced from 50 to 32
-            Bidirectional(LSTM(100)),    # Reduced from 100 to 50
+            Embedding(total_words, 50),  # Reduced from 100 to 50
+            Bidirectional(LSTM(100)),    # Reduced from 150 to 100
             Dense(total_words, activation='softmax')
         ])
         adam = Adam(learning_rate=0.01)
