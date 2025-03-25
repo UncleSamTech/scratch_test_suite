@@ -1062,12 +1062,12 @@ class scratch_train_mle:
                 model_file = f"{model_path}/{model_name}{model_number}_{each_gram}_{run}.pkl"
                 if not os.path.exists(model_file):
                     self.train_mle_new(train_data, each_gram, model_name,model_path,model_number,run)
-                    train_time_duration = time.time() - train_start_time
+                    
                 
                 else:
                     print(f"model {model_file} already trained")
                     
-                
+                train_time_duration = time.time() - train_start_time
                 # Ensure model_path exists before saving the .pkl file
                 
 
