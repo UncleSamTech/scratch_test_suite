@@ -470,4 +470,4 @@ cl_ob = bilstm_cybera()
 
 sample = ("/mnt/siwuchuk/vscode/output_train/tmp80", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
 cl_ob.consolidate_data_train_parallel(*sample)
-#split -l $(( ($(wc -l < scratch_train_set_80_6_1_proc.txt) + 3) / 4)) scratch_train_set_80_6_1_proc.txt scratch_train_set_80_6_1_proc_ && for f in scratch_train_set_80_6_1_proc_*; do mv "$f" "${f}.txt"; done
+#split -l $(( ($(wc -l < scratch_train_set_80_6_4_proc.txt) + 3) / 4)) scratch_train_set_80_6_4_proc.txt scratch_train_set_80_6_4_proc_ && for f in scratch_train_set_80_6_4_proc_*; do mv "$f" "${f}.txt"; done
