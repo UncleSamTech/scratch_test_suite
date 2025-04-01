@@ -294,15 +294,15 @@ class bilstm_cybera:
         # padd_seq, max_len = self.pad_sequ(input_seq)
         # xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
         # print(f"Maximum length for run {each_run}: {max_len}")
-        self.eval_five_runs_opt_main(47,result_path,test_data,model_number,each_run,logs_path)
+        self.eval_five_runs_opt_main(47,result_path,test_path,model_number,each_run,logs_path)
         #self.train_model_five_runs_opt(total_words, max_len, xs, ys, result_path, test_data, model_number, each_run, logs_path)
 
-    def eval_five_runs_opt_main(self, max_seq, result_path, test_data, proj_number, runs, logs_path):
+    def eval_five_runs_opt_main(self, max_seq, result_path, test_path, proj_number, runs, logs_path):
         
         
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         print(f"model is {spec_model}")
-        self.evaluate_bilstm_in_order_upd_norun_opt_new_updated(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+        self.evaluate_bilstm_in_order_optimized(test_path, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
@@ -413,11 +413,39 @@ class bilstm_cybera:
     def count_expected_log_entries(self,test_file_path):
         """Count the total number of log entries that would be generated for the test file."""
         expected_entries = 0
+        
         with open(test_file_path, 'r') as test_file:
             for line in test_file:
                 tokens = line.strip().split()
                 if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
                     expected_entries += len(tokens) - 1  # Tokens after the first token
+        return expected_entries
+ 
+
+    def count_expected_log_entries_v2(self, test_file_path):
+        """Count the total number of log entries across all split test files in a directory."""
+        expected_entries = 0
+
+        # If the path is a directory, process all .txt files inside it
+        if os.path.isdir(test_file_path):
+            for filename in os.listdir(test_file_path):
+                if filename.endswith(".txt"):
+                    file_path = os.path.join(test_file_path, filename)
+                    with open(file_path, 'r') as test_file:
+                        for line in test_file:
+                            tokens = line.strip().split()
+                            if len(tokens) >= 2:
+                                expected_entries += len(tokens) - 1
+        # If the path is a single file, process it directly (backward compatibility)
+        elif os.path.isfile(test_file_path):
+            with open(test_file_path, 'r') as test_file:
+                for line in test_file:
+                    tokens = line.strip().split()
+                    if len(tokens) >= 2:
+                        expected_entries += len(tokens) - 1
+        else:
+            raise ValueError(f"Path {test_file_path} is neither a file nor a directory.")
+
         return expected_entries
     
     def find_resume_point(self,test_file_path, log_entry_count):
@@ -435,6 +463,57 @@ class bilstm_cybera:
                     current_log_entries += tokens_after_first
             print(f"total lines in test file is {current_log_entries} ")
         return None  # If no resume point is found
+    
+
+
+    def find_resume_point_v2(self, test_file_path, log_entry_count):
+        """Find the line and token position across split test files to resume evaluation.
+        Args:
+            test_file_path: Path to a directory containing split files or a single file.
+            log_entry_count: Target log entry count to resume from.
+        Returns:
+            Tuple (file_name, line_num, token_pos) or None if not found.
+        """
+        current_log_entries = 0
+
+        # Case 1: Directory of split files (e.g., `scratch_train_set_80_6_4_proc_aa.txt`, `ab.txt`, ...)
+        if os.path.isdir(test_file_path):
+            # Get sorted list of split files (ensures correct order: aa, ab, ac, ...)
+            split_files = sorted(
+                [f for f in os.listdir(test_file_path) if f.endswith(".txt")],
+                key=lambda x: x.split("_")[-1]  # Sort by suffix (aa, ab, ...)
+            )
+
+            for file_name in split_files:
+                file_path = os.path.join(test_file_path, file_name)
+                with open(file_path, 'r') as test_file:
+                    for line_num, line in enumerate(test_file):
+                        tokens = line.strip().split()
+                        if len(tokens) >= 2:
+                            tokens_after_first = len(tokens) - 1
+                            if current_log_entries + tokens_after_first >= log_entry_count:
+                                # Resume point found in this line
+                                token_pos = log_entry_count - current_log_entries
+                                return file_name, line_num, token_pos
+                            current_log_entries += tokens_after_first
+
+        # Case 2: Single file (backward compatibility)
+        elif os.path.isfile(test_file_path):
+            with open(test_file_path, 'r') as test_file:
+                for line_num, line in enumerate(test_file):
+                    tokens = line.strip().split()
+                    if len(tokens) >= 2:
+                        tokens_after_first = len(tokens) - 1
+                        if current_log_entries + tokens_after_first >= log_entry_count:
+                            token_pos = log_entry_count - current_log_entries
+                            return os.path.basename(test_file_path), line_num, token_pos
+                        current_log_entries += tokens_after_first
+
+        else:
+            raise ValueError(f"Invalid path: {test_file_path}")
+
+        print(f"Total log entries processed: {current_log_entries} (target {log_entry_count} not reached)")
+        return None
 
     def evaluate_bilstm_in_order_upd_norun_opt_new_2(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         # Load pre-trained model
@@ -517,8 +596,7 @@ class bilstm_cybera:
         del loaded_model
         gc.collect()
 
-
-
+    
     def evaluate_bilstm_in_order_upd_norun_opt_new_updated(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
         # Load pre-trained model
         loaded_model = load_model(model, compile=False)
@@ -577,6 +655,184 @@ class bilstm_cybera:
                 token_pos = 1  # Reset token position after processing first resumed line
 
         # Clean up
+        del loaded_model
+        gc.collect()
+
+
+    def evaluate_bilstm_in_order_upd_norun_opt_new_updated_v2(self, test_data_path, maxlen, model, result_path, proj_number, run, logs_path):
+        # Load pre-trained model
+        loaded_model = load_model(model, compile=False)
+
+        test_data_files = [
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_1.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_2.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_3.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt"
+        ]
+
+        for index,each_file in enumerate(test_data_files):
+            each_file = each_file.strip()
+            print(f"evaluating the {index} file {each_file}")
+
+            # Load tokenized data once
+            tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+            with open(tokenized_file_path, "rb") as tk:
+                tokenz = pickle.load(tk)
+
+            # Log file path
+            investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+            log_file_exists = os.path.exists(investig_path) and os.path.getsize(investig_path) > 0
+
+            if not log_file_exists:
+                print(f"Creating log file {investig_path}")
+                with open(investig_path, "w") as log_file:
+                    log_file.write("query,expected,answer,rank,correct\n")
+
+            # Read all lines from test data
+            with open(each_file, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+
+            # Determine the resume point if log file exists
+            if log_file_exists:
+                log_entry_count = self.count_log_entries(investig_path)
+                resume_point = self.find_resume_point_v2(f"{test_data_path}/{proj_number}/{run}", log_entry_count)
+                if resume_point is None:
+                    print("Evaluation completed")
+                    return
+                line_num, token_pos = resume_point
+                print(f"Resuming evaluation from line {line_num + 1}, token position {token_pos + 1}.")
+                lines = lines[line_num:]
+            else:
+                token_pos = 1
+
+            # Process test data
+            with open(investig_path, "a") as inv_path_file:
+                for line in lines:
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    if len(sentence_tokens) < 2:
+                        continue
+
+                    # Evaluate each token in order starting from the second token
+                    for idx in range(token_pos, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
+
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt2(context, tokenz, loaded_model, maxlen)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+
+                        inv_path_file.write(
+                            f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
+                        )
+
+                    token_pos = 1  # Reset token position after processing first resumed line
+
+            # Clean up
+            del loaded_model
+            gc.collect()
+
+    def evaluate_bilstm_in_order_optimized(self, test_data_path, maxlen, model_path, result_path, proj_number, run, logs_path):
+        """
+        Optimized version of the BiLSTM evaluation function that correctly handles resuming
+        across multiple test files based on the find_resume_point_v2 implementation.
+        """
+        # Load pre-trained model once for all files
+        loaded_model = load_model(model_path, compile=False)
+        
+        # Load tokenized data once
+        tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+        with open(tokenized_file_path, "rb") as tk:
+            tokenz = pickle.load(tk)
+        
+        # Log file path
+        investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+        log_file_exists = os.path.exists(investig_path) and os.path.getsize(investig_path) > 0
+        
+        if not log_file_exists:
+            print(f"Creating log file {investig_path}")
+            with open(investig_path, "w") as log_file:
+                log_file.write("query,expected,answer,rank,correct\n")
+        
+        test_data_files = [
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_1.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_2.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_3.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt"
+        ]
+        
+        # Map filenames to their full paths for easier lookup
+        filename_to_path = {os.path.basename(path): path for path in test_data_files}
+        
+        # Determine the resume point if log file exists
+        resume_file_name = None
+        resume_line_num = 0
+        resume_token_pos = 1
+        
+        if log_file_exists:
+            log_entry_count = self.count_log_entries(investig_path)
+            resume_point = self.find_resume_point_v2(f"{test_data_path}/{proj_number}/{run}", log_entry_count)
+            
+            if resume_point is None:
+                print("Evaluation completed")
+                return
+            
+            resume_file_name, resume_line_num, resume_token_pos = resume_point
+            print(f"Resuming evaluation from file {resume_file_name}, line {resume_line_num + 1}, token position {resume_token_pos + 1}.")
+        
+        # Process each file
+        started_processing = False
+        for file_idx, file_path in enumerate(test_data_files):
+            file_basename = os.path.basename(file_path)
+            
+            # Skip files until we reach the resume file
+            if log_file_exists and resume_file_name and not started_processing:
+                if file_basename != resume_file_name:
+                    print(f"Skipping file {file_basename} (resuming from {resume_file_name})")
+                    continue
+                started_processing = True
+            
+            print(f"Evaluating file {file_idx + 1}/{len(test_data_files)}: {file_basename}")
+            
+            # Read all lines from test data
+            with open(file_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+            
+            # Apply resume line number if this is the resume file
+            if log_file_exists and file_basename == resume_file_name:
+                lines = lines[resume_line_num:]
+                current_line_start_token = resume_token_pos
+            else:
+                current_line_start_token = 1
+            
+            # Process test data
+            with open(investig_path, "a") as inv_path_file:
+                for line_idx, line in enumerate(lines):
+                    line = line.strip()
+                    sentence_tokens = line.split(" ")
+                    
+                    if len(sentence_tokens) < 2:
+                        continue
+                    
+                    # For the first line of a resumed file, use the resume token position
+                    # For all other lines, start from the second token (index 1)
+                    token_start = current_line_start_token if line_idx == 0 and file_basename == resume_file_name else 1
+                    
+                    # Evaluate each token in order starting from the appropriate token
+                    for idx in range(token_start, len(sentence_tokens)):
+                        context = ' '.join(sentence_tokens[:idx])
+                        true_next_word = sentence_tokens[idx]
+                        
+                        predicted_next_word, top_10_tokens = self.predict_token_score_upd_opt2(context, tokenz, loaded_model, maxlen)
+                        rank = self.check_available_rank(top_10_tokens, true_next_word)
+                        
+                        inv_path_file.write(
+                            f"{context.strip()},{true_next_word.strip()},{predicted_next_word},{rank},{1 if true_next_word.strip() == predicted_next_word else 0}\n"
+                        )
+            
+            # Reset for next file
+            current_line_start_token = 1
+        
+        # Clean up at the end
         del loaded_model
         gc.collect()
 
