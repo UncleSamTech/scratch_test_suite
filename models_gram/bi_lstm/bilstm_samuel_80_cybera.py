@@ -335,7 +335,7 @@ class bilstm_cybera:
 
         # Construct file paths for all four datasets.
         train_data_files = [
-            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
+            #f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
             f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
             f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
             f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_4.txt"
@@ -356,25 +356,25 @@ class bilstm_cybera:
             xs, ys, labels = self.prep_seq_labels(padd_seq, total_words)
 
             # If this is not the first split, load the previously saved model.
-            if i > 0:
-                model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
-                if os.path.exists(model_file):
-                    print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
-                    model = load_model(model_file)
-                else:
-                    raise FileNotFoundError(f"Model file {model_file} not found.")
+            if os.path.exists(model_file):
+                # model_file = f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{model_number}_6_{each_run}.keras"
+                # if os.path.exists(model_file):
+                print(f"Loading model from {model_file} for incremental training on split {i + 1}...")
+                model = load_model(model_file)
+            else:
+                raise FileNotFoundError(f"Model file {model_file} not found.")
 
             # # If this is the first split, create a new model.
-            if model is None:
-                print("Creating a new model for the first split...")
-                model = Sequential([
-                    Input(shape=(max_len - 1,)),  # Explicitly define the input shape
-                    Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
-                    Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
-                    Dense(total_words, activation='softmax')
-                ])
-                adam = Adam(learning_rate=0.01)
-                model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+            # if model is None:
+            #     print("Creating a new model for the first split...")
+            #     model = Sequential([
+            #         Input(shape=(max_len - 1,)),  # Explicitly define the input shape
+            #         Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
+            #         Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+            #         Dense(total_words, activation='softmax')
+            #     ])
+            #     adam = Adam(learning_rate=0.01)
+            #     model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
             # Use a data generator to reduce memory usage.
             train_generator = self.DataGenerator(xs, ys, batch_size=16)
@@ -470,4 +470,4 @@ cl_ob = bilstm_cybera()
 
 sample = ("/mnt/siwuchuk/vscode/output_train/tmp80", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/vscode/output_test", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
 cl_ob.consolidate_data_train_parallel(*sample)
-#split -l $(( ($(wc -l < scratch_train_set_80_6_4_proc.txt) + 3) / 4)) scratch_train_set_80_6_4_proc.txt scratch_train_set_80_6_4_proc_ && for f in scratch_train_set_80_6_4_proc_*; do mv "$f" "${f}.txt"; done
+#split -l $(( ($(wc -l < scratch_test_set_50_6_1_proc.txt) + 3) / 4)) scratch_test_set_50_6_1_proc.txt scratch_test_set_50_6_1_proc_ && for f in scratch_test_set_50_6_1_proc_*; do mv "$f" "${f}.txt"; done
