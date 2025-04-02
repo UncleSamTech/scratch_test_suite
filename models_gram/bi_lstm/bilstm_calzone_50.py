@@ -667,7 +667,15 @@ class bilstm_cybera:
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_1.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_2.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_3.txt",
-            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt"
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_5.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_6.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_7.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_8.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_9.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_10.txt"
+
+
         ]
 
         for index,each_file in enumerate(test_data_files):
@@ -936,9 +944,10 @@ cl_ob = bilstm_cybera()
 # cl_ob.consolidate_data_train_parallel(*sample)
 
 # Run one dataset with 5 runs spread across 16 cores
-sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
+sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test/tmp", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
 cl_ob.consolidate_data_train_parallel(*sample)
 
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" --filter='sh -c "{ cat > scratch_train_set_50_6_1_proc_$FILE.txt; }"' scratch_train_set_50_6_1_proc.txt && mv scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_1.txt
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_ && mv scratch_train_set_50_6_1_proc_1.txt scratch_train_set_50_6_1_proc.txt && rm scratch_train_set_50_6_1_proc_1.txt
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_5_proc.txt scratch_train_set_50_6_5_proc_
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/10+1)),$((($i)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/10))p" scratch_test_set_50_6_5_proc.txt > scratch_test_set_50_6_5_proc_$i.txt; done
