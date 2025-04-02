@@ -991,7 +991,7 @@ cl_ob = bilstm_cybera()
 # cl_ob.consolidate_data_train_parallel(*sample)
 
 # Run one dataset with 5 runs spread across 16 cores
-sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test/tmp", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
+sample = ("/home/siwuchuk/thesis_project/kenlm/output_train", "/home/siwuchuk/thesis_project/models/bilstm/model/50/", "/home/siwuchuk/thesis_project/kenlm/output_test", 50, "/home/siwuchuk/thesis_project/models/bilstm/logs/50")
 cl_ob.consolidate_data_train_parallel(*sample)
 
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" --filter='sh -c "{ cat > scratch_train_set_50_6_1_proc_$FILE.txt; }"' scratch_train_set_50_6_1_proc.txt && mv scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_1.txt
