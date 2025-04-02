@@ -771,7 +771,47 @@ class bilstm_cybera:
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_7.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_8.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_9.txt",
-            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_10.txt"
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_10.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_11.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_12.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_13.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_14.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_15.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_16.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_17.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_18.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_19.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_20.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_21.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_22.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_23.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_24.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_25.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_26.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_27.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_28.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_29.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_30.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_31.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_32.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_33.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_34.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_35.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_36.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_37.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_38.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_39.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_40.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_41.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_42.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_43.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_44.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_45.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_46.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_47.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_48.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_49.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_50.txt"
 
         ]
         
@@ -957,4 +997,8 @@ cl_ob.consolidate_data_train_parallel(*sample)
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" --filter='sh -c "{ cat > scratch_train_set_50_6_1_proc_$FILE.txt; }"' scratch_train_set_50_6_1_proc.txt && mv scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_1.txt
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_1_proc.txt scratch_train_set_50_6_1_proc_ && mv scratch_train_set_50_6_1_proc_1.txt scratch_train_set_50_6_1_proc.txt && rm scratch_train_set_50_6_1_proc_1.txt
 #split -n l/4 --numeric-suffixes=1 --additional-suffix=".txt" scratch_train_set_50_6_5_proc.txt scratch_train_set_50_6_5_proc_
-#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/10+1)),$((($i)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/10))p" scratch_test_set_50_6_5_proc.txt > scratch_test_set_50_6_5_proc_$i.txt; done
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_1_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_1_proc.txt)/10))p" scratch_test_set_50_6_1_proc.txt > scratch_test_set_50_6_1_proc_$i.txt; done
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_2_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_2_proc.txt)/10))p" scratch_test_set_50_6_2_proc.txt > scratch_test_set_50_6_2_proc_$i.txt; done
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_3_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_3_proc.txt)/10))p" scratch_test_set_50_6_3_proc.txt > scratch_test_set_50_6_3_proc_$i.txt; done
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/10))p" scratch_test_set_50_6_4_proc.txt > scratch_test_set_50_6_4_proc_$i.txt; done
+#for i in {1..10}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/10))p" scratch_test_set_50_6_5_proc.txt > scratch_test_set_50_6_5_proc_$i.txt; done
