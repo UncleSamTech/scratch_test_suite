@@ -765,7 +765,14 @@ class bilstm_cybera:
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_1.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_2.txt",
             f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_3.txt",
-            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt"
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_4.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_5.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_6.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_7.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_8.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_9.txt",
+            f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_10.txt"
+
         ]
         
         # Map filenames to their full paths for easier lookup
