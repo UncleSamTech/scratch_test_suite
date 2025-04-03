@@ -302,7 +302,7 @@ class bilstm_cybera:
         
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         print(f"model is {spec_model}")
-        self.evaluate_bilstm_in_order_upd_norun_opt_new_updated(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+        self.evaluate_bilstm_in_order_upd_norun_opt_new_updated2(test_data, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
@@ -579,6 +579,87 @@ class bilstm_cybera:
         # Clean up
         del loaded_model
         gc.collect()
+
+    
+    def evaluate_bilstm_in_order_upd_norun_opt_new_updated2(self, test_data, maxlen, model, result_path, proj_number, run, logs_path):
+        """Optimized BiLSTM evaluation with memory-efficient processing and resume capability."""
+        try:
+            # Load resources once with memory optimization
+            loaded_model = load_model(model, compile=False)
+            
+            # Load tokenized data using efficient pickle loading
+            tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+            with open(tokenized_file_path, "rb") as tk:
+                tokenz = pickle.load(tk)
+            
+            # Log file handling
+            investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+            
+            # Initialize log file if needed
+            if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                with open(investig_path, "w") as log_file:
+                    log_file.write("query,expected,answer,rank,correct\n")
+                log_entry_count = 0
+            else:
+                # Efficient log entry counting
+                with open(investig_path, "r") as f:
+                    log_entry_count = sum(1 for _ in f) - 1  # Skip header
+
+            # Resume logic
+            resume_line, resume_token = 0, 1
+            if log_entry_count > 0:
+                resume_info = self.find_resume_point(test_data, log_entry_count)
+                if resume_info is None:
+                    print("Evaluation already completed")
+                    return
+                resume_line, resume_token = resume_info
+                print(f"Resuming from line {resume_line+1}, token {resume_token+1}")
+
+            # Process file with memory-efficient streaming
+            with open(test_data, "r", encoding="utf-8") as f, \
+                open(investig_path, "a") as log_file:
+                
+                # Skip to resume line if needed
+                for _ in range(resume_line):
+                    next(f)
+                
+                # Process each line
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                        
+                    tokens = line.split()
+                    if len(tokens) < 2:
+                        continue
+                    
+                    # Process tokens with resume handling
+                    for idx in range(resume_token, len(tokens)):
+                        context = ' '.join(tokens[:idx])
+                        true_word = tokens[idx]
+                        
+                        # Predict with memory management
+                        pred, top_tokens = self.predict_token_score_upd_opt2(
+                            context, tokenz, loaded_model, maxlen
+                        )
+                        rank = self.check_available_rank(top_tokens, true_word)
+                        
+                        log_file.write(
+                            f"{context},{true_word},{pred},{rank},{int(true_word == pred)}\n"
+                        )
+                        
+                        # Periodic memory cleanup
+                        if idx % 100 == 0:
+                            gc.collect()
+                    
+                    # Reset resume token after first line
+                    resume_token = 1
+        
+        finally:
+            # Ensure proper resource cleanup
+            if 'loaded_model' in locals():
+                del loaded_model
+            gc.collect()
 
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """

@@ -302,7 +302,7 @@ class bilstm_cybera:
         
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         print(f"model is {spec_model}")
-        self.evaluate_bilstm_in_order_optimized(test_path, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+        self.evaluate_bilstm_in_order_optimized2(test_path, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
@@ -890,6 +890,103 @@ class bilstm_cybera:
         # Clean up at the end
         del loaded_model
         gc.collect()
+
+
+    def evaluate_bilstm_in_order_optimized2(self, test_data_path, maxlen, model_path, result_path, proj_number, run, logs_path):
+        """Optimized BiLSTM evaluation with memory management and batch processing."""
+        try:
+            # Load resources once
+            loaded_model = load_model(model_path, compile=False)
+            tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+            
+            # Memory-efficient pickle loading
+            with open(tokenized_file_path, "rb") as tk:
+                tokenz = pickle.load(tk)
+            
+            investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+            
+            # Initialize log file
+            if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                with open(investig_path, "w") as log_file:
+                    log_file.write("query,expected,answer,rank,correct\n")
+
+            # Generate test files dynamically instead of hardcoding
+            test_data_files = [
+                f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_{i}.txt"
+                for i in range(1, 51)
+            ]
+
+            # Resume logic
+            resume_file, resume_line, resume_token = None, 0, 1
+            if os.path.exists(investig_path) and os.path.getsize(investig_path) > 0:
+                log_count = sum(1 for _ in open(investig_path)) - 1  # Skip header
+                resume_info = self.find_resume_point_v2(f"{test_data_path}/{proj_number}/{run}", log_count)
+                if resume_info is None:
+                    print("Evaluation already completed")
+                    return
+                resume_file, resume_line, resume_token = resume_info
+                print(f"Resuming from {resume_file}, line {resume_line+1}, token {resume_token+1}")
+
+            # Process files with memory management
+            for file_path in test_data_files:
+                file_name = os.path.basename(file_path)
+                
+                # Skip files until resume point
+                if resume_file and file_name != resume_file:
+                    continue
+                
+                print(f"Processing {file_name}")
+                with open(file_path, "r", encoding="utf-8") as f, \
+                    open(investig_path, "a") as log_file:
+                    
+                    # Process lines with resume handling
+                    for line_num, line in enumerate(f):
+                        if resume_file == file_name and line_num < resume_line:
+                            continue
+                            
+                        line = line.strip()
+                        tokens = line.split()
+                        if len(tokens) < 2:
+                            continue
+                        
+                        # Determine start token
+                        start_token = resume_token if (resume_file == file_name and line_num == resume_line) else 1
+                        
+                        # Batch processing of tokens
+                        for token_pos in range(start_token, len(tokens)):
+                            context = ' '.join(tokens[:token_pos])
+                            true_word = tokens[token_pos]
+                            
+                            # Predict with memory cleanup
+                            pred, top_tokens = self.predict_token_score_upd_opt2(
+                                context, tokenz, loaded_model, maxlen
+                            )
+                            rank = self.check_available_rank(top_tokens, true_word)
+                            
+                            log_file.write(
+                                f"{context},{true_word},{pred},{rank},{int(true_word == pred)}\n"
+                            )
+                            
+                            # Periodic cleanup
+                            if token_pos % 100 == 0:
+                                gc.collect()
+                        
+                        # Reset resume markers after first processed line
+                        if resume_file == file_name and line_num == resume_line:
+                            resume_token = 1
+                    
+                    # Reset resume file after processing
+                    if resume_file == file_name:
+                        resume_file = None
+                
+                # Force cleanup between files
+                gc.collect()
+                
+        finally:
+            # Ensure resources are freed
+            if 'loaded_model' in locals():
+                del loaded_model
+            gc.collect()
 
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
