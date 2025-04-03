@@ -1071,14 +1071,14 @@ class scratch_train_mle:
                 # Ensure model_path exists before saving the .pkl file
                 
 
-                eval_start_time = time.time()
-                print(f"evaluating {test_data}")
+                # eval_start_time = time.time()
+                # print(f"evaluating {test_data}")
                 
-                self.scratch_evaluate_model_nltk_in_order_all_new_opt(test_data, model_name, log_path,model_path,run,each_gram,model_number)
-                eval_time_duration = time.time() - eval_start_time
+                # self.scratch_evaluate_model_nltk_in_order_all_new_opt(test_data, model_name, log_path,model_path,run,each_gram,model_number)
+                # eval_time_duration = time.time() - eval_start_time
                 
-                with open(time_log_file, "a") as tp:
-                    tp.write(f"{train_data},{test_data},{train_time_duration},{eval_time_duration}\n")
+                # with open(time_log_file, "a") as tp:
+                #     tp.write(f"{train_data},{test_data},{train_time_duration},{eval_time_duration}\n")
 
             except Exception as e:
                 print(f"Error: {e}")
