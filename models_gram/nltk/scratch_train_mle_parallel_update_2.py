@@ -780,7 +780,7 @@ class scratch_train_mle:
                 return
         
         test_data_files = [
-            f"{test_data_path}/{model_number}/{n}/{run}scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
+            f"{test_data_path}/{model_number}/{n}/{run}/scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
             for i in range(1, 51)
         ]
         
@@ -1422,7 +1422,7 @@ def main():
                 chosen_core = available_cores[0]
                 print(f"Assigning model {each_model} to core {chosen_core}")
                 test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
-                log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/"
+                log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
                 p = multiprocessing.Process(target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2, args=(test_path, each_model, log_path,run,ngram,proj_number))
                 p.start()
                 processes.append(p)
