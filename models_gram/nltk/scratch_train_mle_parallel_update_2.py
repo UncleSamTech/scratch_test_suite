@@ -780,7 +780,7 @@ class scratch_train_mle:
                 return
         
         test_data_files = [
-            f"{test_data_path}/{model_number}/{run}/scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
+            f"{test_data_path}/{model_number}/{n}/{run}scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
             for i in range(1, 51)
         ]
         
