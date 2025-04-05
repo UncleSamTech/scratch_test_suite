@@ -1405,9 +1405,22 @@ def main():
 
         print(f"Total models: {len(all_models)}")
         #extract the project number, ngram order and run
+
+    skipped = [
+ 'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
+ 'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
+ 'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
+ 'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
+ 'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_20_3_5.pkl', 'nltk_30_2_1.pkl',
+ 'nltk_30_2_2.pkl',  'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_5.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
+ 'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
+ 'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
+]
     
     for each_model in all_models:
             each_model =  each_model.strip() if isinstance(each_model,str) else each_model
+            if each_model in skipped:
+                continue
             
             match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
             proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
