@@ -1408,8 +1408,8 @@ def main():
     
     for each_model in all_models:
             each_model =  each_model.strip() if isinstance(each_model,str) else each_model
-            match = re.search(r"_(\d+)\.pkl$", each_model)
-            proj_number,ngram,run = match.group(0),match.group(1),match.group(2)
+            match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
+            proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
             try:
                 available_cores = tr_scr.get_available_cores(threshold=10)
                 if not available_cores:
