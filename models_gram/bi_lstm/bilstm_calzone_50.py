@@ -1064,7 +1064,7 @@ class bilstm_cybera:
         """
         usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
         available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
-        print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
+        #print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
         return available
 
     def pin_process_to_cores(self, cores):

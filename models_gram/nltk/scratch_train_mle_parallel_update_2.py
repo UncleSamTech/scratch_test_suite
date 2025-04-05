@@ -1290,7 +1290,7 @@ class scratch_train_mle:
         # psutil.cpu_percent(interval=1, percpu=True) waits 1 sec and returns per-core usage
         usage_per_core = psutil.cpu_percent(interval=1, percpu=True)
         available = [i for i, usage in enumerate(usage_per_core) if usage < threshold]
-        print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
+        #print(f"Per-core usage: {usage_per_core} => Available (usage < {threshold}%): {available}")
         return available
 
     def run_on_core(self,train_path, test_path, log_path, model_path, model_number, model_name, core):
@@ -1421,7 +1421,7 @@ def main():
             each_model =  each_model.strip() if isinstance(each_model,str) else each_model
             if each_model in skipped:
                 continue
-            
+
             match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
             proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
             formed_model = f"{model_path}/{proj_number}/{each_model}"
