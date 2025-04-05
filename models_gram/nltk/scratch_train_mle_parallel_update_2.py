@@ -1408,8 +1408,10 @@ def main():
     
     for each_model in all_models:
             each_model =  each_model.strip() if isinstance(each_model,str) else each_model
+            
             match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
             proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
+            formed_model = f"{model_path}/{proj_number}/{each_model}"
             try:
                 available_cores = tr_scr.get_available_cores(threshold=10)
                 if not available_cores:
@@ -1423,7 +1425,7 @@ def main():
                 print(f"Assigning model {each_model} to core {chosen_core}")
                 test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
                 log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
-                p = multiprocessing.Process(target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2, args=(test_path, each_model, log_path,run,ngram,proj_number))
+                p = multiprocessing.Process(target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2, args=(test_path, formed_model, log_path,run,ngram,proj_number))
                 p.start()
                 processes.append(p)
                 #tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2(test_path, each_model, log_path,model_path,run,ngram,proj_number)
