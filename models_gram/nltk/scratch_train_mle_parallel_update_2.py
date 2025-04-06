@@ -23,6 +23,8 @@ import psutil
 import time
 import itertools
 import gc
+import signal
+from datetime import datetime
 
 class scratch_train_mle:
 
@@ -1511,18 +1513,17 @@ class scratch_train_mle:
         # Wait for all processes to complete
         for p in processes:
             p.join()
+    
+
     def process_models_batches(self):
         tr_scr = scratch_train_mle()
-        processes = []
         model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
         test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
         log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
         
-        # Ensure directories exist
         os.makedirs(model_path, exist_ok=True)
         os.makedirs(log_path, exist_ok=True)
 
-        # Predefined skip list (converted to set for O(1) lookups)
         SKIPPED_MODELS = {
             'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
             'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
@@ -1534,7 +1535,7 @@ class scratch_train_mle:
             'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
         }
 
-        # Collect all models to process first
+        # Step 1: Collect all models in order
         all_models = []
         for proj in [10, 20, 30, 50, 80]:
             proj_path = os.path.join(model_path, str(proj))
@@ -1554,61 +1555,45 @@ class scratch_train_mle:
                 model_full_path = os.path.join(proj_path, model_file)
                 all_models.append((model_file, model_full_path, run, ngram, proj_number))
 
-        # Process models in batches based on available cores
-        batch_interval = 120  # 2 minutes in seconds
-        processed_models = 0
-        total_models = len(all_models)
+        # Step 2: Time-sliced round-robin scheduler
+        TIME_SLICE = 5 * 60  # 5 minutes in seconds
+        current_model_idx = 0
+        active_process = None
 
-        while processed_models < total_models:
-            # Get available cores at the start of each batch
-            available_cores = tr_scr.get_available_cores(threshold=10)
-            if not available_cores:
-                print("No available cores, waiting...")
-                time.sleep(10)
-                continue
+        while True:
+            if not all_models:
+                break  # All models processed
 
-            # Determine batch size (number of models to process in this interval)
-            batch_size = len(available_cores)
-            batch = all_models[processed_models:processed_models + batch_size]
+            # Get the next model
+            model_file, model_full_path, run, ngram, proj_number = all_models[current_model_idx]
+            print(f"⏳ Starting {model_file} at {datetime.now().strftime('%H:%M:%S')}")
 
-            print(f"\nStarting new batch with {len(batch)} models at {time.strftime('%Y-%m-%d %H:%M:%S')}")
-            
-            # Process each model in the current batch
-            batch_processes = []
-            for i, (model_file, model_full_path, run, ngram, proj_number) in enumerate(batch):
-                core = available_cores[i % len(available_cores)]  # Distribute across available cores
-                print(f"Assigning {model_file} to core {core}")
-                
-                p = multiprocessing.Process(
-                    target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
-                    args=(test_path, model_full_path, log_path, run, ngram, proj_number)
-                )
-                p.start()
-                batch_processes.append(p)
-                processes.append(p)
+            # Start the model in a separate process
+            active_process = multiprocessing.Process(
+                target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
+                args=(test_path, model_full_path, log_path, run, ngram, proj_number)
+            )
+            active_process.start()
 
-            # Update processed count
-            processed_models += len(batch)
+            # Let it run for TIME_SLICE seconds
+            start_time = time.time()
+            while time.time() - start_time < TIME_SLICE:
+                if not active_process.is_alive():
+                    break  # Model finished early
+                time.sleep(1)  # Check every second
 
-            # Wait for batch interval or until all processes complete
-            batch_start = time.time()
-            while time.time() - batch_start < batch_interval:
-                # Check if all processes in this batch are done
-                all_done = all(not p.is_alive() for p in batch_processes)
-                if all_done:
-                    break
-                time.sleep(5)  # Check every 5 seconds
+            # Terminate the process if still running
+            if active_process.is_alive():
+                print(f"⏸️ Pausing {model_file} after {TIME_SLICE//60} minutes")
+                active_process.terminate()
+                active_process.join()  # Ensure cleanup
 
-            # If some processes are still running after the interval, continue to next batch
-            still_running = sum(1 for p in batch_processes if p.is_alive())
-            if still_running:
-                print(f"{still_running} processes from this batch are still running, moving to next batch")
+            # Move to next model (wrap around if needed)
+            current_model_idx = (current_model_idx + 1) % len(all_models)
 
-        # Final wait for all processes to complete
-        print("\nAll batches started, waiting for remaining processes to complete...")
-        for p in processes:
-            p.join()
-
+        # Remove finished models (optional: track completion elsewhere)
+        # if not active_process.is_alive():
+        #     all_models.pop(current_model_idx)
 def main():
     tr_scr = scratch_train_mle()
     tr_scr.process_models_batches()
