@@ -1515,6 +1515,8 @@ class scratch_train_mle:
             p.join()
     
 
+
+
     def process_models_batches(self):
         tr_scr = scratch_train_mle()
         model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
@@ -1555,42 +1557,62 @@ class scratch_train_mle:
                 model_full_path = os.path.join(proj_path, model_file)
                 all_models.append((model_file, model_full_path, run, ngram, proj_number))
 
-        # Step 2: Time-sliced round-robin scheduler
-        TIME_SLICE = 5 * 60  # 5 minutes in seconds
-        current_model_idx = 0
-        active_process = None
+        # Step 2: Distribute models across cores (round-robin)
+        available_cores = tr_scr.get_available_cores(threshold=10)  # e.g., [0, 1, 2, ..., 11]
+        num_cores = len(available_cores)
+        core_queues = [[] for _ in range(num_cores)]
+        
+        for i, model in enumerate(all_models):
+            core_queues[i % num_cores].append(model)  # Distribute models evenly
 
-        while True:
-            if not all_models:
-                break  # All models processed
+        # Step 3: Worker function (runs on each core)
+        def worker(core_id, queue):
+            TIME_SLICE = 5 * 60  # 5 minutes per model
+            current_model_idx = 0
+            
+            while True:
+                if not queue:
+                    break  # No more models for this core
 
-            # Get the next model
-            model_file, model_full_path, run, ngram, proj_number = all_models[current_model_idx]
-            print(f"⏳ Starting {model_file} at {datetime.now().strftime('%H:%M:%S')}")
+                model_file, model_full_path, run, ngram, proj_number = queue[current_model_idx]
+                print(f"🖥️ [Core {core_id}] Starting {model_file} at {datetime.now().strftime('%H:%M:%S')}")
 
-            # Start the model in a separate process
-            active_process = multiprocessing.Process(
-                target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
-                args=(test_path, model_full_path, log_path, run, ngram, proj_number)
-            )
-            active_process.start()
+                # Start the model process
+                p = multiprocessing.Process(
+                    target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
+                    args=(test_path, model_full_path, log_path, run, ngram, proj_number)
+                )
+                p.start()
+                start_time = time.time()
 
-            # Let it run for TIME_SLICE seconds
-            start_time = time.time()
-            while time.time() - start_time < TIME_SLICE:
-                if not active_process.is_alive():
-                    break  # Model finished early
-                time.sleep(1)  # Check every second
+                # Allow it to run for TIME_SLICE seconds
+                while time.time() - start_time < TIME_SLICE:
+                    if not p.is_alive():
+                        break  # Model finished early
+                    time.sleep(1)
 
-            # Terminate the process if still running
-            if active_process.is_alive():
-                print(f"⏸️ Pausing {model_file} after {TIME_SLICE//60} minutes")
-                active_process.terminate()
-                active_process.join()  # Ensure cleanup
+                # Terminate if still running
+                if p.is_alive():
+                    print(f"⏸️ [Core {core_id}] Pausing {model_file} after {TIME_SLICE//60} min")
+                    p.terminate()
+                    p.join()
 
-            # Move to next model (wrap around if needed)
-            current_model_idx = (current_model_idx + 1) % len(all_models)
+                # Move to next model (round-robin within core's queue)
+                current_model_idx = (current_model_idx + 1) % len(queue)
 
+        # Step 4: Start worker processes (1 per core)
+        processes = []
+        for core_id in range(num_cores):
+            p = multiprocessing.Process(
+                target=worker,
+                args=(core_id, core_queues[core_id]))
+            p.start()
+            processes.append(p)
+
+        # Wait for all workers to finish
+        for p in processes:
+            p.join()
+        print("✅ All models processed!")
         # Remove finished models (optional: track completion elsewhere)
         # if not active_process.is_alive():
         #     all_models.pop(current_model_idx)
