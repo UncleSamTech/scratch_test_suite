@@ -1501,7 +1501,7 @@ class scratch_train_mle:
                             processes.append(p)
                             break
                         else:
-                            print("Waiting for available cores...")
+                            #print("Waiting for available cores...")
                             time.sleep(5)
                             
                 except Exception as e:
