@@ -843,6 +843,100 @@ class scratch_train_mle:
             # Ensure resources are freed
             gc.collect()
 
+    def scratch_evaluate_model_nltk_in_order_all_new_optimized(self, test_data_path, model_name, result_path, run, n, model_number):
+        # Constants and paths
+        LOG_HEADER = "context,true_word,predicted_next_word,rank,correct\n"
+        log_file = f"{result_path}/{model_number}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
+        
+        # Determine resume state
+        file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+        resume_point = None if file_needs_header else self._get_resume_state(test_data_path, model_number, n, run, log_file)
+        
+        if resume_point == "COMPLETED":
+            print("Evaluation completed")
+            return
+
+        # Prepare test files
+        test_data_files = self._prepare_test_files(test_data_path, model_number, n, run)
+        
+        # Process files
+        try:
+            with open(log_file, "a", buffering=1) as log_f:  # Line buffering for immediate writes
+                if file_needs_header:
+                    log_f.write(LOG_HEADER)
+                
+                for file_path in test_data_files:
+                    self._process_test_file(
+                        file_path, 
+                        model_name, 
+                        log_f, 
+                        resume_point
+                    )
+                    # Clear resume state after first file is processed
+                    if resume_point and resume_point["file"] == os.path.basename(file_path):
+                        resume_point = None
+                    
+                    gc.collect()  # Force cleanup between files
+        finally:
+            gc.collect()
+
+    def _get_resume_state(self, test_data_path, model_number, n, run, log_file):
+        """Helper to determine resume state"""
+        log_entry_count = self.count_log_entries(log_file)
+        resume_point = self.find_resume_point_v2(
+            f"{test_data_path}/{model_number}/{n}/{run}", 
+            log_entry_count
+        )
+        
+        if resume_point is None:
+            return "COMPLETED"
+        
+        file_name, line_num, token_pos = resume_point
+        print(f"Resuming from {file_name}, line {line_num+1}, token {token_pos+1}")
+        return {"file": file_name, "line": line_num, "token": token_pos}
+
+    def _prepare_test_files(self, test_data_path, model_number, n, run):
+        """Helper to prepare test files list"""
+        return [
+            f"{test_data_path}/{model_number}/{n}/{run}/scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
+            for i in range(1, 51)
+        ]
+
+    def _process_test_file(self, file_path, model_name, log_f, resume_point):
+        """Process individual test file"""
+        file_name = os.path.basename(file_path)
+        
+        # Skip files before resume point
+        if resume_point and resume_point["file"] != file_name:
+            return
+            
+        print(f"Processing {file_name}")
+        
+        with open(file_path, "r", encoding="utf-8") as f:
+            for line_num, line in enumerate(f):
+                # Skip lines before resume line
+                if resume_point and resume_point["file"] == file_name and line_num < resume_point["line"]:
+                    continue
+                    
+                line = line.strip()
+                tokens = line.split()
+                if len(tokens) < 2:
+                    continue
+                    
+                # Process tokens
+                start_token = resume_point["token"] if (resume_point and resume_point["file"] == file_name and line_num == resume_point["line"]) else 0
+                
+                for token_pos in range(start_token, len(tokens)):
+                    context = ' '.join(tokens[:token_pos])
+                    true_word = tokens[token_pos]
+
+                    predicted_next_word, top_10_tokens = self.predict_next_scratch_token_upd_opt(model_name, context)
+                    rank = self.check_available_rank_opt(top_10_tokens, true_word)
+
+                    log_f.write(f"{context},{true_word},{predicted_next_word},{rank},{1 if true_word == predicted_next_word else 0}\n")
+                    
+                    if token_pos % 100 == 0:
+                        gc.collect()
 
     def scratch_evaluate_model_nltk_in_order(self,test_data,model_name,result_path,proj_number,ngram,run):
 
@@ -1223,7 +1317,7 @@ class scratch_train_mle:
             try:
 
 
-                self.scratch_evaluate_model_nltk_in_order_all_new_opt2(test_path, each_model, log_path,model_path,run,ngram,proj_number)
+                self.scratch_evaluate_model_nltk_in_order_all_new_optimized(test_path, each_model, log_path,model_path,run,ngram,proj_number)
             except Exception as e:
                 print(f"Error: {e}")
         #     #match a log file
@@ -1347,106 +1441,212 @@ class scratch_train_mle:
 
                     precs.write(f"{context},{true_next_word},{predicted_next_word},{rank},{1 if true_next_word == predicted_next_word else 0}\n")
 
+    def process_models(self):
+    tr_scr = scratch_train_mle()
+    processes = []
+    model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
+    test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
+    log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
+    
+    # Ensure directories exist
+    os.makedirs(model_path, exist_ok=True)
+    os.makedirs(log_path, exist_ok=True)
+
+    # Predefined skip list (converted to set for O(1) lookups)
+    SKIPPED_MODELS = {
+        'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
+        'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
+        'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
+        'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
+        'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_20_3_5.pkl', 'nltk_30_2_1.pkl',
+        'nltk_30_2_2.pkl', 'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_5.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
+        'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
+        'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
+    }
+
+    # Process models from all projects
+    for proj in [10, 20, 30, 50, 80]:
+        proj_path = os.path.join(model_path, str(proj))
+        if not os.path.exists(proj_path):
+            continue
+
+        # Process each model file
+        for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
+            model_file = model_file.strip()
+            if model_file in SKIPPED_MODELS:
+                continue
+
+            # Extract model parameters
+            match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
+            if not match:
+                continue
+                
+            proj_number, ngram, run = match.groups()
+            model_full_path = os.path.join(proj_path, model_file)
+
+            # Process with available core
+            try:
+                while True:
+                    available_cores = tr_scr.get_available_cores(threshold=10)
+                    if available_cores:
+                        chosen_core = available_cores[0]
+                        print(f"Assigning {model_file} to core {chosen_core}")
+                        
+                        p = multiprocessing.Process(
+                            target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
+                            args=(test_path, model_full_path, log_path, run, ngram, proj_number)
+                        )
+                        p.start()
+                        processes.append(p)
+                        break
+                    else:
+                        print("Waiting for available cores...")
+                        time.sleep(5)
+                        
+            except Exception as e:
+                print(f"Error processing {model_file}: {str(e)}")
+                continue
+
+    # Wait for all processes to complete
+    for p in processes:
+        p.join()
 
 
+    def process_models(self):
+        tr_scr = scratch_train_mle()
+        processes = []
+        model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
+        test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
+        log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
+        
+        # Ensure directories exist
+        os.makedirs(model_path, exist_ok=True)
+        os.makedirs(log_path, exist_ok=True)
+
+        # Predefined skip list (converted to set for O(1) lookups)
+        SKIPPED_MODELS = {
+            'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
+            'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
+            'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
+            'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
+            'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_20_3_5.pkl', 'nltk_30_2_1.pkl',
+            'nltk_30_2_2.pkl', 'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_5.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
+            'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
+            'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
+        }
+
+        # Process models from all projects
+        for proj in [10, 20, 30, 50, 80]:
+            proj_path = os.path.join(model_path, str(proj))
+            if not os.path.exists(proj_path):
+                continue
+
+            # Process each model file
+            for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
+                model_file = model_file.strip()
+                if model_file in SKIPPED_MODELS:
+                    continue
+
+                # Extract model parameters
+                match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
+                if not match:
+                    continue
+                    
+                proj_number, ngram, run = match.groups()
+                model_full_path = os.path.join(proj_path, model_file)
+
+                # Process with available core
+                try:
+                    while True:
+                        available_cores = tr_scr.get_available_cores(threshold=10)
+                        if available_cores:
+                            chosen_core = available_cores[0]
+                            print(f"Assigning {model_file} to core {chosen_core}")
+                            
+                            p = multiprocessing.Process(
+                                target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
+                                args=(test_path, model_full_path, log_path, run, ngram, proj_number)
+                            )
+                            p.start()
+                            processes.append(p)
+                            break
+                        else:
+                            print("Waiting for available cores...")
+                            time.sleep(5)
+                            
+                except Exception as e:
+                    print(f"Error processing {model_file}: {str(e)}")
+                    continue
+
+        # Wait for all processes to complete
+        for p in processes:
+            p.join()
 
 
 def main():
     tr_scr = scratch_train_mle()
-    # List of datasets, each is a tuple of arguments for multiple_train_time_metrics_new.
-    # Define datasets to be processed on separate cores
-    # datasets = [
-    #     ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/10",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/10",
-    #     "10", "nltk_"),
-
-    #     ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/20",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/20",
-    #     "20", "nltk_"),
-
-    #     ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/30",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/30",
-    #     "30", "nltk_"),
-
-    #     ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/50",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/50",
-    #     "50", "nltk_"),
-
-    #     ("/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_train",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2/80",
-    #     "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2/80",
-    #     "80", "nltk_"),
-    # ]
-
-    processes = []
-
-    # Ensure the model_path directory exists
-    model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
-    os.makedirs(model_path, exist_ok=True)
-    all_projects = [10, 20, 30, 50, 80]
-    all_models = []
-
-    for proj in all_projects:
-        proj_path = os.path.join(model_path, str(proj))
-        
-        # Find all .pkl files in the project directory (non-recursive)
-        models = sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl"))
-        all_models.extend(models)  # Append to the main list
-        print(f"Project {proj}: {len(models)} models")
-
-        print(f"Total models: {len(all_models)}")
-        #extract the project number, ngram order and run
-
-    skipped = [
- 'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
- 'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
- 'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
- 'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
- 'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_20_3_5.pkl', 'nltk_30_2_1.pkl',
- 'nltk_30_2_2.pkl',  'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_5.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
- 'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
- 'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
-]
+    tr_scr.process_models()
     
-    for each_model in all_models:
-            each_model =  each_model.strip() if isinstance(each_model,str) else each_model
-            if each_model in skipped:
-                continue
+#     processes = []
 
-            match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
-            proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
-            formed_model = f"{model_path}/{proj_number}/{each_model}"
-            try:
-                available_cores = tr_scr.get_available_cores(threshold=10)
-                if not available_cores:
-                    print("No cores below 10% usage! Waiting...")
-                    while not available_cores:
-                        time.sleep(1)
-                        available_cores = tr_scr.get_available_cores(threshold=10)
+#     # Ensure the model_path directory exists
+#     model_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/models2"
+#     os.makedirs(model_path, exist_ok=True)
+#     all_projects = [10, 20, 30, 50, 80]
+#     all_models = []
+
+#     for proj in all_projects:
+#         proj_path = os.path.join(model_path, str(proj))
         
-                # Choose the first available core.
-                chosen_core = available_cores[0]
-                print(f"Assigning model {each_model} to core {chosen_core}")
-                test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
-                log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
-                p = multiprocessing.Process(target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2, args=(test_path, formed_model, log_path,run,ngram,proj_number))
-                p.start()
-                processes.append(p)
-                #tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2(test_path, each_model, log_path,model_path,run,ngram,proj_number)
-            except Exception as e:
-                print(f"Error: {e}")
+#         # Find all .pkl files in the project directory (non-recursive)
+#         models = sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl"))
+#         all_models.extend(models)  # Append to the main list
+#         print(f"Project {proj}: {len(models)} models")
 
-    for p in processes:
-        p.join()
+#         print(f"Total models: {len(all_models)}")
+#         #extract the project number, ngram order and run
+
+#     skipped = [
+#  'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
+#  'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
+#  'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
+#  'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
+#  'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_20_3_5.pkl', 'nltk_30_2_1.pkl',
+#  'nltk_30_2_2.pkl',  'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_5.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
+#  'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
+#  'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
+# ]
+    
+#     for each_model in all_models:
+#             each_model =  each_model.strip() if isinstance(each_model,str) else each_model
+#             if each_model in skipped:
+#                 continue
+
+#             match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", each_model)
+#             proj_number,ngram,run = match.group(1),match.group(2),match.group(3)
+#             formed_model = f"{model_path}/{proj_number}/{each_model}"
+#             try:
+#                 available_cores = tr_scr.get_available_cores(threshold=10)
+#                 if not available_cores:
+#                     print("No cores below 10% usage! Waiting...")
+#                     while not available_cores:
+#                         time.sleep(1)
+#                         available_cores = tr_scr.get_available_cores(threshold=10)
+        
+#                 # Choose the first available core.
+#                 chosen_core = available_cores[0]
+#                 print(f"Assigning model {each_model} to core {chosen_core}")
+#                 test_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/output_test/base"
+#                 log_path = "/media/crouton/siwuchuk/newdir/vscode_repos_files/method/models/nltk/logs2"
+#                 p = multiprocessing.Process(target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized, args=(test_path, formed_model, log_path,run,ngram,proj_number))
+#                 p.start()
+#                 processes.append(p)
+#                 #tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2(test_path, each_model, log_path,model_path,run,ngram,proj_number)
+#             except Exception as e:
+#                 print(f"Error: {e}")
+
+#     for p in processes:
+#         p.join()
 
 
     # for i, data in enumerate(datasets):
