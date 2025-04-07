@@ -1104,6 +1104,6 @@ cl_ob = bilstm_cybera()
 
 # Run one dataset with 5 runs spread across the two available cores
 
-sample = ("/mnt/siwuchuk/vscode/output_train/tmp80", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/thesis/another/kenlm/output_test/tmp80", 80, "/mnt/siwuchuk/thesis/another/bilstm/logs/80")
+sample = ("/mnt/siwuchuk/vscode/output_train/tmp80", "/mnt/siwuchuk/thesis/another/bilstm/models/80/", "/mnt/siwuchuk/thesis/another/kenlm/output_test/tmp80", 80, "/mnt/siwuchuk/thesis/another/bilstm/logs/80")
 cl_ob.consolidate_data_train_parallel(*sample)
 
