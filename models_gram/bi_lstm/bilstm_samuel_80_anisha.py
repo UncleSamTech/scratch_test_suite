@@ -37,7 +37,7 @@ class bilstm_cybera:
         available_cores = self.get_available_cores()  
         core_index = 0  # Track which core to assign next
 
-        for each_run in range(3, 4):  # 5 runs
+        for each_run in range(5, 6):  # 5 runs
             # Assign 1 core per run, cycling through the available cores
             chosen_core = available_cores[core_index % len(available_cores)]
             core_index += 1
@@ -70,8 +70,8 @@ class bilstm_cybera:
         # Reduce model complexity to save memory
         model = Sequential([
             Input(shape=(max_seq - 1,)),  # Explicitly define the input shape
-            Embedding(total_words, 50),  # Reduced embedding dimension from 100 to 50
-            Bidirectional(LSTM(100)),  # Reduced LSTM units from 150 to 100
+            Embedding(total_words, 100),  # Reduced embedding dimension from 100 to 50
+            Bidirectional(LSTM(150)),  # Reduced LSTM units from 150 to 100
             Dense(total_words, activation='softmax')
         ])
         adam = Adam(learning_rate=0.01)
@@ -335,9 +335,9 @@ class bilstm_cybera:
 
         # Construct file paths for all four datasets.
         train_data_files = [
-            #f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
-            #f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
-            #f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_1.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_2.txt",
+            f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_3.txt",
             f"{train_path}/{each_run}/scratch_train_set_{model_number}_6_{each_run}_proc_4.txt"
         ]
         test_data = f"{test_path}/scratch_test_set_{model_number}_6_{each_run}_proc.txt"
@@ -364,7 +364,7 @@ class bilstm_cybera:
             else:
                 raise FileNotFoundError(f"Model file {model_file} not found.")
 
-            #If this is the first split, create a new model.
+            # # If this is the first split, create a new model.
             # if model is None:
             #     print("Creating a new model for the first split...")
             #     model = Sequential([
@@ -463,15 +463,11 @@ class bilstm_cybera:
         p.cpu_affinity(cores)
 
     
-    def view_model_summary(self,model_path):
-        ld = load_model(model_path)
-        ld.summary()
     
 
 # Example usage
 cl_ob = bilstm_cybera()
 
-# Run one dataset with 5 runs spread across the two available cores
-sample = ("/mnt/siwuchuk/files/train_data/5","/mnt/siwuchuk/files/bilstm/models/80/","/mnt/siwuchuk/thesis/another/kenlm/output_test",80,"/mnt/siwuchuk/files/bilstm/logs/80")
+sample = ("/mnt/siwuchuk/vscode/output_train/tmp80", "/mnt/siwuchuk/vscode/models/bilstm/model/80/", "/mnt/siwuchuk/files/test_data", 80, "/mnt/siwuchuk/vscode/models/bilstm/logs/80")
 cl_ob.consolidate_data_train_parallel(*sample)
-
+#split -l $(( ($(wc -l < scratch_test_set_50_6_1_proc.txt) + 3) / 10)) scratch_test_set_50_6_1_proc.txt scratch_test_set_50_6_1_proc_ && for f in scratch_test_set_50_6_1_proc_*; do mv "$f" "${f}.txt"; done
