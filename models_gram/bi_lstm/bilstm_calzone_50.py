@@ -1092,10 +1092,11 @@ class bilstm_cybera:
                                 gc.collect()
                         
                             # Write results in batch
-                            for (pred, top_tokens), true_word in zip(predictions, true_words):
+                            # Corrected batch processing and writing
+                            for idx, ((pred, top_tokens), true_word) in enumerate(zip(predictions, true_words)):
                                 rank = self.check_available_rank(top_tokens, true_word)
                                 log_file.write(
-                                    f"{contexts[processed_tokens]},{true_word},{pred},{rank},{int(true_word == pred)}\n"
+                                    f"{contexts[idx]},{true_word},{pred},{rank},{int(true_word == pred)}\n"
                                 )
                                 processed_tokens += 1
                                 
@@ -1109,7 +1110,6 @@ class bilstm_cybera:
                                     log_file.flush()
                                     tf.keras.backend.clear_session()
                                     gc.collect()
-                        
                         # Reset resume markers after first processed line
                         if resume_file == file_name and line_num == resume_line:
                             resume_token = 1
