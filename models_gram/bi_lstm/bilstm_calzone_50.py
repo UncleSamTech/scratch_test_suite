@@ -302,7 +302,7 @@ class bilstm_cybera:
         
         spec_model = os.path.join(f"{result_path}main_bilstm_scratch_model_150embedtime1_main_sample_project{proj_number}_6_{runs}.keras")
         print(f"model is {spec_model}")
-        self.evaluate_bilstm_in_order_optimized2(test_path, max_seq, spec_model, result_path, proj_number, runs, logs_path)
+        self.evaluate_bilstm_in_order_optimized3(test_path, max_seq, spec_model, result_path, proj_number, runs, logs_path)
             
 
     def predict_token_score_upd_opt(self, context, tokenz, model, maxlen):
@@ -988,6 +988,153 @@ class bilstm_cybera:
                 del loaded_model
             gc.collect()
 
+
+    def evaluate_bilstm_in_order_optimized3(self, test_data_path, maxlen, model_path, result_path, proj_number, run, logs_path):
+        """Optimized BiLSTM evaluation with enhanced memory management and batch processing."""
+        try:
+            # Load model with memory optimization
+            loaded_model = load_model(model_path, compile=False)
+            loaded_model.make_predict_function()  # Initialize predict function
+            
+            # Load tokenizer with memory optimization
+            tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
+            with open(tokenized_file_path, "rb") as tk:
+                tokenz = pickle.load(tk)
+            
+            investig_path = f"{logs_path}/bilstm_investigate_{proj_number}_6_{run}_logs.txt"
+            
+            # Initialize log file with buffered writing
+            if not os.path.exists(investig_path) or os.path.getsize(investig_path) == 0:
+                with open(investig_path, "w", buffering=1024*1024) as log_file:  # 1MB buffer
+                    log_file.write("query,expected,answer,rank,correct\n")
+
+            # Generate test files with error handling
+            test_data_files = []
+            for i in range(1, 51):
+                file_path = f"{test_data_path}/{proj_number}/{run}/scratch_test_set_{proj_number}_6_{run}_proc_{i}.txt"
+                if os.path.exists(file_path):
+                    test_data_files.append(file_path)
+                else:
+                    print(f"Warning: Test file {file_path} not found")
+
+            # Resume logic with progress tracking
+            resume_file, resume_line, resume_token = None, 0, 1
+            if os.path.exists(investig_path):
+                with open(investig_path, "r") as f:
+                    log_count = sum(1 for _ in f) - 1  # More efficient counting
+                if log_count > 0:
+                    resume_info = self.find_resume_point_v2(f"{test_data_path}/{proj_number}/{run}", log_count)
+                    if resume_info is None:
+                        print("Evaluation already completed")
+                        return
+                    resume_file, resume_line, resume_token = resume_info
+                    print(f"Resuming from {resume_file}, line {resume_line+1}, token {resume_token+1}")
+
+            # Process files with enhanced memory management
+            for file_idx, file_path in enumerate(test_data_files):
+                file_name = os.path.basename(file_path)
+                
+                # Skip files until resume point
+                if resume_file and file_name != resume_file:
+                    continue
+                
+                print(f"Processing file {file_idx+1}/{len(test_data_files)}: {file_name}")
+                
+                # Use buffered reading and writing
+                with open(file_path, "r", encoding="utf-8", buffering=1024*1024) as f, \
+                    open(investig_path, "a", buffering=1024*1024) as log_file:
+                    
+                    # Track progress for periodic updates
+                    processed_tokens = 0
+                    start_time = time.time()
+                    
+                    # Process lines with resume handling
+                    for line_num, line in enumerate(f):
+                        if resume_file == file_name and line_num < resume_line:
+                            continue
+                            
+                        line = line.strip()
+                        tokens = line.split()
+                        if len(tokens) < 2:
+                            continue
+                        
+                        # Determine start token
+                        start_token = resume_token if (resume_file == file_name and line_num == resume_line) else 1
+                        
+                        # Batch predictions for the line
+                        contexts = []
+                        true_words = []
+                        positions = []
+                        
+                        # Collect all tokens for this line to predict in batch
+                        for token_pos in range(start_token, len(tokens)):
+                            contexts.append(' '.join(tokens[:token_pos]))
+                            true_words.append(tokens[token_pos])
+                            positions.append(token_pos)
+                        
+                        # Batch prediction
+                        if contexts:
+                            predictions = []
+                            # Process in chunks to avoid memory spikes
+                            batch_size = 1000
+                            for i in range(0, len(contexts), batch_size):
+                                batch_contexts = contexts[i:i+batch_size]
+                                batch_preds = []
+                                for ctx in batch_contexts:
+                                    pred, top_tokens = self.predict_token_score_upd_opt2(
+                                        ctx, tokenz, loaded_model, maxlen
+                                    )
+                                    batch_preds.append((pred, top_tokens))
+                                predictions.extend(batch_preds)
+                                
+                                # Clear memory
+                                tf.keras.backend.clear_session()
+                                gc.collect()
+                        
+                            # Write results in batch
+                            for (pred, top_tokens), true_word in zip(predictions, true_words):
+                                rank = self.check_available_rank(top_tokens, true_word)
+                                log_file.write(
+                                    f"{contexts[processed_tokens]},{true_word},{pred},{rank},{int(true_word == pred)}\n"
+                                )
+                                processed_tokens += 1
+                                
+                                # Progress reporting
+                                if processed_tokens % 1000 == 0:
+                                    elapsed = time.time() - start_time
+                                    rate = processed_tokens / elapsed if elapsed > 0 else 0
+                                    print(f"Processed {processed_tokens} tokens ({rate:.2f} tokens/sec)")
+                                    
+                                    # Force flush and clear memory
+                                    log_file.flush()
+                                    tf.keras.backend.clear_session()
+                                    gc.collect()
+                        
+                        # Reset resume markers after first processed line
+                        if resume_file == file_name and line_num == resume_line:
+                            resume_token = 1
+                    
+                    # Final flush for the file
+                    log_file.flush()
+                
+                # Reset resume file after processing
+                if resume_file == file_name:
+                    resume_file = None
+                
+                # Major cleanup between files
+                tf.keras.backend.clear_session()
+                gc.collect()
+                
+        except Exception as e:
+            print(f"Error during evaluation: {str(e)}")
+            raise
+        finally:
+            # Ensure resources are freed
+            if 'loaded_model' in locals():
+                del loaded_model
+            tf.keras.backend.clear_session()
+            gc.collect()
+        
     def run_consolidate_train_run_upd(self, train_path, result_path, test_path, model_number, logs_path, each_run, cores):
         """
         Sets CPU affinity for this process to the chosen cores and performs one run of training.
@@ -1098,4 +1245,4 @@ cl_ob.consolidate_data_train_parallel(*sample)
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_2_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_2_proc.txt)/50))p" scratch_test_set_50_6_2_proc.txt > scratch_test_set_50_6_2_proc_$i.txt; done
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_3_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_3_proc.txt)/50))p" scratch_test_set_50_6_3_proc.txt > scratch_test_set_50_6_3_proc_$i.txt; done
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/50))p" scratch_test_set_50_6_4_proc.txt > scratch_test_set_50_6_4_proc_$i.txt; done
-#for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_5_proc.txt)/50))p" scratch_test_set_50_6_5_proc.txt > scratch_test_set_50_6_5_proc_$i.txt; done
+#for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_5_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_5_proc.txt)/50))p" scratch_test_set_80_6_5_proc.txt > scratch_test_set_80_6_5_proc_$i.txt; done
