@@ -768,7 +768,7 @@ class scratch_train_mle:
     def scratch_evaluate_model_nltk_in_order_all_new_opt2(self,  test_data_path, model_name, result_path, run, n, model_number):
         log_file = f"{result_path}/{model_number}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"  # Fixed variable name
         #formed_model = f"{model_path}/{model_name}{model_number}_{n}_{run}.pkl"
-        
+        LOG_HEADER = "query,expected,answer,rank,correct\n"
         # Determine if we need to write header
         file_needs_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
         
@@ -785,6 +785,8 @@ class scratch_train_mle:
             f"{test_data_path}/{model_number}/{n}/{run}/scratch_test_set_{model_number}_{n}_{run}_proc_{i}.txt"
             for i in range(1, 51)
         ]
+
+        
         
         if resume_point:
             resume_file, resume_line, resume_token = resume_point
@@ -803,7 +805,8 @@ class scratch_train_mle:
                 print(f"Processing {file_name}")
                 with open(file_path, "r", encoding="utf-8") as f, \
                     open(log_file, "a") as log_f:  # Changed variable name to avoid shadowing
-                    
+                    if file_needs_header:
+                        log_f.write(LOG_HEADER)
                     # Process lines with resume handling
                     for line_num, line in enumerate(f):
                         if resume_file == file_name and line_num < resume_line:
@@ -832,7 +835,7 @@ class scratch_train_mle:
                         
                         # Reset resume markers after first processed line
                         if resume_file == file_name and line_num == resume_line:
-                            resume_token = 0
+                            resume_token = 1
                     
                     # Reset resume file after processing
                     if resume_file == file_name:
