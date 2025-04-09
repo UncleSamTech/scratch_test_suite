@@ -1537,6 +1537,8 @@ class scratch_train_mle:
             'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
         }
 
+        accepted = ['nltk_30_3_5.pkl']
+
         # Step 1: Collect all models in order
         all_models = []
         for proj in [10, 20, 30, 50, 80]:
@@ -1546,7 +1548,7 @@ class scratch_train_mle:
 
             for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
                 model_file = model_file.strip()
-                if model_file in SKIPPED_MODELS:
+                if model_file in SKIPPED_MODELS and model_file not in accepted:
                     continue
 
                 match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
