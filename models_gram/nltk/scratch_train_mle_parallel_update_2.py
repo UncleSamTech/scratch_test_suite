@@ -1526,16 +1526,16 @@ class scratch_train_mle:
         os.makedirs(model_path, exist_ok=True)
         os.makedirs(log_path, exist_ok=True)
 
-        SKIPPED_MODELS = {
-            'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
-            'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
-            'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
-            'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
-            'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_30_2_1.pkl',
-            'nltk_30_2_2.pkl', 'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
-            'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
-            'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
-        }
+        # SKIPPED_MODELS = {
+        #     'nltk_10_2_1.pkl', 'nltk_10_2_2.pkl', 'nltk_10_2_3.pkl', 'nltk_10_2_4.pkl', 'nltk_10_2_5.pkl',
+        #     'nltk_10_3_1.pkl', 'nltk_10_3_2.pkl', 'nltk_10_3_3.pkl', 'nltk_10_3_4.pkl', 'nltk_10_3_5.pkl',
+        #     'nltk_10_4_1.pkl', 'nltk_10_4_2.pkl', 'nltk_10_4_3.pkl', 'nltk_10_4_4.pkl', 'nltk_10_4_5.pkl',
+        #     'nltk_10_5_1.pkl', 'nltk_20_2_1.pkl', 'nltk_20_2_2.pkl', 'nltk_20_2_3.pkl', 'nltk_20_2_4.pkl', 'nltk_20_2_5.pkl',
+        #     'nltk_20_3_1.pkl', 'nltk_20_3_2.pkl', 'nltk_20_3_3.pkl', 'nltk_20_3_4.pkl', 'nltk_30_2_1.pkl',
+        #     'nltk_30_2_2.pkl', 'nltk_30_2_3.pkl', 'nltk_30_2_4.pkl', 'nltk_30_3_1.pkl', 'nltk_30_3_2.pkl',
+        #     'nltk_50_2_1.pkl', 'nltk_50_2_2.pkl', 'nltk_50_2_3.pkl', 'nltk_50_2_4.pkl', 'nltk_50_2_5.pkl', 'nltk_50_3_1.pkl',
+        #     'nltk_80_2_1.pkl', 'nltk_80_2_2.pkl', 'nltk_80_2_3.pkl', 'nltk_80_2_4.pkl', 'nltk_80_2_5.pkl'
+        # }
 
         accepted = ['nltk_30_3_5.pkl']
 
@@ -1548,8 +1548,8 @@ class scratch_train_mle:
 
             for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
                 model_file = model_file.strip()
-                if model_file in SKIPPED_MODELS:
-                    continue
+                # if model_file in SKIPPED_MODELS:
+                #     continue
 
                 match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
                 if not match:
