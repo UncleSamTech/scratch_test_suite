@@ -1548,7 +1548,7 @@ class scratch_train_mle:
 
             for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
                 model_file = model_file.strip()
-                if model_file in SKIPPED_MODELS and model_file not in accepted:
+                if model_file not in accepted:
                     continue
 
                 match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
