@@ -1548,7 +1548,7 @@ class scratch_train_mle:
 
             for model_file in sorted(f for f in os.listdir(proj_path) if f.endswith(".pkl")):
                 model_file = model_file.strip()
-                if model_file  in SKIPPED_MODELS:
+                if model_file in SKIPPED_MODELS:
                     continue
 
                 match = re.search(r"nltk_(\d+)_(\d+)_(\d+)\.pkl$", model_file)
@@ -1581,7 +1581,7 @@ class scratch_train_mle:
 
                 # Start the model process
                 p = multiprocessing.Process(
-                    target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_optimized,
+                    target=tr_scr.scratch_evaluate_model_nltk_in_order_all_new_opt2,
                     args=(test_path, model_full_path, log_path, run, ngram, proj_number)
                 )
                 p.start()
