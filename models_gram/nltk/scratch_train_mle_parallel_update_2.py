@@ -818,7 +818,7 @@ class scratch_train_mle:
                             continue
                         
                         # Determine start token
-                        start_token = resume_token if (resume_file == file_name and line_num == resume_line) else 0
+                        start_token = resume_token if (resume_file == file_name and line_num == resume_line) else 1
                         
                         # Batch processing of tokens
                         for token_pos in range(start_token, len(tokens)):
