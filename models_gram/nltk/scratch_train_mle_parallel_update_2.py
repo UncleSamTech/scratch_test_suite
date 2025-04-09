@@ -847,7 +847,7 @@ class scratch_train_mle:
 
     def scratch_evaluate_model_nltk_in_order_all_new_optimized(self, test_data_path, model_name, result_path, run, n, model_number):
         # Constants and paths
-        LOG_HEADER = "context,true_word,predicted_next_word,rank,correct\n"
+        LOG_HEADER = "query,expected,answer,rank,correct\n"
         log_file = f"{result_path}/{model_number}/nltk_investigate_{model_number}_{n}_{run}_logs.txt"
         
         # Determine resume state
