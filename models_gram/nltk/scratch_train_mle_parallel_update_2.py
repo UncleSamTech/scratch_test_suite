@@ -792,7 +792,7 @@ class scratch_train_mle:
             resume_file, resume_line, resume_token = resume_point
             print(f"Resuming from {resume_file}, line {resume_line+1}, token {resume_token+1}")
         else:
-            resume_file, resume_line, resume_token = None, 0, 0
+            resume_file, resume_line, resume_token = None, 0, 1
         
         try:
             for file_path in test_data_files:
