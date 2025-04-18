@@ -920,7 +920,7 @@ class bilstm_cybera:
             resume_file, resume_line, resume_token = None, 0, 1
             if os.path.exists(investig_path) and os.path.getsize(investig_path) > 0:
                 log_count = sum(1 for _ in open(investig_path)) - 1  # Skip header
-                resume_info = self.find_resume_point_v2(f"{test_data_path}/{proj_number}/{run}", log_count)
+                resume_info = self.find_resume_point_v2(f"{test_data_path}", log_count)
                 if resume_info is None:
                     print("Evaluation already completed")
                     return
