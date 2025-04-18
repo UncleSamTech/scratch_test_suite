@@ -1078,7 +1078,7 @@ class bilstm_cybera:
 
 # Example usage
 cl_ob = bilstm_cybera()
-sample = ("/mnt/siwuchuk/files/train_data","/mnt/siwuchuk/files/bilstm/models/80/","/mnt/siwuchuk/files/train_data",80,"/mnt/siwuchuk/files/bilstm/logs/80")
+sample = ("/mnt/siwuchuk/files/train_data","/mnt/siwuchuk/files/bilstm/models/80/","/mnt/siwuchuk/files/test_data",80,"/mnt/siwuchuk/files/bilstm/logs/80")
 
 cl_ob.consolidate_data_train_parallel(*sample)
 #split -l $(( ($(wc -l < scratch_test_set_50_6_1_proc.txt) + 3) / 10)) scratch_test_set_50_6_1_proc.txt scratch_test_set_50_6_1_proc_ && for f in scratch_test_set_50_6_1_proc_*; do mv "$f" "${f}.txt"; done
