@@ -242,8 +242,8 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
     
     # Get predictions
-    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt3(right_context_reversed, tokenz, model, maxlen)
+    left_pred, left_top = predict_token_score_upd_opt4(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt4(right_context_reversed, tokenz, model, maxlen)
     
     # Combine predictions
     combined_scores = defaultdict(float)
@@ -376,6 +376,34 @@ def safe_tokenize3(text, tokenizer, max_index):
         idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
         token_ids.append(min(idx, max_index - 1))  # Ensure index is within bounds
     return token_ids
+
+def predict_token_score_upd_opt4(context, tokenz, model, maxlen):
+    """Improved prediction with better context handling"""
+    # Get valid vocabulary range
+    max_index = model.layers[0].input_dim - 1
+    
+    # Tokenize with more context
+    token_list = tokenz.texts_to_sequences([context])[0][-maxlen*2:]  # Wider context
+    
+    if not token_list:
+        return -1, []
+    
+    # Create prediction sequences with more context
+    base_sequence = [min(idx, max_index) for idx in token_list]
+    vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_index]
+    
+    # Batch predict with temperature scaling
+    sequences = [base_sequence + [tokenz.word_index[t]] for t in vocab]
+    sequences = pad_sequences(sequences, maxlen=maxlen, padding='pre')
+    
+    logits = model.predict(sequences, verbose=0)
+    probs = tf.nn.softmax(logits[:,-1,:]/0.7).numpy()  # Temperature scaling
+    
+    # Get top predictions
+    top_indices = np.argsort(probs)[0][-10:][::-1]
+    top_tokens = [(vocab[i], probs[0,i]) for i in top_indices]
+    
+    return top_tokens[0][0], top_tokens
 
 def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     """
