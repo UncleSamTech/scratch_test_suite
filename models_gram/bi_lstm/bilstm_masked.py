@@ -411,6 +411,7 @@ def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     """
     # Get the actual vocabulary size from the model
     max_valid_index = model.layers[0].input_dim - 1  # indices are 0-based
+    print(f"vocab size : {max_valid_index}")
     
     # Tokenize with strict bounds enforcement
     token_list = tokenz.texts_to_sequences([context])
@@ -451,6 +452,7 @@ def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
 
     predicted_token = max(max_prob_tokens.items(), key=lambda x: x[1])[0]
     top_tokens = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
+    print(f"top 10 tokens : \n {top_tokens}")
 
     return predicted_token, top_tokens
 
