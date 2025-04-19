@@ -198,8 +198,8 @@ def predict_masked_token_safely_new(masked_sequence, mask_pos, tokenz, model, ma
     right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
     
     # Get predictions
-    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt3(right_context_reversed, tokenz, model, maxlen)
+    left_pred, left_top = predict_token_score_upd_opt33(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt33(right_context_reversed, tokenz, model, maxlen)
     
     # Combine predictions
     combined_scores = defaultdict(float)
