@@ -135,14 +135,13 @@ def update_embedding_layer_safely(model, new_vocab_size):
     
     # Create new embedding weights
     new_weights = np.vstack([
-        old_weights,
-        np.random.normal(
-            size=(new_vocab_size - old_weights.shape[0], 
-            scale=0.01,
-            loc=0.0)
-        )
-    ])
-    
+    old_weights,
+    np.random.normal(
+        loc=0.0,
+        scale=0.01,
+        size=(new_vocab_size - old_weights.shape[0], old_weights.shape[1])
+    )
+])    
     # Rebuild model architecture
     input_layer = Input(shape=(None,), dtype='int32', name='input_layer')
     new_embedding = Embedding(
