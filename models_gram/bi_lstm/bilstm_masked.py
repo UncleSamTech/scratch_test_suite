@@ -30,7 +30,7 @@ import multiprocessing
 import itertools
 import gc
 import heapq
-import defaultdict
+from collections import defaultdict
 
 
 def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, proj_number, run, logs_path, mask_prob=0.15):
