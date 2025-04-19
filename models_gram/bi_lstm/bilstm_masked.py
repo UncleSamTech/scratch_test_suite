@@ -50,7 +50,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         
         # Update model embedding layer
         new_vocab_size = len(tokenz.word_index) + 1
-        loaded_model = update_embedding_layer_safely(loaded_model, new_vocab_size)
+        loaded_model = update_embedding_layer_safely3(loaded_model, new_vocab_size)
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
@@ -199,11 +199,11 @@ def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model,
     
     # Left context prediction
     left_context = ' '.join(tokens[:mask_pos])
-    left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
+    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
     
     # Right context prediction (reverse sequence)
     right_context = ' '.join(reversed(tokens[mask_pos+1:]))
-    right_pred, right_top = predict_token_score_upd_opt2(right_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt3(right_context, tokenz, model, maxlen)
     
     # Combine predictions (average scores)
     combined_scores = defaultdict(float)
@@ -302,6 +302,109 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
     top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
     
+    return predicted_token, top_tokens
+
+
+def update_embedding_layer_safely3(model, new_vocab_size):
+    """Safely updates the embedding layer with new vocabulary size"""
+    # Get original embedding configuration
+    old_embedding = model.layers[0]
+    old_weights = old_embedding.get_weights()[0]
+    embedding_dim = old_weights.shape[1]
+    
+    # Create new weights with proper initialization
+    new_weights = np.vstack([
+        old_weights,
+        np.random.normal(
+            loc=0.0,
+            scale=0.01,
+            size=(new_vocab_size - old_weights.shape[0], embedding_dim)
+        )
+    ])
+    
+    # Create new embedding layer
+    new_embedding = Embedding(
+        input_dim=new_vocab_size,
+        output_dim=embedding_dim,
+        weights=[new_weights],
+        mask_zero=old_embedding.mask_zero,
+        name='embedding'
+    )
+    
+    # Rebuild model architecture
+    if isinstance(model, Sequential):
+        new_model = Sequential()
+        new_model.add(new_embedding)
+        for layer in model.layers[1:]:
+            new_model.add(layer)
+    else:
+        input_layer = Input(shape=(None,), dtype='int32')
+        x = new_embedding(input_layer)
+        for layer in model.layers[1:]:
+            x = layer(x)
+        new_model = Model(inputs=input_layer, outputs=x)
+    
+    # Copy weights for non-embedding layers
+    for i in range(1, len(new_model.layers)):
+        if len(model.layers[i].get_weights()) > 0:
+            new_model.layers[i].set_weights(model.layers[i].get_weights())
+    
+    # Compile if original model was compiled
+    if hasattr(model, 'optimizer') and model.optimizer is not None:
+        new_model.compile(
+            optimizer=model.optimizer,
+            loss=model.loss,
+            metrics=model.metrics
+        )
+    
+    return new_model
+
+def safe_tokenize3(text, tokenizer, max_index):
+    """Tokenize with strict bounds checking"""
+    tokens = text.split()
+    token_ids = []
+    for token in tokens:
+        idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
+        token_ids.append(min(idx, max_index - 1))  # Ensure index is within bounds
+    return token_ids
+
+def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
+    """Safe prediction with bounds checking"""
+    # Get max valid index from model
+    max_index = model.layers[0].input_dim
+    
+    # Tokenize with bounds checking
+    token_list = safe_tokenize3(context, tokenz, max_index)
+    if not token_list or len(token_list) == 0:
+        return -1, []
+
+    # Prepare the base sequence
+    base_sequence = token_list[-maxlen + 1:]
+
+    # Get vocabulary with bounds checking
+    vocab = list(tokenz.word_index.keys())
+    token_indices = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) 
+                    for token in vocab]
+
+    # Create padded sequences
+    padded_sequences = [
+        base_sequence + [token_index] for token_index in token_indices
+    ]
+    padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+    padded_sequences = tf.convert_to_tensor(padded_sequences)
+
+    # Predict
+    predictions = model(padded_sequences, training=False)
+
+    # Process results
+    max_prob_tokens = {
+        token: predictions[i][token_index].numpy()
+        for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+    }
+
+    predicted_token = max(max_prob_tokens, key=max_prob_tokens.get)
+    top_tokens = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
+
     return predicted_token, top_tokens
 
 
