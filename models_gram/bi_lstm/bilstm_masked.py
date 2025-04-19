@@ -100,7 +100,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
                     masked_sequence = ' '.join(masked_tokens)
                     
                     # Get bidirectional prediction
-                    pred, top_tokens = predict_masked_token_bidirectional(
+                    pred, top_tokens = predict_masked_token_bidirectional2(
                         masked_sequence, idx, tokenz, loaded_model, maxlen
                     )
                     rank = check_available_rank(top_tokens, true_word)
@@ -175,6 +175,45 @@ def find_resume_point(test_file_path, log_entry_count):
                     current_log_entries += tokens_after_first
             print(f"total lines in test file is {current_log_entries} ")
         return None  # If no resume point is found
+
+
+def predict_masked_token_bidirectional2(masked_sequence, mask_pos, tokenz, model, maxlen):
+    # Verify tokenizer
+    if '[MASK]' not in tokenz.word_index:
+        tokenz.word_index['[MASK]'] = len(tokenz.word_index) + 1
+    
+    # Safe tokenization
+    tokens = masked_sequence.split()
+    token_ids = []
+    for token in tokens:
+        idx = tokenz.word_index.get(token, len(tokenz.word_index))
+        if idx >= len(tokenz.word_index):
+            idx = len(tokenz.word_index)
+        token_ids.append(idx)
+    
+    # Left context
+    left_ids = token_ids[:mask_pos]
+    left_context = ' '.join(tokens[:mask_pos])
+    
+    # Right context (reversed)
+    right_ids = token_ids[mask_pos+1:][::-1]
+    right_context = ' '.join(tokens[mask_pos+1:][::-1])
+    
+    # Predictions (using safe tokenization)
+    left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt2(right_context, tokenz, model, maxlen)
+    
+    # Combine predictions
+    combined = defaultdict(float)
+    for t, s in left_top:
+        combined[t] += s * 0.5
+    for t, s in right_top:
+        combined[t] += s * 0.5
+        
+    predicted = max(combined.items(), key=lambda x: x[1])[0]
+    top_tokens = heapq.nlargest(10, combined.items(), key=lambda x: x[1])
+    
+    return predicted, top_tokens
 
 
 def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
