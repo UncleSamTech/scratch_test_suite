@@ -248,9 +248,9 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     # Combine predictions
     combined_scores = defaultdict(float)
     for token, score in left_top:
-        combined_scores[token] += score * 0.5
+        combined_scores[token] += score * 0.6
     for token, score in right_top:
-        combined_scores[token] += score * 0.5
+        combined_scores[token] += score * 0.4
     
     predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
     top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
