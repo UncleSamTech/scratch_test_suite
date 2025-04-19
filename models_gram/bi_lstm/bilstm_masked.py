@@ -11,7 +11,7 @@ from tensorflow import keras
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.layers import Embedding, LSTM, Dense, Bidirectional
 from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plt
@@ -43,16 +43,14 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
         with open(tokenized_file_path, "rb") as tk:
             tokenz = pickle.load(tk)
-
-        
         
         # Ensure [MASK] token exists
         if 'lbracmaskrbrac' not in tokenz.word_index:
             tokenz.word_index['lbracmaskrbrac'] = len(tokenz.word_index) + 1
         
-        # Calculate new vocab size (add 1 because indices start at 0)
+        # Update model embedding layer
         new_vocab_size = len(tokenz.word_index) + 1
-        loaded_model = update_embedding_layer(loaded_model, new_vocab_size)
+        loaded_model = update_embedding_layer_safely(loaded_model, new_vocab_size)
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
@@ -128,14 +126,56 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
             del loaded_model
         gc.collect()
 
-def check_available_rank(list_tuples, true_word):
-        rank = -1
+def update_embedding_layer_safely(model, new_vocab_size):
+    """Safely updates the embedding layer with new vocabulary size by rebuilding model"""
+    # Get original model configuration
+    old_embedding = model.layers[0]
+    embedding_dim = old_embedding.output_dim
+    old_weights = old_embedding.get_weights()[0]
+    
+    # Create new embedding weights
+    new_weights = np.vstack([
+        old_weights,
+        np.random.normal(
+            size=(new_vocab_size - old_weights.shape[0], 
+            scale=0.01,
+            loc=0.0)
+        )
+    ])
+    
+    # Rebuild model architecture
+    input_layer = Input(shape=(None,), dtype='int32', name='input_layer')
+    new_embedding = Embedding(
+        input_dim=new_vocab_size,
+        output_dim=embedding_dim,
+        weights=[new_weights],
+        mask_zero=old_embedding.mask_zero,
+        name='embedding'
+    )(input_layer)
+    
+    # Reconnect all subsequent layers
+    prev_layer = new_embedding
+    for layer in model.layers[1:]:
+        prev_layer = layer(prev_layer)
+    
+    # Create and compile new model
+    new_model = Model(inputs=input_layer, outputs=prev_layer)
+    if model.optimizer:
+        new_model.compile(
+            optimizer=model.optimizer,
+            loss=model.loss,
+            metrics=model.metrics
+        )
+    
+    return new_model
 
-        for ind, val in enumerate(list_tuples):
-            if true_word.strip() == val[0].strip():
-                rank = ind + 1
-                return rank
-        return rank
+def check_available_rank(list_tuples, true_word):
+    rank = -1
+    for ind, val in enumerate(list_tuples):
+        if true_word.strip() == val[0].strip():
+            rank = ind + 1
+            return rank
+    return rank
 
 def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model, maxlen):
     """
@@ -157,7 +197,7 @@ def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model,
     # Combine predictions (average scores)
     combined_scores = defaultdict(float)
     for token, score in left_top:
-        combined_scores[token] += score * 0.5  # Weighted average
+        combined_scores[token] += score * 0.5
     for token, score in right_top:
         combined_scores[token] += score * 0.5
         
@@ -167,117 +207,71 @@ def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model,
     return predicted_token, top_tokens
 
 def find_resume_point(test_file_path, log_entry_count):
-        """Find the line and token position in the test file to resume evaluation."""
-        with open(test_file_path, 'r') as test_file:
-            current_log_entries = 0
-            for line_num, line in enumerate(test_file):
-                tokens = line.strip().split()
-                if len(tokens) >= 2:  # Only consider lines with 2 or more tokens
-                    tokens_after_first = len(tokens) - 1
-                    if current_log_entries + tokens_after_first >= log_entry_count:
-                        # Resume point is in this line
-                        token_pos = log_entry_count - current_log_entries
-                        return line_num, token_pos
-                    current_log_entries += tokens_after_first
-            print(f"total lines in test file is {current_log_entries} ")
-        return None  # If no resume point is found
-
-
-def predict_masked_token_bidirectional2(masked_sequence, mask_pos, tokenz, model, maxlen):
-    # Verify tokenizer
-    if 'lbracmaskrbrac' not in tokenz.word_index:
-        tokenz.word_index['lbracmaskrbrac'] = len(tokenz.word_index) + 1
-    
-    # Safe tokenization
-    tokens = masked_sequence.split()
-    token_ids = []
-    for token in tokens:
-        idx = tokenz.word_index.get(token, len(tokenz.word_index))
-        if idx >= len(tokenz.word_index):
-            idx = len(tokenz.word_index)
-        token_ids.append(idx)
-    
-    # Left context
-    left_ids = token_ids[:mask_pos]
-    left_context = ' '.join(tokens[:mask_pos])
-    
-    # Right context (reversed)
-    right_ids = token_ids[mask_pos+1:][::-1]
-    right_context = ' '.join(tokens[mask_pos+1:][::-1])
-    
-    # Predictions (using safe tokenization)
-    left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt2(right_context, tokenz, model, maxlen)
-    
-    # Combine predictions
-    combined = defaultdict(float)
-    for t, s in left_top:
-        combined[t] += s * 0.5
-    for t, s in right_top:
-        combined[t] += s * 0.5
-        
-    predicted = max(combined.items(), key=lambda x: x[1])[0]
-    top_tokens = heapq.nlargest(10, combined.items(), key=lambda x: x[1])
-    
-    return predicted, top_tokens
-
+    """Find the line and token position in the test file to resume evaluation."""
+    with open(test_file_path, 'r') as test_file:
+        current_log_entries = 0
+        for line_num, line in enumerate(test_file):
+            tokens = line.strip().split()
+            if len(tokens) >= 2:
+                tokens_after_first = len(tokens) - 1
+                if current_log_entries + tokens_after_first >= log_entry_count:
+                    token_pos = log_entry_count - current_log_entries
+                    return line_num, token_pos
+                current_log_entries += tokens_after_first
+        print(f"Total lines in test file: {current_log_entries}")
+    return None
 
 def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
-        """
-        Predicts the next token based on the given context and scores each token in the vocabulary.
-        Optimized to reduce redundant computations and improve efficiency.
-        """
-        # Tokenize the context
-        token_list = tokenz.texts_to_sequences([context])
-        if not token_list or len(token_list[0]) == 0:
-            return -1, []
+    """
+    Predicts the next token based on the given context and scores each token in the vocabulary.
+    Optimized to reduce redundant computations and improve efficiency.
+    """
+    # Tokenize the context
+    token_list = tokenz.texts_to_sequences([context])
+    if not token_list or len(token_list[0]) == 0:
+        return -1, []
 
-        # Prepare the base sequence (context without the last token)
-        base_sequence = token_list[0][-maxlen + 1:]
+    # Prepare the base sequence (context without the last token)
+    base_sequence = token_list[0][-maxlen + 1:]
 
-        # Precompute all token indices
-        vocab = list(tokenz.word_index.keys())
-        token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+    # Precompute all token indices
+    vocab = list(tokenz.word_index.keys())
+    token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
 
-        # Create a batch of sequences for all tokens
-        padded_sequences = [
-            base_sequence + [token_index] for token_index in token_indices
-        ]
-        padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
-        padded_sequences = tf.convert_to_tensor(padded_sequences)
+    # Create a batch of sequences for all tokens
+    padded_sequences = [
+        base_sequence + [token_index] for token_index in token_indices
+    ]
+    padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
+    padded_sequences = tf.convert_to_tensor(padded_sequences)
 
-        # Perform batch prediction
-        predictions = model(padded_sequences, training=False)  # Use model.call() for raw logits
+    # Perform batch prediction
+    predictions = model(padded_sequences, training=False)
 
-        # Extract probabilities for each token
-        max_prob_tokens = {
-            token: predictions[i][token_index].numpy()
-            for i, (token, token_index) in enumerate(zip(vocab, token_indices))
-        }
+    # Extract probabilities for each token
+    max_prob_tokens = {
+        token: predictions[i][token_index].numpy()
+        for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+    }
 
-        # Find the predicted next token
-        predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
+    # Find the predicted next token
+    predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
 
-        # Use a min-heap to find the top-10 tokens efficiently
-        top_10_tokens_scores = heapq.nlargest(
-            10, max_prob_tokens.items(), key=lambda x: x[1]
-        )
+    # Get top-10 tokens
+    top_10_tokens_scores = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
 
-        return predicted_next_token, top_10_tokens_scores
-
+    return predicted_next_token, top_10_tokens_scores
 
 def safe_tokenize(text, tokenizer):
     """Converts text to token IDs, handling out-of-vocabulary tokens"""
     tokens = text.split()
     token_ids = []
     for token in tokens:
-        # Get index or use last available index for OOV
         idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
         if idx >= len(tokenizer.word_index):
-            idx = len(tokenizer.word_index) - 1  # Clamp to last valid index
+            idx = len(tokenizer.word_index) - 1
         token_ids.append(idx)
     return token_ids
-
 
 def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen):
     # Tokenize safely
@@ -287,7 +281,7 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     left_context_ids = token_ids[:mask_pos]
     right_context_ids = token_ids[mask_pos+1:]
     
-    # Convert back to text for your existing prediction function
+    # Convert back to text
     left_context = ' '.join([list(tokenz.word_index.keys())[i] for i in left_context_ids])
     right_context_reversed = ' '.join([list(tokenz.word_index.keys())[i] for i in reversed(right_context_ids)])
     
@@ -308,33 +302,13 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     return predicted_token, top_tokens
 
 
-
-def update_embedding_layer(model, new_vocab_size):
-    """Resizes the embedding layer to handle new vocabulary"""
-    # Get original embedding weights
-    old_embedding = model.layers[0]  # Assuming first layer is embedding
-    old_weights = old_embedding.get_weights()[0]
-    embedding_dim = old_weights.shape[1]
-    
-    # Create new embedding layer
-    new_embedding = Embedding(
-        input_dim=new_vocab_size,
-        output_dim=embedding_dim,
-        mask_zero=True if old_embedding.mask_zero else False,
-        name=old_embedding.name
-    )
-    
-    # Initialize new weights (original + random for new tokens)
-    new_weights = np.vstack([
-        old_weights,
-        np.random.normal(size=(new_vocab_size - len(old_weights), embedding_dim))
-    ])
-    
-    # Replace the embedding layer
-    model.layers[0] = new_embedding
-    model.layers[0].set_weights([new_weights])
-    return model
-
-
-
-evaluate_bilstm_masked_prediction("/mnt/siwuchuk/thesis/another/kenlm/output_test/m10/scratch_test_set_10_6_1_proc_m.txt",47,"/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_1.keras","/mnt/siwuchuk/thesis/another/bilstm/models/10/",10,1,"/mnt/siwuchuk/thesis/another/bilstm/logs/10_masked")
+# Run the evaluation
+evaluate_bilstm_masked_prediction(
+    "/mnt/siwuchuk/thesis/another/kenlm/output_test/m10/scratch_test_set_10_6_1_proc_m.txt",
+    47,
+    "/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_1.keras",
+    "/mnt/siwuchuk/thesis/another/bilstm/models/10/",
+    10,
+    1,
+    "/mnt/siwuchuk/thesis/another/bilstm/logs/10_masked"
+)
