@@ -104,7 +104,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
                     masked_sequence = ' '.join(masked_tokens)
                     
                     # Get bidirectional prediction
-                    pred, top_tokens = predict_masked_token_safely(
+                    pred, top_tokens = predict_masked_token_safely_new(
                         masked_sequence, idx, tokenz, loaded_model, maxlen
                     )
                     rank = check_available_rank(top_tokens, true_word)
@@ -185,6 +185,48 @@ def find_resume_point(test_file_path, log_entry_count):
         print(f"Total lines in test file: {current_log_entries}")
     return None
 
+def predict_masked_token_safely_new(masked_sequence, mask_pos, tokenz, model, maxlen):
+    # Get max valid index from model
+    max_index = model.layers[0].input_dim
+    
+    # Tokenize with bounds checking
+    tokens = masked_sequence.split()
+    token_ids = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in tokens]
+    
+    # Get left and right contexts
+    left_context = ' '.join(tokens[:mask_pos])
+    right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
+    
+    # Get predictions
+    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt3(right_context_reversed, tokenz, model, maxlen)
+    
+    # Combine predictions
+    combined_scores = defaultdict(float)
+    for token, score in left_top:
+        combined_scores[token] += score * 0.6
+    for token, score in right_top:
+        combined_scores[token] += score * 0.4
+    
+    # Check if combined_scores is empty and handle appropriately
+    if not combined_scores:
+        # Fallback to left prediction if available, otherwise use default
+        if left_top:
+            predicted_token = left_top[0][0]
+            top_tokens = left_top
+        elif right_top:
+            predicted_token = right_top[0][0]
+            top_tokens = right_top
+        else:
+            # If no predictions available, return UNK token
+            predicted_token = "UNK"
+            top_tokens = [("UNK", 1.0)]
+    else:
+        predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
+        top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
+    
+    return predicted_token, top_tokens
+
 def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
     """
     Predicts the next token based on the given context and scores each token in the vocabulary.
@@ -242,8 +284,8 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
     
     # Get predictions
-    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt3(right_context_reversed, tokenz, model, maxlen)
+    left_pred, left_top = predict_token_score_upd_opt33(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt33(right_context_reversed, tokenz, model, maxlen)
     
     # Combine predictions
     combined_scores = defaultdict(float)
@@ -462,6 +504,84 @@ def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     except Exception as e:
         print(f"Prediction error: {str(e)}")
         return -1, []
+    
+def predict_token_score_upd_opt33(context, tokenz, model, maxlen):
+    """
+    Fully robust prediction function with proper tensor handling
+    """
+    try:
+        # Get model's vocabulary capacity
+        max_valid_index = model.layers[0].input_dim - 1
+        
+        # Handle empty context
+        if not context or context.strip() == "":
+            # Return default values for empty context
+            return "UNK", [("UNK", 1.0)]
+        
+        # Tokenize input with bounds checking
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            # Return default for empty token list
+            return "UNK", [("UNK", 1.0)]
+        
+        # Prepare base sequence
+        base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
+        
+        # Get valid vocabulary (use try-except to handle any potential issues)
+        try:
+            vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
+            if not vocab:
+                return "UNK", [("UNK", 1.0)]
+        except Exception as e:
+            print(f"Vocabulary error: {str(e)}")
+            return "UNK", [("UNK", 1.0)]
+        
+        # Create proper input tensor
+        input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
+        input_tensor = tf.convert_to_tensor(input_seq)
+        
+        # Safe prediction with error handling
+        try:
+            # Get model's prediction - handle different output shapes
+            predictions = model(input_tensor, training=False)
+            
+            # Handle different model output formats
+            if len(predictions.shape) == 2:
+                # Sequential model output (batch_size, vocab_size)
+                logits = predictions[0]  # Get first (and only) batch item
+            elif len(predictions.shape) == 3:
+                # Many-to-many output (batch_size, seq_len, vocab_size)
+                logits = predictions[0, -1, :]  # Get last position
+            else:
+                raise ValueError(f"Unexpected prediction shape: {predictions.shape}")
+            
+            # Filter logits for valid tokens only
+            token_indices = [tokenz.word_index[t] for t in vocab]
+            filtered_logits = tf.gather(logits, token_indices)
+            
+            # Convert to probabilities
+            probs = tf.nn.softmax(filtered_logits).numpy()
+            
+            # Pair tokens with their probabilities
+            token_probs = list(zip(vocab, probs))
+            
+            # Get top predictions
+            top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
+            predicted_token = top_tokens[0][0] if top_tokens else "UNK"
+            
+            return predicted_token, top_tokens
+        except tf.errors.ResourceExhaustedError:
+            # Handle out-of-memory errors
+            print("Resource exhausted during prediction, using fallback")
+            return "UNK", [("UNK", 1.0)]
+        except Exception as e:
+            # General error handling
+            print(f"Prediction error: {str(e)}")
+            return "UNK", [("UNK", 1.0)]
+    
+    except Exception as e:
+        print(f"General error in prediction: {str(e)}")
+        return "UNK", [("UNK", 1.0)]
 
 # Run the evaluation
 evaluate_bilstm_masked_prediction(
