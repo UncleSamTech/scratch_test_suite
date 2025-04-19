@@ -127,41 +127,45 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         gc.collect()
 
 def update_embedding_layer_safely(model, new_vocab_size):
-    """Safely updates the embedding layer with new vocabulary size by rebuilding model"""
-    # Get original model configuration
+    """Safely updates the embedding layer with new vocabulary size"""
+    # Get original embedding configuration
     old_embedding = model.layers[0]
-    embedding_dim = old_embedding.output_dim
     old_weights = old_embedding.get_weights()[0]
+    embedding_dim = old_weights.shape[1]
     
-    # Create new embedding weights with proper dimensions
+    # Create new weights with proper initialization
     new_weights = np.vstack([
         old_weights,
         np.random.normal(
             loc=0.0,
             scale=0.01,
-            size=(new_vocab_size - old_weights.shape[0], old_weights.shape[1])
+            size=(new_vocab_size - old_weights.shape[0], embedding_dim)
         )
     ])
     
-    # Rebuild model architecture
-    input_layer = Input(shape=(None,), dtype='int32', name='input_layer')
+    # Create new embedding layer
     new_embedding = Embedding(
         input_dim=new_vocab_size,
         output_dim=embedding_dim,
         weights=[new_weights],
         mask_zero=old_embedding.mask_zero,
         name='embedding'
-    )(input_layer)
+    )
     
-    # Reconnect all subsequent layers
-    prev_layer = new_embedding
+    # Build a new Sequential model
+    new_model = Sequential()
+    new_model.add(new_embedding)
+    
+    # Add all remaining layers
     for layer in model.layers[1:]:
-        prev_layer = layer(prev_layer)
+        new_model.add(layer)
     
-    # Create new model
-    new_model = Model(inputs=input_layer, outputs=prev_layer)
+    # Set weights for all layers
+    for i in range(1, len(new_model.layers)):
+        if model.layers[i].get_weights():  # Only if layer has weights
+            new_model.layers[i].set_weights(model.layers[i].get_weights())
     
-    # Only compile if original model was compiled
+    # Compile if original model was compiled
     if hasattr(model, 'optimizer') and model.optimizer is not None:
         new_model.compile(
             optimizer=model.optimizer,
@@ -170,7 +174,6 @@ def update_embedding_layer_safely(model, new_vocab_size):
         )
     
     return new_model
-
 
 def check_available_rank(list_tuples, true_word):
     rank = -1
@@ -187,7 +190,12 @@ def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model,
         predicted_token: The top predicted token
         top_tokens: List of (token, score) tuples
     """
+    # Get max valid index from model
+    max_index = model.layers[0].input_dim
+    
+    # Tokenize with bounds checking
     tokens = masked_sequence.split()
+    token_ids = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in tokens]
     
     # Left context prediction
     left_context = ' '.join(tokens[:mask_pos])
@@ -229,17 +237,20 @@ def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
     Predicts the next token based on the given context and scores each token in the vocabulary.
     Optimized to reduce redundant computations and improve efficiency.
     """
-    # Tokenize the context
+    # Get max valid index from model
+    max_index = model.layers[0].input_dim
+    
+    # Tokenize the context with bounds checking
     token_list = tokenz.texts_to_sequences([context])
     if not token_list or len(token_list[0]) == 0:
         return -1, []
 
-    # Prepare the base sequence (context without the last token)
-    base_sequence = token_list[0][-maxlen + 1:]
+    # Prepare the base sequence with bounds checking
+    base_sequence = [min(idx, max_index-1) for idx in token_list[0][-maxlen + 1:]]
 
-    # Precompute all token indices
+    # Precompute all token indices with bounds checking
     vocab = list(tokenz.word_index.keys())
-    token_indices = [tokenz.word_index.get(token, 0) for token in vocab]
+    token_indices = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in vocab]
 
     # Create a batch of sequences for all tokens
     padded_sequences = [
@@ -265,28 +276,17 @@ def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
 
     return predicted_next_token, top_10_tokens_scores
 
-def safe_tokenize(text, tokenizer):
-    """Converts text to token IDs, handling out-of-vocabulary tokens"""
-    tokens = text.split()
-    token_ids = []
-    for token in tokens:
-        idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
-        if idx >= len(tokenizer.word_index):
-            idx = len(tokenizer.word_index) - 1
-        token_ids.append(idx)
-    return token_ids
-
 def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen):
-    # Tokenize safely
-    token_ids = safe_tokenize(masked_sequence, tokenz)
+    # Get max valid index from model
+    max_index = model.layers[0].input_dim
+    
+    # Tokenize with bounds checking
+    tokens = masked_sequence.split()
+    token_ids = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in tokens]
     
     # Get left and right contexts
-    left_context_ids = token_ids[:mask_pos]
-    right_context_ids = token_ids[mask_pos+1:]
-    
-    # Convert back to text
-    left_context = ' '.join([list(tokenz.word_index.keys())[i] for i in left_context_ids])
-    right_context_reversed = ' '.join([list(tokenz.word_index.keys())[i] for i in reversed(right_context_ids)])
+    left_context = ' '.join(tokens[:mask_pos])
+    right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
     
     # Get predictions
     left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
