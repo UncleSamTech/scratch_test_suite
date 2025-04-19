@@ -48,9 +48,9 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         if 'lbracmaskrbrac' not in tokenz.word_index:
             tokenz.word_index['lbracmaskrbrac'] = len(tokenz.word_index) + 1
         
-        # Update model embedding layer
-        new_vocab_size = len(tokenz.word_index) + 1
-        loaded_model = update_embedding_layer_safely3(loaded_model, new_vocab_size)
+            # Update model embedding layer
+            new_vocab_size = len(tokenz.word_index) + 1
+            loaded_model = update_embedding_layer_safely3(loaded_model, new_vocab_size)
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
