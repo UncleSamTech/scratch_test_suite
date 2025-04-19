@@ -407,47 +407,61 @@ def predict_token_score_upd_opt4(context, tokenz, model, maxlen):
 
 def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     """
-    Improved prediction with proper probability calculation
+    Fully robust prediction function with proper tensor handling
     """
-    # Get model's vocabulary capacity
-    max_valid_index = model.layers[0].input_dim - 1
+    try:
+        # Get model's vocabulary capacity
+        max_valid_index = model.layers[0].input_dim - 1
+        
+        # Tokenize input with bounds checking
+        token_list = tokenz.texts_to_sequences([context])
+        if not token_list or len(token_list[0]) == 0:
+            return -1, []
+        
+        # Prepare base sequence
+        base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
+        
+        # Get valid vocabulary
+        vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
+        if not vocab:
+            return -1, []
+        
+        # Create proper input tensor
+        input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
+        input_tensor = tf.convert_to_tensor(input_seq)
+        
+        # Get model's prediction - handle different output shapes
+        predictions = model(input_tensor, training=False)
+        
+        # Handle different model output formats
+        if len(predictions.shape) == 2:
+            # Sequential model output (batch_size, vocab_size)
+            logits = predictions[0]  # Get first (and only) batch item
+        elif len(predictions.shape) == 3:
+            # Many-to-many output (batch_size, seq_len, vocab_size)
+            logits = predictions[0, -1, :]  # Get last position
+        else:
+            raise ValueError(f"Unexpected prediction shape: {predictions.shape}")
+        
+        # Filter logits for valid tokens only
+        token_indices = [tokenz.word_index[t] for t in vocab]
+        filtered_logits = tf.gather(logits, token_indices)
+        
+        # Convert to probabilities
+        probs = tf.nn.softmax(filtered_logits).numpy()
+        
+        # Pair tokens with their probabilities
+        token_probs = list(zip(vocab, probs))
+        
+        # Get top predictions
+        top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
+        predicted_token = top_tokens[0][0] if top_tokens else -1
+        
+        return predicted_token, top_tokens
     
-    # Tokenize input with bounds checking
-    token_list = tokenz.texts_to_sequences([context])
-    if not token_list or len(token_list[0]) == 0:
+    except Exception as e:
+        print(f"Prediction error: {str(e)}")
         return -1, []
-    
-    # Prepare base sequence
-    base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
-    
-    # Get valid vocabulary
-    vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
-    if not vocab:
-        return -1, []
-    
-    # Create input tensor
-    input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
-    input_tensor = tf.convert_to_tensor(input_seq)
-    
-    # Get all possible next token indices
-    token_indices = [tokenz.word_index[t] for t in vocab]
-    
-    # Get model's prediction distribution
-    logits = model(input_tensor, training=False)[0, -1, :]  # Get last position logits
-    logits = tf.gather(logits, token_indices)  # Filter for valid tokens
-    
-    # Convert to probabilities
-    probs = tf.nn.softmax(logits).numpy()
-    
-    # Pair tokens with their probabilities
-    token_probs = list(zip(vocab, probs))
-    
-    # Get top predictions
-    top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
-    predicted_token = top_tokens[0][0] if top_tokens else -1
-    
-    return predicted_token, top_tokens
-
 
 # Run the evaluation
 evaluate_bilstm_masked_prediction(
