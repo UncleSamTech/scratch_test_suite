@@ -104,7 +104,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
                     masked_sequence = ' '.join(masked_tokens)
                     
                     # Get bidirectional prediction
-                    pred, top_tokens = predict_masked_token_safely_new(
+                    pred, top_tokens = predict_masked_token_safely(
                         masked_sequence, idx, tokenz, loaded_model, maxlen
                     )
                     rank = check_available_rank(top_tokens, true_word)
@@ -126,66 +126,128 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
             del loaded_model
         gc.collect()
 
-
-
-def check_available_rank(list_tuples, true_word):
-    rank = -1
-    for ind, val in enumerate(list_tuples):
-        if true_word.strip() == val[0].strip():
-            rank = ind + 1
-            return rank
-    return rank
-
-def predict_masked_token_bidirectional(masked_sequence, mask_pos, tokenz, model, maxlen):
+def update_embedding_layer_safely(model, new_vocab_size):
     """
-    Predicts masked token using bidirectional context approximation.
-    Returns:
-        predicted_token: The top predicted token
-        top_tokens: List of (token, score) tuples
+    More robust embedding layer update with comprehensive error handling and validation
     """
-    # Get max valid index from model
-    max_index = model.layers[0].input_dim
-    
-    # Tokenize with bounds checking
-    tokens = masked_sequence.split()
-    token_ids = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in tokens]
-    
-    # Left context prediction
-    left_context = ' '.join(tokens[:mask_pos])
-    left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
-    
-    # Right context prediction (reverse sequence)
-    right_context = ' '.join(reversed(tokens[mask_pos+1:]))
-    right_pred, right_top = predict_token_score_upd_opt2(right_context, tokenz, model, maxlen)
-    
-    # Combine predictions (average scores)
-    combined_scores = defaultdict(float)
-    for token, score in left_top:
-        combined_scores[token] += score * 0.5
-    for token, score in right_top:
-        combined_scores[token] += score * 0.5
+    try:
+        # Verify the model has layers
+        if not model.layers or len(model.layers) == 0:
+            print("Error: Model has no layers")
+            return model
+            
+        # Get original embedding configuration
+        old_embedding = model.layers[0]
         
-    predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
-    top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
+        # Ensure first layer is an embedding layer
+        if not isinstance(old_embedding, Embedding):
+            print("Error: First layer is not an Embedding layer")
+            return model
+            
+        # Get weights with validation
+        if not old_embedding.get_weights():
+            print("Error: Embedding layer has no weights")
+            return model
+            
+        old_weights = old_embedding.get_weights()[0]
+        embedding_dim = old_weights.shape[1]
+        
+        # Check if vocabulary update is needed
+        current_vocab_size = old_weights.shape[0]
+        if new_vocab_size <= current_vocab_size:
+            print(f"No embedding update needed: current size {current_vocab_size} >= new size {new_vocab_size}")
+            return model
+            
+        # Create new weights - ensure we don't exceed max vocabulary or cause memory issues
+        num_new_tokens = min(
+            new_vocab_size - current_vocab_size,
+            10000  # Safety limit
+        )
+        
+        print(f"Extending embedding layer: {current_vocab_size} → {current_vocab_size + num_new_tokens}")
+        
+        # Generate new weights with proper initialization
+        try:
+            new_weights = np.vstack([
+                old_weights,
+                np.random.normal(
+                    loc=0.0,
+                    scale=0.01,  # Small standard deviation for stable initialization
+                    size=(num_new_tokens, embedding_dim)
+                )
+            ])
+        except Exception as e:
+            print(f"Error creating weights array: {str(e)}")
+            return model
+        
+        # Rebuild model with memory efficiency in mind
+        try:
+            # Create new embedding layer
+            new_embedding = Embedding(
+                input_dim=current_vocab_size + num_new_tokens,
+                output_dim=embedding_dim,
+                weights=[new_weights],
+                mask_zero=old_embedding.mask_zero,
+                name='embedding'
+            )
+            
+            # Rebuild model based on its type
+            if isinstance(model, Sequential):
+                # For Sequential models
+                new_model = Sequential()
+                new_model.add(new_embedding)
+                
+                # Add remaining layers
+                for layer in model.layers[1:]:
+                    new_model.add(layer)
+            else:
+                # For Functional API models
+                input_layer = Input(shape=(None,), dtype='int32')
+                x = new_embedding(input_layer)
+                
+                # Reconstruct layer chain
+                for layer in model.layers[1:]:
+                    x = layer(x)
+                
+                new_model = Model(inputs=input_layer, outputs=x)
+            
+            # Copy weights for other layers
+            for i in range(1, len(new_model.layers)):
+                if i < len(model.layers) and model.layers[i].get_weights():
+                    new_model.layers[i].set_weights(model.layers[i].get_weights())
+            
+            # Recompile if needed
+            if hasattr(model, 'optimizer') and model.optimizer:
+                try:
+                    new_model.compile(
+                        optimizer=model.optimizer,
+                        loss=model.loss,
+                        metrics=model.metrics
+                    )
+                except Exception as e:
+                    print(f"Warning: Could not compile model: {str(e)}")
+                    # Continue without compilation as the model can still be used for inference
+            
+            # Clear backend session to free memory
+            K.clear_session()
+            
+            return new_model
+            
+        except Exception as e:
+            print(f"Error rebuilding model: {str(e)}")
+            return model
+            
+    except Exception as e:
+        print(f"Error in embedding layer update: {str(e)}")
+        return model  # Return original model on error
     
-    return predicted_token, top_tokens
 
-def find_resume_point(test_file_path, log_entry_count):
-    """Find the line and token position in the test file to resume evaluation."""
-    with open(test_file_path, 'r') as test_file:
-        current_log_entries = 0
-        for line_num, line in enumerate(test_file):
-            tokens = line.strip().split()
-            if len(tokens) >= 2:
-                tokens_after_first = len(tokens) - 1
-                if current_log_entries + tokens_after_first >= log_entry_count:
-                    token_pos = log_entry_count - current_log_entries
-                    return line_num, token_pos
-                current_log_entries += tokens_after_first
-        print(f"Total lines in test file: {current_log_entries}")
-    return None
-
-def predict_masked_token_safely_new(masked_sequence, mask_pos, tokenz, model, maxlen):
+# Fix 1: The predict_masked_token_safely function with empty dictionary handling
+def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen):
+    """
+    Safely predicts a masked token using bidirectional context.
+    Handles empty prediction results gracefully.
+    """
     # Get max valid index from model
     max_index = model.layers[0].input_dim
     
@@ -198,8 +260,8 @@ def predict_masked_token_safely_new(masked_sequence, mask_pos, tokenz, model, ma
     right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
     
     # Get predictions
-    left_pred, left_top = predict_token_score_upd_opt33(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt33(right_context_reversed, tokenz, model, maxlen)
+    left_pred, left_top = predict_token_score_upd_opt3(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt3(right_context_reversed, tokenz, model, maxlen)
     
     # Combine predictions
     combined_scores = defaultdict(float)
@@ -208,326 +270,50 @@ def predict_masked_token_safely_new(masked_sequence, mask_pos, tokenz, model, ma
     for token, score in right_top:
         combined_scores[token] += score * 0.4
     
-    # Check if combined_scores is empty and handle appropriately
+    # Handle empty combined_scores
     if not combined_scores:
-        # Fallback to left prediction if available, otherwise use default
-        if left_top:
-            predicted_token = left_top[0][0]
-            top_tokens = left_top
-        elif right_top:
-            predicted_token = right_top[0][0]
-            top_tokens = right_top
+        # Fallback strategy: try left prediction, then right, then default
+        if isinstance(left_pred, str) and left_pred != -1:
+            predicted_token = left_pred
+            top_tokens = left_top if left_top else [(left_pred, 1.0)]
+        elif isinstance(right_pred, str) and right_pred != -1:
+            predicted_token = right_pred
+            top_tokens = right_top if right_top else [(right_pred, 1.0)]
         else:
-            # If no predictions available, return UNK token
+            # Last resort fallback
             predicted_token = "UNK"
             top_tokens = [("UNK", 1.0)]
     else:
+        # Normal case - we have scores
         predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
         top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
     
     return predicted_token, top_tokens
 
-def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
-    """
-    Predicts the next token based on the given context and scores each token in the vocabulary.
-    Optimized to reduce redundant computations and improve efficiency.
-    """
-    # Get max valid index from model
-    max_index = model.layers[0].input_dim
-    
-    # Tokenize the context with bounds checking
-    token_list = tokenz.texts_to_sequences([context])
-    if not token_list or len(token_list[0]) == 0:
-        return -1, []
-
-    # Prepare the base sequence with bounds checking
-    base_sequence = [min(idx, max_index-1) for idx in token_list[0][-maxlen + 1:]]
-
-    # Precompute all token indices with bounds checking
-    vocab = list(tokenz.word_index.keys())
-    token_indices = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in vocab]
-
-    # Create a batch of sequences for all tokens
-    padded_sequences = [
-        base_sequence + [token_index] for token_index in token_indices
-    ]
-    padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
-    padded_sequences = tf.convert_to_tensor(padded_sequences)
-
-    # Perform batch prediction
-    predictions = model(padded_sequences, training=False)
-
-    # Extract probabilities for each token
-    max_prob_tokens = {
-        token: predictions[i][token_index].numpy()
-        for i, (token, token_index) in enumerate(zip(vocab, token_indices))
-    }
-
-    # Find the predicted next token
-    predicted_next_token = max(max_prob_tokens, key=max_prob_tokens.get)
-
-    # Get top-10 tokens
-    top_10_tokens_scores = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
-
-    return predicted_next_token, top_10_tokens_scores
-
-def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen):
-    # Get max valid index from model
-    max_index = model.layers[0].input_dim
-    
-    # Tokenize with bounds checking
-    tokens = masked_sequence.split()
-    token_ids = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) for token in tokens]
-    
-    # Get left and right contexts
-    left_context = ' '.join(tokens[:mask_pos])
-    right_context_reversed = ' '.join(reversed(tokens[mask_pos+1:]))
-    
-    # Get predictions
-    left_pred, left_top = predict_token_score_upd_opt33(left_context, tokenz, model, maxlen)
-    right_pred, right_top = predict_token_score_upd_opt33(right_context_reversed, tokenz, model, maxlen)
-    
-    # Combine predictions
-    combined_scores = defaultdict(float)
-    for token, score in left_top:
-        combined_scores[token] += score * 0.6
-    for token, score in right_top:
-        combined_scores[token] += score * 0.4
-    
-    predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
-    top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
-    
-    return predicted_token, top_tokens
-
-def update_embedding_layer_safely(model, new_vocab_size):
-    """More robust embedding layer update"""
-    # Get original embedding configuration
-    old_embedding = model.layers[0]
-    old_weights = old_embedding.get_weights()[0]
-    embedding_dim = old_weights.shape[1]
-    
-    # Create new weights - ensure we don't exceed max vocabulary
-    num_new_tokens = min(new_vocab_size - old_weights.shape[0], 
-                     10000)  # Safety limit
-    new_weights = np.vstack([
-        old_weights,
-        np.random.normal(
-            loc=0.0,
-            scale=0.01,
-            size=(num_new_tokens, embedding_dim)
-        )
-    ])
-    
-    # Rebuild model
-    new_embedding = Embedding(
-        input_dim=old_weights.shape[0] + num_new_tokens,
-        output_dim=embedding_dim,
-        weights=[new_weights],
-        mask_zero=old_embedding.mask_zero,
-        name='embedding'
-    )
-    
-    if isinstance(model, Sequential):
-        new_model = Sequential()
-        new_model.add(new_embedding)
-        for layer in model.layers[1:]:
-            new_model.add(layer)
-    else:
-        input_layer = Input(shape=(None,), dtype='int32')
-        x = new_embedding(input_layer)
-        for layer in model.layers[1:]:
-            x = layer(x)
-        new_model = Model(inputs=input_layer, outputs=x)
-    
-    # Copy weights for other layers
-    for i in range(1, len(new_model.layers)):
-        if model.layers[i].get_weights():
-            new_model.layers[i].set_weights(model.layers[i].get_weights())
-    
-    # Recompile if needed
-    if hasattr(model, 'optimizer') and model.optimizer:
-        new_model.compile(
-            optimizer=model.optimizer,
-            loss=model.loss,
-            metrics=model.metrics
-        )
-    
-    return new_model
-
-
-
-def update_embedding_layer_safely3(model, new_vocab_size):
-    """Safely updates the embedding layer with new vocabulary size"""
-    # Get original embedding configuration
-    old_embedding = model.layers[0]
-    old_weights = old_embedding.get_weights()[0]
-    embedding_dim = old_weights.shape[1]
-    
-    # Create new weights with proper initialization
-    new_weights = np.vstack([
-        old_weights,
-        np.random.normal(
-            loc=0.0,
-            scale=0.01,
-            size=(new_vocab_size - old_weights.shape[0], embedding_dim)
-        )
-    ])
-    
-    # Create new embedding layer
-    new_embedding = Embedding(
-        input_dim=new_vocab_size,
-        output_dim=embedding_dim,
-        weights=[new_weights],
-        mask_zero=old_embedding.mask_zero,
-        name='embedding'
-    )
-    
-    # Rebuild model architecture
-    if isinstance(model, Sequential):
-        new_model = Sequential()
-        new_model.add(new_embedding)
-        for layer in model.layers[1:]:
-            new_model.add(layer)
-    else:
-        input_layer = Input(shape=(None,), dtype='int32')
-        x = new_embedding(input_layer)
-        for layer in model.layers[1:]:
-            x = layer(x)
-        new_model = Model(inputs=input_layer, outputs=x)
-    
-    # Copy weights for non-embedding layers
-    for i in range(1, len(new_model.layers)):
-        if len(model.layers[i].get_weights()) > 0:
-            new_model.layers[i].set_weights(model.layers[i].get_weights())
-    
-    # Compile if original model was compiled
-    if hasattr(model, 'optimizer') and model.optimizer is not None:
-        new_model.compile(
-            optimizer=model.optimizer,
-            loss=model.loss,
-            metrics=model.metrics
-        )
-    
-    return new_model
-
-def safe_tokenize3(text, tokenizer, max_index):
-    """Tokenize with strict bounds checking"""
-    tokens = text.split()
-    token_ids = []
-    for token in tokens:
-        idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
-        token_ids.append(min(idx, max_index - 1))  # Ensure index is within bounds
-    return token_ids
-
-def predict_token_score_upd_opt4(context, tokenz, model, maxlen):
-    """Improved prediction with better context handling"""
-    # Get valid vocabulary range
-    max_index = model.layers[0].input_dim - 1
-    
-    # Tokenize with more context
-    token_list = tokenz.texts_to_sequences([context])[0][-maxlen*2:]  # Wider context
-    
-    if not token_list:
-        return -1, []
-    
-    # Create prediction sequences with more context
-    base_sequence = [min(idx, max_index) for idx in token_list]
-    vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_index]
-    
-    # Batch predict with temperature scaling
-    sequences = [base_sequence + [tokenz.word_index[t]] for t in vocab]
-    sequences = pad_sequences(sequences, maxlen=maxlen, padding='pre')
-    
-    logits = model.predict(sequences, verbose=0)
-    probs = tf.nn.softmax(logits[:,-1,:]/0.7).numpy()  # Temperature scaling
-    
-    # Get top predictions
-    top_indices = np.argsort(probs)[0][-10:][::-1]
-    top_tokens = [(vocab[i], probs[0,i]) for i in top_indices]
-    
-    return top_tokens[0][0], top_tokens
-
+# Fix 2: Improved predict_token_score_upd_opt3 function with robust error handling
 def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     """
-    Fully robust prediction function with proper tensor handling
+    Fully robust prediction function with proper tensor handling and error recovery
     """
     try:
-        # Get model's vocabulary capacity
-        max_valid_index = model.layers[0].input_dim - 1
-        
-        # Tokenize input with bounds checking
-        token_list = tokenz.texts_to_sequences([context])
-        if not token_list or len(token_list[0]) == 0:
-            return -1, []
-        
-        # Prepare base sequence
-        base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
-        
-        # Get valid vocabulary
-        vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
-        if not vocab:
-            return -1, []
-        
-        # Create proper input tensor
-        input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
-        input_tensor = tf.convert_to_tensor(input_seq)
-        
-        # Get model's prediction - handle different output shapes
-        predictions = model(input_tensor, training=False)
-        
-        # Handle different model output formats
-        if len(predictions.shape) == 2:
-            # Sequential model output (batch_size, vocab_size)
-            logits = predictions[0]  # Get first (and only) batch item
-        elif len(predictions.shape) == 3:
-            # Many-to-many output (batch_size, seq_len, vocab_size)
-            logits = predictions[0, -1, :]  # Get last position
-        else:
-            raise ValueError(f"Unexpected prediction shape: {predictions.shape}")
-        
-        # Filter logits for valid tokens only
-        token_indices = [tokenz.word_index[t] for t in vocab]
-        filtered_logits = tf.gather(logits, token_indices)
-        
-        # Convert to probabilities
-        probs = tf.nn.softmax(filtered_logits).numpy()
-        
-        # Pair tokens with their probabilities
-        token_probs = list(zip(vocab, probs))
-        
-        # Get top predictions
-        top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
-        predicted_token = top_tokens[0][0] if top_tokens else -1
-        
-        return predicted_token, top_tokens
-    
-    except Exception as e:
-        print(f"Prediction error: {str(e)}")
-        return -1, []
-    
-def predict_token_score_upd_opt33(context, tokenz, model, maxlen):
-    """
-    Fully robust prediction function with proper tensor handling
-    """
-    try:
-        # Get model's vocabulary capacity
-        max_valid_index = model.layers[0].input_dim - 1
-        
         # Handle empty context
         if not context or context.strip() == "":
-            # Return default values for empty context
             return "UNK", [("UNK", 1.0)]
+            
+        # Get model's vocabulary capacity
+        max_valid_index = model.layers[0].input_dim - 1
         
         # Tokenize input with bounds checking
         token_list = tokenz.texts_to_sequences([context])
         if not token_list or len(token_list[0]) == 0:
-            # Return default for empty token list
             return "UNK", [("UNK", 1.0)]
         
         # Prepare base sequence
         base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
+        if not base_sequence:
+            return "UNK", [("UNK", 1.0)]
         
-        # Get valid vocabulary (use try-except to handle any potential issues)
+        # Get valid vocabulary
         try:
             vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
             if not vocab:
@@ -540,9 +326,8 @@ def predict_token_score_upd_opt33(context, tokenz, model, maxlen):
         input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
         input_tensor = tf.convert_to_tensor(input_seq)
         
-        # Safe prediction with error handling
+        # Get model's prediction with error handling
         try:
-            # Get model's prediction - handle different output shapes
             predictions = model(input_tensor, training=False)
             
             # Handle different model output formats
@@ -553,9 +338,17 @@ def predict_token_score_upd_opt33(context, tokenz, model, maxlen):
                 # Many-to-many output (batch_size, seq_len, vocab_size)
                 logits = predictions[0, -1, :]  # Get last position
             else:
-                raise ValueError(f"Unexpected prediction shape: {predictions.shape}")
-            
-            # Filter logits for valid tokens only
+                print(f"Unexpected prediction shape: {predictions.shape}")
+                return "UNK", [("UNK", 1.0)]
+        except tf.errors.ResourceExhaustedError:
+            print("Resource exhausted during prediction")
+            return "UNK", [("UNK", 1.0)]
+        except Exception as e:
+            print(f"Prediction error: {str(e)}")
+            return "UNK", [("UNK", 1.0)]
+        
+        # Filter logits for valid tokens only
+        try:
             token_indices = [tokenz.word_index[t] for t in vocab]
             filtered_logits = tf.gather(logits, token_indices)
             
@@ -566,22 +359,68 @@ def predict_token_score_upd_opt33(context, tokenz, model, maxlen):
             token_probs = list(zip(vocab, probs))
             
             # Get top predictions
-            top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
-            predicted_token = top_tokens[0][0] if top_tokens else "UNK"
-            
+            top_tokens = heapq.nlargest(min(10, len(token_probs)), token_probs, key=lambda x: x[1])
+            if not top_tokens:
+                return "UNK", [("UNK", 1.0)]
+                
+            predicted_token = top_tokens[0][0]
             return predicted_token, top_tokens
-        except tf.errors.ResourceExhaustedError:
-            # Handle out-of-memory errors
-            print("Resource exhausted during prediction, using fallback")
-            return "UNK", [("UNK", 1.0)]
         except Exception as e:
-            # General error handling
-            print(f"Prediction error: {str(e)}")
+            print(f"Token scoring error: {str(e)}")
             return "UNK", [("UNK", 1.0)]
     
     except Exception as e:
-        print(f"General error in prediction: {str(e)}")
+        print(f"General prediction function error: {str(e)}")
         return "UNK", [("UNK", 1.0)]
+
+# Fix 3: The check_available_rank function to better handle edge cases
+def check_available_rank(list_tuples, true_word):
+    """
+    Find the rank of the true word in the prediction list.
+    Returns -1 if not found.
+    """
+    if not list_tuples or not true_word:
+        return -1
+        
+    rank = -1
+    true_word_clean = true_word.strip()
+    
+    for ind, val in enumerate(list_tuples):
+        # Handle cases where val might not be a tuple
+        if not isinstance(val, tuple) or len(val) < 1:
+            continue
+            
+        token = val[0]
+        if not isinstance(token, str):
+            continue
+            
+        if true_word_clean == token.strip():
+            rank = ind + 1
+            return rank
+    return rank
+
+# Fix 4: Update find_resume_point to handle file not found
+def find_resume_point(test_file_path, log_entry_count):
+    """Find the line and token position in the test file to resume evaluation."""
+    try:
+        with open(test_file_path, 'r') as test_file:
+            current_log_entries = 0
+            for line_num, line in enumerate(test_file):
+                tokens = line.strip().split()
+                if len(tokens) >= 2:
+                    tokens_after_first = len(tokens) - 1
+                    if current_log_entries + tokens_after_first >= log_entry_count:
+                        token_pos = log_entry_count - current_log_entries
+                        return line_num, token_pos
+                    current_log_entries += tokens_after_first
+            print(f"Total lines processed in test file: {line_num+1}")
+        return None
+    except FileNotFoundError:
+        print(f"Error: Test file not found at {test_file_path}")
+        return None
+    except Exception as e:
+        print(f"Error finding resume point: {str(e)}")
+        return None
 
 # Run the evaluation
 evaluate_bilstm_masked_prediction(
