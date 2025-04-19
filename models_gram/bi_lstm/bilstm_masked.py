@@ -133,15 +133,16 @@ def update_embedding_layer_safely(model, new_vocab_size):
     embedding_dim = old_embedding.output_dim
     old_weights = old_embedding.get_weights()[0]
     
-    # Create new embedding weights
+    # Create new embedding weights with proper dimensions
     new_weights = np.vstack([
-    old_weights,
-    np.random.normal(
-        loc=0.0,
-        scale=0.01,
-        size=(new_vocab_size - old_weights.shape[0], old_weights.shape[1])
-    )
-])    
+        old_weights,
+        np.random.normal(
+            loc=0.0,
+            scale=0.01,
+            size=(new_vocab_size - old_weights.shape[0], old_weights.shape[1])
+        )
+    ])
+    
     # Rebuild model architecture
     input_layer = Input(shape=(None,), dtype='int32', name='input_layer')
     new_embedding = Embedding(
@@ -157,9 +158,11 @@ def update_embedding_layer_safely(model, new_vocab_size):
     for layer in model.layers[1:]:
         prev_layer = layer(prev_layer)
     
-    # Create and compile new model
+    # Create new model
     new_model = Model(inputs=input_layer, outputs=prev_layer)
-    if model.optimizer:
+    
+    # Only compile if original model was compiled
+    if hasattr(model, 'optimizer') and model.optimizer is not None:
         new_model.compile(
             optimizer=model.optimizer,
             loss=model.loss,
@@ -167,6 +170,7 @@ def update_embedding_layer_safely(model, new_vocab_size):
         )
     
     return new_model
+
 
 def check_available_rank(list_tuples, true_word):
     rank = -1
