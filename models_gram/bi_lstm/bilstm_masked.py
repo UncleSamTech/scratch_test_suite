@@ -50,7 +50,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         
             # Update model embedding layer
             new_vocab_size = len(tokenz.word_index) + 1
-            loaded_model = update_embedding_layer_safely3(loaded_model, new_vocab_size)
+            loaded_model = update_embedding_layer_safely(loaded_model, new_vocab_size)
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
@@ -126,54 +126,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
             del loaded_model
         gc.collect()
 
-def update_embedding_layer_safely(model, new_vocab_size):
-    """Safely updates the embedding layer with new vocabulary size"""
-    # Get original embedding configuration
-    old_embedding = model.layers[0]
-    old_weights = old_embedding.get_weights()[0]
-    embedding_dim = old_weights.shape[1]
-    
-    # Create new weights with proper initialization
-    new_weights = np.vstack([
-        old_weights,
-        np.random.normal(
-            loc=0.0,
-            scale=0.01,
-            size=(new_vocab_size - old_weights.shape[0], embedding_dim)
-        )
-    ])
-    
-    # Create new embedding layer
-    new_embedding = Embedding(
-        input_dim=new_vocab_size,
-        output_dim=embedding_dim,
-        weights=[new_weights],
-        mask_zero=old_embedding.mask_zero,
-        name='embedding'
-    )
-    
-    # Build a new Sequential model
-    new_model = Sequential()
-    new_model.add(new_embedding)
-    
-    # Add all remaining layers
-    for layer in model.layers[1:]:
-        new_model.add(layer)
-    
-    # Set weights for all layers
-    for i in range(1, len(new_model.layers)):
-        if model.layers[i].get_weights():  # Only if layer has weights
-            new_model.layers[i].set_weights(model.layers[i].get_weights())
-    
-    # Compile if original model was compiled
-    if hasattr(model, 'optimizer') and model.optimizer is not None:
-        new_model.compile(
-            optimizer=model.optimizer,
-            loss=model.loss,
-            metrics=model.metrics
-        )
-    
-    return new_model
+
 
 def check_available_rank(list_tuples, true_word):
     rank = -1
@@ -304,6 +257,62 @@ def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen
     
     return predicted_token, top_tokens
 
+def update_embedding_layer_safely(model, new_vocab_size):
+    """More robust embedding layer update"""
+    # Get original embedding configuration
+    old_embedding = model.layers[0]
+    old_weights = old_embedding.get_weights()[0]
+    embedding_dim = old_weights.shape[1]
+    
+    # Create new weights - ensure we don't exceed max vocabulary
+    num_new_tokens = min(new_vocab_size - old_weights.shape[0], 
+                     10000)  # Safety limit
+    new_weights = np.vstack([
+        old_weights,
+        np.random.normal(
+            loc=0.0,
+            scale=0.01,
+            size=(num_new_tokens, embedding_dim)
+        )
+    ])
+    
+    # Rebuild model
+    new_embedding = Embedding(
+        input_dim=old_weights.shape[0] + num_new_tokens,
+        output_dim=embedding_dim,
+        weights=[new_weights],
+        mask_zero=old_embedding.mask_zero,
+        name='embedding'
+    )
+    
+    if isinstance(model, Sequential):
+        new_model = Sequential()
+        new_model.add(new_embedding)
+        for layer in model.layers[1:]:
+            new_model.add(layer)
+    else:
+        input_layer = Input(shape=(None,), dtype='int32')
+        x = new_embedding(input_layer)
+        for layer in model.layers[1:]:
+            x = layer(x)
+        new_model = Model(inputs=input_layer, outputs=x)
+    
+    # Copy weights for other layers
+    for i in range(1, len(new_model.layers)):
+        if model.layers[i].get_weights():
+            new_model.layers[i].set_weights(model.layers[i].get_weights())
+    
+    # Recompile if needed
+    if hasattr(model, 'optimizer') and model.optimizer:
+        new_model.compile(
+            optimizer=model.optimizer,
+            loss=model.loss,
+            metrics=model.metrics
+        )
+    
+    return new_model
+
+
 
 def update_embedding_layer_safely3(model, new_vocab_size):
     """Safely updates the embedding layer with new vocabulary size"""
@@ -369,23 +378,33 @@ def safe_tokenize3(text, tokenizer, max_index):
     return token_ids
 
 def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
-    """Safe prediction with bounds checking"""
-    # Get max valid index from model
-    max_index = model.layers[0].input_dim
+    """
+    Fully safe prediction function with comprehensive bounds checking
+    """
+    # Get the actual vocabulary size from the model
+    max_valid_index = model.layers[0].input_dim - 1  # indices are 0-based
     
-    # Tokenize with bounds checking
-    token_list = safe_tokenize3(context, tokenz, max_index)
-    if not token_list or len(token_list) == 0:
+    # Tokenize with strict bounds enforcement
+    token_list = tokenz.texts_to_sequences([context])
+    if not token_list or len(token_list[0]) == 0:
         return -1, []
-
-    # Prepare the base sequence
-    base_sequence = token_list[-maxlen + 1:]
-
-    # Get vocabulary with bounds checking
-    vocab = list(tokenz.word_index.keys())
-    token_indices = [min(tokenz.word_index.get(token, len(tokenz.word_index)), max_index-1) 
-                    for token in vocab]
-
+    
+    # Prepare base sequence with bounds checking
+    base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
+    
+    # Get vocabulary with bounds enforcement
+    vocab = []
+    token_indices = []
+    for token in tokenz.word_index:
+        idx = tokenz.word_index[token]
+        if idx <= max_valid_index:  # Only include tokens that fit in the model
+            vocab.append(token)
+            token_indices.append(idx)
+    
+    # Ensure we have some valid tokens
+    if not vocab:
+        return -1, []
+    
     # Create padded sequences
     padded_sequences = [
         base_sequence + [token_index] for token_index in token_indices
@@ -398,11 +417,11 @@ def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
 
     # Process results
     max_prob_tokens = {
-        token: predictions[i][token_index].numpy()
-        for i, (token, token_index) in enumerate(zip(vocab, token_indices))
+        vocab[i]: predictions[i][-1].numpy()  # Get prediction for last position
+        for i in range(len(vocab))
     }
 
-    predicted_token = max(max_prob_tokens, key=max_prob_tokens.get)
+    predicted_token = max(max_prob_tokens.items(), key=lambda x: x[1])[0]
     top_tokens = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
 
     return predicted_token, top_tokens
