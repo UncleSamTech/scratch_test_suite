@@ -407,53 +407,45 @@ def predict_token_score_upd_opt4(context, tokenz, model, maxlen):
 
 def predict_token_score_upd_opt3(context, tokenz, model, maxlen):
     """
-    Fully safe prediction function with comprehensive bounds checking
+    Improved prediction with proper probability calculation
     """
-    # Get the actual vocabulary size from the model
-    max_valid_index = model.layers[0].input_dim - 1  # indices are 0-based
-    print(f"vocab size : {max_valid_index}")
+    # Get model's vocabulary capacity
+    max_valid_index = model.layers[0].input_dim - 1
     
-    # Tokenize with strict bounds enforcement
+    # Tokenize input with bounds checking
     token_list = tokenz.texts_to_sequences([context])
     if not token_list or len(token_list[0]) == 0:
         return -1, []
     
-    # Prepare base sequence with bounds checking
+    # Prepare base sequence
     base_sequence = [min(idx, max_valid_index) for idx in token_list[0][-maxlen + 1:]]
     
-    # Get vocabulary with bounds enforcement
-    vocab = []
-    token_indices = []
-    for token in tokenz.word_index:
-        idx = tokenz.word_index[token]
-        if idx <= max_valid_index:  # Only include tokens that fit in the model
-            vocab.append(token)
-            token_indices.append(idx)
-    
-    # Ensure we have some valid tokens
+    # Get valid vocabulary
+    vocab = [t for t in tokenz.word_index if tokenz.word_index[t] <= max_valid_index]
     if not vocab:
         return -1, []
     
-    # Create padded sequences
-    padded_sequences = [
-        base_sequence + [token_index] for token_index in token_indices
-    ]
-    padded_sequences = pad_sequences(padded_sequences, maxlen=maxlen - 1, padding="pre")
-    padded_sequences = tf.convert_to_tensor(padded_sequences)
-
-    # Predict
-    predictions = model(padded_sequences, training=False)
-
-    # Process results
-    max_prob_tokens = {
-        vocab[i]: predictions[i][-1].numpy()  # Get prediction for last position
-        for i in range(len(vocab))
-    }
-
-    predicted_token = max(max_prob_tokens.items(), key=lambda x: x[1])[0]
-    top_tokens = heapq.nlargest(10, max_prob_tokens.items(), key=lambda x: x[1])
-    print(f"top 10 tokens : \n {top_tokens}")
-
+    # Create input tensor
+    input_seq = pad_sequences([base_sequence], maxlen=maxlen-1, padding='pre')
+    input_tensor = tf.convert_to_tensor(input_seq)
+    
+    # Get all possible next token indices
+    token_indices = [tokenz.word_index[t] for t in vocab]
+    
+    # Get model's prediction distribution
+    logits = model(input_tensor, training=False)[0, -1, :]  # Get last position logits
+    logits = tf.gather(logits, token_indices)  # Filter for valid tokens
+    
+    # Convert to probabilities
+    probs = tf.nn.softmax(logits).numpy()
+    
+    # Pair tokens with their probabilities
+    token_probs = list(zip(vocab, probs))
+    
+    # Get top predictions
+    top_tokens = heapq.nlargest(10, token_probs, key=lambda x: x[1])
+    predicted_token = top_tokens[0][0] if top_tokens else -1
+    
     return predicted_token, top_tokens
 
 
