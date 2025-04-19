@@ -43,10 +43,16 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
         tokenized_file_path = f"{result_path}tokenized_file_50embedtime1_{run}.pickle"
         with open(tokenized_file_path, "rb") as tk:
             tokenz = pickle.load(tk)
+
+        
         
         # Ensure [MASK] token exists
         if 'lbracmaskrbrac' not in tokenz.word_index:
-            tokenz.word_index['lbracmaskrbrac'] = max(tokenz.word_index.values()) + 1
+            tokenz.word_index['lbracmaskrbrac'] = len(tokenz.word_index) + 1
+        
+        # Calculate new vocab size (add 1 because indices start at 0)
+        new_vocab_size = len(tokenz.word_index) + 1
+        loaded_model = update_embedding_layer(loaded_model, new_vocab_size)
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
@@ -100,7 +106,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
                     masked_sequence = ' '.join(masked_tokens)
                     
                     # Get bidirectional prediction
-                    pred, top_tokens = predict_masked_token_bidirectional2(
+                    pred, top_tokens = predict_masked_token_safely(
                         masked_sequence, idx, tokenz, loaded_model, maxlen
                     )
                     rank = check_available_rank(top_tokens, true_word)
@@ -258,5 +264,77 @@ def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
         )
 
         return predicted_next_token, top_10_tokens_scores
+
+
+def safe_tokenize(text, tokenizer):
+    """Converts text to token IDs, handling out-of-vocabulary tokens"""
+    tokens = text.split()
+    token_ids = []
+    for token in tokens:
+        # Get index or use last available index for OOV
+        idx = tokenizer.word_index.get(token, len(tokenizer.word_index))
+        if idx >= len(tokenizer.word_index):
+            idx = len(tokenizer.word_index) - 1  # Clamp to last valid index
+        token_ids.append(idx)
+    return token_ids
+
+
+def predict_masked_token_safely(masked_sequence, mask_pos, tokenz, model, maxlen):
+    # Tokenize safely
+    token_ids = safe_tokenize(masked_sequence, tokenz)
+    
+    # Get left and right contexts
+    left_context_ids = token_ids[:mask_pos]
+    right_context_ids = token_ids[mask_pos+1:]
+    
+    # Convert back to text for your existing prediction function
+    left_context = ' '.join([list(tokenz.word_index.keys())[i] for i in left_context_ids])
+    right_context_reversed = ' '.join([list(tokenz.word_index.keys())[i] for i in reversed(right_context_ids)])
+    
+    # Get predictions
+    left_pred, left_top = predict_token_score_upd_opt2(left_context, tokenz, model, maxlen)
+    right_pred, right_top = predict_token_score_upd_opt2(right_context_reversed, tokenz, model, maxlen)
+    
+    # Combine predictions
+    combined_scores = defaultdict(float)
+    for token, score in left_top:
+        combined_scores[token] += score * 0.5
+    for token, score in right_top:
+        combined_scores[token] += score * 0.5
+    
+    predicted_token = max(combined_scores.items(), key=lambda x: x[1])[0]
+    top_tokens = heapq.nlargest(10, combined_scores.items(), key=lambda x: x[1])
+    
+    return predicted_token, top_tokens
+
+
+
+def update_embedding_layer(model, new_vocab_size):
+    """Resizes the embedding layer to handle new vocabulary"""
+    # Get original embedding weights
+    old_embedding = model.layers[0]  # Assuming first layer is embedding
+    old_weights = old_embedding.get_weights()[0]
+    embedding_dim = old_weights.shape[1]
+    
+    # Create new embedding layer
+    new_embedding = Embedding(
+        input_dim=new_vocab_size,
+        output_dim=embedding_dim,
+        mask_zero=True if old_embedding.mask_zero else False,
+        name=old_embedding.name
+    )
+    
+    # Initialize new weights (original + random for new tokens)
+    new_weights = np.vstack([
+        old_weights,
+        np.random.normal(size=(new_vocab_size - len(old_weights), embedding_dim))
+    ])
+    
+    # Replace the embedding layer
+    model.layers[0] = new_embedding
+    model.layers[0].set_weights([new_weights])
+    return model
+
+
 
 evaluate_bilstm_masked_prediction("/mnt/siwuchuk/thesis/another/kenlm/output_test/m10/scratch_test_set_10_6_1_proc_m.txt",47,"/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_1.keras","/mnt/siwuchuk/thesis/another/bilstm/models/10/",10,1,"/mnt/siwuchuk/thesis/another/bilstm/logs/10_masked")
