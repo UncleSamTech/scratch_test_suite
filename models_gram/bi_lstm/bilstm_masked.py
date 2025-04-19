@@ -220,4 +220,4 @@ def predict_token_score_upd_opt2(context, tokenz, model, maxlen):
 
         return predicted_next_token, top_10_tokens_scores
 
-evaluate_bilstm_masked_prediction("/mnt/siwuchuk/thesis/another/kenlm/output_test/m10/scratch_test_set_10_6_1_proc_m.txt",47,"/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_1.keras","/mnt/siwuchuk/thesis/another/bilstm/models/10",10,1,"/mnt/siwuchuk/thesis/another/bilstm/logs/10_masked")
+evaluate_bilstm_masked_prediction("/mnt/siwuchuk/thesis/another/kenlm/output_test/m10/scratch_test_set_10_6_1_proc_m.txt",47,"/mnt/siwuchuk/thesis/another/bilstm/models/10/main_bilstm_scratch_model_150embedtime1_main_sample_project10_6_1.keras","/mnt/siwuchuk/thesis/another/bilstm/models/10/",10,1,"/mnt/siwuchuk/thesis/another/bilstm/logs/10_masked")
