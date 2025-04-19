@@ -45,8 +45,8 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
             tokenz = pickle.load(tk)
         
         # Ensure [MASK] token exists
-        if '[MASK]' not in tokenz.word_index:
-            tokenz.word_index['[MASK]'] = max(tokenz.word_index.values()) + 1
+        if 'lbracmaskrbrac' not in tokenz.word_index:
+            tokenz.word_index['lbracmaskrbrac'] = max(tokenz.word_index.values()) + 1
         
         # Log file setup
         investig_path = f"{logs_path}/bilstm_masked_{proj_number}_6_{run}_logs.txt"
@@ -96,7 +96,7 @@ def evaluate_bilstm_masked_prediction(test_data, maxlen, model, result_path, pro
                     # Create masked sequence
                     true_word = tokens[idx]
                     masked_tokens = tokens.copy()
-                    masked_tokens[idx] = '[MASK]'
+                    masked_tokens[idx] = 'lbracmaskrbrac'
                     masked_sequence = ' '.join(masked_tokens)
                     
                     # Get bidirectional prediction
@@ -179,8 +179,8 @@ def find_resume_point(test_file_path, log_entry_count):
 
 def predict_masked_token_bidirectional2(masked_sequence, mask_pos, tokenz, model, maxlen):
     # Verify tokenizer
-    if '[MASK]' not in tokenz.word_index:
-        tokenz.word_index['[MASK]'] = len(tokenz.word_index) + 1
+    if 'lbracmaskrbrac' not in tokenz.word_index:
+        tokenz.word_index['lbracmaskrbrac'] = len(tokenz.word_index) + 1
     
     # Safe tokenization
     tokens = masked_sequence.split()
