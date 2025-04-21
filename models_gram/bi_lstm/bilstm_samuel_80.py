@@ -1097,7 +1097,7 @@ cl_ob = bilstm_cybera()
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_1_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_1_proc.txt)/50))p" scratch_test_set_80_6_1_proc.txt > scratch_test_set_80_6_1_proc_$i.txt; done
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_2_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_2_proc.txt)/50))p" scratch_test_set_80_6_2_proc.txt > scratch_test_set_80_6_2_proc_$i.txt; done
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_3_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_3_proc.txt)/50))p" scratch_test_set_80_6_3_proc.txt > scratch_test_set_80_6_3_proc_$i.txt; done
-#for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_50_6_4_proc.txt)/50))p" scratch_test_set_50_6_4_proc.txt > scratch_test_set_50_6_4_proc_$i.txt; done
+#for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_4_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_4_proc.txt)/50))p" scratch_test_set_80_6_4_proc.txt > scratch_test_set_80_6_4_proc_$i.txt; done
 #for i in {1..50}; do sed -n "$((($i-1)*$(wc -l < scratch_test_set_80_6_5_proc.txt)/50+1)),$((($i)*$(wc -l < scratch_test_set_80_6_5_proc.txt)/50))p" scratch_test_set_80_6_5_proc.txt > scratch_test_set_80_6_5_proc_$i.txt; done
 # Example usage
 # cl_ob = bilstm_cybera()

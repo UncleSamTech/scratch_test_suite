@@ -402,6 +402,51 @@ class bilstm_cybera:
 
         return predicted_next_token, top_10_tokens_scores
 
+
+    def predict_masked_token_with_pretrained(self, full_sequence, mask_position, tokenz, model, maxlen):
+        """
+        Uses existing BiLSTM to predict masked tokens by treating it as sequential prediction
+        from both directions.
+        """
+        # Tokenize the full sequence
+        tokens = tokenz.texts_to_sequences([full_sequence])[0]
+        
+        # Get left context (tokens before mask)
+        left_context = tokens[:mask_position]
+        
+        # Get right context (tokens after mask)
+        right_context = tokens[mask_position+1:]
+        
+        # Strategy 1: Average predictions from both directions
+        left_pred = self._predict_from_left(left_context, tokenz, model, maxlen)
+        right_pred = self._predict_from_right(right_context, tokenz, model, maxlen)
+        
+        # Combine predictions (average probabilities)
+        combined_pred = {
+            token: (left_pred.get(token, 0) + right_pred.get(token, 0))/2
+            for token in set(left_pred) | set(right_pred)
+        }
+        
+        predicted_token = max(combined_pred.items(), key=lambda x: x[1])[0]
+        top_tokens = heapq.nlargest(10, combined_pred.items(), key=lambda x: x[1])
+        
+        return predicted_token, top_tokens
+
+    def _predict_from_left(self, context, tokenz, model, maxlen):
+        """Your existing next-token prediction approach"""
+        # Implement using your current predict_token_score_upd_opt2 logic
+        # but return all vocabulary scores
+        pass
+
+    def _predict_from_right(self, context, tokenz, model, maxlen):
+        """Reverse prediction by processing sequence backwards"""
+        # Reverse the context
+        reversed_context = context[::-1]
+        
+        # Use your existing function but with reversed sequence
+        # Need to adjust token processing accordingly
+        pass
+
     def count_log_entries(self,log_file_path):
         """Count the number of lines in the log file."""
         with open(log_file_path, 'r') as log_file:
